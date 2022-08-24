@@ -1,0 +1,20 @@
+{
+    "name": "LandscapeDesignTool.Editor",
+    "rootNamespace": "LandscapeDesignTool.Editor",
+    "references": [
+        "GUID:06bc5408c92469e4b918a190ab1490c8",
+        "GUID:2f611b55791fe6e49aafec04e8adcb97",
+        "GUID:dcb9858be5b08114e8d7d2449ed7cbb2"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
