@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-namespace LandscapeDesignTool.Editor
+namespace LandscapeDesignTool
 {
     public class ShapeItem : MonoBehaviour
     {
@@ -25,7 +25,7 @@ namespace LandscapeDesignTool.Editor
 
 #if UNITY_EDITOR
         [CustomEditor(typeof(ShapeItem))]
-        public class SapeItemEditor :UnityEditor.Editor
+        public class SapeItemEditor : UnityEditor.Editor
         {
             public override void OnInspectorGUI()
             {

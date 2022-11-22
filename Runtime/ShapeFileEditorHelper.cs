@@ -6,7 +6,7 @@ using TriangleNet;
 using TriangleNet.Geometry;
 using EGIS.ShapeFileLib;
 
-namespace LandscapeDesignTool.Editor
+namespace LandscapeDesignTool
 {
     public class ShapeFileEditorHelper : MonoBehaviour
     {

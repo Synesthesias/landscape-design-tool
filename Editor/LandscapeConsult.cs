@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using LandscapeDesignTool;
 
 namespace LandscapeDesignTool.Editor
 {
@@ -31,9 +32,22 @@ namespace LandscapeDesignTool.Editor
         private const string ViewPointGroupName = "ViewPointGroup";
         private const string ViewPointName = "ViewPoint";
         string _viewpointDescription = "視点場";
+
+        /*
+         * layer
+         */
+        string[] layerName = { "RegulationArea" };
+        int[] layerId = { 30 };
+
         private float _viewpointFOV = 60.0f;
         private float _viewpointHeight = 1.6f;
         private GameObject _viewpointRoot;
+
+        float _screenWidth = 80.0f;
+        float _screenHeight = 80.0f;
+
+        int _regurationType;
+        float _regurationHeight;
 
         bool _point_edit_in = false;
 
@@ -51,8 +65,9 @@ namespace LandscapeDesignTool.Editor
 
             var style = new GUIStyle(EditorStyles.label);
             style.richText = true;
+            EditorGUILayout.Space();
             EditorGUILayout.LabelField("<size=15>視点場の作成</size>", style);
-            EditorGUILayout.HelpBox("視点場名と視野角を入力し'視点場の追加'ボタンを押下して下さい", MessageType.Info);
+            EditorGUILayout.HelpBox("視点場名と視点高と視野角を入力し'視点場の追加'ボタンをクリックして下さい", MessageType.Info);
             _viewpointFOV = EditorGUILayout.FloatField("視野角", _viewpointFOV);
             _viewpointHeight = EditorGUILayout.FloatField("視点高", _viewpointHeight);
             _viewpointDescription = EditorGUILayout.TextField("視点場名", _viewpointDescription);
@@ -85,9 +100,117 @@ namespace LandscapeDesignTool.Editor
                     CanvasScaler scaler = ui.AddComponent<CanvasScaler>();
                     scaler.uiScaleMode = CanvasScaler.ScaleMode.ConstantPixelSize;
                     GraphicRaycaster raycaster = ui.AddComponent<GraphicRaycaster>();
+                }
+
+                if (!Camera.main.gameObject.GetComponent<WalkThruHandler>())
+                {
                     Camera.main.gameObject.AddComponent<WalkThruHandler>();
                 }
+
+                if (!GameObject.Find("EventSystem"))
+                {
+                    GameObject go = new GameObject();
+                    go.name = "EventSystem";
+                    EventSystem es = go.AddComponent<EventSystem>();
+                    StandaloneInputModule im = go.AddComponent<StandaloneInputModule>();
+                }
             }
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("<size=15>眺望対象からの規制エリア作成</size>", style);
+            EditorGUILayout.HelpBox("眺望対象地点での幅と高さを設定し規制エリア作成をクリックしてください", MessageType.Info);
+
+            _screenWidth = EditorGUILayout.FloatField("眺望対象地点での幅", _screenWidth);
+            _screenHeight = EditorGUILayout.FloatField("眺望対象地点での高さ", _screenHeight);
+
+            if (GUILayout.Button("眺望規制エリア作成"))
+            {
+                CheckLayers();
+
+                GameObject grp = GameObject.Find("RegurationArea");
+                if (!grp)
+                {
+                    grp = new GameObject();
+                    grp.name = "RegurationArea";
+                    grp.layer = LayerMask.NameToLayer("RegulationArea");
+
+                    RegurationAreaHandler handler = grp.AddComponent<RegurationAreaHandler>();
+                    handler.screenHeight = _screenHeight;
+                    handler.screenWidth = _screenWidth;
+
+                }
+
+            }
+
+
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("<size=15>任意規制エリア作成</size>", style);
+            EditorGUILayout.HelpBox("規制リアの高さを設定しタイプを選択して規制エリア作成をクリックしてください", MessageType.Info);
+            string[] options = { "多角形", "円" };
+            _regurationHeight = EditorGUILayout.FloatField("眺望対象地点での高さ",10);
+
+            _regurationType = EditorGUILayout.Popup(_regurationType, options);
+            if (GUILayout.Button("任意規制エリア作成"))
+            {
+                
+                CheckLayers();
+                if (_regurationType == 0)
+                {
+                    GameObject grp = GameObject.Find("AnyPolygonRegurationArea");
+                    if (!grp)
+                    {
+                        grp = new GameObject();
+                        grp.name = "AnyPolygonRegurationArea";
+                        grp.layer = LayerMask.NameToLayer("RegulationArea");
+
+                        AnyPolygonRegurationAreaHandler handler = grp.AddComponent<AnyPolygonRegurationAreaHandler>();
+                        handler.areaHeight = _regurationHeight;
+                    }
+                }
+                else
+                {
+                    GameObject grp = GameObject.Find("AnyCirclenRegurationArea");
+                    if (!grp)
+                    {
+                        grp = new GameObject();
+                        grp.name = "AnyCirclenRegurationArea";
+                        grp.layer = LayerMask.NameToLayer("RegulationArea");
+
+                        AnyCircleRegurationAreaHandler handler = grp.AddComponent<AnyCircleRegurationAreaHandler>();
+                        handler.areaHeight = _regurationHeight;
+
+                     
+
+                    }
+                }
+                
+            }
+        }
+
+        void CheckLayers()
+        {
+
+            SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
+
+            //layer情報を取得
+            var layersProp = tagManager.FindProperty("layers");
+            var index = 0;
+            foreach (var layerId in layerId)
+            {
+                if (layersProp.arraySize > layerId)
+                {
+                    var sp = layersProp.GetArrayElementAtIndex(layerId);
+                    if (sp != null && sp.stringValue != layerName[index])
+                    {
+                        sp.stringValue = layerName[index];
+                        Debug.Log("Adding layer " + layerName[index]);
+                    }
+                }
+
+                index++;
+            }
+
+            tagManager.ApplyModifiedProperties();
+
         }
     }
 #endif

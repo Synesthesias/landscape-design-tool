@@ -1,7 +1,9 @@
 {
     "name": "LandscapeDesignTool",
     "rootNamespace": "LandScapeDesignTool",
-    "references": [],
+    "references": [
+        "GUID:5f638aa7d847e6c40a36f0cd75558d55"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
