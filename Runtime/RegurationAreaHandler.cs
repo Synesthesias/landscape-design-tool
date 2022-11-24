@@ -40,7 +40,7 @@ public class RegurationAreaHandler : MonoBehaviour
         Color _areaInvalidColor = new Color(1, 0, 0, 0.5f);
         private float _wsize;
         private float _hsize;
-        float _interval = 1.0f;
+        float _interval = 3.0f;
         SerializedProperty _prop;
 
         private void Awake()
@@ -282,8 +282,8 @@ public class RegurationAreaHandler : MonoBehaviour
 
             lineRenderer.SetPositions(point);
             lineRenderer.positionCount = point.Length;
-            lineRenderer.startWidth = 0.25f;
-            lineRenderer.endWidth = 0.25f;
+            lineRenderer.startWidth = 1.0f;
+            lineRenderer.endWidth = 1.0f;
             lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
             lineRenderer.startColor = col;
             lineRenderer.endColor = col;
@@ -481,7 +481,6 @@ public class RegurationAreaHandler : MonoBehaviour
             float magnitude = direction.magnitude;
             Vector3 normal = direction / magnitude;
 
-            GameObject hitTarget;
 
             RaycastHit[] hits;
             hits = Physics.RaycastAll(origin, normal, 10000);
@@ -498,6 +497,11 @@ public class RegurationAreaHandler : MonoBehaviour
 
                         int layerIgnoreRaycast = LayerMask.NameToLayer("RegulationArea");
                         if (hit.collider.gameObject.layer == layerIgnoreRaycast)
+                        {
+                            hitIgnore = true;
+                        }
+
+                        if( hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
                         {
                             hitIgnore = true;
                         }
@@ -522,9 +526,9 @@ public class RegurationAreaHandler : MonoBehaviour
                             result = true;
                             if (hit.distance < mindistance)
                             {
-                                hitTarget = hit.collider.gameObject;
+                                hitpoint = hit;
                                 mindistance = hit.distance;
-                                //  Debug.Log("hit " + hit.collider.name + " " + mindistance + " " + hit.point.ToString());
+                                // Debug.Log("hit " + hit.collider.name + " " + mindistance + " " + hit.point.ToString());
                             }
                         }
                     }

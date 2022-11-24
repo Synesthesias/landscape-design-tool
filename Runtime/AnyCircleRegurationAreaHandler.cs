@@ -227,7 +227,7 @@ namespace LandscapeDesignTool
 
                 SceneView sceneView = SceneView.lastActiveSceneView;
 
-                EditorGUILayout.HelpBox("’†S‚Æ”¼Œa‚ğİ’è‚µ‚Ä”CˆÓ‹K§—Ìˆæ‚ğ¶¬‚µ‚Ü‚·", MessageType.Info);
+                EditorGUILayout.HelpBox("’†S‚Æ”¼Œa‚ğİ’è‚µ‚Ä‹K§ƒGƒŠƒA‚ğ¶¬‚µ‚Ü‚·", MessageType.Info);
 
                 _height = EditorGUILayout.FloatField("‚‚³(m)", _height);
                 _areaColor = EditorGUILayout.ColorField("F‚Ìİ’è", _areaColor);
@@ -236,7 +236,7 @@ namespace LandscapeDesignTool
                 if (_pointing == false)
                 {
                     GUI.color = Color.white;
-                    if (GUILayout.Button("‰~‚É‚æ‚é”CˆÓ‹K§ƒGƒŠƒA‚Ìì¬"))
+                    if (GUILayout.Button("‰~‚É‚æ‚é‹K§ƒGƒŠƒA‚Ìì¬"))
                     {
                         sceneView.Focus();
                         _pointing = true;
