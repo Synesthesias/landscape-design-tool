@@ -116,13 +116,13 @@ namespace LandscapeDesignTool.Editor
                 }
             }
             EditorGUILayout.Space();
-            EditorGUILayout.LabelField("<size=15>眺望対象からの規制エリア作成</size>", style);
-            EditorGUILayout.HelpBox("眺望対象地点での幅と高さを設定し規制エリア作成をクリックしてください", MessageType.Info);
+            EditorGUILayout.LabelField("<size=15>眺望対象からの眺望規制作成</size>", style);
+            EditorGUILayout.HelpBox("眺望対象地点での幅と高さを設定し眺望規制作成をクリックしてください", MessageType.Info);
 
             _screenWidth = EditorGUILayout.FloatField("眺望対象地点での幅", _screenWidth);
             _screenHeight = EditorGUILayout.FloatField("眺望対象地点での高さ", _screenHeight);
 
-            if (GUILayout.Button("眺望規制エリア作成"))
+            if (GUILayout.Button("眺望規制作成"))
             {
                 CheckLayers();
 
@@ -143,13 +143,13 @@ namespace LandscapeDesignTool.Editor
 
 
             EditorGUILayout.Space();
-            EditorGUILayout.LabelField("<size=15>任意規制エリア作成</size>", style);
+            EditorGUILayout.LabelField("<size=15>規制エリア作成</size>", style);
             EditorGUILayout.HelpBox("規制リアの高さを設定しタイプを選択して規制エリア作成をクリックしてください", MessageType.Info);
             string[] options = { "多角形", "円" };
             _regurationHeight = EditorGUILayout.FloatField("眺望対象地点での高さ",10);
 
             _regurationType = EditorGUILayout.Popup(_regurationType, options);
-            if (GUILayout.Button("任意規制エリア作成"))
+            if (GUILayout.Button("規制エリア作成"))
             {
                 
                 CheckLayers();
