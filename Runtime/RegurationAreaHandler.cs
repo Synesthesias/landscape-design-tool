@@ -36,8 +36,8 @@ public class RegurationAreaHandler : MonoBehaviour
         int selectIndex = 0;
         bool selectingTarget = false;
         GameObject vpgroup;
-        Color _areaColor = new Color(0, 1, 0, 0.5f);
-        Color _areaInvalidColor = new Color(1, 0, 0, 0.5f);
+        Color _areaColor = new Color(0, 1, 0, 0.2f);
+        Color _areaInvalidColor = new Color(1, 0, 0, 0.2f);
         private float _wsize;
         private float _hsize;
         float _interval = 3.0f;
@@ -285,6 +285,8 @@ public class RegurationAreaHandler : MonoBehaviour
             lineRenderer.startWidth = 1.0f;
             lineRenderer.endWidth = 1.0f;
             lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+            // lineRenderer.material.SetColor("_Color", col);
+
             lineRenderer.startColor = col;
             lineRenderer.endColor = col;
 
