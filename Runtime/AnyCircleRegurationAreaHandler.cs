@@ -108,11 +108,12 @@ namespace LandscapeDesignTool
         {
 
             Vector3[] v = new Vector3[CircleDiv * 2];
-            int[] triangles = new int[CircleDiv * 2 * 3];
+            int[] triangles = new int[(CircleDiv+1) * 2 * 3];
 
 
             int n = 0;
-            for ( int i=0; i<CircleDiv; i++)
+            int i = 0;
+            for ( i=0; i<CircleDiv; i++)
             {
                 Vector3 v0 = vertex[i + 1];
                 v[n++] = new Vector3(v0.x, v0.y, v0.z);
@@ -120,7 +121,8 @@ namespace LandscapeDesignTool
             }
 
             n = 0;
-            for( int i=0; i<v.Length-2; i+=2)
+            i = 0;
+            for ( i=0; i<v.Length-2; i+=2)
             {
                 triangles[n++] = i+2;
                 triangles[n++] = i+1;
@@ -130,6 +132,14 @@ namespace LandscapeDesignTool
                 triangles[n++] = i + 3;
                 triangles[n++] = i + 1;
             }
+
+            triangles[n++] = 0;
+            triangles[n++] = i + 1;
+            triangles[n++] = i;
+
+            triangles[n++] = 1;
+            triangles[n++] = i + 1;
+            triangles[n++] = 0;
 
             GameObject go = new GameObject("Side");
             go.layer = LayerMask.NameToLayer("RegulationArea");
@@ -241,10 +251,6 @@ namespace LandscapeDesignTool
                         sceneView.Focus();
                         _pointing = true;
                         isBuildSelecting = false;
-
-                        sceneView.rotation = Quaternion.Euler(90, 0, 0);
-                        sceneView.orthographic = true;
-                        sceneView.size = 300.0f;
                     }
                 }
                 else
@@ -270,7 +276,7 @@ namespace LandscapeDesignTool
                 }
                 EditorGUILayout.Space();
                 EditorGUILayout.HelpBox("建物のカラーを変更します", MessageType.Info);
-                _overlayColor = EditorGUILayout.ColorField("色の設定", _overlayColor);
+                // _overlayColor = EditorGUILayout.ColorField("色の設定", _overlayColor);
                 if (isBuildSelecting == false)
                 {
                     GUI.color = Color.white;
@@ -295,6 +301,8 @@ namespace LandscapeDesignTool
             }
 
             bool _keydown = false;
+
+            GameObject hitTarget = null;
 
             private void OnSceneGUI()
             {
@@ -343,7 +351,6 @@ namespace LandscapeDesignTool
 
                 if (isBuildSelecting)
                 {
-                    GameObject hitTarget = null;
                     var ev = Event.current;
                     if (ev.type == EventType.KeyUp && ev.keyCode == KeyCode.LeftShift)
                     {
@@ -374,8 +381,30 @@ namespace LandscapeDesignTool
                                 }
                             }
                         }
+                        if (hitTarget != null)
+                        {
+
+                            Material material = LDTTools.MakeMaterial(_overlayColor);
+                            int nmat;
+                            List<Material> oldmat = new List<Material>();
+                            hitTarget.GetComponent<Renderer>().GetSharedMaterials(oldmat);
+                            _overlayColor = new Color(1, 0, 0, 0.5f);
+                            foreach (Material mat in oldmat)
+                            {
+                                if (mat.name == LDTTools.MaterialName)
+                                {
+                                    _overlayColor = mat.GetColor("_BaseColor");
+                                }
+                            }
+
+                            Debug.Log("Popup");
+                            SelectColorPopup.Init(_overlayColor, ColorSelected, ColorRemove);
+
+
+                        }
                     }
 
+                    /*
                     if (hitTarget != null)
                     {
                         Bounds box = hitTarget.GetComponent<Renderer>().bounds;
@@ -423,7 +452,55 @@ namespace LandscapeDesignTool
                             hitTarget.GetComponent<Renderer>().materials = matArray;
                         }
                     }
+                    */
                 }
+            }
+            void ColorSelected(Color col)
+            {
+                Debug.Log("Selected " + col.ToString());
+                List<Material> oldmat = new List<Material>();
+                hitTarget.GetComponent<Renderer>().GetSharedMaterials(oldmat);
+                _overlayColor = new Color(1, 0, 0, 0.5f);
+                bool f = false;
+                foreach (Material mat in oldmat)
+                {
+                    if (mat.name == LDTTools.MaterialName)
+                    {
+                        mat.SetColor("_BaseColor", col);
+                        f = true;
+                    }
+                }
+                if (f == false)
+                {
+                    int nmat;
+                    Material material = LDTTools.MakeMaterial(col);
+                    nmat = oldmat.Count;
+                    Material[] matArray = new Material[nmat + 1];
+                    for (int i = 0; i < nmat; i++)
+                    {
+                        matArray[i] = oldmat[i];
+                    }
+                    matArray[nmat] = material;
+
+                    hitTarget.GetComponent<Renderer>().materials = matArray;
+                }
+                hitTarget = null;
+            }
+
+            void ColorRemove()
+            {
+                int nmat;
+                List<Material> oldmat = new List<Material>();
+                hitTarget.GetComponent<Renderer>().GetSharedMaterials(oldmat);
+                for (int i = 0; i < oldmat.Count; i++)
+                {
+                    if (oldmat[i].name == LDTTools.MaterialName)
+                    {
+                        oldmat.RemoveAt(i);
+                    }
+                }
+
+                hitTarget.GetComponent<Renderer>().sharedMaterials = oldmat.ToArray();
             }
         }
 #endif

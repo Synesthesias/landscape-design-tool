@@ -78,7 +78,7 @@ namespace LandscapeDesignTool
         public void ClearPoint()
         {
             vertex.Clear();
-            SceneView.RepaintAll();
+            // SceneView.RepaintAll();
         }
 
         public void GenMesh()
@@ -93,23 +93,28 @@ namespace LandscapeDesignTool
                     Vector2 cont = new Vector2(v3.x, v3.z);
                     _Contours.Add(cont);
 
-                    if (i < vertex.Count - 1)
+                    Vector3 v1;
+                    if (i < vertex.Count-1)
                     {
-                        Vector3 v1 = vertex[i + 1];
-                        float length = Vector3.Distance(v0, v1);
-                        int d = (int)(length / 3.0f);
+                        v1 = vertex[i + 1];
 
-                        float dx = (v1.x - v0.x) / (float)d;
-                        float dy = (v1.z - v0.z) / (float)d;
+                    }
+                    else
+                    {
+                        v1 = vertex[0];
+                    }
+                    float length = Vector3.Distance(v0, v1);
+                    int d = (int)(length / 3.0f);
 
-                        for (int j = 1; j < d; j++)
-                        {
-                            float x = v0.x + dx * (float)j;
-                            float y = v0.z + dy * (float)j;
-                            Vector2 v2 = new Vector2(x,y);
-                            _Contours.Add(v2);
+                    float dx = (v1.x - v0.x) / (float)d;
+                    float dy = (v1.z - v0.z) / (float)d;
 
-                        }
+                    for (int j = 1; j < d; j++)
+                    {
+                        float x = v0.x + dx * (float)j;
+                        float y = v0.z + dy * (float)j;
+                        Vector2 v2 = new Vector2(x, y);
+                        _Contours.Add(v2);
 
                     }
 
@@ -130,18 +135,28 @@ namespace LandscapeDesignTool
 
             Vector3[] nv = new Vector3[mesh.vertices.Length];
 
-            RaycastHit hit;
+            // RaycastHit hit;
             for (int i = 0; i < mesh.vertices.Length; i++)
             {
                 Vector3 ov = mesh.vertices[i];
                 Vector3 tmpv = new Vector3(ov.x, 3000, ov.y);
-                if (Physics.Raycast(tmpv, new Vector3(0, -1, 0), out hit, Mathf.Infinity))
-                {
-                    nv[i] = new Vector3(ov.x, hit.point.y + areaHeight, ov.y);
-                }
-                else
-                {
 
+                RaycastHit[] hits;
+                bool isGround = false;
+                hits = Physics.RaycastAll(tmpv, new Vector3(0, -1, 0), Mathf.Infinity);
+                foreach (var hit in hits)
+                {
+                    if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
+                    {
+                        if (Physics.Raycast(tmpv, new Vector3(0, -1, 0), Mathf.Infinity))
+                        {
+                            nv[i] = new Vector3(ov.x, hit.point.y + areaHeight, ov.y);
+                            isGround = true;
+                        }
+                    }
+                }
+                if( isGround == false)
+                {
                     nv[i] = new Vector3(ov.x, 0, ov.y);
                 }
             }
@@ -177,8 +192,6 @@ namespace LandscapeDesignTool
         void GenerateSide(GameObject parent)
         {
 
-            RaycastHit hit;
-
             // int ng = 0;
             _Contours = new List<Vector2>();
 
@@ -190,23 +203,28 @@ namespace LandscapeDesignTool
                     Vector2 cont = new Vector2(v3.x, v3.z);
                     _Contours.Add(cont);
 
+                    Vector3 v1;
                     if (ni < vertex.Count - 1)
                     {
-                        Vector3 v1 = vertex[ni + 1];
-                        float length = Vector3.Distance(v0, v1);
-                        int d = (int)(length / 3.0f);
+                        v1 = vertex[ni + 1];
 
-                        float dx = (v1.x - v0.x) / (float)d;
-                        float dy = (v1.z - v0.z) / (float)d;
+                    }
+                    else
+                    {
+                        v1 = vertex[0];
+                    }
+                    float length = Vector3.Distance(v0, v1);
+                    int d = (int)(length / 3.0f);
 
-                        for (int nj = 1; nj < d; nj++)
-                        {
-                            float x = v0.x + dx * (float)nj;
-                            float y = v0.z + dy * (float)nj;
-                            Vector2 v2 = new Vector2(x, y);
-                            _Contours.Add(v2);
+                    float dx = (v1.x - v0.x) / (float)d;
+                    float dy = (v1.z - v0.z) / (float)d;
 
-                        }
+                    for (int nj = 1; nj < d; nj++)
+                    {
+                        float x = v0.x + dx * (float)nj;
+                        float y = v0.z + dy * (float)nj;
+                        Vector2 v2 = new Vector2(x, y);
+                        _Contours.Add(v2);
 
                     }
 
@@ -216,7 +234,7 @@ namespace LandscapeDesignTool
             }
 
             Vector3[] nv = new Vector3[_Contours.Count * 2];
-            int[] triangles = new int[_Contours.Count * 2 * 3];
+            int[] triangles = new int[(_Contours.Count+1) * 2 * 3];
 
             int i = 0;
             int j = 0;
@@ -225,30 +243,42 @@ namespace LandscapeDesignTool
             foreach (Vector2 pt in _Contours)
             {
                 Vector3 tmpv = new Vector3(pt.x, 3000, pt.y);
-                if (Physics.Raycast(tmpv, new Vector3(0, -1, 0), out hit, Mathf.Infinity))
+
+                RaycastHit[] hits;
+                hits = Physics.RaycastAll(tmpv, new Vector3(0, -1, 0), Mathf.Infinity);
+                bool isGround = false;
+                foreach (var hit in hits)
                 {
-                    nv[i++] = new Vector3(pt.x, hit.point.y, pt.y);
-                    nv[i++] = new Vector3(pt.x, hit.point.y + areaHeight, pt.y);
+                    if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
+                    {
+                        nv[i++] = new Vector3(pt.x, hit.point.y, pt.y);
+                        nv[i++] = new Vector3(pt.x, hit.point.y + areaHeight, pt.y);
+                        isGround = true;
+                    }
                 }
-                else
+                if( isGround == false)
                 {
                     nv[i++] = new Vector3(pt.x, 0, pt.y);
                     nv[i++] = new Vector3(pt.x, areaHeight, pt.y);
                 }
             }
 
-            for( int count = 0; count< _Contours.Count-1; count++)
+            int c1 = _Contours.Count-1;
+            for ( int count = 0; count< c1; count++)
             {
-                // Debug.Log(triangles.Length + " " + count + " " + n + " ");
                 triangles[n++] = count*2 + 2;
                 triangles[n++] = count*2 + 1;
                 triangles[n++] = count*2;
                 triangles[n++] = count*2 + 2;
                 triangles[n++] = count*2 + 3;
                 triangles[n++] = count*2 + 1;
-                // j++;
-                // if (j < _Contours.Count ) j++;
             }
+            triangles[n++] = 0;
+            triangles[n++] = (c1 - 1) * 2 + 1; 
+            triangles[n++] = (c1 - 1) * 2;
+            triangles[n++] = 1;
+            triangles[n++] = (c1 - 1) * 2 + 1;
+            triangles[n++] = 0;
 
             GameObject go = new GameObject("Side");
             go.layer = LayerMask.NameToLayer("RegulationArea");
@@ -285,6 +315,7 @@ namespace LandscapeDesignTool
             bool isBuildSelecting = false;
             List<Vector3> _vertexList = new List<Vector3>();
             SerializedProperty _vertexProp;
+            GameObject hitTarget = null;
 
             private void Awake()
             {
@@ -311,10 +342,11 @@ namespace LandscapeDesignTool
                         sceneView.Focus();
                         _pointing = true;
                         isBuildSelecting = false;
-
+                        /*
                         sceneView.rotation = Quaternion.Euler(90, 0, 0);
                         sceneView.orthographic = true;
                         sceneView.size = 300.0f;
+                        */
                         _nvertex = 0;
                     }
                 }
@@ -333,6 +365,7 @@ namespace LandscapeDesignTool
                     if (GUILayout.Button("頂点をクリア"))
                     {
                         Selection.activeGameObject.GetComponent<AnyPolygonRegurationAreaHandler>().ClearPoint();
+                        SceneView.RepaintAll();
                         _pointing = false;
                     }
 
@@ -341,7 +374,7 @@ namespace LandscapeDesignTool
 
                 EditorGUILayout.Space();
                 EditorGUILayout.HelpBox("建物のカラーを変更します", MessageType.Info);
-                _overlayColor = EditorGUILayout.ColorField("色の設定", _overlayColor);
+                // _overlayColor = EditorGUILayout.ColorField("色の設定", _overlayColor);
                 if (isBuildSelecting == false)
                 {
                     GUI.color = Color.white;
@@ -354,7 +387,7 @@ namespace LandscapeDesignTool
                 else
                 {
                     GUI.color = Color.green;
-                    if (GUILayout.Button("建物のカラーを変更"))
+                    if (GUILayout.Button("カラー変更を終了"))
                     {
                         isBuildSelecting = false;
 
@@ -399,7 +432,6 @@ namespace LandscapeDesignTool
                 }
                 if (isBuildSelecting)
                 {
-                    GameObject hitTarget = null;
                     var ev = Event.current;
                     if (ev.type == EventType.KeyUp && ev.keyCode == KeyCode.LeftShift)
                     {
@@ -413,6 +445,9 @@ namespace LandscapeDesignTool
 
                         if (hits.Length > 0)
                         {
+
+                            bool isRegurationArea = false;
+
                             for (int i = 0; i < hits.Length; i++)
                             {
                                 RaycastHit hit = hits[i];
@@ -426,12 +461,60 @@ namespace LandscapeDesignTool
                                         hitTarget = hit.collider.gameObject;
                                         mindistance = hit.distance;
                                         Debug.Log("hit " + hit.collider.name + " " + mindistance + " " + hit.point.ToString());
+                                        Bounds box = hitTarget.GetComponent<Renderer>().bounds;
+                                        float x = (box.min.x + box.max.x) / 2.0f;
+                                        float z = (box.min.z + box.max.z) / 2.0f;
+                                        Vector3 bottomCenter = new Vector3(x, box.min.y, z);
+                                        Debug.Log(bottomCenter);
+
+                                        RaycastHit[] hits2;
+
+                                        Physics.queriesHitBackfaces = true;
+                                        hits2 = Physics.RaycastAll(bottomCenter, new Vector3(0, 1, 0), Mathf.Infinity);
+
+                                        Debug.Log(hits2.Length);
+                                        if (hits.Length > 0)
+                                        {
+                                            for (int j = 0; j < hits2.Length; j++)
+                                            {
+                                                RaycastHit hit2 = hits2[j];
+                                                Debug.Log(hit2.collider.gameObject.name);
+                                                int layer2 = LayerMask.NameToLayer("RegulationArea");
+                                                if (hit2.collider.gameObject.layer == layer2)
+                                                {
+                                                    isRegurationArea = true;
+                                                }
+                                            }
+                                        }
                                     }
                                 }
+                            }
+
+                            if (isRegurationArea)
+                            {
+
+                                Material material = LDTTools.MakeMaterial(_overlayColor);
+                                int nmat;
+                                List<Material> oldmat = new List<Material>();
+                                hitTarget.GetComponent<Renderer>().GetSharedMaterials(oldmat);
+                                _overlayColor = new Color(1,0,0,0.5f);
+                                foreach (Material mat in oldmat)
+                                {
+                                    if (mat.name == LDTTools.MaterialName)
+                                    {
+                                        _overlayColor = mat.GetColor("_BaseColor");
+                                    }
+                                }
+
+                                Debug.Log("Popup");
+                                SelectColorPopup.Init(_overlayColor, ColorSelected, ColorRemove);
+
+
                             }
                         }
                     }
 
+                        /*
                     if (hitTarget != null)
                     {
                         Bounds box = hitTarget.GetComponent<Renderer>().bounds;
@@ -464,26 +547,72 @@ namespace LandscapeDesignTool
 
                         if (isRegurationArea)
                         {
+
                             Material material = LDTTools.MakeMaterial(_overlayColor);
                             int nmat;
                             List<Material> oldmat = new List<Material>();
-                            hitTarget.GetComponent<Renderer>().GetSharedMaterials(oldmat);
-                            nmat = oldmat.Count;
-                            Material[] matArray = new Material[nmat + 1];
-                            for (int i = 0; i < nmat; i++)
+                            _overlayColor = Color.red;
+                            foreach( Material mat in oldmat)
                             {
-                                matArray[i] = oldmat[i];
+                                if(mat.name == LDTTools.MaterialName)
+                                {
+                                    _overlayColor = mat.GetColor("_BaseColor");
+                                }
                             }
-                            matArray[nmat] = material;
 
-                            hitTarget.GetComponent<Renderer>().materials = matArray;
+                            SelectColorPopup.Init(_overlayColor, ColorSelected);
                         }
                     }
+                        */
                 }
             }
 
+            void ColorSelected( Color col)
+            {
+                Debug.Log("Selected " + col.ToString());
+                List<Material> oldmat = new List<Material>();
+                hitTarget.GetComponent<Renderer>().GetSharedMaterials(oldmat);
+                _overlayColor = new Color(1,0,0,0.5f);
+                bool f = false;
+                foreach (Material mat in oldmat)
+                {
+                    if (mat.name == LDTTools.MaterialName)
+                    {
+                         mat.SetColor("_BaseColor", col);
+                        f = true;
+                    }
+                }
+                if( f == false)
+                {
+                    int nmat;
+                    Material material = LDTTools.MakeMaterial(col);
+                    nmat = oldmat.Count;
+                    Material[] matArray = new Material[nmat + 1];
+                    for (int i = 0; i < nmat; i++)
+                    {
+                        matArray[i] = oldmat[i];
+                    }
+                    matArray[nmat] = material;
 
+                    hitTarget.GetComponent<Renderer>().materials = matArray;
+                }
+            }
 
+            void ColorRemove()
+            {
+                int nmat;
+                List<Material> oldmat = new List<Material>();
+                hitTarget.GetComponent<Renderer>().GetSharedMaterials(oldmat);
+                for (int i = 0; i < oldmat.Count; i++)
+                {
+                    if (oldmat[i].name == LDTTools.MaterialName)
+                    {
+                        oldmat.RemoveAt(i);
+                    }
+                }
+
+                hitTarget.GetComponent<Renderer>().sharedMaterials = oldmat.ToArray();
+            }
 
         }
 

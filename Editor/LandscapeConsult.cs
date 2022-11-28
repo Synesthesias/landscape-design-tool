@@ -49,6 +49,9 @@ namespace LandscapeDesignTool.Editor
         int _regurationType;
         float _regurationHeight;
 
+        float _heightAreaHeight=30.0f;
+        float _heightAreaRadius=100.0f;
+
         bool _point_edit_in = false;
 
         [MenuItem("Sandbox/景観まちづくり/景観策定")]
@@ -146,12 +149,12 @@ namespace LandscapeDesignTool.Editor
             EditorGUILayout.LabelField("<size=15>規制エリア作成</size>", style);
             EditorGUILayout.HelpBox("規制リアの高さを設定しタイプを選択して規制エリア作成をクリックしてください", MessageType.Info);
             string[] options = { "多角形", "円" };
-            _regurationHeight = EditorGUILayout.FloatField("眺望対象地点での高さ",10);
+            _regurationHeight = EditorGUILayout.FloatField("高さ", 10);
 
             _regurationType = EditorGUILayout.Popup(_regurationType, options);
             if (GUILayout.Button("規制エリア作成"))
             {
-                
+
                 CheckLayers();
                 if (_regurationType == 0)
                 {
@@ -178,11 +181,33 @@ namespace LandscapeDesignTool.Editor
                         AnyCircleRegurationAreaHandler handler = grp.AddComponent<AnyCircleRegurationAreaHandler>();
                         handler.areaHeight = _regurationHeight;
 
-                     
+
 
                     }
                 }
-                
+
+            }
+
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("<size=15>規制エリア作成</size>", style);
+            EditorGUILayout.HelpBox("高さ規制リアの高さ半径を設定しタイプを選択して規制エリア作成をクリックしてください", MessageType.Info);
+            _heightAreaHeight = EditorGUILayout.FloatField("高さ", _heightAreaHeight);
+            _heightAreaRadius = EditorGUILayout.FloatField("半径", _heightAreaRadius);
+
+            if (GUILayout.Button("規制エリア作成"))
+            {
+                GameObject grp = GameObject.Find("HeitRegurationAreaGroup");
+                if (!grp)
+                {
+                    grp = new GameObject();
+                    grp.name = "HeightRegurationArea";
+                    grp.layer = LayerMask.NameToLayer("RegulationArea");
+
+                    HeightRegurationAreaHandler handler = grp.AddComponent<HeightRegurationAreaHandler>();
+                    handler.areaHeight = _heightAreaHeight;
+                    handler.areaRadius = _heightAreaRadius;
+
+                }
             }
         }
 
