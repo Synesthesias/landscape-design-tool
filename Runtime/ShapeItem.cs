@@ -11,6 +11,8 @@ namespace LandscapeDesignTool
         public float height;
 
         public float oldHeight;
+
+        public List<Vector2> Contours;
         // Start is called before the first frame update
         void Start()
         {
@@ -21,6 +23,15 @@ namespace LandscapeDesignTool
         void Update()
         {
 
+        }
+
+        public void SetVertex( List<Vector2> org)
+        {
+            Contours = new List<Vector2>();
+            foreach(var v in org)
+            {
+                Contours.Add(v);
+            }
         }
 
 #if UNITY_EDITOR
@@ -86,5 +97,6 @@ namespace LandscapeDesignTool
             oldHeight = height;
 
         }
+
     }
 }

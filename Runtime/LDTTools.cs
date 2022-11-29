@@ -28,20 +28,46 @@ namespace LandscapeDesignTool
             return material;
         }
 
-        public static void WriteShapeFile(string filename, List<Vector3> vertexlist)
+        public static void WriteShapeFile(string filename, string descript, List<List<Vector2>> vertexlist)
         {
             string path = Application.dataPath + "/plugins/LandscapeDesignTool/ShapeFiles/" + filename;
-            ShapeFile writer = new ShapeFile(path);
-            List<Vector2> vertex2 = new List<Vector2>();
-            foreach( var v in vertexlist)
+
+            int nblock = vertexlist.Count;
+
+            Debug.Log("WriteShapeFile "+ filename);
+            DbfFieldDesc[] fields = new DbfFieldDesc[]
             {
-                Vector2 v2 = new Vector2(v.x, v.z);
-                vertex2.Add(v2);
+                new DbfFieldDesc { FieldName="ID", FieldType = DbfFieldType.Character, FieldLength = 14, RecordOffset = 0}
+            };
+
+
+            ShapeFileWriter sfw = ShapeFileWriter.CreateWriter(Application.dataPath + "/plugins/LandscapeDesignTool/ShapeFiles/", filename, ShapeType.Polygon, fields);
+
+
+            for (int i = 0; i < nblock; i++)
+            {
+                List<Vector2> vlist = vertexlist[i];
+
+                PointD[] vertex = new PointD[vlist.Count];
+
+                int n = 0;
+                Debug.Log("nvertex " + vlist.Count);
+                foreach (var v in vlist)
+                {
+                    vertex[n++] = new PointD(v.x, v.y);
+                }
+
+
+                string[] fielddata = new string[1];
+                fielddata[0] = descript+i.ToString();
+                sfw.AddRecord(vertex, vertex.Length, fielddata);
             }
+
+            sfw.Close();
         }
     }
 
-
+#if UNITY_EDITOR
     public class SelectColorPopup : EditorWindow
     {
         public delegate void ColorChangeDelegate(Color col);
@@ -83,6 +109,7 @@ namespace LandscapeDesignTool
             }
         }
     }
+#endif
 
 
 }

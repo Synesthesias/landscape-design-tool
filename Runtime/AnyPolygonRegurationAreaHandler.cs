@@ -16,6 +16,7 @@ namespace LandscapeDesignTool
         public Color AreaColor;
         Material _areaMaterial;
         Color OverlayColor;
+        public List<Vector2> Vertexes = new List<Vector2>();
 
 
         // Start is called before the first frame update
@@ -92,6 +93,7 @@ namespace LandscapeDesignTool
                     Vector3 v0 = v3;
                     Vector2 cont = new Vector2(v3.x, v3.z);
                     _Contours.Add(cont);
+                    Vertexes.Add(cont);
 
                     Vector3 v1;
                     if (i < vertex.Count-1)
@@ -181,6 +183,7 @@ namespace LandscapeDesignTool
             si.material = material;
             si.height = areaHeight;
             si.oldHeight = areaHeight;
+            si.SetVertex(Vertexes);
 
             rootNode.transform.parent = gameObject.transform;
             go.transform.parent = rootNode.transform;
@@ -357,7 +360,7 @@ namespace LandscapeDesignTool
                     {
                         _pointing = false;
                         sceneView.orthographic = false;
-
+                        Selection.activeGameObject.GetComponent<AnyPolygonRegurationAreaHandler>().Vertexes.Clear();
                         Selection.activeGameObject.GetComponent<AnyPolygonRegurationAreaHandler>().AreaColor = _areaColor;
                         Selection.activeGameObject.GetComponent<AnyPolygonRegurationAreaHandler>().GenMesh();
                     }

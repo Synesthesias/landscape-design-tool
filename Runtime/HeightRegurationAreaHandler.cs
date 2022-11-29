@@ -107,6 +107,6 @@ namespace LandscapeDesignTool
                 }
             }
         }
-    }
 #endif
+    }
 }

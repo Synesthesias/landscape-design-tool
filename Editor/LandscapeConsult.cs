@@ -53,6 +53,9 @@ namespace LandscapeDesignTool.Editor
         float _heightAreaRadius=100.0f;
 
         bool _point_edit_in = false;
+        string _regurationAreaFileName = "";
+        string _heightAreaFileName = "";
+        string _viewRegrationAreaFileName = "";
 
         [MenuItem("Sandbox/景観まちづくり/景観策定")]
 
@@ -171,11 +174,11 @@ namespace LandscapeDesignTool.Editor
                 }
                 else
                 {
-                    GameObject grp = GameObject.Find("AnyCirclenRegurationArea");
+                    GameObject grp = GameObject.Find("AnyCirclnRegurationArea");
                     if (!grp)
                     {
                         grp = new GameObject();
-                        grp.name = "AnyCirclenRegurationArea";
+                        grp.name = "AnyCircleRegurationArea";
                         grp.layer = LayerMask.NameToLayer("RegulationArea");
 
                         AnyCircleRegurationAreaHandler handler = grp.AddComponent<AnyCircleRegurationAreaHandler>();
@@ -208,6 +211,47 @@ namespace LandscapeDesignTool.Editor
                     handler.areaRadius = _heightAreaRadius;
 
                 }
+            }
+
+
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("<size=15>規制エリア出力</size>", style);
+            _regurationAreaFileName = EditorGUILayout.TextField("ファイル名", _regurationAreaFileName);
+            if (GUILayout.Button("規制エリア出力"))
+            {
+                List<List<Vector2>> contours = new List<List<Vector2>>();
+                GameObject grp = GameObject.Find("AnyPolygonRegurationArea");
+                if(grp)
+                {
+                    int narea = grp.transform.childCount;
+                    for( int i=0; i<narea; i++)
+                    {
+                        GameObject go = grp.transform.GetChild(i).gameObject;
+                        ShapeItem handler = go.GetComponent<ShapeItem>();
+                        if (handler)
+                        {
+                            List<Vector2> cnt = handler.Contours;
+                            contours.Add(cnt);
+                        }
+                    }
+                }
+                grp = GameObject.Find("AnyCircleRegurationArea");
+                if (grp)
+                {
+                    int narea = grp.transform.childCount;
+                    for (int i = 0; i < narea; i++)
+                    {
+                        GameObject go = grp.transform.GetChild(i).gameObject;
+                        ShapeItem handler = go.GetComponent<ShapeItem>();
+                        if (handler)
+                        {
+                            List<Vector2> cnt = handler.Contours;
+                            contours.Add(cnt);
+                        }
+                    }
+                }
+
+                LDTTools.WriteShapeFile(_regurationAreaFileName, "RArea", contours);
             }
         }
 

@@ -47,7 +47,7 @@ namespace LandscapeDesignTool
         public void GenMesh()
         {
 
-
+            _Contours = new List<Vector2>();
             GameObject go = new GameObject("Upper");
             go.layer = LayerMask.NameToLayer("RegulationArea");
             var mr = go.AddComponent<MeshRenderer>();
@@ -63,7 +63,11 @@ namespace LandscapeDesignTool
             foreach( Vector3 v0 in vertex)
             {
                 v[i] = new Vector3(v0.x, v0.y+areaHeight, v0.z);
-                Debug.Log(v0.ToString());
+                if (i > 0)
+                {
+                    _Contours.Add(new Vector2(v0.x, v0.z));
+                }
+                
                 i++;
             }
 
@@ -97,6 +101,7 @@ namespace LandscapeDesignTool
             si.material = material;
             si.height = areaHeight;
             si.oldHeight = areaHeight;
+            si.SetVertex(_Contours);
 
             rootNode.transform.parent = gameObject.transform;
             go.transform.parent = rootNode.transform;
