@@ -65,6 +65,35 @@ namespace LandscapeDesignTool
 
             sfw.Close();
         }
+
+        static string[] layerName = { "RegulationArea" };
+        static int[] layerId = { 30 };
+        public static void CheckLayers()
+        {
+
+            SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
+
+            //layer情報を取得
+            var layersProp = tagManager.FindProperty("layers");
+            var index = 0;
+            foreach (var layerId in layerId)
+            {
+                if (layersProp.arraySize > layerId)
+                {
+                    var sp = layersProp.GetArrayElementAtIndex(layerId);
+                    if (sp != null && sp.stringValue != layerName[index])
+                    {
+                        sp.stringValue = layerName[index];
+                        Debug.Log("Adding layer " + layerName[index]);
+                    }
+                }
+
+                index++;
+            }
+
+            tagManager.ApplyModifiedProperties();
+
+        }
     }
 
 #if UNITY_EDITOR
@@ -75,12 +104,16 @@ namespace LandscapeDesignTool
         public delegate void ColorRemoveDelegate();
         public static ColorRemoveDelegate colorRemove;
         static Color _col;
-        public static void Init(Color ccol, ColorChangeDelegate dg, ColorRemoveDelegate rm)
+        static Color orgColor;
+        static bool hasMaterial = false;
+        public static void Init(Color ccol, ColorChangeDelegate dg, ColorRemoveDelegate rm, bool f)
         {
 
             colorChange = dg;
             colorRemove = rm;
+            orgColor = ccol;
             _col = ccol;
+            hasMaterial = f;
             SelectColorPopup window = ScriptableObject.CreateInstance<SelectColorPopup>();
             window.position = new Rect(Screen.width / 2, Screen.height / 2, 250, 350);
             window.Show();
@@ -90,6 +123,8 @@ namespace LandscapeDesignTool
         {
             EditorGUILayout.LabelField("設定する色を選択", EditorStyles.wordWrappedLabel);
             GUILayout.Space(70);
+
+            colorChange.Invoke(_col);
 
             _col = EditorGUILayout.ColorField("色の設定", _col);
             GUILayout.Space(10);
@@ -105,6 +140,16 @@ namespace LandscapeDesignTool
             }
             if (GUILayout.Button("キャンセル"))
             {
+                if(!hasMaterial)
+                {
+                    colorRemove.Invoke();
+
+                }
+                else
+                {
+                    colorChange.Invoke(orgColor);
+
+                }
                 this.Close();
             }
         }

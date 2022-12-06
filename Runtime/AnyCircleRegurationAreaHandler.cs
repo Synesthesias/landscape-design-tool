@@ -394,16 +394,18 @@ namespace LandscapeDesignTool
                             List<Material> oldmat = new List<Material>();
                             hitTarget.GetComponent<Renderer>().GetSharedMaterials(oldmat);
                             _overlayColor = new Color(1, 0, 0, 0.5f);
+                            bool find = false;
                             foreach (Material mat in oldmat)
                             {
                                 if (mat.name == LDTTools.MaterialName)
                                 {
+                                    find = true;
                                     _overlayColor = mat.GetColor("_BaseColor");
                                 }
                             }
 
                             Debug.Log("Popup");
-                            SelectColorPopup.Init(_overlayColor, ColorSelected, ColorRemove);
+                            SelectColorPopup.Init(_overlayColor, ColorSelected, ColorRemove, find);
 
 
                         }
