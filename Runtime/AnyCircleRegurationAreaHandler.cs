@@ -8,11 +8,13 @@ namespace LandscapeDesignTool
     public class AnyCircleRegurationAreaHandler : MonoBehaviour
     {
 
+        [SerializeField] float areaHeight;
+        [SerializeField] Color AreaColor;
+        [SerializeField] Vector3 AreaCenter;
+        [SerializeField] Vector3 AreaRadiusPoint;
+
         const int CircleDiv = 180;
-        public float areaHeight;
-        public Color AreaColor;
-        Vector3 AreaCenter;
-        Vector3 AreaRadiusPoint;
+
         bool _isValid = false;
         Material _areaMaterial;
 
@@ -30,6 +32,26 @@ namespace LandscapeDesignTool
         {
 
         }
+
+        public float GetHeight()
+        {
+            return areaHeight;
+        }
+
+        public void SetHeight(float h)
+        {
+            areaHeight = h;
+        }
+
+        public Color GetAreaColor()
+        {
+            return AreaColor;
+        }
+        public void SetAreaColor(Color c)
+        {
+            AreaColor = c;
+        }
+
         private void OnDrawGizmosSelected()
         {
             if (_isValid)
@@ -48,13 +70,13 @@ namespace LandscapeDesignTool
         {
 
             _Contours = new List<Vector2>();
-            GameObject go = new GameObject("Upper");
-            go.layer = LayerMask.NameToLayer("RegulationArea");
-            var mr = go.AddComponent<MeshRenderer>();
+            // GameObject go = new GameObject("Upper");
+            gameObject.layer = LayerMask.NameToLayer("RegulationArea");
+            var mr = gameObject.AddComponent<MeshRenderer>();
             Material material = LDTTools.MakeMaterial(AreaColor);
             _areaMaterial = material;
 
-            var mf = go.AddComponent<MeshFilter>();
+            var mf = gameObject.AddComponent<MeshFilter>();
 
             Mesh mesh = new Mesh();
             Vector3[] v = new Vector3[CircleDiv+1];
@@ -90,11 +112,12 @@ namespace LandscapeDesignTool
             mr.sharedMaterial = material;
             mf.mesh = mesh;
 
-            MeshCollider meshCollider = go.AddComponent<MeshCollider>();
+            MeshCollider meshCollider = gameObject.AddComponent<MeshCollider>();
             meshCollider.sharedMesh = mesh;
 
             mesh.RecalculateBounds();
 
+            /*
             GameObject rootNode = new GameObject("RegurationCircleArea");
             rootNode.layer = LayerMask.NameToLayer("RegulationArea");
             ShapeItem si = rootNode.AddComponent<ShapeItem>();
@@ -105,7 +128,8 @@ namespace LandscapeDesignTool
 
             rootNode.transform.parent = gameObject.transform;
             go.transform.parent = rootNode.transform;
-            GenerateSide(rootNode);
+            */
+            // GenerateSide(rootNode);
 
         }
 
@@ -234,6 +258,7 @@ namespace LandscapeDesignTool
             private void Awake()
             {
                 _height = Selection.activeGameObject.GetComponent<AnyCircleRegurationAreaHandler>().areaHeight;
+                _areaColor = Selection.activeGameObject.GetComponent<AnyCircleRegurationAreaHandler>().AreaColor;
             }
 
             public override void OnInspectorGUI()

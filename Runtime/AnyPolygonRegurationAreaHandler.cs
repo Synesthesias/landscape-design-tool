@@ -9,11 +9,12 @@ namespace LandscapeDesignTool
 {
     public class AnyPolygonRegurationAreaHandler : MonoBehaviour
     {
-        public float areaHeight;
+        [SerializeField] float areaHeight;
         [SerializeField] List<Vector3> vertex = new List<Vector3>();
+        [SerializeField] Color AreaColor;
+
 
         public List<Vector2> _Contours;
-        public Color AreaColor;
         Material _areaMaterial;
         Color OverlayColor;
         public List<Vector2> Vertexes = new List<Vector2>();
@@ -31,18 +32,49 @@ namespace LandscapeDesignTool
 
         }
 
+        public List<Vector2> GetVertexData()
+        {
+            List<Vector2> lst = new List<Vector2>();
+            foreach( Vector3 v in vertex)
+            {
+                lst.Add(new Vector2(v.x, v.z));
+            }
+            return lst;
+        }
+        public float GetHeight()
+        {
+            return areaHeight;
+        }
+
+        public void SetHeight(float h)
+        {
+            areaHeight = h;
+        }
+
+        public Color GetAreaColor()
+        {
+            return AreaColor;
+        }
+        public void SetAreaColor(Color c)
+        {
+            AreaColor = c;
+        }
+
         private void OnDrawGizmosSelected()
         {
+            // Debug.Log("OnDrawGizmo");
 
             Gizmos.color = Color.blue;
 
+            int n = 0;
+            float size = 50f;
             foreach (Vector3 val in vertex)
             {
                 Vector3 v0 = new Vector3(val.x, val.y + 5, val.z);
                 Gizmos.DrawCube(v0, new Vector3(10, 10, 10));
             }
 
-            Gizmos.color = Color.red;
+            Gizmos.color = Color.yellow;
             if (vertex.Count > 2)
             {
                 for (int i = 0; i < vertex.Count - 1; i++)
@@ -67,7 +99,6 @@ namespace LandscapeDesignTool
 
                 }
             }
-
 
         }
 
@@ -129,14 +160,15 @@ namespace LandscapeDesignTool
             poly.Add(_Contours);
             var triangleNetMesh = (TriangleNetMesh)poly.Triangulate();
 
-            GameObject go = new GameObject("Upper");
-            go.layer = LayerMask.NameToLayer("RegulationArea");
+            // GameObject go = new GameObject("Upper");
+            // go.layer = LayerMask.NameToLayer("RegulationArea");
 
-            var mf = go.AddComponent<MeshFilter>();
+            var mf = gameObject.AddComponent<MeshFilter>();
             var mesh = triangleNetMesh.GenerateUnityMesh();
 
-            Vector3[] nv = new Vector3[mesh.vertices.Length];
+            Vector3[] nv = new Vector3[mesh.vertices.Length*2];
 
+            int vco= mesh.vertices.Length;
             // RaycastHit hit;
             for (int i = 0; i < mesh.vertices.Length; i++)
             {
@@ -153,6 +185,7 @@ namespace LandscapeDesignTool
                         if (Physics.Raycast(tmpv, new Vector3(0, -1, 0), Mathf.Infinity))
                         {
                             nv[i] = new Vector3(ov.x, hit.point.y + areaHeight, ov.y);
+                            nv[i + mesh.vertices.Length] = new Vector3(ov.x, hit.point.y, ov.y);
                             isGround = true;
                         }
                     }
@@ -160,23 +193,63 @@ namespace LandscapeDesignTool
                 if( isGround == false)
                 {
                     nv[i] = new Vector3(ov.x, 0, ov.y);
+                    nv[i + mesh.vertices.Length] = new Vector3(ov.x,0, ov.y);
                 }
+
             }
+
+
+            int[] triangles = new int[(_Contours.Count + 1) * 2 * 3 + mesh.triangles.Length];
+            {
+                int i = 0;
+                foreach (int idx in mesh.triangles)
+                {
+                    triangles[i] = idx;
+                    i++;
+                }
+
+                int c1 = _Contours.Count - 1;
+                int n = mesh.triangles.Length;
+                for (int count = 0; count < c1; count++)
+                {
+                    int k1 = count;
+                    int k2 = count + vco;
+                    int k3 = k1 + 1;
+                    int k4 = k2 + 1;
+
+                    triangles[n++] = k1;
+                    triangles[n++] = k4;
+                    triangles[n++] = k3;
+                    triangles[n++] = k1;
+                    triangles[n++] = k2;
+                    triangles[n++] = k4;
+                }
+                triangles[n++] = vco - 1;
+                triangles[n++] = vco;
+                triangles[n++] = 0;
+                triangles[n++] = vco - 1;
+                triangles[n++] = vco * 2 - 1;
+                triangles[n++] = vco;
+            }
+
+
             mesh.vertices = nv;
+            mesh.triangles = triangles;
 
             Debug.Log(mesh.bounds.ToString());
 
-            var mr = go.AddComponent<MeshRenderer>();
+            var mr = gameObject.AddComponent<MeshRenderer>();
             Material material = LDTTools.MakeMaterial(AreaColor);
             _areaMaterial = material;
 
             mr.sharedMaterial = material;
             mf.mesh = mesh;
-            MeshCollider meshCollider = go.AddComponent<MeshCollider>();
+            MeshCollider meshCollider = gameObject.AddComponent<MeshCollider>();
             meshCollider.sharedMesh = mesh;
 
             mesh.RecalculateBounds();
 
+            /*
             GameObject rootNode = new GameObject("RegurationPolygonArea");
             rootNode.layer = LayerMask.NameToLayer("RegulationArea");
             ShapeItem si = rootNode.AddComponent<ShapeItem>();
@@ -185,11 +258,25 @@ namespace LandscapeDesignTool
             si.oldHeight = areaHeight;
             si.SetVertex(Vertexes);
 
+            si.fields = new LDTShapeFileHandler();
+            si.fields.areaType = "RegulationArea";
+            si.fields.type = "Polygon";
+            si.fields.height = areaHeight;
+            si.fields.col = Color.red;
+            foreach (Vector3 v3 in vertex)
+            {
+                Vector2 v2 = new Vector3(v3.x, v3.z);
+                Debug.Log("Add " + v2);
+                si.fields.AddPoint(v2);
+            }
+            si.fields.Save(gameObject.GetInstanceID());
+
             rootNode.transform.parent = gameObject.transform;
             go.transform.parent = rootNode.transform;
             GenerateSide(rootNode);
+            */
 
-            ClearPoint();
+            // ClearPoint();
         }
 
         void GenerateSide(GameObject parent)
@@ -320,9 +407,13 @@ namespace LandscapeDesignTool
             SerializedProperty _vertexProp;
             GameObject hitTarget = null;
 
+
+            List<Vector3> vertex = new List<Vector3>();
+
             private void Awake()
             {
                 _height = Selection.activeGameObject.GetComponent<AnyPolygonRegurationAreaHandler>().areaHeight;
+                _areaColor = Selection.activeGameObject.GetComponent<AnyPolygonRegurationAreaHandler>().AreaColor;
                 _vertexProp = this.serializedObject.FindProperty("vertex");
             }
 
@@ -368,6 +459,7 @@ namespace LandscapeDesignTool
                     if (GUILayout.Button("’¸“_‚ðƒNƒŠƒA"))
                     {
                         Selection.activeGameObject.GetComponent<AnyPolygonRegurationAreaHandler>().ClearPoint();
+                        vertex.Clear();
                         SceneView.RepaintAll();
                         _pointing = false;
                     }
@@ -396,6 +488,19 @@ namespace LandscapeDesignTool
 
                     }
                 }
+                /*
+                if(_pointing)
+                {
+                    int n = 0;
+                    foreach (Vector3 val in vertex)
+                    {
+                        Vector3 v0 = new Vector3(val.x, val.y + 5, val.z);
+                        // Gizmos.DrawCube(v0, new Vector3(10, 10, 10));
+                        Handles.CubeHandleCap(n, v0, Quaternion.Euler(Vector3.forward), 1.0f,  EventType.Repaint);
+                        n++;
+                    }
+                }
+                */
             }
 
             private void OnSceneGUI()
@@ -420,6 +525,8 @@ namespace LandscapeDesignTool
                             Debug.Log(hit.point);
 
                             Selection.activeGameObject.GetComponent<AnyPolygonRegurationAreaHandler>().AddPoint(new Vector3(hit.point.x, hit.point.y, hit.point.z));
+                            vertex.Add(new Vector3(hit.point.x, hit.point.y, hit.point.z));
+
                             /*
                             for (int i=0; i<_vertexProp.arraySize; i++)
                             {
@@ -432,6 +539,36 @@ namespace LandscapeDesignTool
                             // _vertexList.Add(new Vector3(hit.point.x, hit.point.y, hit.point.z));
                         }
                     }
+
+                    /*
+                    */
+                    float size = 50;
+                    LDTHandles.DragHandleResult dhResult;
+                    foreach (Vector3 val in vertex)
+                    {
+                        Vector3 v = new Vector3(val.x, val.y+ 5, val.z);
+                        LDTHandles handles1 = new LDTHandles();
+                        Vector3 newPositionx = handles1.DragHandle(v, Quaternion.LookRotation(Vector3.right),  size, Handles.ArrowHandleCap, Handles.xAxisColor, out dhResult); 
+                        
+                        switch (dhResult)
+                        {
+                            case LDTHandles.DragHandleResult.LMBDrag:
+                                // Debug.Log("LMBDrag x" + newPositionx);
+                                // do something
+                                break;
+                        }
+                        LDTHandles handles2 = new LDTHandles();
+                        Vector3 newPositionz = handles2.DragHandle(v, Quaternion.LookRotation(Vector3.forward), size, Handles.ArrowHandleCap, Handles.zAxisColor, out dhResult);
+
+                        switch (dhResult)
+                        {
+                            case LDTHandles.DragHandleResult.LMBDrag:
+                                // Debug.Log("LMBDrag y"+newPositionx);
+                                // do something
+                                break;
+                        }
+                    }
+                
                 }
                 if (isBuildSelecting)
                 {
@@ -511,7 +648,6 @@ namespace LandscapeDesignTool
                                     }
                                 }
 
-                                Debug.Log("Popup");
                                 SelectColorPopup.Init(_overlayColor, ColorSelected, ColorRemove, find);
 
 
@@ -519,58 +655,28 @@ namespace LandscapeDesignTool
                         }
                     }
 
-                        /*
-                    if (hitTarget != null)
-                    {
-                        Bounds box = hitTarget.GetComponent<Renderer>().bounds;
-                        float x = (box.min.x + box.max.x) / 2.0f;
-                        float z = (box.min.z + box.max.z) / 2.0f;
-                        Vector3 bottomCenter = new Vector3(x, box.min.y, z);
-                        Debug.Log(bottomCenter);
-
-                        RaycastHit[] hits;
-
-                        Physics.queriesHitBackfaces = true;
-                        hits = Physics.RaycastAll(bottomCenter, new Vector3(0, 1, 0), Mathf.Infinity);
-
-                        bool isRegurationArea = false;
-                        Debug.Log(hits.Length);
-                        if (hits.Length > 0)
-                        {
-                            for (int i = 0; i < hits.Length; i++)
-                            {
-                                RaycastHit hit = hits[i];
-                                Debug.Log(hit.collider.gameObject.name);
-                                int layer = LayerMask.NameToLayer("RegulationArea");
-                                if( hit.collider.gameObject.layer == layer)
-                                {
-                                    isRegurationArea = true;
-                                }
-                            }
-                        }
-
-
-                        if (isRegurationArea)
-                        {
-
-                            Material material = LDTTools.MakeMaterial(_overlayColor);
-                            int nmat;
-                            List<Material> oldmat = new List<Material>();
-                            _overlayColor = Color.red;
-                            foreach( Material mat in oldmat)
-                            {
-                                if(mat.name == LDTTools.MaterialName)
-                                {
-                                    _overlayColor = mat.GetColor("_BaseColor");
-                                }
-                            }
-
-                            SelectColorPopup.Init(_overlayColor, ColorSelected);
-                        }
-                    }
-                        */
                 }
             }
+
+
+            void EnableMesh(bool onoff)
+            {
+                Transform objectTransform = Selection.activeGameObject.transform;
+                for ( int i=0; i< objectTransform.childCount; i++)
+                {
+                    for( int n = 0; n< objectTransform.GetChild(i).childCount; n++)
+                    {
+                        GameObject child = objectTransform.GetChild(n).gameObject;
+                        MeshRenderer mesh = child.GetComponent<MeshRenderer>();
+                        if (mesh)
+                        {
+                            mesh.enabled = onoff;
+                        }
+                    }
+                }
+            }
+
+            
 
             void ColorSelected( Color col)
             {

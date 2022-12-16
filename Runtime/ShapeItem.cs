@@ -13,6 +13,10 @@ namespace LandscapeDesignTool
         public float oldHeight;
 
         public List<Vector2> Contours;
+
+        [SerializeField]
+        public LDTShapeFileHandler fields;
+        
         // Start is called before the first frame update
         void Start()
         {

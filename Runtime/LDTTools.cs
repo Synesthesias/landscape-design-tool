@@ -9,6 +9,11 @@ namespace LandscapeDesignTool
 {
     public static class LDTTools
     {
+        public enum AreaType
+        {
+            CIRCLE_REGURATION,
+            POLYCGON_REGURATION
+        }
         public static string MaterialName = "RegurationAreaMaterial";
         public static Material MakeMaterial(Color col)
         {
@@ -28,21 +33,36 @@ namespace LandscapeDesignTool
             return material;
         }
 
-        public static void WriteShapeFile(string filename, string descript, List<List<Vector2>> vertexlist)
+        public static void WriteShapeFile(string filename, string areatype, string[] type, Color[] col, float[] height, Vector2[,] specpoint,List<List<Vector2>> vertexlist/*,  List<int> instanceList*/)
         {
             string path = Application.dataPath + "/plugins/LandscapeDesignTool/ShapeFiles/" + filename;
 
             int nblock = vertexlist.Count;
 
-            Debug.Log("WriteShapeFile "+ filename);
-            DbfFieldDesc[] fields = new DbfFieldDesc[]
+            // int maxRecords = int.MinValue;
+
+            /*
+            foreach(int instanceID in instanceList)
             {
-                new DbfFieldDesc { FieldName="ID", FieldType = DbfFieldType.Character, FieldLength = 14, RecordOffset = 0}
-            };
+                int np = PlayerPrefs.GetInt(instanceID.ToString() + "-npoints");
+                maxRecords = Mathf.Max(maxRecords, np);
+            }
+            */
+
+            Debug.Log("WriteShapeFile "+ filename);
+            string tmp = "ABCDEFG";
+            DbfFieldDesc[] fields = new DbfFieldDesc[7];
+            DbfFieldDesc field;
+            fields[0] = new DbfFieldDesc { FieldName = "ID", FieldType = DbfFieldType.Character, FieldLength = 14, RecordOffset = 0 };
+            fields[1] = new DbfFieldDesc { FieldName = "AREATYPE", FieldType = DbfFieldType.Character, FieldLength = 14, RecordOffset = 0 };
+            fields[2] = new DbfFieldDesc { FieldName = "TYPE", FieldType = DbfFieldType.Character, FieldLength = 14, RecordOffset = 0 };
+            fields[3] = new DbfFieldDesc { FieldName = "HEIGHT", FieldType = DbfFieldType.Character, FieldLength = 14, RecordOffset = 0 };
+            fields[4] = new DbfFieldDesc { FieldName = "COLOR", FieldType = DbfFieldType.Character, FieldLength = 128, RecordOffset = 0 };
+            fields[5] = new DbfFieldDesc { FieldName = "POINT1", FieldType = DbfFieldType.Character, FieldLength = 128, RecordOffset = 0 };
+            fields[6] = new DbfFieldDesc { FieldName = "POINT2", FieldType = DbfFieldType.Character, FieldLength = 128, RecordOffset = 0 };
 
 
             ShapeFileWriter sfw = ShapeFileWriter.CreateWriter(Application.dataPath + "/plugins/LandscapeDesignTool/ShapeFiles/", filename, ShapeType.Polygon, fields);
-
 
             for (int i = 0; i < nblock; i++)
             {
@@ -51,17 +71,58 @@ namespace LandscapeDesignTool
                 PointD[] vertex = new PointD[vlist.Count];
 
                 int n = 0;
-                Debug.Log("nvertex " + vlist.Count);
+                // Debug.Log("nvertex " + vlist.Count);
                 foreach (var v in vlist)
                 {
                     vertex[n++] = new PointD(v.x, v.y);
+                    Debug.Log(vertex[n-1].ToString());
                 }
 
+                string[] fielddata = new string[7];
+                fielddata[0] = i.ToString();
+                fielddata[1] = areatype;
+                fielddata[2] = type[i];
+                fielddata[3] = height[i].ToString();
+                fielddata[4] = col[i].r.ToString() + "," + col[i].g.ToString() + "," + col[i].b.ToString() + "," + col[i].a.ToString();
+                Debug.Log(fielddata[4]);
+                fielddata[5] = specpoint[i,0].x.ToString() + ", " + specpoint[i,0].y.ToString();
+                fielddata[6] = specpoint[i,1].x.ToString() + ", "+specpoint[i,1].y.ToString();
 
-                string[] fielddata = new string[1];
-                fielddata[0] = descript+i.ToString();
+                /*
+                int instanceID = instanceList[i];
+                fielddata[0] = i.ToString();
+                fielddata[1] = PlayerPrefs.GetString(instanceID.ToString() + "-areaType");
+                fielddata[2] = PlayerPrefs.GetString(instanceID.ToString() + "-type");
+                fielddata[3] = PlayerPrefs.GetFloat(instanceID.ToString() + "-height").ToString();
+                fielddata[4] = fielddesc[i].col.r.ToString() + "," + fielddesc[i].col.g.ToString() + "," + fielddesc[i].col.b.ToString() + "," + fielddesc[i].col.a.ToString();
+
+                int nfield = fielddesc[i].points.Count;
+                fielddata[5] = nfield.ToString();
+
+                int j = 6;
+                foreach (var p in fielddesc[i].points)
+                {
+                    string pstring = p.x.ToString() + "," + p.y.ToString();
+                    fielddata[j++] = pstring;
+                }
+
+                for (int k = fielddesc[i].points.Count; k < maxRecords; k++)
+                {
+                    fielddata[k] = "0,0";
+                }
+
+                foreach( var val in fielddata)
+                {
+                    Debug.Log(val);
+                }
+
+                // fielddata[2] = type[i];
+
+                */
                 sfw.AddRecord(vertex, vertex.Length, fielddata);
             }
+
+
 
             sfw.Close();
         }
@@ -92,7 +153,48 @@ namespace LandscapeDesignTool
             }
 
             tagManager.ApplyModifiedProperties();
+            tagManager.Update();
 
+        }
+
+        public static void CheckTag(string tagname)
+        {
+            SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
+
+            //layerî•ñ‚ðŽæ“¾
+            var tags = tagManager.FindProperty("tags");
+
+            for (int i = 0; i < tags.arraySize; ++i)
+            {
+                if (tags.GetArrayElementAtIndex(i).stringValue == tagname)
+                {
+                    return;
+                }
+            }
+
+            int index = tags.arraySize;
+            tags.InsertArrayElementAtIndex(index);
+            tags.GetArrayElementAtIndex(index).stringValue = tagname;
+            tagManager.ApplyModifiedProperties();
+            tagManager.Update();
+        }
+
+        public static string GetNumberWithTag(string tagname, string title)
+        {
+            int rval = -1;
+
+            int maxvalule = 0;
+            GameObject[] objects = GameObject.FindGameObjectsWithTag(tagname);
+            foreach( GameObject obj in objects)
+            {
+                string nm = obj.name;
+                string[] s1 = nm.Split('-');
+                int n = int.Parse(s1[1]);
+                maxvalule = Mathf.Max(maxvalule, n);
+            }
+            rval = maxvalule + 1;
+
+            return title+"-"+rval.ToString();
         }
     }
 
