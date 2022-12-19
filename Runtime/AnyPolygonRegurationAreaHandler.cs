@@ -60,6 +60,20 @@ namespace LandscapeDesignTool
             AreaColor = c;
         }
 
+        public void SetVertex(List<Vector3> v0)
+        {
+            vertex.Clear();
+            foreach ( var v in v0)
+            {
+                vertex.Add(v);
+            }
+        }
+
+        public List<Vector3> GetVertex()
+        {
+            return vertex;
+        }
+
         private void OnDrawGizmosSelected()
         {
             // Debug.Log("OnDrawGizmo");
@@ -417,6 +431,7 @@ namespace LandscapeDesignTool
                 _vertexProp = this.serializedObject.FindProperty("vertex");
             }
 
+
             public override void OnInspectorGUI()
             {
 
@@ -428,6 +443,7 @@ namespace LandscapeDesignTool
                 _areaColor = EditorGUILayout.ColorField("êFÇÃê›íË", _areaColor);
 
                 EditorGUILayout.Space();
+                /*
                 if (_pointing == false)
                 {
                     GUI.color = Color.white;
@@ -436,11 +452,11 @@ namespace LandscapeDesignTool
                         sceneView.Focus();
                         _pointing = true;
                         isBuildSelecting = false;
-                        /*
+                        / *
                         sceneView.rotation = Quaternion.Euler(90, 0, 0);
                         sceneView.orthographic = true;
                         sceneView.size = 300.0f;
-                        */
+                        * /
                         _nvertex = 0;
                     }
                 }
@@ -465,6 +481,7 @@ namespace LandscapeDesignTool
                     }
 
                 }
+                */
 
 
                 EditorGUILayout.Space();
