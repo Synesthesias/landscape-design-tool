@@ -63,7 +63,7 @@ namespace LandscapeDesignTool.Editor
 
         private readonly string[] _tabToggles = { "視点場作成", "Shapefile読み込み","天候と時間" };
         private int _tabIndex;
-        [MenuItem("Sandbox/景観まちづくり/景観協議")]
+        [MenuItem("PLATEAU/景観まちづくり/景観協議")]
 
         public static void ShowWindow()
         {

@@ -35,7 +35,7 @@ namespace LandscapeDesignTool.Editor
         private readonly string[] _tabToggles = { "‹K§ƒGƒŠƒAì¬", "’­–]‹K§ì¬", "‚‚³‹K§ƒGƒŠƒAì¬", "ShapeFile‘‚«o‚µ" };
         private int _tabIndex;
 
-        [MenuItem("Sandbox/ŒiŠÏ‚Ü‚¿‚Ã‚­‚è/ŒiŠÏŒv‰æ")]
+        [MenuItem("PLATEAU/ŒiŠÏ‚Ü‚¿‚Ã‚­‚è/ŒiŠÏŒv‰æ")]
         public static void ShowWindow()
         {
             EditorWindow.GetWindow(typeof(LandscapeDesign), true, "ŒiŠÏŒv‰æ‰æ–Ê");
