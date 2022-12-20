@@ -44,8 +44,8 @@ namespace LandscapeDesignTool.Editor
         private float _viewpointHeight = 1.6f;
         private GameObject _viewpointRoot;
 
-        int _regurationType;
-        float _regurationHeight;
+        int _regulationType;
+        float _regulationHeight;
 
         bool _point_edit_in = false;
 
