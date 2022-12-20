@@ -67,7 +67,7 @@ namespace LandscapeDesignTool
                 Debug.LogError($"Export path is invalid. path = {exportFilePath}");
                 return;
             }
-            ShapeFileWriter sfw = ShapeFileWriter.CreateWriter(exportBaseDirPath, exportFilePath, ShapeType.Polygon, fields);
+            ShapeFileWriter sfw = ShapeFileWriter.CreateWriter(exportBaseDirPath, Path.GetFileNameWithoutExtension(exportFilePath), ShapeType.Polygon, fields);
 
             for (int i = 0; i < nblock; i++)
             {
