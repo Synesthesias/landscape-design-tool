@@ -11,18 +11,18 @@ namespace LandscapeDesignTool.Editor
     public class LandscapeDesign :EditorWindow
     {
 
-        int _regurationType;
-        float _regurationHeight = 10;
+        int _regulationType;
+        float _regulationHeight = 10;
         float _screenWidth = 80.0f;
         float _screenHeight = 80.0f;
         float _heightAreaHeight = 30.0f;
         float _heightAreaRadius = 100.0f;
         Color _areaColor = new Color(0, 1, 1, 0.5f);
 
-        string _regurationAreaFileName = "";
+        string _regulationAreaExportPath = "";
 
 
-        bool _regurationAreaEdit = false;
+        bool _regulationAreaEdit = false;
         bool _isRecurationAreaEdit = false;
         AnyPolygonRegurationAreaHandler polygonHandler;
 
@@ -35,7 +35,7 @@ namespace LandscapeDesignTool.Editor
         private readonly string[] _tabToggles = { "規制エリア作成", "眺望規制作成", "高さ規制エリア作成", "ShapeFile書き出し" };
         private int _tabIndex;
 
-        [MenuItem("Sandbox/景観まちづくり/景観計画")]
+        [MenuItem("PLATEAU/景観まちづくり/景観計画")]
         public static void ShowWindow()
         {
             EditorWindow.GetWindow(typeof(LandscapeDesign), true, "景観計画画面");
@@ -53,7 +53,7 @@ namespace LandscapeDesignTool.Editor
 
         private void OnSceneGUI(SceneView sceneView)
         {
-            if (_regurationAreaEdit)
+            if (_regulationAreaEdit)
             {
                 HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
                 var ev = Event.current;
@@ -107,10 +107,10 @@ namespace LandscapeDesignTool.Editor
                 EditorGUILayout.LabelField("<size=15>規制エリア作成</size>", style);
                 EditorGUILayout.HelpBox("規制リアの高さを設定しタイプを選択して規制エリア作成をクリックしてください", MessageType.Info);
                 string[] options = { "多角形", "円" };
-                _regurationHeight = EditorGUILayout.FloatField("高さ", _regurationHeight);
+                _regulationHeight = EditorGUILayout.FloatField("高さ", _regulationHeight);
                 _areaColor = EditorGUILayout.ColorField("色の設定", _areaColor);
 
-                _regurationType = EditorGUILayout.Popup(_regurationType, options);
+                _regulationType = EditorGUILayout.Popup(_regulationType, options);
                 /*
                 if (GUILayout.Button("規制エリア作成"))
                 {
@@ -178,12 +178,12 @@ namespace LandscapeDesignTool.Editor
 
                 }
                 */
-                if (_regurationAreaEdit)
+                if (_regulationAreaEdit)
                 {
                     GUI.color = Color.green;
                     if (GUILayout.Button("頂点作成を完了し多角形を生成"))
                     {
-                        _regurationAreaEdit = false;
+                        _regulationAreaEdit = false;
                         /*
                         GameObject go = new GameObject();
                         go.layer = LayerMask.NameToLayer("RegulationArea");
@@ -216,7 +216,7 @@ namespace LandscapeDesignTool.Editor
                     GUI.color = Color.white;
                     if (GUILayout.Button("頂点作成"))
                     {
-                        _regurationAreaEdit = true;
+                        _regulationAreaEdit = true;
                         SceneView sceneView = SceneView.sceneViews[0] as SceneView;
                         // sceneView.Focus();
                         GameObject go = new GameObject();
@@ -225,8 +225,8 @@ namespace LandscapeDesignTool.Editor
                         go.tag = "RegulationArea";
                         Selection.activeObject = go;
                         polygonHandler = go.AddComponent<AnyPolygonRegurationAreaHandler>();
-                        Debug.Log(_regurationHeight);
-                        polygonHandler.SetHeight(_regurationHeight);
+                        Debug.Log(_regulationHeight);
+                        polygonHandler.SetHeight(_regulationHeight);
                         polygonHandler.SetAreaColor(_areaColor);
 
                         Repaint();
@@ -309,7 +309,18 @@ namespace LandscapeDesignTool.Editor
                 EditorGUILayout.LabelField("<size=15>規制エリア出力</size>", style);
                 List<string> type = new List<string>();
                 List<LDTShapeFileHandler> fields = new List<LDTShapeFileHandler>();
-                _regurationAreaFileName = EditorGUILayout.TextField("ファイル名", _regurationAreaFileName);
+                using (new EditorGUI.DisabledScope(true))
+                {
+                    EditorGUILayout.TextField("エクスポート先", _regulationAreaExportPath);
+                }
+                if (GUILayout.Button("エクスポート先選択"))
+                {
+                    var selectedPath = EditorUtility.SaveFilePanel("保存先", "", "Shapefile", "shp");
+                    if (!string.IsNullOrEmpty(selectedPath))
+                    {
+                        _regulationAreaExportPath = selectedPath;
+                    }
+                }
                 List<LDTTools.AreaType> areaTypes = new List<LDTTools.AreaType>();
 
                 if (GUILayout.Button("規制エリア出力"))
@@ -340,7 +351,7 @@ namespace LandscapeDesignTool.Editor
 
                         }
                     }
-                    LDTTools.WriteShapeFile(_regurationAreaFileName, "RegurationArea", types, cols, heights, v2, contours);
+                    LDTTools.WriteShapeFile(_regulationAreaExportPath, "RegurationArea", types, cols, heights, v2, contours);
 
                     /*
                         List<int> instanceList = new List<int>();
