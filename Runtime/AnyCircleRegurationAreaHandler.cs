@@ -52,6 +52,8 @@ namespace LandscapeDesignTool
             AreaColor = c;
         }
 
+
+
         private void OnDrawGizmosSelected()
         {
             if (_isValid)
@@ -112,8 +114,8 @@ namespace LandscapeDesignTool
             mr.sharedMaterial = material;
             mf.mesh = mesh;
 
-            MeshCollider meshCollider = gameObject.AddComponent<MeshCollider>();
-            meshCollider.sharedMesh = mesh;
+            // MeshCollider meshCollider = gameObject.AddComponent<MeshCollider>();
+            // meshCollider.sharedMesh = mesh;
 
             mesh.RecalculateBounds();
 
