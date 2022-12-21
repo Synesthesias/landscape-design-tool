@@ -38,6 +38,7 @@ namespace LandscapeDesignTool.Editor
         [MenuItem("PLATEAU/ŒiŠÏ‚Ü‚¿‚Ã‚­‚è/ŒiŠÏŒv‰æ")]
         public static void ShowWindow()
         {
+            TagAdder.ConfigureTags();
             EditorWindow.GetWindow(typeof(LandscapeDesign), true, "ŒiŠÏŒv‰æ‰æ–Ê");
         }
 

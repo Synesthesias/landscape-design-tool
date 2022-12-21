@@ -67,6 +67,7 @@ namespace LandscapeDesignTool.Editor
 
         public static void ShowWindow()
         {
+            TagAdder.ConfigureTags();
             EditorWindow.GetWindow(typeof(LandscapeConsult), true, "景観協議画面");
         }
 
