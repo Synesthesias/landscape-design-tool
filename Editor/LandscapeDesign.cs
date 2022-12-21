@@ -20,11 +20,11 @@ namespace LandscapeDesignTool.Editor
         Color _areaColor = new Color(0, 1, 1, 0.5f);
 
         string _regulationAreaExportPath = "";
-
-
         bool _regulationAreaEdit = false;
-        bool _isRecurationAreaEdit = false;
         AnyPolygonRegurationAreaHandler polygonHandler;
+        AnyCircleRegurationAreaHandler circleHandler;
+        bool isMouseDown = false;
+
 
 
         List<Vector3> vertex = new List<Vector3>();
@@ -58,31 +58,59 @@ namespace LandscapeDesignTool.Editor
             {
                 HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
                 var ev = Event.current;
-                if( ev.type == EventType.MouseDown)
+                if (ev.type == EventType.MouseDown)
                 {
                     RaycastHit[] hits;
                     int layerMask = 1 << 31;
                     Vector3 mousePosition = Event.current.mousePosition;
-
                     Ray ray = HandleUtility.GUIPointToWorldRay(mousePosition);
-                    hits = Physics.RaycastAll(ray, Mathf.Infinity, layerMask);
-                    if( hits != null)
-                    {
-                        vertex.Add(hits[0].point);
-                    }
 
-                    int id = 100;
-                    Handles.color = Color.blue;
-                    polygonHandler.SetVertex(vertex);
-                    /*
-                    foreach ( Vector3 v in vertex)
+                    if (_regulationType == 0)
                     {
-                        Vector3 p = new Vector3(v.x, v.y + 5, v.z);
-                        Debug.Log(p);
-                        Handles.CubeHandleCap(id, p, Quaternion.Euler(Vector3.forward), 10.0f, EventType.Repaint);
-                        id++;
+                        hits = Physics.RaycastAll(ray, Mathf.Infinity, layerMask);
+                        if (hits != null)
+                        {
+                            vertex.Add(hits[0].point);
+                        }
+
+                        int id = 100;
+                        Handles.color = Color.blue;
+                        polygonHandler.SetVertex(vertex);
                     }
-                    */
+                    else
+                    {
+                        hits = Physics.RaycastAll(ray, Mathf.Infinity, layerMask);
+                        if (hits != null)
+                        {
+                            circleHandler.SetCenter(hits[0].point);
+                            isMouseDown = true;
+                        }
+                    }
+                }
+                if (ev.type == EventType.MouseUp || ev.type == EventType.MouseMove)
+                {
+
+                    if (isMouseDown)
+                    {
+                        RaycastHit[] hits;
+                        int layerMask = 1 << 31;
+                        Vector3 mousePosition = Event.current.mousePosition;
+                        Ray ray = HandleUtility.GUIPointToWorldRay(mousePosition);
+                        if (_regulationType == 1)
+                        {
+                            hits = Physics.RaycastAll(ray, Mathf.Infinity, layerMask);
+                            if (hits != null)
+                            {
+                                circleHandler.SetArcRadius(hits[0].point);
+                                if (ev.type == EventType.MouseUp)
+                                {
+                                    circleHandler.FinishArc();
+                                    circleHandler.GenMesh();
+                                    isMouseDown = false;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -179,77 +207,111 @@ namespace LandscapeDesignTool.Editor
 
                 }
                 */
-                if (_regulationAreaEdit)
+                if (_regulationType == 0)
                 {
-                    GUI.color = Color.green;
-                    if (GUILayout.Button("頂点作成を完了し多角形を生成"))
+                    if (_regulationAreaEdit)
                     {
-                        _regulationAreaEdit = false;
-                        /*
-                        GameObject go = new GameObject();
-                        go.layer = LayerMask.NameToLayer("RegulationArea");
-                        go.name = LDTTools.GetNumberWithTag("RegulationArea", "規制エリア");
-                        go.tag = "RegulationArea";
-                        Selection.activeObject = go;
-                        AnyPolygonRegurationAreaHandler handler = go.AddComponent<AnyPolygonRegurationAreaHandler>();
-                        Debug.Log(_regurationHeight);
-                        handler.SetHeight(_regurationHeight);
-                        handler.SetAreaColor(_areaColor);
-                        handler.SetVertex(vertex);
-                        */
-                        vertex.Clear();
-                        polygonHandler.GenMesh();
+                        GUI.color = Color.green;
+                        if (GUILayout.Button("頂点作成を完了し多角形を生成"))
+                        {
+                            _regulationAreaEdit = false;
+                            /*
+                            GameObject go = new GameObject();
+                            go.layer = LayerMask.NameToLayer("RegulationArea");
+                            go.name = LDTTools.GetNumberWithTag("RegulationArea", "規制エリア");
+                            go.tag = "RegulationArea";
+                            Selection.activeObject = go;
+                            AnyPolygonRegurationAreaHandler handler = go.AddComponent<AnyPolygonRegurationAreaHandler>();
+                            Debug.Log(_regurationHeight);
+                            handler.SetHeight(_regurationHeight);
+                            handler.SetAreaColor(_areaColor);
+                            handler.SetVertex(vertex);
+                            */
+                            vertex.Clear();
+                            polygonHandler.GenMesh();
 
-                        Repaint();
+                            Repaint();
+                        }
+
+
+                        GUI.color = Color.white;
+                        if (GUILayout.Button("頂点をクリア"))
+                        {
+                            vertex.Clear();
+                        }
+
+
                     }
-
-
-                    GUI.color = Color.white;
-                    if (GUILayout.Button("頂点をクリア"))
+                    else
                     {
-                        vertex.Clear();
+                        GUI.color = Color.white;
+                        if (GUILayout.Button("頂点作成"))
+                        {
+                            _regulationAreaEdit = true;
+                            SceneView sceneView = SceneView.sceneViews[0] as SceneView;
+                            // sceneView.Focus();
+                            GameObject go = new GameObject();
+                            go.layer = LayerMask.NameToLayer("RegulationArea");
+                            go.name = LDTTools.GetNumberWithTag("RegulationArea", "規制エリア");
+                            go.tag = "RegulationArea";
+                            Selection.activeObject = go;
+                            polygonHandler = go.AddComponent<AnyPolygonRegurationAreaHandler>();
+                            Debug.Log(_regulationHeight);
+                            polygonHandler.SetHeight(_regulationHeight);
+                            polygonHandler.SetAreaColor(_areaColor);
+
+                            Repaint();
+                        }
+
                     }
-
-
                 }
                 else
                 {
-                    GUI.color = Color.white;
-                    if (GUILayout.Button("頂点作成"))
-                    {
-                        _regulationAreaEdit = true;
-                        SceneView sceneView = SceneView.sceneViews[0] as SceneView;
-                        // sceneView.Focus();
-                        GameObject go = new GameObject();
-                        go.layer = LayerMask.NameToLayer("RegulationArea");
-                        go.name = LDTTools.GetNumberWithTag("RegulationArea", "規制エリア");
-                        go.tag = "RegulationArea";
-                        Selection.activeObject = go;
-                        polygonHandler = go.AddComponent<AnyPolygonRegurationAreaHandler>();
-                        Debug.Log(_regulationHeight);
-                        polygonHandler.SetHeight(_regulationHeight);
-                        polygonHandler.SetAreaColor(_areaColor);
 
-                        Repaint();
+                    if (_regulationAreaEdit)
+                    {
+                        GUI.color = Color.green;
+                        if (GUILayout.Button("円を生成"))
+                        {
+                            _regulationAreaEdit = false;
+                            Repaint();
+                        }
+                    }
+                    else
+                    {
+                        if (GUILayout.Button("中心と半径を指定して円を作成"))
+                        {
+                            _regulationAreaEdit = true;
+
+                            GameObject go = new GameObject();
+                            go.layer = LayerMask.NameToLayer("RegulationArea");
+                            go.name = LDTTools.GetNumberWithTag("RegulationArea", "規制エリア");
+                            go.tag = "RegulationArea";
+                            Selection.activeObject = go;
+                            circleHandler = go.AddComponent<AnyCircleRegurationAreaHandler>();
+                            circleHandler.SetHeight(_regulationHeight);
+                            circleHandler.SetAreaColor(_areaColor);
+                            Repaint();
+                        }
+
                     }
 
-                }
-
-                /*
-                var ev = Event.current;
-                RaycastHit hit;
-                if (ev.type == EventType.KeyUp && ev.keyCode == KeyCode.LeftShift)
-                {
-                    Debug.Log("Shift");
-                    Vector3 mousePosition = Event.current.mousePosition;
-
-                    Ray ray = HandleUtility.GUIPointToWorldRay(mousePosition);
-                    if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+                    /*
+                    var ev = Event.current;
+                    RaycastHit hit;
+                    if (ev.type == EventType.KeyUp && ev.keyCode == KeyCode.LeftShift)
                     {
-                        Debug.Log(hit.point);
+                        Debug.Log("Shift");
+                        Vector3 mousePosition = Event.current.mousePosition;
+
+                        Ray ray = HandleUtility.GUIPointToWorldRay(mousePosition);
+                        if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+                        {
+                            Debug.Log(hit.point);
+                        }
                     }
+                    */
                 }
-                */
             }
             else if (_tabIndex == 1)
             {
