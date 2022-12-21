@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.Rendering;
@@ -34,8 +33,9 @@ namespace LandscapeDesignTool
             return material;
         }
 
-        public static void WriteShapeFile(string exportFilePath, string areatype, string[] type, Color[] col, float[] height, Vector2[,] specpoint,List<List<Vector2>> vertexlist/*,  List<int> instanceList*/)
+        public static void WriteShapeFile(string filename, string areatype, string[] type, Color[] col, float[] height, Vector2[,] specpoint,List<List<Vector2>> vertexlist/*,  List<int> instanceList*/)
         {
+            string path = Application.dataPath + "/plugins/LandscapeDesignTool/ShapeFiles/" + filename;
 
             int nblock = vertexlist.Count;
 
@@ -49,7 +49,7 @@ namespace LandscapeDesignTool
             }
             */
 
-            Debug.Log("WriteShapeFile to : "+ exportFilePath);
+            Debug.Log("WriteShapeFile "+ filename);
             string tmp = "ABCDEFG";
             DbfFieldDesc[] fields = new DbfFieldDesc[7];
             DbfFieldDesc field;
@@ -61,13 +61,8 @@ namespace LandscapeDesignTool
             fields[5] = new DbfFieldDesc { FieldName = "POINT1", FieldType = DbfFieldType.Character, FieldLength = 128, RecordOffset = 0 };
             fields[6] = new DbfFieldDesc { FieldName = "POINT2", FieldType = DbfFieldType.Character, FieldLength = 128, RecordOffset = 0 };
 
-            string exportBaseDirPath = Directory.GetParent(exportFilePath)?.FullName;
-            if (string.IsNullOrEmpty(exportBaseDirPath))
-            {
-                Debug.LogError($"Export path is invalid. path = {exportFilePath}");
-                return;
-            }
-            ShapeFileWriter sfw = ShapeFileWriter.CreateWriter(exportBaseDirPath, Path.GetFileNameWithoutExtension(exportFilePath), ShapeType.Polygon, fields);
+
+            ShapeFileWriter sfw = ShapeFileWriter.CreateWriter(Application.dataPath + "/plugins/LandscapeDesignTool/ShapeFiles/", filename, ShapeType.Polygon, fields);
 
             for (int i = 0; i < nblock; i++)
             {
@@ -189,6 +184,7 @@ namespace LandscapeDesignTool
             int rval = -1;
 
             int maxvalule = 0;
+            CheckTag(tagname);
             GameObject[] objects = GameObject.FindGameObjectsWithTag(tagname);
             foreach( GameObject obj in objects)
             {
