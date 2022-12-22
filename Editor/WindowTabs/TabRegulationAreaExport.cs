@@ -7,31 +7,41 @@ namespace LandscapeDesignTool.Editor.WindowTabs
     public class TabRegulationAreaExport
     {
         string _regulationAreaExportPath = "";
-        
+        int _outputType = 0;
+
         public void Draw(GUIStyle labelStyle)
         {
             EditorGUILayout.Space();
-                EditorGUILayout.LabelField("<size=15>規制エリア出力</size>", labelStyle);
-                List<string> type = new List<string>();
-                List<LDTShapeFileHandler> fields = new List<LDTShapeFileHandler>();
-                using (new EditorGUI.DisabledScope(true))
-                {
-                    EditorGUILayout.TextField("エクスポート先", _regulationAreaExportPath);
-                }
-                if (GUILayout.Button("エクスポート先選択"))
-                {
-                    var selectedPath = EditorUtility.SaveFilePanel("保存先", "", "Shapefile", "shp");
-                    if (!string.IsNullOrEmpty(selectedPath))
-                    {
-                        _regulationAreaExportPath = selectedPath;
-                    }
-                }
-                List<LDTTools.AreaType> areaTypes = new List<LDTTools.AreaType>();
+            EditorGUILayout.LabelField("<size=15>ShapeFile出力</size>", labelStyle);
+            List<string> type = new List<string>();
+            List<LDTShapeFileHandler> fields = new List<LDTShapeFileHandler>();
+            
 
+            string[] options = { "規制エリア", "高さ規制エリア", "眺望規制エリア" };
+
+            _outputType = EditorGUILayout.Popup(_outputType, options);
+
+            using (new EditorGUI.DisabledScope(true))
+            {
+                EditorGUILayout.TextField("エクスポート先", _regulationAreaExportPath);
+            }
+
+            if (GUILayout.Button("エクスポート先選択"))
+            {
+                var selectedPath = EditorUtility.SaveFilePanel("保存先", "", "Shapefile", "shp");
+                if (!string.IsNullOrEmpty(selectedPath))
+                {
+                    _regulationAreaExportPath = selectedPath;
+                }
+            }
+
+            List<LDTTools.AreaType> areaTypes = new List<LDTTools.AreaType>();
+
+            if (_outputType == 0)
+            {
                 if (GUILayout.Button("規制エリア出力"))
                 {
                     List<List<Vector2>> contours = new List<List<Vector2>>();
-                    GameObject grp = GameObject.Find("AnyPolygonRegurationArea");
 
                     GameObject[] objects = GameObject.FindGameObjectsWithTag("RegulationArea");
                     string[] types = new string[objects.Length];
@@ -43,7 +53,8 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                         if (objects[i].GetComponent<AnyPolygonRegurationAreaHandler>())
                         {
                             List<Vector2> p = new List<Vector2>();
-                            AnyPolygonRegurationAreaHandler obj = objects[i].GetComponent<AnyPolygonRegurationAreaHandler>();
+                            AnyPolygonRegurationAreaHandler obj =
+                                objects[i].GetComponent<AnyPolygonRegurationAreaHandler>();
                             types[i] = "PolygonArea";
                             heights[i] = obj.GetHeight();
                             cols[i] = obj.GetAreaColor();
@@ -55,49 +66,26 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                             contours.Add(cnt);
 
                         }
-                    }
-                    LDTTools.WriteShapeFile(_regulationAreaExportPath, "RegurationArea", types, cols, heights, v2, contours);
-
-                    /*
-                        List<int> instanceList = new List<int>();
-                    if (grp)
-                    {
-                        int narea = grp.transform.childCount;
-                        for (int i = 0; i < narea; i++)
+                        else if (objects[i].GetComponent<AnyCircleRegurationAreaHandler>())
                         {
-                            GameObject go = grp.transform.GetChild(i).gameObject;
-                            instanceList.Add(go.GetInstanceID());
-                            ShapeItem handler = go.GetComponent<ShapeItem>();
-                            if (handler)
-                            {
-                                List<Vector2> cnt = handler.Contours;
-                                contours.Add(cnt);
-                                type.Add("Polygon");
-                                fields.Add(handler.fields);
 
-                            }
+                            AnyCircleRegurationAreaHandler obj =
+                                objects[i].GetComponent<AnyCircleRegurationAreaHandler>();
+                            types[i] = "PolygonArea";
+                            heights[i] = obj.GetHeight();
+                            cols[i] = obj.GetAreaColor();
+                            v2[i, 0] = new Vector2(obj.GetCenter().x, obj.GetCenter().z);
+                            v2[i, 1] = new Vector2(obj.GetAreaRadius().x, obj.GetAreaRadius().z);
+                            List<Vector2> cnt = obj.GetVertex();
+                            contours.Add(cnt);
                         }
                     }
-                    grp = GameObject.Find("AnyCircleRegurationArea");
-                    if (grp)
-                    {
-                        int narea = grp.transform.childCount;
-                        for (int i = 0; i < narea; i++)
-                        {
-                            GameObject go = grp.transform.GetChild(i).gameObject;
-                            ShapeItem handler = go.GetComponent<ShapeItem>();
-                            if (handler)
-                            {
-                                List<Vector2> cnt = handler.Contours;
-                                contours.Add(cnt);
-                                type.Add("Circle");
-                                fields.Add(handler.fields);
-                            }
-                        }
-                    }
-                    */
+
+                    LDTTools.WriteShapeFile(_regulationAreaExportPath, "RegurationArea", types, cols, heights, v2,
+                        contours);
 
                 }
+            }
         }
     }
 }

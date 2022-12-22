@@ -7,8 +7,10 @@ namespace LandscapeDesignTool
 {
     public class HeightRegurationAreaHandler : MonoBehaviour
     {
-        public float areaHeight = 10;
-        public float areaRadius = 10;
+        [SerializeField] float areaHeight = 10;
+        [SerializeField] float areaRadius = 10;
+        [SerializeField] Vector3 targetPoint= Vector3.zero;
+        [SerializeField] Color areaColor;
         // Start is called before the first frame update
         void Start()
         {
@@ -20,10 +22,54 @@ namespace LandscapeDesignTool
         {
 
         }
+        private void OnDrawGizmosSelected()
+        {
+
+            Gizmos.color = Color.blue;
+
+            int n = 0;
+            float size = 50f;
+
+            Vector3 v0 = new Vector3(targetPoint.x, targetPoint.y, targetPoint.z);
+            Gizmos.DrawCube(v0, new Vector3(10, 10, 10));
+        }
+
+        public void SetHeight( float h)
+        {
+            areaHeight = h;
+        }
+        public float GetHeight()
+        {
+            return areaHeight;
+        }
+        public void SetRadius(float r)
+        {
+            areaRadius = r;
+        }
+        public float GetRadius()
+        {
+            return areaRadius;
+        }
+        public void SetPoint( Vector3 p)
+        {
+            targetPoint = new Vector3(p.x, p.y, p.z);
+        }
+        public Vector3 GetPoint()
+        {
+            return targetPoint;
+        }
+        public void SetColor(Color c)
+        {
+            areaColor = c;
+        }
+        public Color GetColor()
+        {
+            return areaColor;
+        }
 
 
 #if UNITY_EDITOR
-        [CustomEditor(typeof(HeightRegurationAreaHandler))]
+            [CustomEditor(typeof(HeightRegurationAreaHandler))]
         [CanEditMultipleObjects]
         public class HeightRegurationAreaEditor : Editor
         {
@@ -40,6 +86,7 @@ namespace LandscapeDesignTool
 
             public override void OnInspectorGUI()
             {
+                /*
 
                 SceneView sceneView = SceneView.lastActiveSceneView;
                 EditorGUILayout.HelpBox("í≠ñ]ëŒè€Ç©ÇÁÇÃçÇÇ≥ãKêßÉGÉäÉAÇê∂ê¨ÇµÇ‹Ç∑", MessageType.Info);
@@ -66,9 +113,11 @@ namespace LandscapeDesignTool
                         _pointing = false;
                     }
                 }
+                */
             }
             private void OnSceneGUI()
             {
+                /*
                 if (_pointing)
                 {
                     var ev = Event.current;
@@ -105,6 +154,7 @@ namespace LandscapeDesignTool
                         
                     }
                 }
+                */
             }
         }
 #endif

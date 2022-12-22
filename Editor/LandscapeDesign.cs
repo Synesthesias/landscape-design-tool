@@ -1,22 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using LandscapeDesignTool.Editor.WindowTabs;
 using UnityEngine;
 using UnityEditor;
 
 
-
 namespace LandscapeDesignTool.Editor
 {
 #if UNITY_EDITOR
-    public class LandscapeDesign :EditorWindow
+    public class LandscapeDesign : EditorWindow
     {
+        
+        private readonly string[] _tabToggles =
+            { "視点場作成", "規制エリア作成", "眺望規制作成", "高さ規制エリア作成", "ShapeFile読込", "ShapeFile書き出し" };
 
-
-        // Start is called before the first frame update
-
-
-        private readonly string[] _tabToggles = { "視点場作成", "規制エリア作成", "眺望規制作成", "高さ規制エリア作成", "ShapeFile読込", "ShapeFile書き出し" };
         private int _tabIndex;
         private readonly TabViewPointGenerate _tabViewPointGenerate = new TabViewPointGenerate();
         private readonly TabRegulationAreaGenerate _tabRegulationAreaGenerate;
@@ -51,12 +46,20 @@ namespace LandscapeDesignTool.Editor
 
         private void OnSceneGUI(SceneView sceneView)
         {
-            _tabRegulationAreaGenerate.OnSceneGUI();
+            switch (_tabIndex)
+            {
+                case 1:
+                    _tabRegulationAreaGenerate.OnSceneGUI();
+                    break;
+                case 3:
+                    _tabHeightRegulationGenerate.OnSceneGUI();
+                    break;
+            }
         }
+
 
         private void OnGUI()
         {
-
             var style = new GUIStyle(EditorStyles.label);
             style.richText = true;
 
@@ -65,7 +68,8 @@ namespace LandscapeDesignTool.Editor
             EditorGUILayout.Space();
             using (new EditorGUILayout.HorizontalScope(EditorStyles.toolbar))
             {
-                _tabIndex = GUILayout.Toolbar(_tabIndex, _tabToggles, new GUIStyle(EditorStyles.toolbarButton), GUI.ToolbarButtonSize.FitToContents);
+                _tabIndex = GUILayout.Toolbar(_tabIndex, _tabToggles, new GUIStyle(EditorStyles.toolbarButton),
+                    GUI.ToolbarButtonSize.FitToContents);
             }
 
             switch (_tabIndex)
@@ -90,9 +94,8 @@ namespace LandscapeDesignTool.Editor
                     break;
             }
         }
-
     }
+}
 
 
 #endif
-}

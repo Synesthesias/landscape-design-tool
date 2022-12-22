@@ -1,12 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
-using LandscapeDesignTool;
 using LandscapeDesignTool.Editor.WindowTabs;
-using UnityEngine.Rendering;
 
 namespace LandscapeDesignTool.Editor
 {

@@ -7,28 +7,155 @@ namespace LandscapeDesignTool.Editor.WindowTabs
     {
         float _heightAreaHeight = 30.0f;
         float _heightAreaRadius = 100.0f;
+        bool _heightReguratoinAreaEdit = false;
+        Vector3 _targetViewPoint;
+        HeightRegurationAreaHandler _heightRegurationArea;
+        Color _areaColor = new Color(0, 1, 1, 0.5f);
+        bool _editMode = false;
         
         public void Draw(GUIStyle labelStyle)
         {
             EditorGUILayout.Space();
-            EditorGUILayout.LabelField("<size=15>高さ規制エリア作成</size>", labelStyle);
-            EditorGUILayout.HelpBox("高さ規制リアの高さ半径を設定しタイプを選択して規制エリア作成をクリックしてください", MessageType.Info);
-            _heightAreaHeight = EditorGUILayout.FloatField("高さ", _heightAreaHeight);
-            _heightAreaRadius = EditorGUILayout.FloatField("半径", _heightAreaRadius);
+                EditorGUILayout.LabelField("<size=15>高さ規制エリア作成</size>", labelStyle);
+                EditorGUILayout.HelpBox("高さ規制リアの高さ半径を設定しタイプを選択して規制エリア作成をクリックしてください", MessageType.Info);
+                _heightAreaHeight = EditorGUILayout.FloatField("高さ", _heightAreaHeight);
+                _heightAreaRadius = EditorGUILayout.FloatField("半径", _heightAreaRadius);
+                _areaColor = EditorGUILayout.ColorField("色の設定", _areaColor);
 
-            if (GUILayout.Button("高さ規制エリア作成"))
-            {
-                GameObject grp = GameObject.Find("HeitRegurationAreaGroup");
-                if (!grp)
+                if (_heightReguratoinAreaEdit)
                 {
-                    grp = new GameObject();
-                    grp.name = "HeightRegurationArea";
-                    grp.layer = LayerMask.NameToLayer("RegulationArea");
+                    if (_editMode) {
+                   
+                        if (GUILayout.Button("編集完了"))
+                        {
+                            _editMode = false;
+                        _heightReguratoinAreaEdit = false;
 
-                    HeightRegurationAreaHandler handler = grp.AddComponent<HeightRegurationAreaHandler>();
-                    handler.areaHeight = _heightAreaHeight;
-                    handler.areaRadius = _heightAreaRadius;
+                        _heightRegurationArea.transform.localScale = new Vector3(_heightAreaRadius, _heightAreaHeight, _heightAreaRadius);
+                            _heightRegurationArea.SetColor(_areaColor);
+                            _heightRegurationArea.SetHeight(_heightAreaHeight);
+                            _heightRegurationArea.SetRadius(_heightAreaRadius);
+
+                            _heightRegurationArea.transform.position = new Vector3(_targetViewPoint.x, _heightAreaHeight / 2.0f, _targetViewPoint.z);
+                            Material mat = LDTTools.MakeMaterial(_areaColor);
+                            _heightRegurationArea.GetComponent<Renderer>().material = mat;
+                        }
+                    }
+                    else
+                    {
+                        GUI.color = Color.green;
+                        if (GUILayout.Button("高さ規制エリア作成"))
+                        {
+                            _heightReguratoinAreaEdit = false;
+
+                            _heightRegurationArea.transform.localScale = new Vector3(_heightAreaRadius, _heightAreaHeight, _heightAreaRadius);
+                            _heightRegurationArea.SetColor(_areaColor);
+                            _heightRegurationArea.SetHeight(_heightAreaHeight);
+                            _heightRegurationArea.SetRadius(_heightAreaRadius);
+
+                            _heightRegurationArea.transform.position = new Vector3(_targetViewPoint.x, _heightAreaHeight / 2.0f, _targetViewPoint.z);
+                            Material mat = LDTTools.MakeMaterial(_areaColor);
+                            _heightRegurationArea.GetComponent<Renderer>().material = mat;
+                        }
+                        GUI.color = Color.white;
+                        if (GUILayout.Button("キャンセル"))
+                        {
+                            _heightReguratoinAreaEdit = false;
+                        }
+                    }
                 }
+                else
+                {
+                    if (_editMode)
+                    {
+
+                        if (GUILayout.Button("編集完了"))
+                        {
+                            _editMode = false;
+                            _heightReguratoinAreaEdit = false;
+
+                            _heightRegurationArea.transform.localScale = new Vector3(_heightAreaRadius, _heightAreaHeight, _heightAreaRadius);
+                            _heightRegurationArea.SetColor(_areaColor);
+                            _heightRegurationArea.SetHeight(_heightAreaHeight);
+                            _heightRegurationArea.SetRadius(_heightAreaRadius);
+
+                            _heightRegurationArea.transform.position = new Vector3(_targetViewPoint.x, _heightAreaHeight / 2.0f, _targetViewPoint.z);
+                            Material mat = LDTTools.MakeMaterial(_areaColor);
+                            _heightRegurationArea.GetComponent<Renderer>().material = mat;
+                        }
+                    }
+                    else
+                    {
+                        if (GUILayout.Button("規制地点を選択"))
+                        {
+                            GUI.color = Color.white;
+                            GameObject grp = GameObject.Find("HeitRegurationAreaGroup");
+                            if (!grp)
+                            {
+                                _heightReguratoinAreaEdit = true;
+                                GameObject cylinder = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+                                cylinder.layer = LayerMask.NameToLayer("RegulationArea");
+                                HeightRegurationAreaHandler area = cylinder.AddComponent<HeightRegurationAreaHandler>();
+                                _heightRegurationArea = area;
+                                cylinder.transform.localScale = new Vector3(0, 0, 0);
+                                cylinder.name = LDTTools.GetNumberWithTag("HeightRegulationArea", "高さ規制エリア");
+                                cylinder.tag = "HeightRegulationArea";
+
+                                Selection.activeGameObject = cylinder;
+                            }
+                        }
+                        HeightRegurationAreaList();
+                    }
+                }
+        }
+
+        public void OnSceneGUI()
+        {
+            if (_heightReguratoinAreaEdit)
+            {
+                HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
+
+                var ev = Event.current;
+                if (ev.type == EventType.MouseDown)
+                {
+                    RaycastHit hit;
+                    int layerMask = 1 << 31 | 1 << 29;
+                    Vector3 mousePosition = Event.current.mousePosition;
+                    Ray ray = HandleUtility.GUIPointToWorldRay(mousePosition);
+
+                    if(Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
+                    {
+                        _targetViewPoint = hit.point;
+                        _heightRegurationArea.SetPoint(_targetViewPoint);
+                    }
+
+                }
+            }
+        }
+
+        void HeightRegurationAreaList()
+        {
+
+            EditorGUILayout.Space();
+            EditorGUILayout.HelpBox("編集は下記リストより選択してください", MessageType.Info);
+            GameObject[] objects = GameObject.FindGameObjectsWithTag("HeightRegulationArea");
+            int n = 0;
+            foreach (var obj in objects)
+            {
+                if (GUILayout.Button(obj.name))
+                {
+                    _editMode = true;
+                    Selection.activeGameObject = objects[n];
+                    HeightRegurationAreaHandler harea = objects[n].GetComponent<HeightRegurationAreaHandler>();
+                    _heightAreaHeight = harea.GetHeight();
+                    _heightAreaRadius = harea.GetRadius();
+                    _areaColor = harea.GetColor();
+                    _targetViewPoint = harea.GetPoint();
+                    _heightRegurationArea = harea;
+
+                }
+
+                n++;
             }
         }
     }

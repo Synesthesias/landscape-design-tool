@@ -52,6 +52,19 @@ namespace LandscapeDesignTool
             AreaColor = c;
         }
 
+        public List<Vector2> GetVertex()
+        {
+            List<Vector2> lst = new List<Vector2>();
+            for (int i=1; i< vertex.Count; i++)
+            {
+                Vector3 v = vertex[i];
+                lst.Add(new Vector2(v.x, v.z));
+            }
+            return lst;
+        }
+
+
+
         private void OnDrawGizmosSelected()
         {
             if (_isValid)
@@ -70,7 +83,6 @@ namespace LandscapeDesignTool
         {
 
             _Contours = new List<Vector2>();
-            // GameObject go = new GameObject("Upper");
             gameObject.layer = LayerMask.NameToLayer("RegulationArea");
             var mr = gameObject.AddComponent<MeshRenderer>();
             Material material = LDTTools.MakeMaterial(AreaColor);
@@ -79,8 +91,8 @@ namespace LandscapeDesignTool
             var mf = gameObject.AddComponent<MeshFilter>();
 
             Mesh mesh = new Mesh();
-            Vector3[] v = new Vector3[CircleDiv+1];
-            int[] triangles = new int[(CircleDiv) * 3];
+            Vector3[] v = new Vector3[(CircleDiv+1)*2];
+            int[] triangles = new int[(CircleDiv) * 3 + CircleDiv*3*2];
             int i = 0;
             foreach( Vector3 v0 in vertex)
             {
@@ -93,7 +105,14 @@ namespace LandscapeDesignTool
                 i++;
             }
 
-            int n=0;
+            int n = vertex.Count;
+            for (i = 0; i < CircleDiv; i++)
+            {
+                Vector3 v0 = vertex[i + 1];
+                v[n++] = new Vector3(v0.x, v0.y, v0.z);
+            }
+
+            n=0;
             for( int j = 0; j<CircleDiv-1; j++)
             {
                 triangles[n++] = 0;
@@ -104,7 +123,31 @@ namespace LandscapeDesignTool
             triangles[n++] = CircleDiv;
             triangles[n++] = 1;
 
+            int vco = CircleDiv;
 
+            int c1 = _Contours.Count;
+            for (int count = 1; count < c1; count++)
+            {
+                int k1 = count;
+                int k2 = count + vco;
+                int k3 = k1 + 1;
+                int k4 = k2 + 1;
+                Debug.Log(k1 + " " + k2 + " " + k3+" " + k4);
+
+                triangles[n++] = k1;
+                triangles[n++] = k4;
+                triangles[n++] = k3;
+                triangles[n++] = k1;
+                triangles[n++] = k2;
+                triangles[n++] = k4;
+            }
+
+            triangles[n++] = vco;
+            triangles[n++] = vco+1;
+            triangles[n++] = 1;
+            triangles[n++] = vco;
+            triangles[n++] = vco * 2;
+            triangles[n++] = vco+1;
 
             mesh.vertices = v;
             mesh.triangles = triangles;
@@ -116,20 +159,6 @@ namespace LandscapeDesignTool
             meshCollider.sharedMesh = mesh;
 
             mesh.RecalculateBounds();
-
-            /*
-            GameObject rootNode = new GameObject("RegurationCircleArea");
-            rootNode.layer = LayerMask.NameToLayer("RegulationArea");
-            ShapeItem si = rootNode.AddComponent<ShapeItem>();
-            si.material = material;
-            si.height = areaHeight;
-            si.oldHeight = areaHeight;
-            si.SetVertex(_Contours);
-
-            rootNode.transform.parent = gameObject.transform;
-            go.transform.parent = rootNode.transform;
-            */
-            // GenerateSide(rootNode);
 
         }
 
@@ -188,12 +217,25 @@ namespace LandscapeDesignTool
 
         }
 
+        public void DoEdit()
+        {
+            MeshRenderer mr = gameObject.GetComponent<MeshRenderer>();
+            MeshFilter mf = gameObject.GetComponent<MeshFilter>();
+            MeshCollider mc = gameObject.GetComponent<MeshCollider>();
+            DestroyImmediate(mr);
+            DestroyImmediate(mf);
+            DestroyImmediate(mc);
+            GenMesh();
+        }
+
         public void ClearPoint()
         {
             _isValid = false;
             AreaRadiusPoint = Vector3.zero;
             AreaCenter = Vector3.zero;
             vertex.Clear();
+            _Contours.Clear();
+            SceneView.RepaintAll();
         }
 
         public void SetCenter(Vector3 c)
@@ -201,11 +243,23 @@ namespace LandscapeDesignTool
             AreaCenter = c;
             AreaRadiusPoint = c;
             _isValid = true;
+            SceneView.RepaintAll();
+        }
+
+        public Vector3 GetCenter()
+        {
+            return AreaCenter;
+        }
+
+        public Vector3 GetAreaRadius()
+        {
+            return AreaRadiusPoint;
         }
 
         public void SetArcRadius(Vector3 r)
         {
             AreaRadiusPoint = r;
+            SceneView.RepaintAll();
         }
 
         public void FinishArc()
@@ -264,8 +318,8 @@ namespace LandscapeDesignTool
             public override void OnInspectorGUI()
             {
 
-
                 SceneView sceneView = SceneView.lastActiveSceneView;
+                /*
 
                 EditorGUILayout.HelpBox("中心と半径を設定して規制エリアを生成します", MessageType.Info);
 
@@ -273,40 +327,9 @@ namespace LandscapeDesignTool
                 _areaColor = EditorGUILayout.ColorField("色の設定", _areaColor);
 
                 EditorGUILayout.Space();
-                if (_pointing == false)
-                {
-                    GUI.color = Color.white;
-                    if (GUILayout.Button("円による規制エリアの作成"))
-                    {
-                        sceneView.Focus();
-                        _pointing = true;
-                        isBuildSelecting = false;
-                    }
-                }
-                else
-                {
-                    GUI.color = Color.green;
-                    if (GUILayout.Button("完了し円柱を生成"))
-                    {
-                        _pointing = false;
-                        sceneView.orthographic = false;
-                        _keydown = false;
-
-                        Selection.activeGameObject.GetComponent<AnyCircleRegurationAreaHandler>().AreaColor = _areaColor;
-                        Selection.activeGameObject.GetComponent<AnyCircleRegurationAreaHandler>().areaHeight = _height;
-                        Selection.activeGameObject.GetComponent<AnyCircleRegurationAreaHandler>().GenMesh();
-                    }
-                    GUI.color = Color.white;
-                    if (GUILayout.Button("中心と半径をクリア"))
-                    {
-                        Selection.activeGameObject.GetComponent<AnyCircleRegurationAreaHandler>().ClearPoint();
-                        _pointing = false;
-                    }
-
-                }
-                EditorGUILayout.Space();
                 EditorGUILayout.HelpBox("建物のカラーを変更します", MessageType.Info);
                 // _overlayColor = EditorGUILayout.ColorField("色の設定", _overlayColor);
+                */
                 if (isBuildSelecting == false)
                 {
                     GUI.color = Color.white;
