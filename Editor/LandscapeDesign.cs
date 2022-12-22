@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using LandscapeDesignTool.Editor.WindowTabs;
 using UnityEngine;
 using UnityEditor;
@@ -10,24 +8,7 @@ namespace LandscapeDesignTool.Editor
 #if UNITY_EDITOR
     public class LandscapeDesign : EditorWindow
     {
-// <<<<<<< HEAD
-        // int _regulationType;
-        // float _regulationHeight = 10;
-        // float _screenWidth = 80.0f;
-        // float _screenHeight = 80.0f;
-        // float _heightAreaHeight = 30.0f;
-        // float _heightAreaRadius = 100.0f;
-        //
-        //
-        // string _regulationAreaExportPath = "";
-        // bool _regulationAreaEdit = false;
-        // AnyPolygonRegurationAreaHandler polygonHandler;
-        //
-        // List<Vector3> vertex = new List<Vector3>();
-// =======
-// >>>>>>> main
-
-
+        
         private readonly string[] _tabToggles =
             { "視点場作成", "規制エリア作成", "眺望規制作成", "高さ規制エリア作成", "ShapeFile読込", "ShapeFile書き出し" };
 
@@ -65,7 +46,6 @@ namespace LandscapeDesignTool.Editor
 
         private void OnSceneGUI(SceneView sceneView)
         {
-// <<<<<<< HEAD
             if (_tabIndex == 1)
             {
                 _tabRegulationAreaGenerate.OnSceneGUI();
@@ -76,9 +56,6 @@ namespace LandscapeDesignTool.Editor
             }
         }
 
-// =======
-        // _tabRegulationAreaGenerate.OnSceneGUI();
-// >>>>>>> main
 
         private void OnGUI()
         {
@@ -98,19 +75,15 @@ namespace LandscapeDesignTool.Editor
             {
                 case 0:
                     _tabViewPointGenerate.Draw(style);
-                    // _tabRegulationAreaGenerate.OnGUI(style);
                     break;
                 case 1:
                     _tabRegulationAreaGenerate.OnGUI(style);
-                    // _tabViewportRegulationGenerate.Draw(style);
                     break;
                 case 2:
                     _tabViewportRegulationGenerate.Draw(style);
-                    // _tabHeightRegulationGenerate.Draw(style);
                     break;
                 case 3:
                     _tabHeightRegulationGenerate.Draw(style);
-                    // _tabRegulationAreaExport.Draw(style);
                     break;
                 case 4:
                     _tabShapefileLoad.Draw(style);
@@ -118,7 +91,6 @@ namespace LandscapeDesignTool.Editor
                 case 5:
                     _tabRegulationAreaExport.Draw(style);
                     break;
-// >>>>>>> main
             }
         }
     }
