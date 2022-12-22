@@ -189,6 +189,7 @@ namespace LandscapeDesignTool
             int rval = -1;
 
             int maxvalule = 0;
+            CheckTag(tagname);
             GameObject[] objects = GameObject.FindGameObjectsWithTag(tagname);
             foreach( GameObject obj in objects)
             {
