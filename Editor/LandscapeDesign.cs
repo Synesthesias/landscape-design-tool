@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using LandscapeDesignTool.Editor.WindowTabs;
 using UnityEngine;
 using UnityEditor;
 
@@ -32,8 +33,9 @@ namespace LandscapeDesignTool.Editor
         // Start is called before the first frame update
 
 
-        private readonly string[] _tabToggles = { "‹K§ƒGƒŠƒAì¬", "’­–]‹K§ì¬", "‚‚³‹K§ƒGƒŠƒAì¬", "ShapeFile‘‚«o‚µ" };
+        private readonly string[] _tabToggles = { "‹“_êì¬", "‹K§ƒGƒŠƒAì¬", "’­–]‹K§ì¬", "‚‚³‹K§ƒGƒŠƒAì¬", "ShapeFile‘‚«o‚µ" };
         private int _tabIndex;
+        private TabViewPointGenerate _tabViewPointGenerate = new TabViewPointGenerate();
 
         [MenuItem("PLATEAU/ŒiŠÏ‚Ü‚¿‚Ã‚­‚è/ŒiŠÏŒv‰æ")]
         public static void ShowWindow()
@@ -102,6 +104,10 @@ namespace LandscapeDesignTool.Editor
             }
 
             if (_tabIndex == 0)
+            {
+                _tabViewPointGenerate.Draw(style);    
+            }
+            else if (_tabIndex == 1)
             {
                 EditorGUILayout.Space();
 
@@ -251,7 +257,7 @@ namespace LandscapeDesignTool.Editor
                 }
                 */
             }
-            else if (_tabIndex == 1)
+            else if (_tabIndex == 2)
             {
                 EditorGUILayout.Space();
                 EditorGUILayout.LabelField("<size=15>’­–]‘ÎÛ‚©‚ç‚Ì’­–]‹K§ì¬</size>", style);
@@ -280,7 +286,7 @@ namespace LandscapeDesignTool.Editor
                 }
 
             }
-            else if (_tabIndex == 2)
+            else if (_tabIndex == 3)
             {
                 EditorGUILayout.Space();
                 EditorGUILayout.LabelField("<size=15>‚‚³‹K§ƒGƒŠƒAì¬</size>", style);
@@ -304,7 +310,7 @@ namespace LandscapeDesignTool.Editor
                     }
                 }
             }
-            else if (_tabIndex == 3)
+            else if (_tabIndex == 4)
             {
                 EditorGUILayout.Space();
                 EditorGUILayout.LabelField("<size=15>‹K§ƒGƒŠƒAo—Í</size>", style);
