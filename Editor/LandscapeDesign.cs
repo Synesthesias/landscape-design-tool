@@ -46,13 +46,14 @@ namespace LandscapeDesignTool.Editor
 
         private void OnSceneGUI(SceneView sceneView)
         {
-            if (_tabIndex == 1)
+            switch (_tabIndex)
             {
-                _tabRegulationAreaGenerate.OnSceneGUI();
-            }
-            else if (_tabIndex == 3)
-            {
-                _tabHeightRegulationGenerate.OnSceneGUI();
+                case 1:
+                    _tabRegulationAreaGenerate.OnSceneGUI();
+                    break;
+                case 3:
+                    _tabHeightRegulationGenerate.OnSceneGUI();
+                    break;
             }
         }
 

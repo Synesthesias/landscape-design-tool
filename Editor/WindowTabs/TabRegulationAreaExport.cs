@@ -7,6 +7,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
     public class TabRegulationAreaExport
     {
         string _regulationAreaExportPath = "";
+        int _outputType = 0;
 
         public void Draw(GUIStyle labelStyle)
         {
@@ -14,11 +15,11 @@ namespace LandscapeDesignTool.Editor.WindowTabs
             EditorGUILayout.LabelField("<size=15>ShapeFile出力</size>", labelStyle);
             List<string> type = new List<string>();
             List<LDTShapeFileHandler> fields = new List<LDTShapeFileHandler>();
-            int outputType = 0;
+            
 
             string[] options = { "規制エリア", "高さ規制エリア", "眺望規制エリア" };
 
-            outputType = EditorGUILayout.Popup(outputType, options);
+            _outputType = EditorGUILayout.Popup(_outputType, options);
 
             using (new EditorGUI.DisabledScope(true))
             {
@@ -36,7 +37,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
 
             List<LDTTools.AreaType> areaTypes = new List<LDTTools.AreaType>();
 
-            if (outputType == 0)
+            if (_outputType == 0)
             {
                 if (GUILayout.Button("規制エリア出力"))
                 {
