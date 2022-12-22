@@ -33,9 +33,10 @@ namespace LandscapeDesignTool.Editor
         // Start is called before the first frame update
 
 
-        private readonly string[] _tabToggles = { "視点場作成", "規制エリア作成", "眺望規制作成", "高さ規制エリア作成", "ShapeFile書き出し" };
+        private readonly string[] _tabToggles = { "視点場作成", "規制エリア作成", "眺望規制作成", "高さ規制エリア作成", "ShapeFile読込", "ShapeFile書き出し" };
         private int _tabIndex;
         private TabViewPointGenerate _tabViewPointGenerate = new TabViewPointGenerate();
+        private TabShapefileLoad _tabShapefileLoad = new TabShapefileLoad();
 
         [MenuItem("PLATEAU/景観まちづくり/景観計画")]
         public static void ShowWindow()
@@ -311,6 +312,10 @@ namespace LandscapeDesignTool.Editor
                 }
             }
             else if (_tabIndex == 4)
+            {
+                _tabShapefileLoad.Draw(style);
+            }
+            else if (_tabIndex == 5)
             {
                 EditorGUILayout.Space();
                 EditorGUILayout.LabelField("<size=15>規制エリア出力</size>", style);

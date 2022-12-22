@@ -28,8 +28,8 @@ namespace LandscapeDesignTool.Editor
         string[] layerName = { "RegulationArea" };
         int[] layerId = { 30 };
 
-        private TabViewPointGenerate _tabViewPointGenerate = new TabViewPointGenerate();
-        
+        private readonly TabViewPointGenerate _tabViewPointGenerate = new TabViewPointGenerate();
+        private readonly TabShapefileLoad _tabShapefileLoad = new TabShapefileLoad();
 
         int _regulationType;
         float _regulationHeight;
@@ -48,7 +48,7 @@ namespace LandscapeDesignTool.Editor
         int _weather = 0;
 
 
-        private readonly string[] _tabToggles = { "視点場作成", "Shapefile読み込み","天候と時間" };
+        private readonly string[] _tabToggles = { "視点場作成", "Shapefile読込","天候と時間" };
         private int _tabIndex;
         [MenuItem("PLATEAU/景観まちづくり/景観協議")]
 
@@ -72,6 +72,10 @@ namespace LandscapeDesignTool.Editor
             if (_tabIndex == 0)
             {
                 _tabViewPointGenerate.Draw(style);
+            }
+            else if (_tabIndex == 1)
+            {
+                _tabShapefileLoad.Draw(style);
             }
             else if (_tabIndex == 2)
             {
