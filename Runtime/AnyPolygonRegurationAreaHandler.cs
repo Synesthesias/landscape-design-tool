@@ -9,9 +9,10 @@ namespace LandscapeDesignTool
 {
     public class AnyPolygonRegurationAreaHandler : MonoBehaviour
     {
-        [SerializeField] float areaHeight;
+        [SerializeField] float areaHeight=0;
         [SerializeField] List<Vector3> vertex = new List<Vector3>();
         [SerializeField] Color AreaColor;
+        [SerializeField] float oldHeight = 0;
 
 
         public List<Vector2> _Contours;
@@ -48,6 +49,7 @@ namespace LandscapeDesignTool
 
         public void SetHeight(float h)
         {
+            oldHeight = areaHeight;
             areaHeight = h;
         }
 
@@ -116,6 +118,17 @@ namespace LandscapeDesignTool
 
         }
 
+        public void DoEdit()
+        {
+            MeshRenderer mr = gameObject.GetComponent<MeshRenderer>();
+            MeshFilter mf = gameObject.GetComponent<MeshFilter>();
+            MeshCollider mc = gameObject.GetComponent<MeshCollider>();
+            DestroyImmediate(mr);
+            DestroyImmediate(mf);
+            DestroyImmediate(mc);
+            GenMesh();
+        }
+
         public void AddPoint(Vector3 p)
         {
             vertex.Add(p);
@@ -124,6 +137,7 @@ namespace LandscapeDesignTool
         public void ClearPoint()
         {
             vertex.Clear();
+            _Contours.Clear();
             // SceneView.RepaintAll();
         }
 
@@ -169,6 +183,8 @@ namespace LandscapeDesignTool
                     i++;
                 }
             }
+
+            Debug.Log(_Contours.Count);
 
             Polygon poly = new Polygon();
             poly.Add(_Contours);
@@ -263,145 +279,8 @@ namespace LandscapeDesignTool
 
             mesh.RecalculateBounds();
 
-            /*
-            GameObject rootNode = new GameObject("RegurationPolygonArea");
-            rootNode.layer = LayerMask.NameToLayer("RegulationArea");
-            ShapeItem si = rootNode.AddComponent<ShapeItem>();
-            si.material = material;
-            si.height = areaHeight;
-            si.oldHeight = areaHeight;
-            si.SetVertex(Vertexes);
-
-            si.fields = new LDTShapeFileHandler();
-            si.fields.areaType = "RegulationArea";
-            si.fields.type = "Polygon";
-            si.fields.height = areaHeight;
-            si.fields.col = Color.red;
-            foreach (Vector3 v3 in vertex)
-            {
-                Vector2 v2 = new Vector3(v3.x, v3.z);
-                Debug.Log("Add " + v2);
-                si.fields.AddPoint(v2);
-            }
-            si.fields.Save(gameObject.GetInstanceID());
-
-            rootNode.transform.parent = gameObject.transform;
-            go.transform.parent = rootNode.transform;
-            GenerateSide(rootNode);
-            */
-
-            // ClearPoint();
-        }
-
-        void GenerateSide(GameObject parent)
-        {
-
-            // int ng = 0;
-            _Contours = new List<Vector2>();
-
-            {
-                int ni = 0;
-                foreach (Vector3 v3 in vertex)
-                {
-                    Vector3 v0 = v3;
-                    Vector2 cont = new Vector2(v3.x, v3.z);
-                    _Contours.Add(cont);
-
-                    Vector3 v1;
-                    if (ni < vertex.Count - 1)
-                    {
-                        v1 = vertex[ni + 1];
-
-                    }
-                    else
-                    {
-                        v1 = vertex[0];
-                    }
-                    float length = Vector3.Distance(v0, v1);
-                    int d = (int)(length / 3.0f);
-
-                    float dx = (v1.x - v0.x) / (float)d;
-                    float dy = (v1.z - v0.z) / (float)d;
-
-                    for (int nj = 1; nj < d; nj++)
-                    {
-                        float x = v0.x + dx * (float)nj;
-                        float y = v0.z + dy * (float)nj;
-                        Vector2 v2 = new Vector2(x, y);
-                        _Contours.Add(v2);
-
-                    }
-
-
-                    ni++;
-                }
-            }
-
-            Vector3[] nv = new Vector3[_Contours.Count * 2];
-            int[] triangles = new int[(_Contours.Count+1) * 2 * 3];
-
-            int i = 0;
-            int j = 0;
-            int n = 0;
-
-            foreach (Vector2 pt in _Contours)
-            {
-                Vector3 tmpv = new Vector3(pt.x, 3000, pt.y);
-
-                RaycastHit[] hits;
-                hits = Physics.RaycastAll(tmpv, new Vector3(0, -1, 0), Mathf.Infinity);
-                bool isGround = false;
-                foreach (var hit in hits)
-                {
-                    if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
-                    {
-                        nv[i++] = new Vector3(pt.x, hit.point.y, pt.y);
-                        nv[i++] = new Vector3(pt.x, hit.point.y + areaHeight, pt.y);
-                        isGround = true;
-                    }
-                }
-                if( isGround == false)
-                {
-                    nv[i++] = new Vector3(pt.x, 0, pt.y);
-                    nv[i++] = new Vector3(pt.x, areaHeight, pt.y);
-                }
-            }
-
-            int c1 = _Contours.Count-1;
-            for ( int count = 0; count< c1; count++)
-            {
-                triangles[n++] = count*2 + 2;
-                triangles[n++] = count*2 + 1;
-                triangles[n++] = count*2;
-                triangles[n++] = count*2 + 2;
-                triangles[n++] = count*2 + 3;
-                triangles[n++] = count*2 + 1;
-            }
-            triangles[n++] = 0;
-            triangles[n++] = (c1 - 1) * 2 + 1; 
-            triangles[n++] = (c1 - 1) * 2;
-            triangles[n++] = 1;
-            triangles[n++] = (c1 - 1) * 2 + 1;
-            triangles[n++] = 0;
-
-            GameObject go = new GameObject("Side");
-            go.layer = LayerMask.NameToLayer("RegulationArea");
-            var mf = go.AddComponent<MeshFilter>();
-            var mesh = new Mesh();
-            mf.mesh = mesh;
-            mesh.vertices = nv;
-            mesh.triangles = triangles;
-
-            mesh.RecalculateBounds();
-
-            var mr = go.AddComponent<MeshRenderer>();
-            mr.sharedMaterial = _areaMaterial;
-
-            go.transform.parent = parent.transform;
-
 
         }
-
 
 
 #if UNITY_EDITOR
@@ -436,7 +315,7 @@ namespace LandscapeDesignTool
             {
 
                 SceneView sceneView = SceneView.lastActiveSceneView;
-
+                /*
                 EditorGUILayout.HelpBox("高さ、領域色、多角形ポイントを設定して任意規制領域を生成します", MessageType.Info);
 
                 _height = EditorGUILayout.FloatField("高さ(m)", _height);
