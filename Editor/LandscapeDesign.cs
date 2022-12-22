@@ -11,8 +11,6 @@ namespace LandscapeDesignTool.Editor
 #if UNITY_EDITOR
     public class LandscapeDesign :EditorWindow
     {
-        float _heightAreaHeight = 30.0f;
-        float _heightAreaRadius = 100.0f;
 
         string _regulationAreaExportPath = "";
         
@@ -25,6 +23,7 @@ namespace LandscapeDesignTool.Editor
         private readonly TabViewPointGenerate _tabViewPointGenerate = new TabViewPointGenerate();
         private readonly TabRegulationAreaGenerate _tabRegulationAreaGenerate;
         private readonly TabShapefileLoad _tabShapefileLoad = new TabShapefileLoad();
+        private readonly TabHeightRegulationGenerate _tabHeightRegulationGenerate = new TabHeightRegulationGenerate();
 
         private readonly TabViewportRegulationGenerate _tabViewportRegulationGenerate =
             new TabViewportRegulationGenerate();
@@ -85,27 +84,7 @@ namespace LandscapeDesignTool.Editor
             }
             else if (_tabIndex == 3)
             {
-                EditorGUILayout.Space();
-                EditorGUILayout.LabelField("<size=15>高さ規制エリア作成</size>", style);
-                EditorGUILayout.HelpBox("高さ規制リアの高さ半径を設定しタイプを選択して規制エリア作成をクリックしてください", MessageType.Info);
-                _heightAreaHeight = EditorGUILayout.FloatField("高さ", _heightAreaHeight);
-                _heightAreaRadius = EditorGUILayout.FloatField("半径", _heightAreaRadius);
-
-                if (GUILayout.Button("高さ規制エリア作成"))
-                {
-                    GameObject grp = GameObject.Find("HeitRegurationAreaGroup");
-                    if (!grp)
-                    {
-                        grp = new GameObject();
-                        grp.name = "HeightRegurationArea";
-                        grp.layer = LayerMask.NameToLayer("RegulationArea");
-
-                        HeightRegurationAreaHandler handler = grp.AddComponent<HeightRegurationAreaHandler>();
-                        handler.areaHeight = _heightAreaHeight;
-                        handler.areaRadius = _heightAreaRadius;
-
-                    }
-                }
+                _tabHeightRegulationGenerate.Draw(style);
             }
             else if (_tabIndex == 4)
             {
