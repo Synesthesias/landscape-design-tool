@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace LandscapeDesignTool.Editor.WindowTabs
 {
+    /// <summary>
+    /// Shapefile読込のタブを描画します。
+    /// </summary>
     public class TabShapefileLoad
     {
         public void Draw(GUIStyle labelStyle)
