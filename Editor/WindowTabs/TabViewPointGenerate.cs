@@ -12,46 +12,48 @@ namespace LandscapeDesignTool.Editor.WindowTabs
     {
         private float _viewpointFOV = 60.0f;
         private float _viewpointHeight = 1.6f;
-        private GameObject _viewpointRoot;
         string _viewpointDescription = "視点場";
-        private const string ViewPointGroupName = "ViewPointGroup";
-        private const string ViewPointName = "ViewPoint";
-        private GameObject _scriptAttachNode;
-        private KEY_OPERATION_MODE _keyOperationMode = KEY_OPERATION_MODE.None;
-        
-        private enum KEY_OPERATION_MODE
-        {
-            VIEWPOINT,
-            None
-        }
+        bool _isEdit = false;
+        private Vector3 _viewpoint;
+        private LandscapeViewPoint viewpointNode;
 
         public void Draw(GUIStyle labelStyle)
         {
             EditorGUILayout.Space();
-                EditorGUILayout.LabelField("<size=15>視点場の作成</size>", labelStyle);
-                EditorGUILayout.HelpBox("視点場名と視点高と視野角を入力し'視点場の追加'ボタンをクリックして下さい", MessageType.Info);
-                _viewpointFOV = EditorGUILayout.FloatField("視野角", _viewpointFOV);
-                _viewpointHeight = EditorGUILayout.FloatField("視点高", _viewpointHeight);
-                _viewpointDescription = EditorGUILayout.TextField("視点場名", _viewpointDescription);
+            EditorGUILayout.LabelField("<size=15>視点場の作成</size>", labelStyle);
+            EditorGUILayout.HelpBox("視点場名と視点高と視野角と視点場を設定し視点場の追加をクリックしてください", MessageType.Info);
+            _viewpointFOV = EditorGUILayout.FloatField("視野角", _viewpointFOV);
+            _viewpointHeight = EditorGUILayout.FloatField("視点高", _viewpointHeight);
+            _viewpointDescription = EditorGUILayout.TextField("視点場名", _viewpointDescription);
 
+            if (!_isEdit)
+            {
+                GUI.color = Color.white;
+                if (GUILayout.Button("視点場の指定"))
+                {
+                    _isEdit = true;
+                }
+            }
+            else
+            {
+
+                GUI.color = Color.green;
                 if (GUILayout.Button("視点場の追加"))
                 {
-                    _viewpointRoot = GameObject.Find(ViewPointGroupName);
-                    if (!_viewpointRoot)
-                    {
-                        _viewpointRoot = new GameObject(ViewPointGroupName);
-                        _viewpointRoot.AddComponent<LandscapeViewPointGroup>();
-                    }
-                    GameObject child = new GameObject(ViewPointName);
-                    child.transform.parent = _viewpointRoot.transform;
-                    _scriptAttachNode = child;
 
-                    _keyOperationMode = KEY_OPERATION_MODE.VIEWPOINT;
+                    _isEdit = false;
+                    GameObject go = new GameObject();
+                    go.name = LDTTools.GetNumberWithTag("ViewPoint", "視点場");
+                    go.tag = "ViewPoint";
 
-                    LandscapeViewPoint node = _scriptAttachNode.AddComponent<LandscapeViewPoint>();
-                    node.ViewpointDescription = _viewpointDescription;
-                    node.viewpointFOV = _viewpointFOV;
-                    node.EyeHeight = _viewpointHeight;
+                    LandscapeViewPoint node = go.AddComponent<LandscapeViewPoint>();
+                    viewpointNode = node;
+                    node.SetDescription( _viewpointDescription);
+                    node.SetFOV(  _viewpointFOV);
+                    node.SetHeight( _viewpointHeight);
+                    go.transform.position = _viewpoint;
+
+                    Selection.activeObject = go;
 
                     if (!GameObject.Find("UI"))
                     {
@@ -71,12 +73,47 @@ namespace LandscapeDesignTool.Editor.WindowTabs
 
                     if (!GameObject.Find("EventSystem"))
                     {
-                        GameObject go = new GameObject();
-                        go.name = "EventSystem";
-                        EventSystem es = go.AddComponent<EventSystem>();
-                        StandaloneInputModule im = go.AddComponent<StandaloneInputModule>();
+                        GameObject esgo = new GameObject();
+                        esgo.name = "EventSystem";
+                        EventSystem es = esgo.AddComponent<EventSystem>();
+                        StandaloneInputModule im = esgo.AddComponent<StandaloneInputModule>();
                     }
                 }
+                GUI.color = Color.white;
+                if (GUILayout.Button("キャンセル"))
+                {
+                    _isEdit = true;
+                }
+            }
         }
+
+        public void OnSceneGUI()
+        {
+            if (_isEdit)
+            {
+
+                HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
+
+                var ev = Event.current;
+                if (ev.type == EventType.MouseDown)
+                {
+                    RaycastHit[] hits;
+                    int layerMask = 1 << 31;
+                    Vector3 mousePosition = Event.current.mousePosition;
+                    Ray ray = HandleUtility.GUIPointToWorldRay(mousePosition);
+
+                    hits = Physics.RaycastAll(ray, Mathf.Infinity, layerMask);
+                    if (hits != null)
+                    {
+                        _viewpoint = hits[0].point;
+                    }
+                }
+
+                Handles.color = Color.blue;
+                Handles.CubeHandleCap(0, _viewpoint, Quaternion.Euler(0, 0, 0), 10.0f, EventType.Repaint);
+            }
+        }
+
+        
     }
 }

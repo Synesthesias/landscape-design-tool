@@ -93,37 +93,6 @@ namespace LandscapeDesignTool
                 fielddata[5] = specpoint[i,0].x.ToString() + ", " + specpoint[i,0].y.ToString();
                 fielddata[6] = specpoint[i,1].x.ToString() + ", "+specpoint[i,1].y.ToString();
 
-                /*
-                int instanceID = instanceList[i];
-                fielddata[0] = i.ToString();
-                fielddata[1] = PlayerPrefs.GetString(instanceID.ToString() + "-areaType");
-                fielddata[2] = PlayerPrefs.GetString(instanceID.ToString() + "-type");
-                fielddata[3] = PlayerPrefs.GetFloat(instanceID.ToString() + "-height").ToString();
-                fielddata[4] = fielddesc[i].col.r.ToString() + "," + fielddesc[i].col.g.ToString() + "," + fielddesc[i].col.b.ToString() + "," + fielddesc[i].col.a.ToString();
-
-                int nfield = fielddesc[i].points.Count;
-                fielddata[5] = nfield.ToString();
-
-                int j = 6;
-                foreach (var p in fielddesc[i].points)
-                {
-                    string pstring = p.x.ToString() + "," + p.y.ToString();
-                    fielddata[j++] = pstring;
-                }
-
-                for (int k = fielddesc[i].points.Count; k < maxRecords; k++)
-                {
-                    fielddata[k] = "0,0";
-                }
-
-                foreach( var val in fielddata)
-                {
-                    Debug.Log(val);
-                }
-
-                // fielddata[2] = type[i];
-
-                */
                 sfw.AddRecord(vertex, vertex.Length, fielddata);
             }
 

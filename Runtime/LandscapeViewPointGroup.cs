@@ -17,7 +17,7 @@ public class LandscapeViewPointGroup : MonoBehaviour
         for(int i=0; i< transform.childCount; i++)
         {
             GameObject child = transform.GetChild(i).gameObject;
-            string description = child.GetComponent<LandscapeViewPoint>().ViewpointDescription;
+            string description = child.GetComponent<LandscapeViewPoint>().GetDescription();
             GameObject ui = GameObject.Find("UI").gameObject;
             
             Button btn = Instantiate(viewpointButton);
@@ -42,13 +42,12 @@ public class LandscapeViewPointGroup : MonoBehaviour
 
     public void OnViewpointButton(int n)
     {
-        Debug.Log(n);
         GameObject target = transform.GetChild(n).gameObject;
         LandscapeViewPoint viewpoint = target.GetComponent<LandscapeViewPoint>();
         Vector3 pos = viewpoint.transform.position;
         Quaternion rot = viewpoint.transform.localRotation;
-        float fov = viewpoint.viewpointFOV;
-        float height=viewpoint.EyeHeight;
+        float fov = viewpoint.GetFOV();
+        float height=viewpoint.GetHeight();
         Camera camera = Camera.main;
         camera.transform.position = pos+new Vector3(0,height,0);
         camera.transform.localRotation = rot;
