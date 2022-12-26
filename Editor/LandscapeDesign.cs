@@ -8,7 +8,7 @@ namespace LandscapeDesignTool.Editor
 #if UNITY_EDITOR
     public class LandscapeDesign : EditorWindow
     {
-        
+
         private readonly string[] _tabToggles =
             { "視点場作成", "規制エリア作成", "眺望規制作成", "高さ規制エリア作成", "ShapeFile読込", "ShapeFile書き出し" };
 
@@ -56,7 +56,6 @@ namespace LandscapeDesignTool.Editor
                     break;
             }
         }
-
 
         private void OnGUI()
         {

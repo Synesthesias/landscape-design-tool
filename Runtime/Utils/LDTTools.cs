@@ -15,7 +15,9 @@ namespace LandscapeDesignTool
             CIRCLE_REGURATION,
             POLYCGON_REGURATION
         }
+
         public static string MaterialName = "RegurationAreaMaterial";
+
         public static Material MakeMaterial(Color col)
         {
             Material material = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
@@ -39,20 +41,8 @@ namespace LandscapeDesignTool
 
             int nblock = vertexlist.Count;
 
-            // int maxRecords = int.MinValue;
-
-            /*
-            foreach(int instanceID in instanceList)
-            {
-                int np = PlayerPrefs.GetInt(instanceID.ToString() + "-npoints");
-                maxRecords = Mathf.Max(maxRecords, np);
-            }
-            */
-
             Debug.Log("WriteShapeFile to : "+ exportFilePath);
-            string tmp = "ABCDEFG";
             DbfFieldDesc[] fields = new DbfFieldDesc[7];
-            DbfFieldDesc field;
             fields[0] = new DbfFieldDesc { FieldName = "ID", FieldType = DbfFieldType.Character, FieldLength = 14, RecordOffset = 0 };
             fields[1] = new DbfFieldDesc { FieldName = "AREATYPE", FieldType = DbfFieldType.Character, FieldLength = 14, RecordOffset = 0 };
             fields[2] = new DbfFieldDesc { FieldName = "TYPE", FieldType = DbfFieldType.Character, FieldLength = 14, RecordOffset = 0 };
@@ -76,7 +66,7 @@ namespace LandscapeDesignTool
                 PointD[] vertex = new PointD[vlist.Count];
 
                 int n = 0;
-                // Debug.Log("nvertex " + vlist.Count);
+
                 foreach (var v in vlist)
                 {
                     vertex[n++] = new PointD(v.x, v.y);
@@ -92,38 +82,7 @@ namespace LandscapeDesignTool
                 Debug.Log(fielddata[4]);
                 fielddata[5] = specpoint[i,0].x.ToString() + ", " + specpoint[i,0].y.ToString();
                 fielddata[6] = specpoint[i,1].x.ToString() + ", "+specpoint[i,1].y.ToString();
-
-                /*
-                int instanceID = instanceList[i];
-                fielddata[0] = i.ToString();
-                fielddata[1] = PlayerPrefs.GetString(instanceID.ToString() + "-areaType");
-                fielddata[2] = PlayerPrefs.GetString(instanceID.ToString() + "-type");
-                fielddata[3] = PlayerPrefs.GetFloat(instanceID.ToString() + "-height").ToString();
-                fielddata[4] = fielddesc[i].col.r.ToString() + "," + fielddesc[i].col.g.ToString() + "," + fielddesc[i].col.b.ToString() + "," + fielddesc[i].col.a.ToString();
-
-                int nfield = fielddesc[i].points.Count;
-                fielddata[5] = nfield.ToString();
-
-                int j = 6;
-                foreach (var p in fielddesc[i].points)
-                {
-                    string pstring = p.x.ToString() + "," + p.y.ToString();
-                    fielddata[j++] = pstring;
-                }
-
-                for (int k = fielddesc[i].points.Count; k < maxRecords; k++)
-                {
-                    fielddata[k] = "0,0";
-                }
-
-                foreach( var val in fielddata)
-                {
-                    Debug.Log(val);
-                }
-
-                // fielddata[2] = type[i];
-
-                */
+                
                 sfw.AddRecord(vertex, vertex.Length, fielddata);
             }
 
