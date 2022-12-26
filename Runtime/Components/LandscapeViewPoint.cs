@@ -6,9 +6,9 @@ using UnityEngine;
 
 public class LandscapeViewPoint : MonoBehaviour
 {
-    public string ViewpointDescription = "視点場";
-    public float viewpointFOV = 60.0f;
-    public float EyeHeight = 1.6f;
+    [SerializeField] string ViewpointDescription = "視点場";
+    [SerializeField] float viewpointFOV = 60.0f;
+    [SerializeField] float EyeHeight = 1.6f;
 
     // Start is called before the first frame update
     void Start()
@@ -18,6 +18,31 @@ public class LandscapeViewPoint : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+    }
+
+    public string GetDescription()
+    {
+        return ViewpointDescription;
+    }
+    public void SetDescription( string s)
+    {
+        ViewpointDescription = s;
+    }
+    public float GetFOV()
+    {
+        return viewpointFOV;
+    }
+    public void SetFOV(float fov)
+    {
+        viewpointFOV = fov;
+    }
+    public float GetHeight()
+    {
+        return EyeHeight;
+    }
+    public void SetHeight( float h)
+    {
+        EyeHeight = h;
     }
 
 #if UNITY_EDITOR

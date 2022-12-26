@@ -82,7 +82,6 @@ namespace LandscapeDesignTool
                 Debug.Log(fielddata[4]);
                 fielddata[5] = specpoint[i,0].x.ToString() + ", " + specpoint[i,0].y.ToString();
                 fielddata[6] = specpoint[i,1].x.ToString() + ", "+specpoint[i,1].y.ToString();
-                
                 sfw.AddRecord(vertex, vertex.Length, fielddata);
             }
 
