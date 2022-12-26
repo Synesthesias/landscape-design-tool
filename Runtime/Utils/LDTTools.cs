@@ -1,10 +1,9 @@
-using System.Collections;
+using EGIS.ShapeFileLib;
 using System.Collections.Generic;
 using System.IO;
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
 using UnityEngine.Rendering;
-using EGIS.ShapeFileLib;
 
 namespace LandscapeDesignTool
 {
@@ -36,12 +35,12 @@ namespace LandscapeDesignTool
             return material;
         }
 
-        public static void WriteShapeFile(string exportFilePath, string areatype, string[] type, Color[] col, float[] height, Vector2[,] specpoint,List<List<Vector2>> vertexlist/*,  List<int> instanceList*/)
+        public static void WriteShapeFile(string exportFilePath, string areatype, string[] type, Color[] col, float[] height, Vector2[,] specpoint, List<List<Vector2>> vertexlist/*,  List<int> instanceList*/)
         {
 
             int nblock = vertexlist.Count;
 
-            Debug.Log("WriteShapeFile to : "+ exportFilePath);
+            Debug.Log("WriteShapeFile to : " + exportFilePath);
             DbfFieldDesc[] fields = new DbfFieldDesc[7];
             fields[0] = new DbfFieldDesc { FieldName = "ID", FieldType = DbfFieldType.Character, FieldLength = 14, RecordOffset = 0 };
             fields[1] = new DbfFieldDesc { FieldName = "AREATYPE", FieldType = DbfFieldType.Character, FieldLength = 14, RecordOffset = 0 };
@@ -70,7 +69,7 @@ namespace LandscapeDesignTool
                 foreach (var v in vlist)
                 {
                     vertex[n++] = new PointD(v.x, v.y);
-                    Debug.Log(vertex[n-1].ToString());
+                    Debug.Log(vertex[n - 1].ToString());
                 }
 
                 string[] fielddata = new string[7];
@@ -80,13 +79,11 @@ namespace LandscapeDesignTool
                 fielddata[3] = height[i].ToString();
                 fielddata[4] = col[i].r.ToString() + "," + col[i].g.ToString() + "," + col[i].b.ToString() + "," + col[i].a.ToString();
                 Debug.Log(fielddata[4]);
-                fielddata[5] = specpoint[i,0].x.ToString() + ", " + specpoint[i,0].y.ToString();
-                fielddata[6] = specpoint[i,1].x.ToString() + ", "+specpoint[i,1].y.ToString();
-                
+                fielddata[5] = specpoint[i, 0].x.ToString() + ", " + specpoint[i, 0].y.ToString();
+                fielddata[6] = specpoint[i, 1].x.ToString() + ", " + specpoint[i, 1].y.ToString();
+
                 sfw.AddRecord(vertex, vertex.Length, fielddata);
             }
-
-
 
             sfw.Close();
         }
@@ -150,16 +147,22 @@ namespace LandscapeDesignTool
             int maxvalule = 0;
             CheckTag(tagname);
             GameObject[] objects = GameObject.FindGameObjectsWithTag(tagname);
-            foreach( GameObject obj in objects)
+            foreach (GameObject obj in objects)
             {
                 string nm = obj.name;
                 string[] s1 = nm.Split('-');
-                int n = int.Parse(s1[1]);
+
+                if (s1.Length < 2)
+                    continue;
+
+                if (!int.TryParse(s1[1], out int n))
+                    continue;
+
                 maxvalule = Mathf.Max(maxvalule, n);
             }
             rval = maxvalule + 1;
 
-            return title+"-"+rval.ToString();
+            return title + "-" + rval.ToString();
         }
     }
 
@@ -207,7 +210,7 @@ namespace LandscapeDesignTool
             }
             if (GUILayout.Button("ƒLƒƒƒ“ƒZƒ‹"))
             {
-                if(!hasMaterial)
+                if (!hasMaterial)
                 {
                     colorRemove.Invoke();
 

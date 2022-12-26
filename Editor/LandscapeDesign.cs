@@ -13,7 +13,7 @@ namespace LandscapeDesignTool.Editor
             { "‹“_êì¬", "‹K§ƒGƒŠƒAì¬", "’­–]‹K§ì¬", "‚‚³‹K§ƒGƒŠƒAì¬", "ShapeFile“Ç", "ShapeFile‘‚«o‚µ" };
 
         private int _tabIndex;
-        private readonly TabViewPointGenerate _tabViewPointGenerate = new TabViewPointGenerate();
+        private readonly TabViewPointGenerate _tabViewPointGenerate;
         private readonly TabRegulationAreaGenerate _tabRegulationAreaGenerate;
         private readonly TabShapefileLoad _tabShapefileLoad = new TabShapefileLoad();
         private readonly TabHeightRegulationGenerate _tabHeightRegulationGenerate = new TabHeightRegulationGenerate();
@@ -24,6 +24,7 @@ namespace LandscapeDesignTool.Editor
 
         public LandscapeDesign()
         {
+            _tabViewPointGenerate = new TabViewPointGenerate(this);
             _tabRegulationAreaGenerate = new TabRegulationAreaGenerate(this);
         }
 
@@ -55,6 +56,11 @@ namespace LandscapeDesignTool.Editor
                     _tabHeightRegulationGenerate.OnSceneGUI();
                     break;
             }
+        }
+
+        private void Update()
+        {
+            _tabViewPointGenerate.Update();
         }
 
         private void OnGUI()

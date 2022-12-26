@@ -6,14 +6,15 @@ namespace LandscapeDesignTool.Editor.WindowTabs
 {
     public class TabRegulationAreaGenerate
     {
-        float _regulationHeight = 10;
-        Color _areaColor = new Color(0, 1, 1, 0.5f);
         bool _isCreatingContour = false;
-        RegurationArea polygon;
-        List<Vector3> vertex = new List<Vector3>();
+
+        private int selectedIndex;
+
+        RegulationArea regulationArea;
+
         private EditorWindow _parentWindow;
-        bool _isEditingContour = false;
-        GameObject _selectObject = null;
+        private GUIStyle _labelStyle;
+        private Vector2 _scrollPosition = Vector2.zero;
 
         public TabRegulationAreaGenerate(EditorWindow parentWindow)
         {
@@ -22,61 +23,150 @@ namespace LandscapeDesignTool.Editor.WindowTabs
 
         public void OnGUI(GUIStyle labelStyle)
         {
+            LDTTools.CheckTag("RegulationArea");
+
+            _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
+
+            _labelStyle = labelStyle;
+
+            DrawCreateRegulation();
+            DrawEditRegulationArea();
+            DrawDeleteRegulationArea();
+
+            EditorGUILayout.EndScrollView();
+        }
+
+        private void DrawCreateRegulation()
+        {
             EditorGUILayout.Space();
 
-            EditorGUILayout.LabelField("<size=15>規制エリア作成</size>", labelStyle);
-            EditorGUILayout.HelpBox("規制エリアの高さを設定しタイプを選択して規制エリア作成をクリックしてください", MessageType.Info);
+            EditorGUILayout.LabelField("<size=15>規制エリア作成</size>", _labelStyle);
 
-            _regulationHeight = EditorGUILayout.FloatField("高さ", _regulationHeight);
-            _areaColor = EditorGUILayout.ColorField("色の設定", _areaColor);
             GUI.enabled = true;
 
             if (_isCreatingContour)
             {
                 DrawCreateContourButton();
+                return;
             }
-            else
+            
+            GUI.color = Color.white;
+            if (GUILayout.Button("新規規制エリア作成..."))
             {
-                if (!_isEditingContour)
+                _isCreatingContour = true;
+                GameObject go = new GameObject();
+                go.layer = LayerMask.NameToLayer("RegulationArea");
+                go.name = LDTTools.GetNumberWithTag("RegulationArea", "規制エリア");
+                go.tag = "RegulationArea";
+                Selection.activeObject = go;
+                regulationArea = go.AddComponent<RegulationArea>();
+                regulationArea.SetAreaColor(new Color(0.8f, 0.3f, 0.3f, 0.4f));
+                _parentWindow.Repaint();
+            }
+        }
+
+        private void DrawCreateContourButton()
+        {
+            RegulationAreaEditor.Active.IsEditMode = true;
+            EditorGUILayout.HelpBox("地面をクリックして頂点を追加してください。", MessageType.Info);
+
+            GUILayout.BeginHorizontal();
+
+            GUI.color = Color.green;
+            if (GUILayout.Button("完了"))
+            {
+                _isCreatingContour = false;
+
+                if (regulationArea.Vertices.Count > 2)
                 {
-                    GUI.color = Color.white;
-                    if (GUILayout.Button("新規規制エリア作成"))
-                    {
-                        _isCreatingContour = true;
-                        GameObject go = new GameObject();
-                        go.layer = LayerMask.NameToLayer("RegulationArea");
-                        go.name = LDTTools.GetNumberWithTag("RegulationArea", "規制エリア");
-                        go.tag = "RegulationArea";
-                        Selection.activeObject = go;
-                        polygon = go.AddComponent<RegurationArea>();
-                        Debug.Log(_regulationHeight);
-                        polygon.SetHeight(_regulationHeight);
-                        polygon.SetAreaColor(_areaColor);
-
-                        _parentWindow.Repaint();
-                    }
-
-                    RegurationAreaList();
+                    regulationArea.GenMesh();
+                    RegulationAreaEditor.Active.IsEditMode = false;
                 }
                 else
                 {
-                    if (GUILayout.Button("編集完了"))
-                    {
-                        RegurationArea handler =
-                            _selectObject.GetComponent<RegurationArea>();
-                        handler.SetHeight(_regulationHeight);
-                        handler.SetAreaColor(_areaColor);
-                        handler.ClearPoint();
-                        handler.SetVertex(vertex);
-                        handler.DoEdit();
-
-                        _isEditingContour = false;
-                    }
-
-                    if (GUILayout.Button("キャンセル"))
-                        _isEditingContour = false;
+                    Object.DestroyImmediate(regulationArea.gameObject);
+                    RegulationAreaEditor.Active = null;
                 }
+
+                _parentWindow.Repaint();
             }
+
+            GUI.color = Color.white;
+            if (GUILayout.Button("取り消し"))
+            {
+                _isCreatingContour = false;
+
+                Object.DestroyImmediate(regulationArea.gameObject);
+                RegulationAreaEditor.Active = null;
+
+                _parentWindow.Repaint();
+            }
+
+            GUILayout.EndHorizontal();
+        }
+
+        private void DrawEditRegulationArea()
+        {
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("<size=15>規制エリア編集</size>", _labelStyle);
+
+            DrawRegurationAreaList();
+
+            if (RegulationAreaEditor.Active == null)
+                return;
+
+            EditorGUILayout.Space();
+
+            RegulationAreaEditor.Active.OnInspectorGUI();
+        }
+
+        void DrawRegurationAreaList()
+        {
+            GameObject[] objects = GameObject.FindGameObjectsWithTag("RegulationArea");
+
+            if (objects.Length == 0)
+                return;
+
+            var popupElements = new List<string>();
+            for (int i = 0; i < objects.Length; ++i)
+            {
+                popupElements.Add(objects[i].name);
+
+                // アクティブオブジェクトが外部から変更された際(ヒエラルキーからオブジェクトを選択した際)に表示を更新
+                if (Selection.activeGameObject == objects[i])
+                    selectedIndex = i;
+            }
+
+            if (selectedIndex >= popupElements.Count)
+                selectedIndex = popupElements.Count - 1;
+
+            var boldStyle = new GUIStyle(GUI.skin.label)
+            {
+                fontStyle = FontStyle.Bold
+            };
+            EditorGUILayout.LabelField("編集対象", boldStyle);
+
+            selectedIndex = EditorGUILayout.Popup("", selectedIndex, popupElements.ToArray());
+
+            Selection.activeGameObject = objects[selectedIndex];
+        }
+
+        private void DrawDeleteRegulationArea()
+        {
+            if (RegulationAreaEditor.Active == null)
+                return;
+
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("<size=15>規制エリア削除</size>", _labelStyle);
+
+            GUI.color = Color.red;
+            if (GUILayout.Button("選択中の規制エリアを削除"))
+            {
+                Object.DestroyImmediate(RegulationAreaEditor.Active.Target.gameObject);
+                selectedIndex = Mathf.Max(selectedIndex - 1, 0);
+            }
+
+            GUI.color = Color.white;
         }
 
         public void OnSceneGUI()
@@ -86,70 +176,21 @@ namespace LandscapeDesignTool.Editor.WindowTabs
 
             HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
 
+            // クリック時に頂点生成を行う
             var ev = Event.current;
             if (!(ev.type == EventType.MouseDown && !ev.shift && !ev.control && !ev.alt))
                 return;
-            
+
             RaycastHit[] hits;
             int layerMask = 1 << 31;
             Vector3 mousePosition = Event.current.mousePosition;
             Ray ray = HandleUtility.GUIPointToWorldRay(mousePosition);
 
             hits = Physics.RaycastAll(ray, Mathf.Infinity, layerMask);
-            if (hits != null)
-                vertex.Add(hits[0].point);
+            if (hits == null)
+                return;
 
-            polygon.SetVertex(vertex);
-        }
-
-        void RegurationAreaList()
-        {
-            EditorGUILayout.Space();
-            EditorGUILayout.HelpBox("編集は下記リストより選択してください", MessageType.Info);
-            GameObject[] objects = GameObject.FindGameObjectsWithTag("RegulationArea");
-            int n = -1;
-            foreach (var obj in objects)
-            {
-                n++;
-
-                if (!GUILayout.Button(obj.name))
-                    continue;
-                
-                Selection.activeGameObject = objects[n];
-                _selectObject = objects[n];
-                _isEditingContour = true;
-                
-                if (!objects[n].GetComponent<RegurationArea>())
-                    continue;
-                
-                RegurationArea handler =
-                    objects[n].GetComponent<RegurationArea>();
-                _regulationHeight = handler.GetHeight();
-                _areaColor = handler.GetAreaColor();
-                List<Vector3> vs = handler.GetVertex();
-                vertex.Clear();
-                foreach (var v in vs)
-                    vertex.Add(v);
-            }
-        }
-
-        private void DrawCreateContourButton()
-        {
-            GUI.color = Color.green;
-            if (GUILayout.Button("頂点作成を完了し多角形を生成"))
-            {
-                _isCreatingContour = false;
-                vertex.Clear();
-                polygon.GenMesh();
-
-                _parentWindow.Repaint();
-            }
-
-            GUI.color = Color.white;
-            if (GUILayout.Button("頂点をクリア"))
-            {
-                vertex.Clear();
-            }
+            regulationArea.AddVertex(hits[0].point);
         }
     }
 }

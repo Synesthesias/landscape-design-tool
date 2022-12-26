@@ -5,9 +5,9 @@ using UnityEngine;
 
 namespace LandscapeDesignTool
 {
-    public class RegurationArea : MonoBehaviour
+    public class RegulationArea : MonoBehaviour
     {
-        [SerializeField] float areaHeight = 0;
+        [SerializeField] float areaHeight = 10;
         [SerializeField] List<Vector3> vertices = new List<Vector3>();
         [SerializeField] Color AreaColor;
 
@@ -15,6 +15,7 @@ namespace LandscapeDesignTool
         public List<Vector2> Vertexes = new List<Vector2>();
 
         public List<Vector3> Vertices => vertices;
+        public bool IsMeshGenerated => GetComponent<MeshFilter>() != null;
 
         public List<Vector2> GetVertexData()
         {
@@ -33,6 +34,7 @@ namespace LandscapeDesignTool
         public void SetHeight(float h)
         {
             areaHeight = h;
+            GenMesh();
         }
 
         public Color GetAreaColor()
@@ -44,72 +46,40 @@ namespace LandscapeDesignTool
             AreaColor = c;
         }
 
-        public void SetVertex(List<Vector3> v0)
+        public void AddVertex(Vector3 vertex)
         {
-            vertices.Clear();
-            foreach (var v in v0)
-            {
-                vertices.Add(v);
-            }
+            vertices.Add(vertex);
         }
-
-        public List<Vector3> GetVertex()
-        {
-            return vertices;
-        }
-
-        public void DoEdit()
-        {
-            MeshRenderer mr = gameObject.GetComponent<MeshRenderer>();
-            MeshFilter mf = gameObject.GetComponent<MeshFilter>();
-            MeshCollider mc = gameObject.GetComponent<MeshCollider>();
-            DestroyImmediate(mr);
-            DestroyImmediate(mf);
-            DestroyImmediate(mc);
-            GenMesh();
-        }
-
-        public void AddPoint(Vector3 p)
-        {
-            vertices.Add(p);
-        }
-
-        public void ClearPoint()
-        {
-            vertices.Clear();
-            _Contours.Clear();
-            // SceneView.RepaintAll();
-        }
-
-        private void OnDrawGizmos()
+        
+        private void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.yellow;
-            if (Vertices.Count > 2)
+            for (int i = 0; i < Vertices.Count - 1; i++)
             {
-                for (int i = 0; i < Vertices.Count - 1; i++)
-                {
-                    Vector3 val0 = Vertices[i];
-                    Vector3 v0 = new Vector3(val0.x, val0.y + 5, val0.z);
-                    Vector3 val1 = Vertices[i + 1];
-                    Vector3 v1 = new Vector3(val1.x, val1.y + 5, val1.z);
+                Vector3 val0 = Vertices[i];
+                Vector3 v0 = new Vector3(val0.x, val0.y + 1, val0.z);
+                Vector3 val1 = Vertices[i + 1];
+                Vector3 v1 = new Vector3(val1.x, val1.y + 1, val1.z);
 
-                    Gizmos.DrawLine(v0, v1);
-                }
+                Gizmos.DrawLine(v0, v1);
+            }
 
-                if (Vertices.Count > 3)
-                {
-                    Vector3 val0 = Vertices[Vertices.Count - 1];
-                    Vector3 v0 = new Vector3(val0.x, val0.y + 5, val0.z);
-                    Vector3 val1 = Vertices[0];
-                    Vector3 v1 = new Vector3(val1.x, val1.y + 5, val1.z);
+            if (Vertices.Count > 3 && IsMeshGenerated)
+            {
+                Vector3 val0 = Vertices[Vertices.Count - 1];
+                Vector3 v0 = new Vector3(val0.x, val0.y + 1, val0.z);
+                Vector3 val1 = Vertices[0];
+                Vector3 v1 = new Vector3(val1.x, val1.y + 1, val1.z);
 
-                    Gizmos.DrawLine(v0, v1);
-                }
+                Gizmos.DrawLine(v0, v1);
             }
         }
 
         public void GenMesh()
         {
+            if (vertices.Count < 3)
+                return;
+
             UpdateContour();
 
             var mesh = GenerateMeshFromContour();
@@ -154,7 +124,6 @@ namespace LandscapeDesignTool
                     if (i < vertices.Count - 1)
                     {
                         v1 = vertices[i + 1];
-
                     }
                     else
                     {
@@ -185,9 +154,6 @@ namespace LandscapeDesignTool
             poly.Add(_Contours);
             var triangleNetMesh = (TriangleNetMesh)poly.Triangulate();
 
-            // GameObject go = new GameObject("Upper");
-            // go.layer = LayerMask.NameToLayer("RegulationArea");
-
             var mesh = triangleNetMesh.GenerateUnityMesh();
 
             Vector3[] nv = new Vector3[mesh.vertices.Length * 2];
@@ -197,24 +163,14 @@ namespace LandscapeDesignTool
             for (int i = 0; i < mesh.vertices.Length; i++)
             {
                 Vector3 ov = mesh.vertices[i];
-                Vector3 tmpv = new Vector3(ov.x, 3000, ov.y);
-
-                RaycastHit[] hits;
-                bool isGround = false;
-                hits = Physics.RaycastAll(tmpv, new Vector3(0, -1, 0), Mathf.Infinity);
-                foreach (var hit in hits)
+                Vector3 rayOrigin = new Vector3(ov.x, 100000, ov.y);
+                var ray = new Ray(rayOrigin, Vector3.down);
+                if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, 1 << LayerMask.NameToLayer("Ground")))
                 {
-                    if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
-                    {
-                        if (Physics.Raycast(tmpv, new Vector3(0, -1, 0), Mathf.Infinity))
-                        {
-                            nv[i] = new Vector3(ov.x, hit.point.y + areaHeight, ov.y);
-                            nv[i + mesh.vertices.Length] = new Vector3(ov.x, hit.point.y, ov.y);
-                            isGround = true;
-                        }
-                    }
+                    nv[i] = new Vector3(ov.x, hit.point.y + areaHeight, ov.y);
+                    nv[i + mesh.vertices.Length] = new Vector3(ov.x, hit.point.y, ov.y);
                 }
-                if (isGround == false)
+                else
                 {
                     nv[i] = new Vector3(ov.x, 0, ov.y);
                     nv[i + mesh.vertices.Length] = new Vector3(ov.x, 0, ov.y);
@@ -239,19 +195,20 @@ namespace LandscapeDesignTool
                     int k3 = k1 + 1;
                     int k4 = k2 + 1;
 
+                    // TODO: 外形が右回りの場合側面のメッシュが内向きになってしまう問題の解消
                     triangles[n++] = k1;
-                    triangles[n++] = k4;
                     triangles[n++] = k3;
-                    triangles[n++] = k1;
-                    triangles[n++] = k2;
                     triangles[n++] = k4;
+                    triangles[n++] = k1;
+                    triangles[n++] = k4;
+                    triangles[n++] = k2;
                 }
                 triangles[n++] = vco - 1;
-                triangles[n++] = vco;
                 triangles[n++] = 0;
-                triangles[n++] = vco - 1;
-                triangles[n++] = vco * 2 - 1;
                 triangles[n++] = vco;
+                triangles[n++] = vco - 1;
+                triangles[n++] = vco;
+                triangles[n++] = vco * 2 - 1;
             }
 
             mesh.vertices = nv;

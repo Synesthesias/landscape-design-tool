@@ -1,37 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using UnityEditor;
-using UnityEngine.Rendering;
-using LandscapeDesignTool;
+using UnityEngine;
 
-
-public class RegurationAreaHandler : MonoBehaviour
+namespace LandscapeDesignTool.Editor
 {
-    public Material highlightMaterial;
-    public Material areaMaterial;
-
-    public float screenWidth = 80.0f;
-    public float screenHeight = 80.0f;
-    [SerializeField] List<GameObject> ignoreObject = new List<GameObject>();
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-#if UNITY_EDITOR
-    [CustomEditor(typeof(RegurationAreaHandler))]
+    [CustomEditor(typeof(ViewRegulation))]
     [CanEditMultipleObjects]
-    public class RegurationAreaEditor : Editor
+    public class ViewRegulationEditor : UnityEditor.Editor
     {
         int selectIndex = 0;
         bool selectingTarget = false;
@@ -45,25 +19,18 @@ public class RegurationAreaHandler : MonoBehaviour
 
         private void Awake()
         {
-            _wsize = Selection.activeGameObject.GetComponent<RegurationAreaHandler>().screenWidth;
-            _hsize = Selection.activeGameObject.GetComponent<RegurationAreaHandler>().screenHeight;
-            Debug.Log(_wsize);
+            _wsize = Selection.activeGameObject.GetComponent<ViewRegulation>().screenWidth;
+            _hsize = Selection.activeGameObject.GetComponent<ViewRegulation>().screenHeight;
         }
 
         private void drawArrayProperty(string prop_name)
         {
             EditorGUIUtility.LookLikeInspector();
             _prop = this.serializedObject.FindProperty(prop_name);
-            EditorGUI.BeginChangeCheck();
+
             EditorGUILayout.PropertyField(_prop, new GUIContent("èúäOÉIÉuÉWÉFÉNÉg"), true);
 
             this.serializedObject.ApplyModifiedProperties();
-            /*
-            if (EditorGUI.EndChangeCheck())
-            {
-                this.serializedObject.ApplyModifiedProperties();
-            }
-            */
 
             this.serializedObject.ApplyModifiedProperties();
 
@@ -87,65 +54,45 @@ public class RegurationAreaHandler : MonoBehaviour
             _areaInvalidColor = EditorGUILayout.ColorField("ãKêßêFÇÃê›íË", _areaInvalidColor);
             _interval = EditorGUILayout.FloatField("è·äQï®ÇÃîªíËä‘äu(m)", _interval);
 
-
-            //  drawArrayProperty("ignoreObject");
-
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("<size=12>éãì_èÍ</size>", style);
 
-            vpgroup = GameObject.Find("ViewPointGroup");
-            if (!vpgroup)
-            {
+            vpgroup = Object.FindObjectOfType<LandscapeViewPointGroup>().gameObject;
 
+            if (vpgroup == null || vpgroup.transform.childCount == 0)
+            {
                 EditorGUILayout.HelpBox("éãì_èÍÇçÏê¨ÇµÇƒÇ≠ÇæÇ≥Ç¢", MessageType.Error);
+                return;
             }
-            else
+
+            string[] options = new string[vpgroup.transform.childCount];
+            for (int i = 0; i < vpgroup.transform.childCount; i++)
             {
-                if (vpgroup.transform.childCount == 0)
-                {
-
-                    EditorGUILayout.HelpBox("éãì_èÍÇçÏê¨ÇµÇƒÇ≠ÇæÇ≥Ç¢", MessageType.Error);
-
-                }
-                else
-                {
-                    string[] options = new string[vpgroup.transform.childCount];
-                    for (int i = 0; i < vpgroup.transform.childCount; i++)
-                    {
-                        LandscapeViewPoint vp = vpgroup.transform.GetChild(i).GetComponent<LandscapeViewPoint>();
-                        options[i] = vp.ViewpointDescription;
-                    }
-                    selectIndex = EditorGUILayout.Popup(selectIndex, options);
-                    EditorGUILayout.Space();
-                    EditorGUILayout.LabelField("<size=12>í≠ñ]ëŒè€</size>", style);
-                    if (selectingTarget == false)
-                    {
-                        GUI.color = Color.white;
-                    }
-                    else
-                    {
-                        GUI.color = Color.green;
-
-                    }
-                    if (GUILayout.Button("í≠ñ]ëŒè€ÇÃëIë"))
-                    {
-                        sceneView.Focus();
-                        selectingTarget = true;
-                    }
-                }
+                LandscapeViewPoint vp = vpgroup.transform.GetChild(i).GetComponent<LandscapeViewPoint>();
+                options[i] = vp.Name;
+            }
+            selectIndex = EditorGUILayout.Popup(selectIndex, options);
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("<size=12>í≠ñ]ëŒè€</size>", style);
+            GUI.color = selectingTarget == false
+                ? Color.white
+                : Color.green;
+            if (GUILayout.Button("í≠ñ]ëŒè€ÇÃëIë"))
+            {
+                sceneView.Focus();
+                selectingTarget = true;
             }
         }
+
         public enum SurfaceType
         {
             Opaque,
             Transparent
         }
 
-        public void OnSceneGUI()
+        private void OnSceneGUI()
         {
-
             var ev = Event.current;
-
 
             RaycastHit hit;
             if (ev.type == EventType.KeyUp && ev.keyCode == KeyCode.LeftShift)
@@ -167,21 +114,13 @@ public class RegurationAreaHandler : MonoBehaviour
                     selectingTarget = false;
                     float length = Vector3.Distance(originPoint, targetPoint);
 
-                    // CheckCollitionCone(originPoint, targetPoint, length, hit);
-
-                    CheckCollitionDrawLine(originPoint, targetPoint, length, hit);
-
-
-
-
-                    // Repaint();
-
+                    DrawViewRegulation(originPoint, targetPoint, length, hit);
                 }
                 ev.Use();
             }
         }
 
-        void CheckCollitionDrawLine(Vector3 originPoint, Vector3 targetPoint, float length, RaycastHit hit)
+        void DrawViewRegulation(Vector3 originPoint, Vector3 targetPoint, float length, RaycastHit hit)
         {
 
             Vector3[] vertex = new Vector3[6];
@@ -222,35 +161,29 @@ public class RegurationAreaHandler : MonoBehaviour
             go.transform.parent = Selection.activeGameObject.transform;
             mr.enabled = false;
 
-            CheckCollitionBuildingLine(originPoint, targetPoint, hit.collider.gameObject, go);
-
+            DrawViewLine(originPoint, targetPoint, go);
         }
 
 
-        float CheckCollitionBuildingLine(Vector3 origin, Vector3 distination, GameObject target, GameObject parent)
+        float DrawViewLine(Vector3 origin, Vector3 destination, GameObject parent)
         {
 
             float result = -1;
-
-            float length = Vector3.Distance(origin, distination);
+            
             int divx = (int)(_wsize / _interval);
             int divy = (int)(_hsize / _interval);
-
 
             for (int i = 0; i < divx + 1; i++)
             {
                 for (int j = 0; j < divy + 1; j++)
                 {
-
-
-                    float x = distination.x - (_wsize / 2.0f) + _interval * i;
-                    float y = distination.y - (_hsize / 2.0f) + _interval * j;
-                    Vector3 d = new Vector3(x, y, distination.z);
+                    float x = destination.x - (_wsize / 2.0f) + _interval * i;
+                    float y = destination.y - (_hsize / 2.0f) + _interval * j;
+                    Vector3 d = new Vector3(x, y, destination.z);
                     RaycastHit hit;
 
-                    if (CollisionBuilding(origin, d, length, target, out hit))
+                    if (RaycastBuildings(origin, d, out hit))
                     {
-
                         DrawLine(origin, hit.point, parent, _areaColor);
                         DrawLine(hit.point, d, parent, _areaInvalidColor);
                     }
@@ -258,14 +191,10 @@ public class RegurationAreaHandler : MonoBehaviour
                     {
                         DrawLine(origin, d, parent, _areaColor);
                     }
-
                 }
             }
 
-
-
             return result;
-
         }
 
         void DrawLine(Vector3 origin, Vector3 distination, GameObject parent, Color col)
@@ -279,13 +208,11 @@ public class RegurationAreaHandler : MonoBehaviour
 
             LineRenderer lineRenderer = go.AddComponent<LineRenderer>();
 
-
             lineRenderer.SetPositions(point);
             lineRenderer.positionCount = point.Length;
             lineRenderer.startWidth = 1.0f;
             lineRenderer.endWidth = 1.0f;
             lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
-            // lineRenderer.material.SetColor("_Color", col);
 
             lineRenderer.startColor = col;
             lineRenderer.endColor = col;
@@ -295,14 +222,10 @@ public class RegurationAreaHandler : MonoBehaviour
 
         void CheckCollitionCone(Vector3 originPoint, Vector3 targetPoint, float length, RaycastHit hit)
         {
-            RaycastHit hitpoint;
-            float result = CheckCollitionBuilding(originPoint, targetPoint, length, hit.collider.gameObject, out hitpoint);
-
-            Debug.Log("hit " + hitpoint.collider.name + " " + hitpoint.point.ToString() + " " + result);
-
+            float result = CheckCollitionBuilding(originPoint, targetPoint, out _);
+            
             if (result == -1)
             {
-
                 Vector3[] vertex = new Vector3[6];
                 vertex[0] = new Vector3(0, 0, 0);
                 vertex[1] = new Vector3(-_wsize / 2.0f, -_hsize / 2.0f, length);
@@ -345,7 +268,6 @@ public class RegurationAreaHandler : MonoBehaviour
             }
             else
             {
-
                 float divwidth = (_wsize * result) / length;
                 float divheight = (_hsize * result) / length;
 
@@ -362,7 +284,6 @@ public class RegurationAreaHandler : MonoBehaviour
                 vertex[8] = new Vector3(divwidth / 2.0f, -divheight / 2.0f, result);
 
                 vertex[9] = new Vector3(0, 0, result);
-
 
                 int[] idx1 = {
                         0, 5, 6,
@@ -387,8 +308,7 @@ public class RegurationAreaHandler : MonoBehaviour
                         5, 3, 2,
                         5, 4, 3,
                         5, 1, 4
-
-                        };
+                };
 
                 // Safe area
                 GameObject go = new GameObject("ViewRegurationArea");
@@ -403,10 +323,8 @@ public class RegurationAreaHandler : MonoBehaviour
                 material.SetFloat("_Surface", (float)SurfaceType.Transparent);
                 material.SetColor("_BaseColor", _areaColor);
 
-
                 mr.sharedMaterial = material;
                 mf.mesh = mesh;
-
 
                 go.transform.position = originPoint;
                 go.transform.LookAt(targetPoint, Vector3.up);
@@ -425,20 +343,16 @@ public class RegurationAreaHandler : MonoBehaviour
                 materialInvalid.SetFloat("_Surface", (float)SurfaceType.Transparent);
                 materialInvalid.SetColor("_BaseColor", _areaInvalidColor);
 
-
                 mrInvalid.sharedMaterial = materialInvalid;
                 mfInvalid.mesh = meshInvalid;
-
 
                 goInvalid.transform.position = originPoint;
                 goInvalid.transform.LookAt(targetPoint, Vector3.up);
                 goInvalid.transform.parent = go.transform;
-
             }
-
         }
 
-        float CheckCollitionBuilding(Vector3 origin, Vector3 distination, float length, GameObject target, out RaycastHit hitpoint)
+        float CheckCollitionBuilding(Vector3 origin, Vector3 distination, out RaycastHit hitpoint)
         {
             float result = -1;
             hitpoint = new RaycastHit();
@@ -456,7 +370,7 @@ public class RegurationAreaHandler : MonoBehaviour
                     Vector3 d = new Vector3(x, y, distination.z);
                     RaycastHit hit;
 
-                    if (CollisionBuilding(origin, d, length, target, out hit))
+                    if (RaycastBuildings(origin, d, out hit))
                     {
                         if (hit.distance < mindistance)
                         {
@@ -465,85 +379,47 @@ public class RegurationAreaHandler : MonoBehaviour
                             result = mindistance;
                         }
                     }
-
                 }
             }
-
 
             return result;
         }
 
-        bool CollisionBuilding(Vector3 origin, Vector3 distination, float length, GameObject target, out RaycastHit hitpoint)
+        bool RaycastBuildings(Vector3 origin, Vector3 destination, out RaycastHit hitInfo)
         {
             bool result = false;
 
-            hitpoint = new RaycastHit();
+            hitInfo = new RaycastHit();
 
-            Vector3 direction = distination - origin;
-            float magnitude = direction.magnitude;
-            Vector3 normal = direction / magnitude;
-
+            Vector3 direction = (destination - origin).normalized;
 
             RaycastHit[] hits;
-            hits = Physics.RaycastAll(origin, normal, 10000);
+            hits = Physics.RaycastAll(origin, direction, 10000);
 
-            float mindistance = float.MaxValue;
-            if (hits.Length > 0)
+            float minDistance = float.MaxValue;
+            if (hits.Length <= 0)
+                return result;
+            
+            foreach (var hit in hits)
             {
-                for (int i = 0; i < hits.Length; i++)
-                {
-                    RaycastHit hit = hits[i];
-                    if (hit.collider.gameObject.name != target.name)
-                    {
-                        bool hitIgnore = false;
+                if (hit.collider.gameObject.name == target.name)
+                    continue;
 
-                        int layerIgnoreRaycast = LayerMask.NameToLayer("RegulationArea");
-                        if (hit.collider.gameObject.layer == layerIgnoreRaycast)
-                        {
-                            hitIgnore = true;
-                        }
+                int layerIgnoreRaycast = LayerMask.NameToLayer("RegulationArea");
+                
+                if (hit.collider.gameObject.layer == layerIgnoreRaycast)
+                    continue;
 
-                        if( hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
-                        {
-                            hitIgnore = true;
-                        }
+                result = true;
+                        
+                if (hit.distance >= minDistance)
+                    continue;
 
-                        /*
-                        if (_prop.isArray)
-                        {
-                            for (int k = 0; k < _prop.arraySize; k++)
-                            {
-                                SerializedProperty element = _prop.GetArrayElementAtIndex(k);
-                                GameObject obj = element.objectReferenceValue as GameObject;
-                                int layerIgnoreRaycast = LayerMask.NameToLayer("RegulationArea");
-                                if ( hit.collider.gameObject.layer == layerIgnoreRaycast)
-                                {
-                                    hitIgnore = true;
-                                }
-                            }
-                        }
-                        */
-                        if (hitIgnore == false)
-                        {
-                            result = true;
-                            if (hit.distance < mindistance)
-                            {
-                                hitpoint = hit;
-                                mindistance = hit.distance;
-                                // Debug.Log("hit " + hit.collider.name + " " + mindistance + " " + hit.point.ToString());
-                            }
-                        }
-                    }
-                }
-            }
-            else
-            {
-                Debug.Log("No hits");
+                hitInfo = hit;
+                minDistance = hit.distance;
             }
 
             return result;
         }
     }
-#endif
 }
-

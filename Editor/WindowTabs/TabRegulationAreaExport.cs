@@ -40,11 +40,11 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                 Vector2[,] v2 = new Vector2[objects.Length, 2];
                 for (int i = 0; i < objects.Length; i++)
                 {
-                    if (objects[i].GetComponent<RegurationArea>())
+                    if (objects[i].GetComponent<RegulationArea>())
                     {
                         List<Vector2> p = new List<Vector2>();
-                        RegurationArea obj =
-                            objects[i].GetComponent<RegurationArea>();
+                        RegulationArea obj =
+                            objects[i].GetComponent<RegulationArea>();
                         types[i] = "PolygonArea";
                         heights[i] = obj.GetHeight();
                         cols[i] = obj.GetAreaColor();

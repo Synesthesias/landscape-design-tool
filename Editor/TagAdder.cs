@@ -35,7 +35,6 @@ namespace LandscapeDesignTool.Editor
             {
                 EditorUtility.ClearProgressBar();
             }
-            
         }
         
         private static void SetTagOfBuildingAndGround()

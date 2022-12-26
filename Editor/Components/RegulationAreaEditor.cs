@@ -1,28 +1,74 @@
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
 namespace LandscapeDesignTool.Editor
 {
-    [CustomEditor(typeof(RegurationArea))]
+    [CustomEditor(typeof(RegulationArea))]
     public class RegulationAreaEditor : UnityEditor.Editor
     {
+        public static RegulationAreaEditor Active;
+
         Color _overlayColor = new Color(1, 0, 0, 0.5f);
         bool isBuildSelecting = false;
         GameObject hitTarget = null;
+        private bool isEditMode;
+
+        private SerializedProperty heightProperty;
+
+        public RegulationArea Target => target as RegulationArea;
+        
+        public bool IsEditMode
+        {
+            get => isEditMode;
+            set => isEditMode = value;
+        }
+
+        private void OnEnable()
+        {
+            heightProperty = serializedObject.FindProperty("areaHeight");
+        }
 
         public override void OnInspectorGUI()
         {
-            SceneView sceneView = SceneView.lastActiveSceneView;
+            Active = this;
 
-            EditorGUILayout.Space();
+            var newHeight = EditorGUILayout.FloatField("高さ制限", heightProperty.floatValue);
+            if (Math.Abs(newHeight - heightProperty.floatValue) > 0.01f)
+                ((RegulationArea)target).SetHeight(newHeight);
+
+            if (isEditMode)
+            {
+                GUI.color = Color.green;
+                if (GUILayout.Button("頂点の編集を完了"))
+                {
+                    isEditMode = false;
+                    SceneView.lastActiveSceneView.Repaint();
+                }
+                GUI.color = Color.white;
+            }
+            else
+            {
+                if (GUILayout.Button("頂点を編集する"))
+                {
+                    isEditMode = true;
+                    SceneView.lastActiveSceneView.Repaint();
+                }
+            }
+
+            serializedObject.ApplyModifiedProperties();
+        }
+
+        private void DrawBuildingColorEditPanel()
+        {
             EditorGUILayout.HelpBox("建物のカラーを変更します", MessageType.Info);
             if (isBuildSelecting == false)
             {
                 GUI.color = Color.white;
                 if (GUILayout.Button("建物のカラーを変更"))
                 {
-                    sceneView.Focus();
+                    SceneView.lastActiveSceneView.Focus();
                     isBuildSelecting = true;
                 }
             }
@@ -38,7 +84,10 @@ namespace LandscapeDesignTool.Editor
 
         private void OnSceneGUI()
         {
-            var regulationArea = target as RegurationArea;
+            if (!isEditMode)
+                return;
+
+            var regulationArea = target as RegulationArea;
 
             for (int i = 0; i < regulationArea.Vertices.Count; ++i)
             {
@@ -60,7 +109,8 @@ namespace LandscapeDesignTool.Editor
                 if (EditorGUI.EndChangeCheck())
                 {
                     regulationArea.Vertices[i] = pos;
-                    regulationArea.GenMesh();
+                    if (regulationArea.IsMeshGenerated)
+                        regulationArea.GenMesh();
                 }
             }
 
@@ -124,9 +174,6 @@ namespace LandscapeDesignTool.Editor
 
                         if (isRegurationArea)
                         {
-
-                            Material material = LDTTools.MakeMaterial(_overlayColor);
-                            int nmat;
                             List<Material> oldmat = new List<Material>();
                             hitTarget.GetComponent<Renderer>().GetSharedMaterials(oldmat);
                             _overlayColor = new Color(1, 0, 0, 0.5f);
