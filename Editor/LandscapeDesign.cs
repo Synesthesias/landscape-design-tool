@@ -49,8 +49,14 @@ namespace LandscapeDesignTool.Editor
         {
             switch (_tabIndex)
             {
+                case 0:
+                    _tabViewPointGenerate.OnSceneGUI();
+                    break;
                 case 1:
                     _tabRegulationAreaGenerate.OnSceneGUI();
+                    break;
+                case 2:
+                    _tabViewportRegulationGenerate.OnSceneGUI();
                     break;
                 case 3:
                     _tabHeightRegulationGenerate.OnSceneGUI();
