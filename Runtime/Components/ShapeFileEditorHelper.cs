@@ -10,62 +10,61 @@ namespace LandscapeDesignTool
 {
     public class ShapeFileEditorHelper : MonoBehaviour
     {
-        public string shapefileName = "";
         public Material areaMat;
         public float areaHeight;
+        public string shapefileLoadPath;
 
         public List<List<Vector2>> _Contours;
 
         public List<GameObject> _groupRoot;
 
-
-        // Start is called before the first frame update
-        void Start()
-        {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
-
 #if UNITY_EDITOR
         [CustomEditor(typeof(ShapeFileEditorHelper))]
-        public class SapeFileEditor : UnityEditor.Editor
+        public class ShapeFileEditor : Editor
         {
 
             public override void OnInspectorGUI()
             {
-                SceneView sceneView = SceneView.lastActiveSceneView;
+                ((ShapeFileEditorHelper)target).DrawGui();
+            }
+        }
 
-                Selection.activeGameObject.GetComponent<ShapeFileEditorHelper>().shapefileName =
-                        EditorGUILayout.TextField("Shapeファイル名",
-                            Selection.activeGameObject.GetComponent<ShapeFileEditorHelper>().shapefileName);
-
-                Selection.activeGameObject.GetComponent<ShapeFileEditorHelper>().areaMat =
-                    (Material)EditorGUILayout.ObjectField("マテリアル",
-                        Selection.activeGameObject.GetComponent<ShapeFileEditorHelper>().areaMat, typeof(Material), false);
-
-                Selection.activeGameObject.GetComponent<ShapeFileEditorHelper>().areaHeight =
-                    EditorGUILayout.FloatField("高さ",
-                        Selection.activeGameObject.GetComponent<ShapeFileEditorHelper>().areaHeight);
-
-                if (GUILayout.Button("メッシュデータの作成"))
+        public void DrawGui()
+        {
+            EditorGUILayout.LabelField("読込ファイル:");
+            string displayPath = string.IsNullOrEmpty(shapefileLoadPath) ? "未選択" : shapefileLoadPath;
+            EditorGUILayout.LabelField(displayPath);
+            if (GUILayout.Button("ファイル選択"))
+            {
+                string selectedPath = EditorUtility.OpenFilePanel("ShapeFile選択", "", "shp");
+                if (!string.IsNullOrEmpty(selectedPath))
                 {
-                    Selection.activeGameObject.GetComponent<ShapeFileEditorHelper>().BuildMesh();
+                    shapefileLoadPath = selectedPath;
                 }
+            }
+
+            areaMat =
+                (Material)EditorGUILayout.ObjectField("マテリアル",
+                    areaMat, typeof(Material), false);
+
+            areaHeight =
+                EditorGUILayout.FloatField("高さ",
+                    areaHeight);
+
+            if (GUILayout.Button("メッシュデータの作成"))
+            {
+                BuildMesh(shapefileLoadPath);
             }
         }
 #endif
 
 #if UNITY_EDITOR
-        void BuildMesh()
+        void BuildMesh(string shapefilePath)
         {
 
-            Debug.Log(Application.dataPath + "/plugins/LandscapeDesignTool/ShapeFiles/" + Selection.activeGameObject.GetComponent<ShapeFileEditorHelper>().shapefileName);
-            ShapeFile shp = new ShapeFile(Application.dataPath + "/plugins/LandscapeDesignTool/ShapeFiles/" + Selection.activeGameObject.GetComponent<ShapeFileEditorHelper>().shapefileName);
+            Debug.Log(shapefilePath);
+            // ShapeFile shp = new ShapeFile(Application.dataPath + "/plugins/LandscapeDesignTool/ShapeFiles/" + Selection.activeGameObject.GetComponent<ShapeFileEditorHelper>().shapefileName);
+            var shp = new ShapeFile(shapefilePath);
             ShapeFileEnumerator sfEnum = shp.GetShapeFileEnumerator();
 
             _Contours = new List<List<Vector2>>();

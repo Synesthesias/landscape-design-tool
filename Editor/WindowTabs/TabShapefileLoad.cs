@@ -8,10 +8,17 @@ namespace LandscapeDesignTool.Editor.WindowTabs
     /// </summary>
     public class TabShapefileLoad
     {
+        private ShapeFileEditorHelper _shapeFileEditorHelper;
         public void Draw(GUIStyle labelStyle)
         {
-            EditorGUILayout.LabelField("TODO ここにShapefile読込のGUIと処理を書きます。", labelStyle);
-            // TODO ここに Shapefile 読込のGUIと処理を書く
+            _shapeFileEditorHelper = (ShapeFileEditorHelper)EditorGUILayout.ObjectField("ShapefileHelper選択",
+                _shapeFileEditorHelper,
+                typeof(ShapeFileEditorHelper),
+                true);
+            if (_shapeFileEditorHelper != null)
+            {
+                _shapeFileEditorHelper.DrawGui();
+            }
         }
     }
 }
