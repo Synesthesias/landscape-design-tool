@@ -67,6 +67,11 @@ namespace LandscapeDesignTool.Editor
             }
         }
 
+        public static void Draw(ViewRegulation target)
+        {
+            
+        }
+
         public enum SurfaceType
         {
             Opaque,
