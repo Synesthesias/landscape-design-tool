@@ -24,6 +24,17 @@ namespace LandscapeDesignTool
         public List<Vector3> Vertices => vertices;
         public bool IsMeshGenerated => GetComponent<MeshFilter>() != null;
 
+        public static RegulationArea Create()
+        {
+            GameObject go = new GameObject();
+            go.layer = LayerMask.NameToLayer("RegulationArea");
+            go.name = LDTTools.GetNumberWithTag("RegulationArea", "ãKêßÉGÉäÉA");
+            go.tag = "RegulationArea";
+            var regulationArea = go.AddComponent<RegulationArea>();
+            regulationArea.SetAreaColor(new Color(0.8f, 0.3f, 0.3f, 0.4f));
+            return regulationArea;
+        }
+
         public List<Vector2> GetVertex2D()
         {
             List<Vector2> lst = new List<Vector2>();
