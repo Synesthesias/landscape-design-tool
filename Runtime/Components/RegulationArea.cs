@@ -17,7 +17,7 @@ namespace LandscapeDesignTool
         public List<Vector3> Vertices => vertices;
         public bool IsMeshGenerated => GetComponent<MeshFilter>() != null;
 
-        public List<Vector2> GetVertexData()
+        public List<Vector2> GetVertex2D()
         {
             List<Vector2> lst = new List<Vector2>();
             foreach (Vector3 v in vertices)
