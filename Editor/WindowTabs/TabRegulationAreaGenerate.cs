@@ -54,7 +54,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
             if (GUILayout.Button("新規規制エリア作成..."))
             {
                 _isCreatingContour = true;
-                regulationArea = RegulationArea.Create();
+                regulationArea = RegulationArea.Create(null);
                 Selection.activeObject = regulationArea.gameObject;
 
                 _parentWindow.Repaint();
