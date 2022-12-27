@@ -40,21 +40,23 @@ namespace LandscapeDesignTool
 
 #if UNITY_EDITOR
         [CustomEditor(typeof(ShapeItem))]
-        public class SapeItemEditor : UnityEditor.Editor
+        public class ShapeItemEditor : UnityEditor.Editor
         {
             public override void OnInspectorGUI()
             {
-                Selection.activeGameObject.GetComponent<ShapeItem>().material =
-        (Material)EditorGUILayout.ObjectField("マテリアル",
-            Selection.activeGameObject.GetComponent<ShapeItem>().material, typeof(Material), false);
+                var shapeItem = (ShapeItem)target;
+                shapeItem.material =
+                    (Material)EditorGUILayout.ObjectField("マテリアル",
+                        shapeItem.material, typeof(Material), false);
 
-                Selection.activeGameObject.GetComponent<ShapeItem>().height =
+                shapeItem.height =
                     EditorGUILayout.FloatField("高さ",
-                        Selection.activeGameObject.GetComponent<ShapeItem>().height);
+                        shapeItem.height);
                 if (GUILayout.Button("変更する"))
                 {
-                    Selection.activeGameObject.GetComponent<ShapeItem>().ReConstruct();
+                    shapeItem.ReConstruct();
                 }
+                EditorGUILayout.LabelField($"頂点数: {shapeItem.Contours?.Count ?? 0}");
             }
         }
 #endif
