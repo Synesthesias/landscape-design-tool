@@ -79,19 +79,18 @@ namespace LandscapeDesignTool
                 {
                     if (pts.Length < 3) continue;
                     List<Vector2> contour = new List<Vector2>();
-                    _Contours.Add(contour);
 
                     Debug.Log(string.Format("[NumPoints:{0}]", pts.Length));
 
 
                     for (int n = 0; n < pts.Length; ++n)
                     {
-                        Vector2 p = new Vector2((float)(pts[n].X + 655576.0), (float)(pts[n].Y + 217265.0));
+                        Vector2 p = new Vector2((float)(pts[n].X/* + 655576.0*/), (float)(pts[n].Y/* + 217265.0*/));
                         Debug.Log(pts[n].X + "," + pts[n].Y);
                         //  Vertex vtx = new Vertex((float)pts[n].X, (float)pts[n].Y);
                         contour.Add(p);
                     }
-
+                    _Contours.Add(contour);
 
                     i++;
                 }
