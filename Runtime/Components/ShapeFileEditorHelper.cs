@@ -13,7 +13,7 @@ namespace LandscapeDesignTool
     public class ShapeFileEditorHelper : MonoBehaviour
     {
         // public Material areaMat;
-        public Color materialColor = Color.cyan;
+        public Color materialColor = new Color(0, 160f/255f, 233f/255f, 0.5f);
         public float areaHeight;
         public string shapefileLoadPath;
 
