@@ -5,18 +5,22 @@ using UnityEditor;
 using TriangleNet;
 using TriangleNet.Geometry;
 using EGIS.ShapeFileLib;
+using PLATEAU.CityInfo;
+using PLATEAU.Geometries;
 
 namespace LandscapeDesignTool
 {
     public class ShapeFileEditorHelper : MonoBehaviour
     {
-        public Material areaMat;
+        // public Material areaMat;
+        public Color materialColor = Color.cyan;
         public float areaHeight;
         public string shapefileLoadPath;
 
         public List<List<Vector2>> _Contours;
 
         public List<GameObject> _groupRoot;
+        private PLATEAUInstancedCityModel _cityModel;
 
 #if UNITY_EDITOR
         [CustomEditor(typeof(ShapeFileEditorHelper))]
@@ -31,6 +35,9 @@ namespace LandscapeDesignTool
 
         public void DrawGui()
         {
+            _cityModel =
+                (PLATEAUInstancedCityModel)EditorGUILayout.ObjectField("対象都市", _cityModel,
+                    typeof(PLATEAUInstancedCityModel), true);
             EditorGUILayout.LabelField("読込ファイル:");
             string displayPath = string.IsNullOrEmpty(shapefileLoadPath) ? "未選択" : shapefileLoadPath;
             EditorGUILayout.LabelField(displayPath);
@@ -43,23 +50,24 @@ namespace LandscapeDesignTool
                 }
             }
 
-            areaMat =
-                (Material)EditorGUILayout.ObjectField("マテリアル",
-                    areaMat, typeof(Material), false);
+            materialColor = EditorGUILayout.ColorField("色", materialColor);
 
             areaHeight =
                 EditorGUILayout.FloatField("高さ",
                     areaHeight);
-
-            if (GUILayout.Button("メッシュデータの作成"))
+            if (_cityModel == null)
             {
-                BuildMesh(shapefileLoadPath);
+                EditorGUILayout.HelpBox("対象都市を指定してください。", MessageType.Error);
+            }
+            else if (GUILayout.Button("メッシュデータの作成"))
+            {
+                BuildMesh(shapefileLoadPath, _cityModel.GeoReference);
             }
         }
 #endif
 
 #if UNITY_EDITOR
-        void BuildMesh(string shapefilePath)
+        void BuildMesh(string shapefilePath, GeoReference geoRef)
         {
 
             Debug.Log(shapefilePath);
@@ -85,8 +93,9 @@ namespace LandscapeDesignTool
 
                     for (int n = 0; n < pts.Length; ++n)
                     {
-                        Vector2 p = new Vector2((float)(pts[n].X/* + 655576.0*/), (float)(pts[n].Y/* + 217265.0*/));
-                        Debug.Log(pts[n].X + "," + pts[n].Y);
+                        var refP = geoRef.ReferencePoint;
+                        Debug.Log($"Reference Point = {refP}");
+                        Vector2 p = new Vector2((float)(pts[n].X - refP.X), (float)(pts[n].Y - refP.Z));
                         //  Vertex vtx = new Vertex((float)pts[n].X, (float)pts[n].Y);
                         contour.Add(p);
                     }
@@ -99,13 +108,14 @@ namespace LandscapeDesignTool
 
             _groupRoot = new List<GameObject>();
 
-            GenerateTriangle();
-            GenerateWall();
+            var material = LDTTools.MakeMaterial(materialColor);
+            GenerateTriangle(material);
+            GenerateWall(material);
 
         }
 #endif
 
-        void GenerateTriangle()
+        void GenerateTriangle(Material material)
         {
             // Debug.Log("GenerateTriangle");
             RaycastHit hit;
@@ -143,7 +153,7 @@ namespace LandscapeDesignTool
                 Debug.Log(mesh.bounds.ToString());
 
                 var mr = go.AddComponent<MeshRenderer>();
-                mr.sharedMaterial = areaMat;
+                mr.sharedMaterial = material;
 
                 mf.mesh = mesh;
 
@@ -151,7 +161,7 @@ namespace LandscapeDesignTool
 
                 GameObject rootNode = new GameObject("ShapeItem");
                 ShapeItem si = rootNode.AddComponent<ShapeItem>();
-                si.material = areaMat;
+                si.material = mr.sharedMaterial;
                 si.height = areaHeight;
                 si.oldHeight = areaHeight;
 
@@ -162,7 +172,7 @@ namespace LandscapeDesignTool
 
         }
 
-        void GenerateWall()
+        void GenerateWall(Material material)
         {
 
             RaycastHit hit;
@@ -211,7 +221,7 @@ namespace LandscapeDesignTool
                 mesh.vertices = nv;
                 mesh.triangles = triangles;
                 var mr = go.AddComponent<MeshRenderer>();
-                mr.sharedMaterial = areaMat;
+                mr.sharedMaterial = material;
 
                 GameObject rootNode = _groupRoot[ng];
                 go.transform.parent = rootNode.transform;
