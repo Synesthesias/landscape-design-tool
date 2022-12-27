@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -10,73 +11,171 @@ namespace LandscapeDesignTool.Editor.WindowTabs
     /// </summary>
     public class TabViewPointGenerate
     {
-        private float _viewpointFOV = 60.0f;
-        private float _viewpointHeight = 1.6f;
-        private GameObject _viewpointRoot;
-        string _viewpointDescription = "視点場";
-        private const string ViewPointGroupName = "ViewPointGroup";
+        private GUIStyle _labelStyle;
+        private EditorWindow _parentWindow;
+        private Vector2 _scrollPosition;
+
+        private int selectedIndex;
+
+        private const string ViewPointGroupName = "視点場";
         private const string ViewPointName = "ViewPoint";
-        private GameObject _scriptAttachNode;
-        private KEY_OPERATION_MODE _keyOperationMode = KEY_OPERATION_MODE.None;
-        
-        private enum KEY_OPERATION_MODE
+
+        public TabViewPointGenerate(EditorWindow parentWindow)
         {
-            VIEWPOINT,
-            None
+            _parentWindow = parentWindow;
+        }
+
+        private Pose _lastCameraPose;
+        public void Update()
+        {
+            // カメラの位置が変わった際にプレビューの描画を更新するための措置
+            var viewPort = LandScapeViewPointEditor.Active?.Target;
+            if (viewPort == null)
+                return;
+
+            var newCameraPose = new Pose(
+                viewPort.transform.position, viewPort.transform.rotation);
+            if (_lastCameraPose != newCameraPose)
+                _parentWindow.Repaint();
+
+            _lastCameraPose = newCameraPose;
         }
 
         public void Draw(GUIStyle labelStyle)
         {
+            LDTTools.CheckTag("ViewPoint");
+
+            _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
+
+            _labelStyle = labelStyle;
+
+            DrawCreatePanel();
+            DrawEditPanel();
+            DrawDelete();
+            DrawCameraPreview();
+
+            EditorGUILayout.EndScrollView();
+        }
+
+        private void DrawCreatePanel()
+        {
             EditorGUILayout.Space();
-                EditorGUILayout.LabelField("<size=15>視点場の作成</size>", labelStyle);
-                EditorGUILayout.HelpBox("視点場名と視点高と視野角を入力し'視点場の追加'ボタンをクリックして下さい", MessageType.Info);
-                _viewpointFOV = EditorGUILayout.FloatField("視野角", _viewpointFOV);
-                _viewpointHeight = EditorGUILayout.FloatField("視点高", _viewpointHeight);
-                _viewpointDescription = EditorGUILayout.TextField("視点場名", _viewpointDescription);
+            EditorGUILayout.LabelField("<size=15>視点場の作成</size>", _labelStyle);
 
-                if (GUILayout.Button("視点場の追加"))
+            if (GUILayout.Button("視点場の追加"))
+            {
+                var viewpointGroup = Object.FindObjectOfType<LandscapeViewPointGroup>()?.gameObject;
+                if (!viewpointGroup)
                 {
-                    _viewpointRoot = GameObject.Find(ViewPointGroupName);
-                    if (!_viewpointRoot)
-                    {
-                        _viewpointRoot = new GameObject(ViewPointGroupName);
-                        _viewpointRoot.AddComponent<LandscapeViewPointGroup>();
-                    }
-                    GameObject child = new GameObject(ViewPointName);
-                    child.transform.parent = _viewpointRoot.transform;
-                    _scriptAttachNode = child;
-
-                    _keyOperationMode = KEY_OPERATION_MODE.VIEWPOINT;
-
-                    LandscapeViewPoint node = _scriptAttachNode.AddComponent<LandscapeViewPoint>();
-                    node.ViewpointDescription = _viewpointDescription;
-                    node.viewpointFOV = _viewpointFOV;
-                    node.EyeHeight = _viewpointHeight;
-
-                    if (!GameObject.Find("UI"))
-                    {
-                        GameObject ui = new GameObject();
-                        ui.name = "UI";
-                        Canvas canvas = ui.AddComponent<Canvas>();
-                        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-                        CanvasScaler scaler = ui.AddComponent<CanvasScaler>();
-                        scaler.uiScaleMode = CanvasScaler.ScaleMode.ConstantPixelSize;
-                        GraphicRaycaster raycaster = ui.AddComponent<GraphicRaycaster>();
-                    }
-
-                    if (!Camera.main.gameObject.GetComponent<WalkThruHandler>())
-                    {
-                        Camera.main.gameObject.AddComponent<WalkThruHandler>();
-                    }
-
-                    if (!GameObject.Find("EventSystem"))
-                    {
-                        GameObject go = new GameObject();
-                        go.name = "EventSystem";
-                        EventSystem es = go.AddComponent<EventSystem>();
-                        StandaloneInputModule im = go.AddComponent<StandaloneInputModule>();
-                    }
+                    viewpointGroup = new GameObject(ViewPointGroupName);
+                    viewpointGroup.AddComponent<LandscapeViewPointGroup>();
                 }
+                GameObject viewPointObject = new GameObject(ViewPointName);
+                viewPointObject.transform.parent = viewpointGroup.transform;
+                viewPointObject.AddComponent<LandscapeViewPoint>();
+                viewPointObject.name = LDTTools.GetNumberWithTag("ViewPoint", "視点場");
+                viewPointObject.tag = "ViewPoint";
+                viewPointObject.transform.position = Vector3.up * 100f;
+                Selection.activeGameObject = viewPointObject;
+
+                InitializeRequiredObjects();
+            }
+        }
+
+        private void DrawEditPanel()
+        {
+            DrawList();
+
+            if (LandScapeViewPointEditor.Active?.Target == null)
+                return;
+
+            LandScapeViewPointEditor.Active?.OnInspectorGUI();
+        }
+
+        private void DrawList()
+        {
+            GameObject[] objects = GameObject.FindGameObjectsWithTag("ViewPoint");
+
+            if (objects.Length == 0)
+                return;
+
+            var popupElements = new List<string>();
+            for (int i = 0; i < objects.Length; ++i)
+            {
+                popupElements.Add(objects[i].name);
+
+                // アクティブオブジェクトが外部から変更された際(ヒエラルキーからオブジェクトを選択した際)に表示を更新
+                if (Selection.activeGameObject == objects[i])
+                    selectedIndex = i;
+            }
+
+            if (selectedIndex >= popupElements.Count)
+                selectedIndex = popupElements.Count - 1;
+
+            var boldStyle = new GUIStyle(GUI.skin.label)
+            {
+                fontStyle = FontStyle.Bold
+            };
+            EditorGUILayout.LabelField("編集対象", boldStyle);
+
+            selectedIndex = EditorGUILayout.Popup("", selectedIndex, popupElements.ToArray());
+
+            Selection.activeGameObject = objects[selectedIndex];
+        }
+
+        private void DrawCameraPreview()
+        {
+            if (LandScapeViewPointEditor.Active?.Target == null)
+                return;
+
+            var rect = GUILayoutUtility.GetRect(0, 100, 0, 100);
+            rect.height = rect.width * 9 / 16;
+            Handles.DrawCamera(rect, LandScapeViewPointEditor.Active.Target.Camera);
+        }
+
+        private void DrawDelete()
+        {
+            if (LandScapeViewPointEditor.Active == null)
+                return;
+
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("<size=15>視点場削除</size>", _labelStyle);
+
+            GUI.color = Color.red;
+            if (GUILayout.Button("選択中の視点場を削除"))
+            {
+                Object.DestroyImmediate(LandScapeViewPointEditor.Active.Target.gameObject);
+                selectedIndex = Mathf.Max(selectedIndex - 1, 0);
+            }
+
+            GUI.color = Color.white;
+        }
+
+        private void InitializeRequiredObjects()
+        {
+            if (!GameObject.Find("UI"))
+            {
+                GameObject ui = new GameObject();
+                ui.name = "UI";
+                Canvas canvas = ui.AddComponent<Canvas>();
+                canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+                CanvasScaler scaler = ui.AddComponent<CanvasScaler>();
+                scaler.uiScaleMode = CanvasScaler.ScaleMode.ConstantPixelSize;
+                GraphicRaycaster raycaster = ui.AddComponent<GraphicRaycaster>();
+            }
+
+            if (!Camera.main.gameObject.GetComponent<WalkThruHandler>())
+            {
+                Camera.main.gameObject.AddComponent<WalkThruHandler>();
+            }
+
+            if (!GameObject.Find("EventSystem"))
+            {
+                GameObject go = new GameObject();
+                go.name = "EventSystem";
+                go.AddComponent<EventSystem>();
+                go.AddComponent<StandaloneInputModule>();
+            }
         }
     }
 }

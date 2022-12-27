@@ -28,12 +28,10 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                     grp.name = "RegurationArea";
                     grp.layer = LayerMask.NameToLayer("RegulationArea");
 
-                    RegurationAreaHandler handler = grp.AddComponent<RegurationAreaHandler>();
+                    ViewRegulation handler = grp.AddComponent<ViewRegulation>();
                     handler.screenHeight = _screenHeight;
                     handler.screenWidth = _screenWidth;
-
                 }
-
             }
         }
     }

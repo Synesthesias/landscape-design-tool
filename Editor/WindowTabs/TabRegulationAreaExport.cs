@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using PLATEAU.CityInfo;
 using UnityEditor;
 using UnityEngine;
 
@@ -7,19 +9,19 @@ namespace LandscapeDesignTool.Editor.WindowTabs
     public class TabRegulationAreaExport
     {
         string _regulationAreaExportPath = "";
-        int _outputType = 0;
+        private PLATEAUInstancedCityModel _cityModel;
 
         public void Draw(GUIStyle labelStyle)
         {
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("<size=15>ShapeFile出力</size>", labelStyle);
-            List<string> type = new List<string>();
-            List<LDTShapeFileHandler> fields = new List<LDTShapeFileHandler>();
-            
 
             string[] options = { "規制エリア", "高さ規制エリア", "眺望規制エリア" };
 
-            _outputType = EditorGUILayout.Popup(_outputType, options);
+            _cityModel =
+                (PLATEAUInstancedCityModel)EditorGUILayout.ObjectField("対象都市", _cityModel,
+                    typeof(PLATEAUInstancedCityModel), true);
+            if (_cityModel == null) return;
 
             using (new EditorGUI.DisabledScope(true))
             {
@@ -35,56 +37,40 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                 }
             }
 
-            List<LDTTools.AreaType> areaTypes = new List<LDTTools.AreaType>();
-
-            if (_outputType == 0)
+            if (GUILayout.Button("規制エリア出力"))
             {
-                if (GUILayout.Button("規制エリア出力"))
+                List<List<Vector2>> contours = new List<List<Vector2>>();
+
+                GameObject[] objects = GameObject.FindGameObjectsWithTag("RegulationArea");
+                int objCount = objects.Length;
+                string[] types = new string[objCount];
+                Color[] cols = new Color[objCount];
+                float[] heights = new float[objCount];
+                Vector2[,] v2 = new Vector2[objCount, 2];
+                var referencePoint = _cityModel.GeoReference.ReferencePoint;
+                for (int i = 0; i < objCount; i++)
                 {
-                    List<List<Vector2>> contours = new List<List<Vector2>>();
-
-                    GameObject[] objects = GameObject.FindGameObjectsWithTag("RegulationArea");
-                    string[] types = new string[objects.Length];
-                    Color[] cols = new Color[objects.Length];
-                    float[] heights = new float[objects.Length];
-                    Vector2[,] v2 = new Vector2[objects.Length, 2];
-                    for (int i = 0; i < objects.Length; i++)
+                    if (objects[i].GetComponent<RegulationArea>())
                     {
-                        if (objects[i].GetComponent<AnyPolygonRegurationAreaHandler>())
-                        {
-                            List<Vector2> p = new List<Vector2>();
-                            AnyPolygonRegurationAreaHandler obj =
-                                objects[i].GetComponent<AnyPolygonRegurationAreaHandler>();
-                            types[i] = "PolygonArea";
-                            heights[i] = obj.GetHeight();
-                            cols[i] = obj.GetAreaColor();
-                            v2[i, 0] = new Vector2(0, 0);
-                            v2[i, 1] = new Vector2(0, 0);
+                        List<Vector2> p = new List<Vector2>();
+                        RegulationArea obj =
+                            objects[i].GetComponent<RegulationArea>();
+                        types[i] = "PolygonArea";
+                        heights[i] = obj.GetHeight();
+                        cols[i] = obj.GetAreaColor();
+                        v2[i, 0] = new Vector2(0, 0);
+                        v2[i, 1] = new Vector2(0, 0);
 
-
-                            List<Vector2> cnt = obj.GetVertexData();
-                            contours.Add(cnt);
-
-                        }
-                        else if (objects[i].GetComponent<AnyCircleRegurationAreaHandler>())
-                        {
-
-                            AnyCircleRegurationAreaHandler obj =
-                                objects[i].GetComponent<AnyCircleRegurationAreaHandler>();
-                            types[i] = "PolygonArea";
-                            heights[i] = obj.GetHeight();
-                            cols[i] = obj.GetAreaColor();
-                            v2[i, 0] = new Vector2(obj.GetCenter().x, obj.GetCenter().z);
-                            v2[i, 1] = new Vector2(obj.GetAreaRadius().x, obj.GetAreaRadius().z);
-                            List<Vector2> cnt = obj.GetVertex();
-                            contours.Add(cnt);
-                        }
+                        List<Vector2> cnt = obj.GetVertex2D();
+                        var convertedCnt = cnt.Select(c =>
+                                new Vector2(c.x + (float)referencePoint.X, c.y + (float)referencePoint.Z))
+                            .ToList();
+                        contours.Add(convertedCnt);
                     }
-
-                    LDTTools.WriteShapeFile(_regulationAreaExportPath, "RegurationArea", types, cols, heights, v2,
-                        contours);
-
                 }
+
+                LDTTools.WriteShapeFile(_regulationAreaExportPath, "RegurationArea", types, cols, heights, v2,
+                    contours);
             }
         }
     }
