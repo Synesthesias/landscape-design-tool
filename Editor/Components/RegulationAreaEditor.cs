@@ -13,18 +13,11 @@ namespace LandscapeDesignTool.Editor
         Color _overlayColor = new Color(1, 0, 0, 0.5f);
         bool isBuildSelecting = false;
         GameObject hitTarget = null;
-        private bool isEditMode;
 
         private SerializedProperty heightProperty;
 
         public RegulationArea Target => target as RegulationArea;
         
-        public bool IsEditMode
-        {
-            get => isEditMode;
-            set => isEditMode = value;
-        }
-
         private void OnEnable()
         {
             heightProperty = serializedObject.FindProperty("areaHeight");
@@ -38,12 +31,12 @@ namespace LandscapeDesignTool.Editor
             if (Math.Abs(newHeight - heightProperty.floatValue) > 0.01f)
                 ((RegulationArea)target).SetHeight(newHeight);
 
-            if (isEditMode)
+            if (Target.IsEditMode)
             {
                 GUI.color = Color.green;
                 if (GUILayout.Button("頂点の編集を完了"))
                 {
-                    isEditMode = false;
+                    Target.IsEditMode = false;
                     SceneView.lastActiveSceneView.Repaint();
                 }
                 GUI.color = Color.white;
@@ -52,7 +45,7 @@ namespace LandscapeDesignTool.Editor
             {
                 if (GUILayout.Button("頂点を編集する"))
                 {
-                    isEditMode = true;
+                    Target.IsEditMode = true;
                     SceneView.lastActiveSceneView.Repaint();
                 }
             }
@@ -84,7 +77,7 @@ namespace LandscapeDesignTool.Editor
 
         private void OnSceneGUI()
         {
-            if (!isEditMode)
+            if (!Target.IsEditMode)
                 return;
 
             var regulationArea = target as RegulationArea;
@@ -95,20 +88,12 @@ namespace LandscapeDesignTool.Editor
                 EditorGUI.BeginChangeCheck();
                 Vector3 pos = Handles.FreeMoveHandle(regulationArea.Vertices[i], Quaternion.identity, 10f, Vector3.zero, Handles.SphereHandleCap);
 
-                if (pos != regulationArea.Vertices[i])
-                {
-                    // 地面の高さに修正
-                    int layerMask = 1 << 31; // Ground
-                    var origin = pos + Vector3.up * 10000f;
-                    var ray = new Ray(origin, Vector3.down);
-                    Physics.Raycast(ray, out RaycastHit hitInfo, float.PositiveInfinity, layerMask);
-                    if (hitInfo.transform != null)
-                        pos = hitInfo.point;
-                }
-
                 if (EditorGUI.EndChangeCheck())
                 {
-                    regulationArea.Vertices[i] = pos;
+                    if (regulationArea.Vertices[i] == pos)
+                        continue;
+
+                    regulationArea.TrySetVertexOnGround(i, pos);
                     if (regulationArea.IsMeshGenerated)
                         regulationArea.GenMesh();
                 }

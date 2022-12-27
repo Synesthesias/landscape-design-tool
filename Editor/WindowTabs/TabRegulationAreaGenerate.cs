@@ -67,7 +67,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
 
         private void DrawCreateContourButton()
         {
-            RegulationAreaEditor.Active.IsEditMode = true;
+            RegulationAreaEditor.Active.Target.IsEditMode = true;
             EditorGUILayout.HelpBox("地面をクリックして頂点を追加してください。", MessageType.Info);
 
             GUILayout.BeginHorizontal();
@@ -80,7 +80,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                 if (regulationArea.Vertices.Count > 2)
                 {
                     regulationArea.GenMesh();
-                    RegulationAreaEditor.Active.IsEditMode = false;
+                    RegulationAreaEditor.Active.Target.IsEditMode = false;
                 }
                 else
                 {
