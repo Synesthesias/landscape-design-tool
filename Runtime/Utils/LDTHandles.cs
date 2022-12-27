@@ -33,6 +33,7 @@ public class LDTHandles
         RMBRelease,
     };
 
+    #if UNITY_EDITOR
     public Vector3 DragHandle(Vector3 position, Quaternion rotate, float handleSize, Handles.CapFunction capFunc, Color colorSelected, out DragHandleResult result)
     {
         int id = GUIUtility.GetControlID(s_DragHandleHash, FocusType.Passive);
@@ -152,5 +153,6 @@ public class LDTHandles
 
         return position;
     }
+    #endif
 }
 

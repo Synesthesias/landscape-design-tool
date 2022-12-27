@@ -92,7 +92,7 @@ namespace LandscapeDesignTool
         static int[] layerId = { 30 };
         public static void CheckLayers()
         {
-
+#if UNITY_EDITOR
             SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
 
             //layerî•ñ‚ğæ“¾
@@ -115,11 +115,12 @@ namespace LandscapeDesignTool
 
             tagManager.ApplyModifiedProperties();
             tagManager.Update();
-
+#endif
         }
 
         public static void CheckTag(string tagname)
         {
+            #if UNITY_EDITOR
             SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
 
             //layerî•ñ‚ğæ“¾
@@ -138,6 +139,7 @@ namespace LandscapeDesignTool
             tags.GetArrayElementAtIndex(index).stringValue = tagname;
             tagManager.ApplyModifiedProperties();
             tagManager.Update();
+            #endif
         }
 
         public static string GetNumberWithTag(string tagname, string title)
