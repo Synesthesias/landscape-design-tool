@@ -51,6 +51,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
 
             DrawCreatePanel();
             DrawEditPanel();
+            DrawDelete();
             DrawCameraPreview();
 
             EditorGUILayout.EndScrollView();
@@ -124,12 +125,30 @@ namespace LandscapeDesignTool.Editor.WindowTabs
 
         private void DrawCameraPreview()
         {
-            if (LandScapeViewPointEditor.Active == null)
+            if (LandScapeViewPointEditor.Active?.Target == null)
                 return;
 
             var rect = GUILayoutUtility.GetRect(0, 100, 0, 100);
             rect.height = rect.width * 9 / 16;
             Handles.DrawCamera(rect, LandScapeViewPointEditor.Active.Target.Camera);
+        }
+
+        private void DrawDelete()
+        {
+            if (LandScapeViewPointEditor.Active == null)
+                return;
+
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("<size=15>視点場削除</size>", _labelStyle);
+
+            GUI.color = Color.red;
+            if (GUILayout.Button("選択中の視点場を削除"))
+            {
+                Object.DestroyImmediate(LandScapeViewPointEditor.Active.Target.gameObject);
+                selectedIndex = Mathf.Max(selectedIndex - 1, 0);
+            }
+
+            GUI.color = Color.white;
         }
 
         private void InitializeRequiredObjects()
