@@ -10,12 +10,30 @@ namespace LandscapeDesignTool
         [SerializeField] float areaHeight = 10;
         [SerializeField] List<Vector3> vertices = new List<Vector3>();
         [SerializeField] Color AreaColor;
+        [SerializeField] private bool isEditMode;
 
         public List<Vector2> _Contours;
         public List<Vector2> Vertexes = new List<Vector2>();
 
+        public bool IsEditMode
+        {
+            get => isEditMode;
+            set => isEditMode = value;
+        }
+
         public List<Vector3> Vertices => vertices;
         public bool IsMeshGenerated => GetComponent<MeshFilter>() != null;
+
+        public static RegulationArea Create()
+        {
+            GameObject go = new GameObject();
+            go.layer = LayerMask.NameToLayer("RegulationArea");
+            go.name = LDTTools.GetNumberWithTag("RegulationArea", "ãKêßÉGÉäÉA");
+            go.tag = "RegulationArea";
+            var regulationArea = go.AddComponent<RegulationArea>();
+            regulationArea.SetAreaColor(new Color(0.8f, 0.3f, 0.3f, 0.4f));
+            return regulationArea;
+        }
 
         public List<Vector2> GetVertex2D()
         {
@@ -26,6 +44,7 @@ namespace LandscapeDesignTool
             }
             return lst;
         }
+
         public float GetHeight()
         {
             return areaHeight;
@@ -50,7 +69,45 @@ namespace LandscapeDesignTool
         {
             vertices.Add(vertex);
         }
-        
+
+        public bool TrySetVertexOnGround(int index, Vector3 vertex)
+        {
+            // ínñ ÇÃçÇÇ≥Ç…èCê≥
+            var result = TryGetGroundPosition(vertex, out var point);
+            if (!result)
+                return false;
+
+            Vertices[index] = point;
+            return true;
+        }
+
+        public bool TryAddVertexOnGround(Vector3 vertex)
+        {
+            // ínñ ÇÃçÇÇ≥Ç…èCê≥
+            var result = TryGetGroundPosition(vertex, out var point);
+            if (!result)
+                return false;
+
+            Vertices.Add(point);
+            return true;
+        }
+
+        private static bool TryGetGroundPosition(Vector3 position, out Vector3 result)
+        {
+            int layerMask = 1 << 31; // Ground
+            var origin = position + Vector3.up * 10000f;
+            var ray = new Ray(origin, Vector3.down);
+            Physics.Raycast(ray, out RaycastHit hitInfo, float.PositiveInfinity, layerMask);
+            if (hitInfo.transform == null)
+            {
+                result = Vector3.zero;
+                return false;
+            }
+
+            result = hitInfo.point;
+            return true;
+        }
+
         private void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.yellow;

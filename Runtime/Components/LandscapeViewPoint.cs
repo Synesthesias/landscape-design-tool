@@ -7,7 +7,12 @@ public class LandscapeViewPoint : MonoBehaviour
     private float fov = 60.0f;
 
     public string Name => gameObject.name;
-    public float Fov => fov;
+
+    public float Fov
+    {
+        get => fov;
+        set => fov = value;
+    }
 
     public Camera Camera
     {

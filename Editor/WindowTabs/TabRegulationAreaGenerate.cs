@@ -54,20 +54,16 @@ namespace LandscapeDesignTool.Editor.WindowTabs
             if (GUILayout.Button("新規規制エリア作成..."))
             {
                 _isCreatingContour = true;
-                GameObject go = new GameObject();
-                go.layer = LayerMask.NameToLayer("RegulationArea");
-                go.name = LDTTools.GetNumberWithTag("RegulationArea", "規制エリア");
-                go.tag = "RegulationArea";
-                Selection.activeObject = go;
-                regulationArea = go.AddComponent<RegulationArea>();
-                regulationArea.SetAreaColor(new Color(0.8f, 0.3f, 0.3f, 0.4f));
+                regulationArea = RegulationArea.Create();
+                Selection.activeObject = regulationArea.gameObject;
+
                 _parentWindow.Repaint();
             }
         }
 
         private void DrawCreateContourButton()
         {
-            RegulationAreaEditor.Active.IsEditMode = true;
+            RegulationAreaEditor.Active.Target.IsEditMode = true;
             EditorGUILayout.HelpBox("地面をクリックして頂点を追加してください。", MessageType.Info);
 
             GUILayout.BeginHorizontal();
@@ -80,7 +76,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                 if (regulationArea.Vertices.Count > 2)
                 {
                     regulationArea.GenMesh();
-                    RegulationAreaEditor.Active.IsEditMode = false;
+                    RegulationAreaEditor.Active.Target.IsEditMode = false;
                 }
                 else
                 {
