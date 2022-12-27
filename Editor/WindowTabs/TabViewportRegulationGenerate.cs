@@ -31,9 +31,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                     ViewRegulation handler = grp.AddComponent<ViewRegulation>();
                     handler.screenHeight = _screenHeight;
                     handler.screenWidth = _screenWidth;
-
                 }
-
             }
         }
     }

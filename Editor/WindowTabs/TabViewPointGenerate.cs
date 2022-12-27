@@ -13,6 +13,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
     {
         private GUIStyle _labelStyle;
         private EditorWindow _parentWindow;
+        private Vector2 _scrollPosition;
 
         private int selectedIndex;
 
@@ -44,11 +45,15 @@ namespace LandscapeDesignTool.Editor.WindowTabs
         {
             LDTTools.CheckTag("ViewPoint");
 
+            _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
+
             _labelStyle = labelStyle;
 
             DrawCreatePanel();
             DrawEditPanel();
             DrawCameraPreview();
+
+            EditorGUILayout.EndScrollView();
         }
 
         private void DrawCreatePanel()

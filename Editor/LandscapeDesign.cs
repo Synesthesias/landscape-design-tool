@@ -50,13 +50,13 @@ namespace LandscapeDesignTool.Editor
             switch (_tabIndex)
             {
                 case 0:
-                    _tabViewPointGenerate.OnSceneGUI();
+                    //_tabViewPointGenerate.OnSceneGUI();
                     break;
                 case 1:
                     _tabRegulationAreaGenerate.OnSceneGUI();
                     break;
                 case 2:
-                    _tabViewportRegulationGenerate.OnSceneGUI();
+                    //_tabViewportRegulationGenerate.OnSceneGUI();
                     break;
                 case 3:
                     _tabHeightRegulationGenerate.OnSceneGUI();
@@ -74,7 +74,6 @@ namespace LandscapeDesignTool.Editor
             var style = new GUIStyle(EditorStyles.label);
             style.richText = true;
 
-
             EditorGUI.BeginChangeCheck();
             EditorGUILayout.Space();
             using (new EditorGUILayout.HorizontalScope(EditorStyles.toolbar))
@@ -89,7 +88,7 @@ namespace LandscapeDesignTool.Editor
                     _tabViewPointGenerate.Draw(style);
                     break;
                 case 1:
-                    _tabRegulationAreaGenerate.OnGUI(style);
+                    _tabRegulationAreaGenerate.Draw(style);
                     break;
                 case 2:
                     _tabViewportRegulationGenerate.Draw(style);

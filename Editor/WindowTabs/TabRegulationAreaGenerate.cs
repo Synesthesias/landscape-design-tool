@@ -21,7 +21,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
             _parentWindow = parentWindow;
         }
 
-        public void OnGUI(GUIStyle labelStyle)
+        public void Draw(GUIStyle labelStyle)
         {
             LDTTools.CheckTag("RegulationArea");
 

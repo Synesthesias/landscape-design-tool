@@ -15,28 +15,11 @@ namespace LandscapeDesignTool.Editor
         private float _wsize;
         private float _hsize;
         float _interval = 3.0f;
-        SerializedProperty _prop;
 
         private void Awake()
         {
             _wsize = Selection.activeGameObject.GetComponent<ViewRegulation>().screenWidth;
             _hsize = Selection.activeGameObject.GetComponent<ViewRegulation>().screenHeight;
-        }
-
-        private void drawArrayProperty(string prop_name)
-        {
-            EditorGUIUtility.LookLikeInspector();
-            _prop = this.serializedObject.FindProperty(prop_name);
-
-            EditorGUILayout.PropertyField(_prop, new GUIContent("除外オブジェクト"), true);
-
-            this.serializedObject.ApplyModifiedProperties();
-
-            this.serializedObject.ApplyModifiedProperties();
-
-            EditorGUIUtility.LookLikeControls();
-
-
         }
 
         public override void OnInspectorGUI()
@@ -90,8 +73,22 @@ namespace LandscapeDesignTool.Editor
             Transparent
         }
 
+        private Vector3 targetPosition;
+
         private void OnSceneGUI()
         {
+            EditorGUI.BeginChangeCheck();
+            Vector3 pos = Handles.PositionHandle(targetPosition, Quaternion.identity);
+
+            if (EditorGUI.EndChangeCheck())
+            {
+                if (targetPosition != pos)
+                    CreateViewRegulation(Vector3.zero, pos, pos.magnitude);
+                targetPosition = pos;
+            }
+
+            return;
+
             var ev = Event.current;
 
             RaycastHit hit;
@@ -114,15 +111,23 @@ namespace LandscapeDesignTool.Editor
                     selectingTarget = false;
                     float length = Vector3.Distance(originPoint, targetPoint);
 
-                    DrawViewRegulation(originPoint, targetPoint, length, hit);
+                    CreateViewRegulation(originPoint, targetPoint, length);
                 }
                 ev.Use();
             }
         }
 
-        void DrawViewRegulation(Vector3 originPoint, Vector3 targetPoint, float length, RaycastHit hit)
+        void CreateViewRegulation(Vector3 originPoint, Vector3 targetPoint, float length)
         {
+            CreateCoveringMesh(originPoint, targetPosition, length);
+            CreateLineOfSight(originPoint, targetPosition);
+        }
 
+        /// <summary>
+        /// 選択判定のためのメッシュを生成します。
+        /// </summary>
+        private void CreateCoveringMesh(Vector3 originPoint, Vector3 targetPoint, float length)
+        {
             Vector3[] vertex = new Vector3[6];
             vertex[0] = new Vector3(0, 0, 0);
             vertex[1] = new Vector3(-_wsize / 2.0f, -_hsize / 2.0f, length);
@@ -132,24 +137,29 @@ namespace LandscapeDesignTool.Editor
             vertex[5] = new Vector3(0, 0, length);
 
             int[] idx = {
-                        0, 1, 2,
-                        0, 2, 3,
-                        0, 3, 4,
-                        0, 4, 1,
-                        5, 2, 1,
-                        5, 3, 2,
-                        5, 4, 3,
-                        5, 1, 4 };
+                0, 1, 2,
+                0, 2, 3,
+                0, 3, 4,
+                0, 4, 1,
+                5, 2, 1,
+                5, 3, 2,
+                5, 4, 3,
+                5, 1, 4 };
 
-
-            GameObject go = new GameObject("ViewRegurationArea");
+            GameObject go = new GameObject("CoveringMesh");
             go.layer = LayerMask.NameToLayer("RegulationArea");
 
-            var mf = go.AddComponent<MeshFilter>();
+            var mf = go.GetComponent<MeshFilter>();
+            if (mf == null)
+                mf = go.AddComponent<MeshFilter>();
+
             var mesh = new Mesh();
             mesh.vertices = vertex;
             mesh.triangles = idx;
-            var mr = go.AddComponent<MeshRenderer>();
+
+            var mr = go.GetComponent<MeshRenderer>();
+            if (mr == null)
+                mr = go.AddComponent<MeshRenderer>();
 
             Material material = LDTTools.MakeMaterial(_areaColor);
 
@@ -158,18 +168,30 @@ namespace LandscapeDesignTool.Editor
 
             go.transform.position = originPoint;
             go.transform.LookAt(targetPoint, Vector3.up);
-            go.transform.parent = Selection.activeGameObject.transform;
+            go.transform.parent = ((ViewRegulation)target).transform;
             mr.enabled = false;
-
-            DrawViewLine(originPoint, targetPoint, go);
         }
 
-
-        float DrawViewLine(Vector3 origin, Vector3 destination, GameObject parent)
+        void ClearLineOfSight()
         {
+            var root = ((ViewRegulation)target).transform;
+            for (int i = 0; i < root.childCount; ++i)
+            {
+                var obj = root.GetChild(i);
+                if (obj.name == "LineOfSight")
+                    DestroyImmediate(obj);
+            }
+        }
+
+        float CreateLineOfSight(Vector3 origin, Vector3 destination)
+        {
+            ClearLineOfSight();
+
+            var obj = new GameObject("LineOfSight");
+            obj.transform.parent = ((ViewRegulation)target).transform;
 
             float result = -1;
-            
+
             int divx = (int)(_wsize / _interval);
             int divy = (int)(_hsize / _interval);
 
@@ -184,12 +206,12 @@ namespace LandscapeDesignTool.Editor
 
                     if (RaycastBuildings(origin, d, out hit))
                     {
-                        DrawLine(origin, hit.point, parent, _areaColor);
-                        DrawLine(hit.point, d, parent, _areaInvalidColor);
+                        DrawLine(origin, hit.point, obj, _areaColor);
+                        DrawLine(hit.point, d, obj, _areaInvalidColor);
                     }
                     else
                     {
-                        DrawLine(origin, d, parent, _areaColor);
+                        DrawLine(origin, d, obj, _areaColor);
                     }
                 }
             }
@@ -220,171 +242,6 @@ namespace LandscapeDesignTool.Editor
             go.transform.parent = parent.transform;
         }
 
-        void CheckCollitionCone(Vector3 originPoint, Vector3 targetPoint, float length, RaycastHit hit)
-        {
-            float result = CheckCollitionBuilding(originPoint, targetPoint, out _);
-            
-            if (result == -1)
-            {
-                Vector3[] vertex = new Vector3[6];
-                vertex[0] = new Vector3(0, 0, 0);
-                vertex[1] = new Vector3(-_wsize / 2.0f, -_hsize / 2.0f, length);
-                vertex[2] = new Vector3(-_wsize / 2.0f, _hsize / 2.0f, length);
-                vertex[3] = new Vector3(_wsize / 2.0f, _hsize / 2.0f, length);
-                vertex[4] = new Vector3(_wsize / 2.0f, -_hsize / 2.0f, length);
-                vertex[5] = new Vector3(0, 0, length);
-
-                int[] idx = {
-                        0, 1, 2,
-                        0, 2, 3,
-                        0, 3, 4,
-                        0, 4, 1,
-                        5, 2, 1,
-                        5, 3, 2,
-                        5, 4, 3,
-                        5, 1, 4 };
-
-
-                GameObject go = new GameObject("ViewRegurationArea");
-
-                var mf = go.AddComponent<MeshFilter>();
-                var mesh = new Mesh();
-                mesh.vertices = vertex;
-                mesh.triangles = idx;
-                var mr = go.AddComponent<MeshRenderer>();
-
-                Material material = new Material(Shader.Find("Universal Render Pipeline/Lit"));
-                material.SetFloat("_Surface", (float)SurfaceType.Transparent);
-                material.SetColor("_BaseColor", _areaColor);
-
-
-                mr.sharedMaterial = material;
-                mf.mesh = mesh;
-
-
-                go.transform.position = originPoint;
-                go.transform.LookAt(targetPoint, Vector3.up);
-                go.transform.parent = Selection.activeGameObject.transform;
-            }
-            else
-            {
-                float divwidth = (_wsize * result) / length;
-                float divheight = (_hsize * result) / length;
-
-                Vector3[] vertex = new Vector3[10];
-                vertex[0] = new Vector3(0, 0, 0);
-                vertex[1] = new Vector3(-_wsize / 2.0f, -_hsize / 2.0f, length);
-                vertex[2] = new Vector3(-_wsize / 2.0f, _hsize / 2.0f, length);
-                vertex[3] = new Vector3(_wsize / 2.0f, _hsize / 2.0f, length);
-                vertex[4] = new Vector3(_wsize / 2.0f, -_hsize / 2.0f, length);
-
-                vertex[5] = new Vector3(-divwidth / 2.0f, -divheight / 2.0f, result);
-                vertex[6] = new Vector3(-divwidth / 2.0f, divheight / 2.0f, result);
-                vertex[7] = new Vector3(divwidth / 2.0f, divheight / 2.0f, result);
-                vertex[8] = new Vector3(divwidth / 2.0f, -divheight / 2.0f, result);
-
-                vertex[9] = new Vector3(0, 0, result);
-
-                int[] idx1 = {
-                        0, 5, 6,
-                        0, 6, 7,
-                        0, 7, 8,
-                        0, 8, 5,
-                        9, 6, 5,
-                        9, 7, 6,
-                        9, 8, 7,
-                        9, 5, 8 };
-
-                int[] idx2 = {
-                        5,1,2,
-                        5,2,6,
-                        6,2,3,
-                        6,3,7,
-                        7,3,4,
-                        7,4,8,
-                        8,4,5,
-                        8,5,9,
-                        5, 2, 1,
-                        5, 3, 2,
-                        5, 4, 3,
-                        5, 1, 4
-                };
-
-                // Safe area
-                GameObject go = new GameObject("ViewRegurationArea");
-
-                var mf = go.AddComponent<MeshFilter>();
-                var mesh = new Mesh();
-                mesh.vertices = vertex;
-                mesh.triangles = idx1;
-                var mr = go.AddComponent<MeshRenderer>();
-
-                Material material = new Material(Shader.Find("Universal Render Pipeline/Lit"));
-                material.SetFloat("_Surface", (float)SurfaceType.Transparent);
-                material.SetColor("_BaseColor", _areaColor);
-
-                mr.sharedMaterial = material;
-                mf.mesh = mesh;
-
-                go.transform.position = originPoint;
-                go.transform.LookAt(targetPoint, Vector3.up);
-                go.transform.parent = Selection.activeGameObject.transform;
-
-                // Invalid area
-                GameObject goInvalid = new GameObject("ViewRegurationAreaInvalid");
-
-                var mfInvalid = goInvalid.AddComponent<MeshFilter>();
-                var meshInvalid = new Mesh();
-                meshInvalid.vertices = vertex;
-                meshInvalid.triangles = idx2;
-                var mrInvalid = goInvalid.AddComponent<MeshRenderer>();
-
-                Material materialInvalid = new Material(Shader.Find("Universal Render Pipeline/Lit"));
-                materialInvalid.SetFloat("_Surface", (float)SurfaceType.Transparent);
-                materialInvalid.SetColor("_BaseColor", _areaInvalidColor);
-
-                mrInvalid.sharedMaterial = materialInvalid;
-                mfInvalid.mesh = meshInvalid;
-
-                goInvalid.transform.position = originPoint;
-                goInvalid.transform.LookAt(targetPoint, Vector3.up);
-                goInvalid.transform.parent = go.transform;
-            }
-        }
-
-        float CheckCollitionBuilding(Vector3 origin, Vector3 distination, out RaycastHit hitpoint)
-        {
-            float result = -1;
-            hitpoint = new RaycastHit();
-
-            int divx = (int)(_wsize / _interval);
-            int divy = (int)(_hsize / _interval);
-
-            float mindistance = float.MaxValue;
-            for (int i = 0; i < divx + 1; i++)
-            {
-                for (int j = 0; j < divy + 1; j++)
-                {
-                    float x = distination.x - (_wsize / 2.0f) + _interval * i;
-                    float y = distination.y - (_hsize / 2.0f) + _interval * j;
-                    Vector3 d = new Vector3(x, y, distination.z);
-                    RaycastHit hit;
-
-                    if (RaycastBuildings(origin, d, out hit))
-                    {
-                        if (hit.distance < mindistance)
-                        {
-                            hitpoint = hit;
-                            mindistance = hit.distance;
-                            result = mindistance;
-                        }
-                    }
-                }
-            }
-
-            return result;
-        }
-
         bool RaycastBuildings(Vector3 origin, Vector3 destination, out RaycastHit hitInfo)
         {
             bool result = false;
@@ -399,19 +256,19 @@ namespace LandscapeDesignTool.Editor
             float minDistance = float.MaxValue;
             if (hits.Length <= 0)
                 return result;
-            
+
             foreach (var hit in hits)
             {
                 if (hit.collider.gameObject.name == target.name)
                     continue;
 
                 int layerIgnoreRaycast = LayerMask.NameToLayer("RegulationArea");
-                
+
                 if (hit.collider.gameObject.layer == layerIgnoreRaycast)
                     continue;
 
                 result = true;
-                        
+
                 if (hit.distance >= minDistance)
                     continue;
 
