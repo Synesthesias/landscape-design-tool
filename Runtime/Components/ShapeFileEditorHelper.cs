@@ -10,12 +10,13 @@ using PLATEAU.Geometries;
 
 namespace LandscapeDesignTool
 {
-    public class ShapeFileEditorHelper : MonoBehaviour
+    public class ShapeFileEditorHelper
     {
         // public Material areaMat;
         public Color materialColor = new Color(0, 160f/255f, 233f/255f, 0.5f);
         public float areaHeight;
         public string shapefileLoadPath;
+        private string _generateGameObjName = "LoadedShapeFile";
 
         public List<List<Vector2>> _Contours;
 
@@ -23,15 +24,15 @@ namespace LandscapeDesignTool
         private PLATEAUInstancedCityModel _cityModel;
 
 #if UNITY_EDITOR
-        [CustomEditor(typeof(ShapeFileEditorHelper))]
-        public class ShapeFileEditor : Editor
-        {
-
-            public override void OnInspectorGUI()
-            {
-                ((ShapeFileEditorHelper)target).DrawGui();
-            }
-        }
+        // [CustomEditor(typeof(ShapeFileEditorHelper))]
+        // public class ShapeFileEditor : Editor
+        // {
+        //
+        //     public override void OnInspectorGUI()
+        //     {
+        //         ((ShapeFileEditorHelper)target).DrawGui();
+        //     }
+        // }
 
         public void DrawGui()
         {
@@ -50,6 +51,8 @@ namespace LandscapeDesignTool
                 }
             }
 
+            _generateGameObjName = EditorGUILayout.TextField("ゲームオブジェクト名: ", _generateGameObjName);
+
             materialColor = EditorGUILayout.ColorField("色", materialColor);
 
             areaHeight =
@@ -61,13 +64,14 @@ namespace LandscapeDesignTool
             }
             else if (GUILayout.Button("メッシュデータの作成"))
             {
-                BuildMesh(shapefileLoadPath, _cityModel.GeoReference);
+                var parentObj = new GameObject(_generateGameObjName);
+                BuildMesh(shapefileLoadPath, parentObj.transform, _cityModel.GeoReference);
             }
         }
 #endif
 
 #if UNITY_EDITOR
-        void BuildMesh(string shapefilePath, GeoReference geoRef)
+        void BuildMesh(string shapefilePath, Transform parentTransform, GeoReference geoRef)
         {
 
             Debug.Log(shapefilePath);
@@ -94,7 +98,6 @@ namespace LandscapeDesignTool
                     for (int n = 0; n < pts.Length; ++n)
                     {
                         var refP = geoRef.ReferencePoint;
-                        Debug.Log($"Reference Point = {refP}");
                         Vector2 p = new Vector2((float)(pts[n].X - refP.X), (float)(pts[n].Y - refP.Z));
                         //  Vertex vtx = new Vertex((float)pts[n].X, (float)pts[n].Y);
                         contour.Add(p);
@@ -109,13 +112,13 @@ namespace LandscapeDesignTool
             _groupRoot = new List<GameObject>();
 
             var material = LDTTools.MakeMaterial(materialColor);
-            GenerateTriangle(material);
+            GenerateTriangle(parentTransform, material);
             GenerateWall(material);
 
         }
 #endif
 
-        void GenerateTriangle(Material material)
+        void GenerateTriangle(Transform parentTransform, Material material)
         {
             // Debug.Log("GenerateTriangle");
             RaycastHit hit;
@@ -165,7 +168,7 @@ namespace LandscapeDesignTool
                 si.height = areaHeight;
                 si.oldHeight = areaHeight;
 
-                rootNode.transform.parent = gameObject.transform;
+                rootNode.transform.parent = parentTransform.transform;
                 _groupRoot.Add(rootNode);
                 go.transform.parent = rootNode.transform;
             }
