@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace LandscapeDesignTool
 {
-    public class RegurationArea : MonoBehaviour
+    public class RegulationArea : MonoBehaviour
     {
         [SerializeField] float areaHeight = 0;
         [SerializeField] List<Vector3> vertices = new List<Vector3>();
@@ -16,7 +16,10 @@ namespace LandscapeDesignTool
 
         public List<Vector3> Vertices => vertices;
 
-        public List<Vector2> GetVertexData()
+        /// <summary>
+        /// vertices から x座標と z座標 だけ取り出して2D座標のリストにしたものを返します。、
+        /// </summary>
+        public List<Vector2> GetVertex2D()
         {
             List<Vector2> lst = new List<Vector2>();
             foreach (Vector3 v in vertices)

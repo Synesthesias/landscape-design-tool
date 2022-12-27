@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 namespace LandscapeDesignTool.Editor.WindowTabs
@@ -9,7 +10,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
         float _regulationHeight = 10;
         Color _areaColor = new Color(0, 1, 1, 0.5f);
         bool _isCreatingContour = false;
-        RegurationArea polygon;
+        RegulationArea polygon;
         List<Vector3> vertex = new List<Vector3>();
         private EditorWindow _parentWindow;
         bool _isEditingContour = false;
@@ -48,7 +49,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                         go.name = LDTTools.GetNumberWithTag("RegulationArea", "規制エリア");
                         go.tag = "RegulationArea";
                         Selection.activeObject = go;
-                        polygon = go.AddComponent<RegurationArea>();
+                        polygon = go.AddComponent<RegulationArea>();
                         Debug.Log(_regulationHeight);
                         polygon.SetHeight(_regulationHeight);
                         polygon.SetAreaColor(_areaColor);
@@ -62,8 +63,8 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                 {
                     if (GUILayout.Button("編集完了"))
                     {
-                        RegurationArea handler =
-                            _selectObject.GetComponent<RegurationArea>();
+                        RegulationArea handler =
+                            _selectObject.GetComponent<RegulationArea>();
                         handler.SetHeight(_regulationHeight);
                         handler.SetAreaColor(_areaColor);
                         handler.ClearPoint();
@@ -71,6 +72,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                         handler.DoEdit();
 
                         _isEditingContour = false;
+                        MarkSceneDirty();
                     }
 
                     if (GUILayout.Button("キャンセル"))
@@ -119,11 +121,11 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                 _selectObject = objects[n];
                 _isEditingContour = true;
                 
-                if (!objects[n].GetComponent<RegurationArea>())
+                if (!objects[n].GetComponent<RegulationArea>())
                     continue;
                 
-                RegurationArea handler =
-                    objects[n].GetComponent<RegurationArea>();
+                RegulationArea handler =
+                    objects[n].GetComponent<RegulationArea>();
                 _regulationHeight = handler.GetHeight();
                 _areaColor = handler.GetAreaColor();
                 List<Vector3> vs = handler.GetVertex();
@@ -143,13 +145,20 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                 polygon.GenMesh();
 
                 _parentWindow.Repaint();
+                MarkSceneDirty();
             }
 
             GUI.color = Color.white;
             if (GUILayout.Button("頂点をクリア"))
             {
                 vertex.Clear();
+                MarkSceneDirty();
             }
+        }
+
+        private void MarkSceneDirty()
+        {
+            EditorSceneManager.MarkAllScenesDirty();
         }
     }
 }

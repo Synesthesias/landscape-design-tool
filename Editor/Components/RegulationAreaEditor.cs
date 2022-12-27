@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace LandscapeDesignTool.Editor
 {
-    [CustomEditor(typeof(RegurationArea))]
+    [CustomEditor(typeof(RegulationArea))]
     public class RegulationAreaEditor : UnityEditor.Editor
     {
         Color _overlayColor = new Color(1, 0, 0, 0.5f);
@@ -14,6 +14,7 @@ namespace LandscapeDesignTool.Editor
         public override void OnInspectorGUI()
         {
             SceneView sceneView = SceneView.lastActiveSceneView;
+            var regulationArea = (RegulationArea)target;
 
             EditorGUILayout.Space();
             EditorGUILayout.HelpBox("建物のカラーを変更します", MessageType.Info);
@@ -34,11 +35,13 @@ namespace LandscapeDesignTool.Editor
                     isBuildSelecting = false;
                 }
             }
+            
+            EditorGUILayout.LabelField($"頂点数: {regulationArea.GetVertex().Count}");
         }
 
         private void OnSceneGUI()
         {
-            var regulationArea = target as RegurationArea;
+            var regulationArea = target as RegulationArea;
 
             for (int i = 0; i < regulationArea.Vertices.Count; ++i)
             {

@@ -34,24 +34,25 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                 List<List<Vector2>> contours = new List<List<Vector2>>();
 
                 GameObject[] objects = GameObject.FindGameObjectsWithTag("RegulationArea");
-                string[] types = new string[objects.Length];
-                Color[] cols = new Color[objects.Length];
-                float[] heights = new float[objects.Length];
-                Vector2[,] v2 = new Vector2[objects.Length, 2];
-                for (int i = 0; i < objects.Length; i++)
+                int objCount = objects.Length;
+                string[] types = new string[objCount];
+                Color[] cols = new Color[objCount];
+                float[] heights = new float[objCount];
+                Vector2[,] v2 = new Vector2[objCount, 2];
+                for (int i = 0; i < objCount; i++)
                 {
-                    if (objects[i].GetComponent<RegurationArea>())
+                    if (objects[i].GetComponent<RegulationArea>())
                     {
                         List<Vector2> p = new List<Vector2>();
-                        RegurationArea obj =
-                            objects[i].GetComponent<RegurationArea>();
+                        RegulationArea obj =
+                            objects[i].GetComponent<RegulationArea>();
                         types[i] = "PolygonArea";
                         heights[i] = obj.GetHeight();
                         cols[i] = obj.GetAreaColor();
                         v2[i, 0] = new Vector2(0, 0);
                         v2[i, 1] = new Vector2(0, 0);
 
-                        List<Vector2> cnt = obj.GetVertexData();
+                        List<Vector2> cnt = obj.GetVertex2D();
                         contours.Add(cnt);
                     }
                 }
