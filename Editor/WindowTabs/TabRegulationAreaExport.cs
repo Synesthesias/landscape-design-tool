@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using PLATEAU.CityInfo;
 using UnityEditor;
 using UnityEngine;
 
@@ -7,6 +9,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
     public class TabRegulationAreaExport
     {
         string _regulationAreaExportPath = "";
+        private PLATEAUInstancedCityModel _cityModel;
 
         public void Draw(GUIStyle labelStyle)
         {
@@ -14,6 +17,11 @@ namespace LandscapeDesignTool.Editor.WindowTabs
             EditorGUILayout.LabelField("<size=15>ShapeFile出力</size>", labelStyle);
 
             string[] options = { "規制エリア", "高さ規制エリア", "眺望規制エリア" };
+
+            _cityModel =
+                (PLATEAUInstancedCityModel)EditorGUILayout.ObjectField("対象都市", _cityModel,
+                    typeof(PLATEAUInstancedCityModel), true);
+            if (_cityModel == null) return;
 
             using (new EditorGUI.DisabledScope(true))
             {
@@ -39,6 +47,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                 Color[] cols = new Color[objCount];
                 float[] heights = new float[objCount];
                 Vector2[,] v2 = new Vector2[objCount, 2];
+                var referencePoint = _cityModel.GeoReference.ReferencePoint;
                 for (int i = 0; i < objCount; i++)
                 {
                     if (objects[i].GetComponent<RegulationArea>())
@@ -53,7 +62,10 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                         v2[i, 1] = new Vector2(0, 0);
 
                         List<Vector2> cnt = obj.GetVertex2D();
-                        contours.Add(cnt);
+                        var convertedCnt = cnt.Select(c =>
+                                new Vector2(c.x + (float)referencePoint.X, c.y + (float)referencePoint.Z))
+                            .ToList();
+                        contours.Add(convertedCnt);
                     }
                 }
 
