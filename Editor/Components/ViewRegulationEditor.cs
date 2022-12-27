@@ -1,11 +1,35 @@
+using System;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace LandscapeDesignTool.Editor
 {
     [CustomEditor(typeof(ViewRegulation))]
     [CanEditMultipleObjects]
     public class ViewRegulationEditor : UnityEditor.Editor
+    {
+        private ViewRegulationGUI _gui;
+
+        private void Init()
+        {
+            _gui = new ViewRegulationGUI((ViewRegulation)target);
+        }
+
+        public override void OnInspectorGUI()
+        {
+            if (_gui == null) Init();
+            _gui.Draw((ViewRegulation)target);
+        }
+
+        public void OnSceneGUI()
+        {
+            if (_gui == null) Init();
+            _gui.OnSceneGUI((ViewRegulation)target);
+        }
+    }
+
+    public class ViewRegulationGUI
     {
         int selectIndex = 0;
         bool selectingTarget = false;
@@ -16,17 +40,17 @@ namespace LandscapeDesignTool.Editor
         private float _hsize;
         float _interval = 3.0f;
 
-        private void Awake()
+        public ViewRegulationGUI(ViewRegulation target)
         {
-            _wsize = Selection.activeGameObject.GetComponent<ViewRegulation>().screenWidth;
-            _hsize = Selection.activeGameObject.GetComponent<ViewRegulation>().screenHeight;
+            _wsize = target.screenWidth;
+            _hsize = target.screenHeight;
         }
 
-        public override void OnInspectorGUI()
+        public void Draw(ViewRegulation target)
         {
             var style = new GUIStyle(EditorStyles.label);
             style.richText = true;
-            this.serializedObject.Update();
+            // this.serializedObject.Update();
 
             SceneView sceneView = SceneView.lastActiveSceneView;
 
@@ -67,11 +91,6 @@ namespace LandscapeDesignTool.Editor
             }
         }
 
-        public static void Draw(ViewRegulation target)
-        {
-            
-        }
-
         public enum SurfaceType
         {
             Opaque,
@@ -80,7 +99,7 @@ namespace LandscapeDesignTool.Editor
 
         private Vector3 targetPosition;
 
-        private void OnSceneGUI()
+        public void OnSceneGUI(ViewRegulation target)
         {
             EditorGUI.BeginChangeCheck();
             Vector3 pos = Handles.PositionHandle(targetPosition, Quaternion.identity);
@@ -88,11 +107,11 @@ namespace LandscapeDesignTool.Editor
             if (EditorGUI.EndChangeCheck())
             {
                 if (targetPosition != pos)
-                    CreateViewRegulation(Vector3.zero, pos, pos.magnitude);
+                    CreateViewRegulation(target, Vector3.zero, pos, pos.magnitude);
                 targetPosition = pos;
             }
 
-            return;
+            if(!selectingTarget) return;
 
             var ev = Event.current;
 
@@ -116,22 +135,22 @@ namespace LandscapeDesignTool.Editor
                     selectingTarget = false;
                     float length = Vector3.Distance(originPoint, targetPoint);
 
-                    CreateViewRegulation(originPoint, targetPoint, length);
+                    CreateViewRegulation(target, originPoint, targetPoint, length);
                 }
                 ev.Use();
             }
         }
 
-        void CreateViewRegulation(Vector3 originPoint, Vector3 targetPoint, float length)
+        void CreateViewRegulation(ViewRegulation targetViewRegulation, Vector3 originPoint, Vector3 targetPoint, float length)
         {
-            CreateCoveringMesh(originPoint, targetPosition, length);
-            CreateLineOfSight(originPoint, targetPosition);
+            CreateCoveringMesh(targetViewRegulation, originPoint, targetPosition, length);
+            CreateLineOfSight(targetViewRegulation, originPoint, targetPosition);
         }
 
         /// <summary>
         /// 選択判定のためのメッシュを生成します。
         /// </summary>
-        private void CreateCoveringMesh(Vector3 originPoint, Vector3 targetPoint, float length)
+        private void CreateCoveringMesh(ViewRegulation target, Vector3 originPoint, Vector3 targetPoint, float length)
         {
             Vector3[] vertex = new Vector3[6];
             vertex[0] = new Vector3(0, 0, 0);
@@ -177,20 +196,20 @@ namespace LandscapeDesignTool.Editor
             mr.enabled = false;
         }
 
-        void ClearLineOfSight()
+        void ClearLineOfSight(ViewRegulation target)
         {
-            var root = ((ViewRegulation)target).transform;
+            var root = (target).transform;
             for (int i = 0; i < root.childCount; ++i)
             {
-                var obj = root.GetChild(i);
-                if (obj.name == "LineOfSight")
-                    DestroyImmediate(obj);
+                var trans = root.GetChild(i);
+                if (trans.name == "LineOfSight")
+                    Object.DestroyImmediate(trans);
             }
         }
 
-        float CreateLineOfSight(Vector3 origin, Vector3 destination)
+        float CreateLineOfSight(ViewRegulation target, Vector3 origin, Vector3 destination)
         {
-            ClearLineOfSight();
+            ClearLineOfSight(target);
 
             var obj = new GameObject("LineOfSight");
             obj.transform.parent = ((ViewRegulation)target).transform;
@@ -209,7 +228,7 @@ namespace LandscapeDesignTool.Editor
                     Vector3 d = new Vector3(x, y, destination.z);
                     RaycastHit hit;
 
-                    if (RaycastBuildings(origin, d, out hit))
+                    if (RaycastBuildings(target, origin, d, out hit))
                     {
                         DrawLine(origin, hit.point, obj, _areaColor);
                         DrawLine(hit.point, d, obj, _areaInvalidColor);
@@ -247,7 +266,7 @@ namespace LandscapeDesignTool.Editor
             go.transform.parent = parent.transform;
         }
 
-        bool RaycastBuildings(Vector3 origin, Vector3 destination, out RaycastHit hitInfo)
+        bool RaycastBuildings(ViewRegulation target, Vector3 origin, Vector3 destination, out RaycastHit hitInfo)
         {
             bool result = false;
 

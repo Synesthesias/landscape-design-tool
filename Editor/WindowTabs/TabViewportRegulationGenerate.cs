@@ -12,6 +12,8 @@ namespace LandscapeDesignTool.Editor.WindowTabs
         private float _screenHeight = 80.0f;
         private string _viewRegulationAreaObjName = "RagulationArea";
         private int _selectViewRegulationIdx;
+        private ViewRegulationGUI _viewRegulationGUI;
+        private ViewRegulation _selectedViewRegulation;
 
         public void Draw(GUIStyle labelStyle)
         {
@@ -44,9 +46,22 @@ namespace LandscapeDesignTool.Editor.WindowTabs
             var viewRegulationOptions = viewRegulations.Select(v => v.name).ToArray();
             if (viewRegulations.Length == 0) return;
             _selectViewRegulationIdx = Math.Min(_selectViewRegulationIdx, viewRegulations.Length);
-            _selectViewRegulationIdx = EditorGUILayout.Popup("眺望規制", _selectViewRegulationIdx, viewRegulationOptions);
-            var selectedViewRegulation = viewRegulations[_selectViewRegulationIdx];
+            using (var check = new EditorGUI.ChangeCheckScope())
+            {
+                _selectViewRegulationIdx = EditorGUILayout.Popup("眺望規制", _selectViewRegulationIdx, viewRegulationOptions);
+                _selectedViewRegulation = viewRegulations[_selectViewRegulationIdx];
+                if (check.changed || _viewRegulationGUI == null)
+                {
+                    _viewRegulationGUI = new ViewRegulationGUI(_selectedViewRegulation);
+                }
+            }
+            _viewRegulationGUI?.Draw(_selectedViewRegulation);
             
+        }
+
+        public void OnSceneGUI()
+        {
+            _viewRegulationGUI?.OnSceneGUI(_selectedViewRegulation);
         }
     }
 }

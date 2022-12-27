@@ -56,7 +56,7 @@ namespace LandscapeDesignTool.Editor
                     _tabRegulationAreaGenerate.OnSceneGUI();
                     break;
                 case 2:
-                    //_tabViewportRegulationGenerate.OnSceneGUI();
+                    _tabViewportRegulationGenerate.OnSceneGUI();
                     break;
                 case 3:
                     _tabHeightRegulationGenerate.OnSceneGUI();
