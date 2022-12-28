@@ -1,4 +1,5 @@
-﻿using PLATEAU.CityGML;
+﻿using System.Xml.Schema;
+using PLATEAU.CityGML;
 using UnityEditor;
 using UnityEngine;
 using Material = UnityEngine.Material;
@@ -16,7 +17,7 @@ namespace LandscapeDesignTool.Editor
         private float _wsize;
         private float _hsize;
         float _interval = 3.0f;
-        private Vector3 _prevPosition;
+        private Vector3 _prevPos;
         private const string ObjNameLineOfSight = "LineOfSight";
         private const string ObjNameCoveringMesh = "CoveringMesh";
 
@@ -24,7 +25,7 @@ namespace LandscapeDesignTool.Editor
         {
             _wsize = target.screenWidth;
             _hsize = target.screenHeight;
-            _prevPosition = target.transform.position;
+            _prevPos = target.transform.position;
         }
 
         public void Draw(ViewRegulation target)
@@ -82,26 +83,46 @@ namespace LandscapeDesignTool.Editor
 
         public void OnSceneGUI(ViewRegulation target)
         {
-            EditorGUI.BeginChangeCheck();
             var trans = target.transform;
-            var posStart = trans.position;
-            Vector3 posEnd = Handles.PositionHandle(targetPosition, Quaternion.identity);
-            float lineLength = (posEnd - posStart).magnitude;
-            
-            Handles.Label(posStart, "視線 始点");
-            if ((posStart - _prevPosition).sqrMagnitude > 0.00001)
-            {
-                CreateViewRegulation(target, posStart, posEnd, lineLength);
-            }
-            
-            Handles.Label(targetPosition, "視線 終点");
+            // var posStart = trans.position;
 
-            if (EditorGUI.EndChangeCheck())
+            bool posStartChanged = false;
+            bool posEndChanged = false;
+            
+            // 視線の始点ハンドルを描画します。
+            // ゲームオブジェクトが選択されているときは、Unity標準の矢印ハンドルで始点を移動するので、ここでは始点ハンドルは描画しません。
+            // 選択されていないときは、始点の矢印ハンドルを描画します。
+            // どちらにしても、 transform.position の差分を見て移動があったかどうかを監視します。
+            Handles.Label(trans.position, "視線 始点");
+            if (!Selection.Contains(target.gameObject))
             {
-                if (targetPosition != posEnd)
-                    CreateViewRegulation(target, posStart, posEnd, lineLength);
-                targetPosition = posEnd;
+                trans.position = Handles.PositionHandle(trans.position, Quaternion.identity);
             }
+            if ((trans.position - _prevPos).magnitude > 0.0001)
+            {
+                posStartChanged = true;
+            }
+
+            // 視線の終点ハンドルを描画します。
+            using (var check = new EditorGUI.ChangeCheckScope())
+            {
+                Handles.Label(targetPosition, "視線 終点");
+                targetPosition = Handles.PositionHandle(targetPosition, Quaternion.identity);
+                if (check.changed)
+                {
+                    posEndChanged = true;
+                }
+            }
+
+            // 移動があったら視線を生成しなおします。
+            if (posStartChanged || posEndChanged)
+            {
+                var startPos = trans.position;
+                float lineLength = (targetPosition - startPos).magnitude;
+                CreateViewRegulation(target, startPos, targetPosition, lineLength);
+            }
+
+            _prevPos = trans.position;
 
             if(!selectingTarget) return;
 
@@ -131,8 +152,7 @@ namespace LandscapeDesignTool.Editor
                 }
                 ev.Use();
             }
-
-            _prevPosition = posStart;
+            
         }
 
         void CreateViewRegulation(ViewRegulation targetViewRegulation, Vector3 originPoint, Vector3 targetPoint, float length)
