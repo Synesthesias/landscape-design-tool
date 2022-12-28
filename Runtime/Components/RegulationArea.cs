@@ -10,10 +10,12 @@ namespace LandscapeDesignTool
         [SerializeField] float areaHeight = 10;
         [SerializeField] List<Vector3> vertices = new List<Vector3>();
         [SerializeField] Color AreaColor;
+        [SerializeField] private Color areaInvalidColor;
         [SerializeField] private bool isEditMode;
 
         public List<Vector2> _Contours;
         public List<Vector2> Vertexes = new List<Vector2>();
+        public Color AreaInvalidColor { get; set; }
 
         public bool IsEditMode
         {
