@@ -16,6 +16,7 @@ namespace LandscapeDesignTool.Editor
         private float _wsize;
         private float _hsize;
         float _interval = 3.0f;
+        private Vector3 _prevPosition;
         private const string ObjNameLineOfSight = "LineOfSight";
         private const string ObjNameCoveringMesh = "CoveringMesh";
 
@@ -23,6 +24,7 @@ namespace LandscapeDesignTool.Editor
         {
             _wsize = target.screenWidth;
             _hsize = target.screenHeight;
+            _prevPosition = target.transform.position;
         }
 
         public void Draw(ViewRegulation target)
@@ -81,13 +83,24 @@ namespace LandscapeDesignTool.Editor
         public void OnSceneGUI(ViewRegulation target)
         {
             EditorGUI.BeginChangeCheck();
-            Vector3 pos = Handles.PositionHandle(targetPosition, Quaternion.identity);
+            var trans = target.transform;
+            var posStart = trans.position;
+            Vector3 posEnd = Handles.PositionHandle(targetPosition, Quaternion.identity);
+            float lineLength = (posEnd - posStart).magnitude;
+            
+            Handles.Label(posStart, "視線 始点");
+            if ((posStart - _prevPosition).sqrMagnitude > 0.00001)
+            {
+                CreateViewRegulation(target, posStart, posEnd, lineLength);
+            }
+            
+            Handles.Label(targetPosition, "視線 終点");
 
             if (EditorGUI.EndChangeCheck())
             {
-                if (targetPosition != pos)
-                    CreateViewRegulation(target, Vector3.zero, pos, pos.magnitude);
-                targetPosition = pos;
+                if (targetPosition != posEnd)
+                    CreateViewRegulation(target, posStart, posEnd, lineLength);
+                targetPosition = posEnd;
             }
 
             if(!selectingTarget) return;
@@ -118,6 +131,8 @@ namespace LandscapeDesignTool.Editor
                 }
                 ev.Use();
             }
+
+            _prevPosition = posStart;
         }
 
         void CreateViewRegulation(ViewRegulation targetViewRegulation, Vector3 originPoint, Vector3 targetPoint, float length)
