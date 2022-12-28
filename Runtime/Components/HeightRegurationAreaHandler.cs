@@ -84,39 +84,38 @@ namespace LandscapeDesignTool
 
             public override void OnInspectorGUI()
             {
-                /*
+                 /*
+                 SceneView sceneView = SceneView.lastActiveSceneView;
+                 EditorGUILayout.HelpBox("í≠ñ]ëŒè€Ç©ÇÁÇÃçÇÇ≥ãKêßÉGÉäÉAÇê∂ê¨ÇµÇ‹Ç∑", MessageType.Info);
 
-                SceneView sceneView = SceneView.lastActiveSceneView;
-                EditorGUILayout.HelpBox("í≠ñ]ëŒè€Ç©ÇÁÇÃçÇÇ≥ãKêßÉGÉäÉAÇê∂ê¨ÇµÇ‹Ç∑", MessageType.Info);
+                 _height = EditorGUILayout.FloatField("çÇÇ≥(m)", _height);
+                 _radius = EditorGUILayout.FloatField("îºåa(m)", _radius);
 
-                _height = EditorGUILayout.FloatField("çÇÇ≥(m)", _height);
-                _radius = EditorGUILayout.FloatField("îºåa(m)", _radius);
-
-                _areaColor = EditorGUILayout.ColorField("êFÇÃê›íË", _areaColor);
-                EditorGUILayout.Space();
-                if (_pointing == false)
-                {
-                    GUI.color = Color.white;
-                    if (GUILayout.Button("í≠ñ]ëŒè€ÇëIë"))
-                    {
-                        sceneView.Focus();
-                        _pointing = true;
-                    }
-                }
-                else
-                {
-                    GUI.color = Color.green;
-                    if (GUILayout.Button("í≠ñ]ëŒè€ÇëIë"))
-                    {
-                        _pointing = false;
-                    }
-                }
-                */
+                 _areaColor = EditorGUILayout.ColorField("êFÇÃê›íË", _areaColor);
+                 EditorGUILayout.Space();
+                 if (_pointing == false)
+                 {
+                     GUI.color = Color.white;
+                     if (GUILayout.Button("í≠ñ]ëŒè€ÇëIë"))
+                     {
+                         sceneView.Focus();
+                         _pointing = true;
+                     }
+                 }
+                 else
+                 {
+                     GUI.color = Color.green;
+                     if (GUILayout.Button("í≠ñ]ëŒè€ÇëIë"))
+                     {
+                         _pointing = false;
+                     }
+                 }
+                 */
             }
             private void OnSceneGUI()
             {
-                /*
-                if (_pointing)
+                
+                /*if (_pointing)
                 {
                     var ev = Event.current;
 
@@ -130,12 +129,13 @@ namespace LandscapeDesignTool
                         Ray ray = HandleUtility.GUIPointToWorldRay(mousePosition);
                         if (Physics.Raycast(ray, out hit, Mathf.Infinity))
                         {
+                            Debug.Log("height");
                             Vector3 targetPoint = hit.collider.bounds.center;
                             Debug.Log(targetPoint);
                             Debug.Log(hit.point);
                             GameObject cylinder = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
                             cylinder.layer = LayerMask.NameToLayer("RegulationArea");
-                            HeightRegurationArea area = cylinder.AddComponent<HeightRegurationArea>();
+                            var area = cylinder.AddComponent<HeightRegurationAreaHandler>();
                             cylinder.transform.localScale = new Vector3(_radius, _height, _radius);
                             area.areaColor = _areaColor;
                             area.areaHeight = _height;
