@@ -17,9 +17,9 @@ namespace LandscapeDesignTool.Editor.WindowTabs
         {
             EditorGUILayout.Space();
                 EditorGUILayout.LabelField("<size=15>高さ規制エリア作成</size>", labelStyle);
-                EditorGUILayout.HelpBox("高さ規制リアの高さ半径を設定しタイプを選択して規制エリア作成をクリックしてください", MessageType.Info);
+                EditorGUILayout.HelpBox("高さ規制リアの高さ直径を設定しタイプを選択して規制エリア作成をクリックしてください", MessageType.Info);
                 _heightAreaHeight = EditorGUILayout.FloatField("高さ", _heightAreaHeight);
-                _heightAreaRadius = EditorGUILayout.FloatField("半径", _heightAreaRadius);
+                _heightAreaRadius = EditorGUILayout.FloatField("直径", _heightAreaRadius);
                 _areaColor = EditorGUILayout.ColorField("色の設定", _areaColor);
 
                 if (_heightReguratoinAreaEdit)
