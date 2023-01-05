@@ -1,3 +1,4 @@
+using System;
 using EGIS.ShapeFileLib;
 using System.Collections.Generic;
 using System.IO;
@@ -19,7 +20,26 @@ namespace LandscapeDesignTool
 
         public static Material MakeMaterial(Color col)
         {
-            Material material = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
+            //レンダーパイプラインに応じた Unlitシェーダーを求めます。
+            var pipelineAsset = GraphicsSettings.renderPipelineAsset;
+            Shader shader;
+            if (pipelineAsset == null)
+            {
+                shader = Shader.Find("Unlit/Transparent Colored");
+            }
+            else if (pipelineAsset.name == "UniversalRenderPipelineAsset")
+            {
+                shader = Shader.Find("Universal Render Pipeline/Unlit");
+            }
+            else if (pipelineAsset.name.Contains("HighDefinition"))
+            {
+                shader = Shader.Find("HDRP/Unlit");
+            }
+            else
+            {
+                throw new Exception("Unknown Pipeline.");
+            }
+            Material material = new Material(shader);
             material.SetFloat("_SrcBlend", (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
             material.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
             material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
