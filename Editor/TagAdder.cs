@@ -131,6 +131,8 @@ namespace LandscapeDesignTool.Editor
                     layerProperty.stringValue = layerTuple.name;
                 }
             }
+
+            tagManager.ApplyModifiedPropertiesWithoutUndo();
         }
     }
 }
