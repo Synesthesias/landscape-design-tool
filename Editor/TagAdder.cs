@@ -15,8 +15,10 @@ namespace LandscapeDesignTool.Editor
         private static readonly Func<Transform, bool> predIsGround = trans => trans.name.Contains("_dem_");
         private const string LayerNameBuilding = "Building";
         private const string LayerNameGround = "Ground";
+        private const string LayerNameRagulationArea = "RegulationArea";
         private const int LayerIdBuilding = 29;
         private const int LayerIdGround = 31;
+        private const int LayerIdRagulationArea = 30;
 
         /// <summary>
         /// プロジェクト設定のレイヤー設定で、Building, Ground を設定します。
@@ -121,7 +123,9 @@ namespace LandscapeDesignTool.Editor
 
             var layersToSet = new (int id, string name)[]
             {
-                (LayerIdBuilding, LayerNameBuilding), (LayerIdGround, LayerNameGround)
+                (LayerIdBuilding, LayerNameBuilding),
+                (LayerIdGround, LayerNameGround),
+                (LayerIdRagulationArea, LayerNameRagulationArea)
             };
             foreach (var layerTuple in layersToSet)
             {
