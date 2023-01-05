@@ -1,6 +1,4 @@
-﻿using System.Xml.Schema;
-using PLATEAU.CityGML;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 using Material = UnityEngine.Material;
 using Object = UnityEngine.Object;
