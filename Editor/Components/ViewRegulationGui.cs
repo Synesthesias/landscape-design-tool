@@ -45,7 +45,7 @@ namespace LandscapeDesignTool.Editor
             EditorGUILayout.LabelField("<size=12>視点場</size>", style);
 
             var vpGroupComponent = Object.FindObjectOfType<LandscapeViewPointGroup>();
-            if (vpGroupComponent == null || vpgroup.transform.childCount == 0)
+            if (vpGroupComponent == null || vpGroupComponent.transform.childCount == 0)
             {
                 EditorGUILayout.HelpBox("視点場を作成してください", MessageType.Error);
                 return;
