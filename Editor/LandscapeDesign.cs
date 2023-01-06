@@ -27,6 +27,12 @@ namespace LandscapeDesignTool.Editor
             _tabViewPointGenerate = new TabViewPointGenerate(this);
             _tabRegulationAreaGenerate = new TabRegulationAreaGenerate(this);
         }
+        private void Awake()
+        {
+
+            LDTTools.SetUI();
+        }
+
 
         [MenuItem("PLATEAU/ŒiŠÏ‚Ü‚¿‚Ã‚­‚è/ŒiŠÏŒv‰æ")]
         public static void ShowWindow()
