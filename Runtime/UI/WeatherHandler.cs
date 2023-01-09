@@ -1,62 +1,85 @@
-﻿
-
-using UnityEditor;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-namespace LandscapeDesignTool.Editor.WindowTabs
+namespace LandScapeDesignTool
 {
-    /// <summary>
-    /// 「天候と時間」タブを描画します。
-    /// </summary>
-    public class TabWeatherAndTime
+    public class WeatherHandler : MonoBehaviour
     {
-        float _time = 12;
+        [SerializeField] Text timeText;
+        [SerializeField] GameObject rain;
+        [SerializeField] GameObject snow;
 
-        Color _sunColor = new Color(1,0.9568f, 0.8392f);
-        Color _sunColor1 = new Color(0.95294f, 0.71373f, 0.3647f);
-        float _sunAngle;
-        [SerializeField] GameObject _sunLight=null;
-        float _morningTime=5.0f, _nightTime=19.0f;
-        float _sunRoll = -20.0f;
-
+        GameObject _sunLight = null;
         int _weather = 0;
-        
-        public void OnGUI(GUIStyle labelStyle)
+        float _time = 12.0f;
+
+        Color _sunColor = new Color(1, 0.9568f, 0.8392f);
+        Color _sunColor1 = new Color(0.95294f, 0.71373f, 0.3647f);
+        float _morningTime = 5.0f, _nightTime = 19.0f;
+        GameObject _rain;
+        GameObject _snow;
+
+        // Start is called before the first frame update
+
+        void Start()
         {
-            // _sunLight = GameObject.Find("SunSource").gameObject;
             _sunLight = RenderSettings.sun.gameObject;
-            EditorGUILayout.Space();
-            /*
-            if(_sunLight == null)
-            {
-                EditorGUILayout.ObjectField("光源指定", _sunLight, typeof(GameObject), true);
-            }
-            */
-            EditorGUILayout.LabelField("<size=15>光源</size>", labelStyle);
-            EditorGUILayout.ObjectField("光源", _sunLight, typeof(GameObject), true);
-            EditorGUILayout.LabelField("<size=15>時間の設定</size>", labelStyle);
-            _time = EditorGUILayout.Slider("時間", _time, _morningTime, _nightTime);
 
-
-            EditorGUILayout.Space();
-            EditorGUILayout.LabelField("<size=15>天候の設定</size>", labelStyle);
-            GUIContent[] popupItem = new[]
-            {
-                new GUIContent("晴れ"),
-                new GUIContent("薄曇り"),
-                new GUIContent("曇り"),
-                new GUIContent("雨"),
-                new GUIContent("雪")
-            };
-
-            _weather = EditorGUILayout.Popup(
-                label: new UnityEngine.GUIContent("天候"),
-                selectedIndex: _weather,
-                displayedOptions: popupItem);
+            _rain = Instantiate(rain);
+            _snow = Instantiate(snow);
+            _rain.transform.parent = Camera.main.transform;
+            _snow.transform.parent = Camera.main.transform;
+            _snow.SetActive(false);
+            _snow.transform.localPosition = new Vector3(0, 10, 0);
+            _rain.SetActive(false);
+            _rain.transform.localPosition = new Vector3(0, 10, 0);
         }
 
-        public void OnInspectorUpdate()
+        // Update is called once per frame
+        void Update()
         {
+
+        }
+
+        public void OnWeatherChange(int n)
+        {
+            _weather = n;
+            switch(_weather)
+            {
+                case 3:
+                    _rain.SetActive(true);
+                    _snow.SetActive(false);
+                    break;
+                case 4:
+                    _rain.SetActive(false);
+                    _snow.SetActive(true);
+                    break;
+                default:
+                    _rain.SetActive(false);
+                    _snow.SetActive(false);
+                    break;
+
+            }
+            ChangeLighting();
+        }
+
+        public void OnTimeChange(float value)
+        {
+            
+            int h = (int)value;
+            float m = value - h;
+            int m2 = (int)(60 * m );
+            string timestring = h.ToString("D2")+ ":"+ m2.ToString("D2");
+            timeText.text = timestring;
+            _time = value;
+            ChangeLighting();
+        }
+
+        void ChangeLighting()
+        {
+
             if (_sunLight == null)
             {
                 _sunLight = RenderSettings.sun.gameObject;
@@ -64,7 +87,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
 
             float f = (_time - _morningTime) / (_nightTime - _morningTime);
 
-            float r=1, g=1, b=1;
+            float r = 1, g = 1, b = 1;
             Color col = new Color();
             if (_time > (_morningTime + 2) && _time < (_nightTime - 2))
             {
@@ -88,7 +111,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
 
                 if (_time >= (_nightTime - 1))
                 {
-                    r = col.r * (((_nightTime-_time) / 1.0f));
+                    r = col.r * (((_nightTime - _time) / 1.0f));
                     g = col.g * (((_nightTime - _time) / 1.0f));
                     b = col.b * (((_nightTime - _time) / 1.0f));
                     if (r < 0) r = 0;
@@ -103,12 +126,12 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                 }
 
             }
-            else if( _time <= (_morningTime + 2))
+            else if (_time <= (_morningTime + 2))
             {
                 float f1 = (_time - _morningTime) / 2.0f;
                 r = _sunColor1.r + ((_sunColor.r - _sunColor1.r) * f1);
-                g = _sunColor1.g +((_sunColor.g - _sunColor1.g) * f1);
-                b = _sunColor1.b +((_sunColor.b - _sunColor1.b) * f1);
+                g = _sunColor1.g + ((_sunColor.g - _sunColor1.g) * f1);
+                b = _sunColor1.b + ((_sunColor.b - _sunColor1.b) * f1);
                 if (r < 0) r = 0;
                 if (r > 1) r = 1;
                 if (g < 0) g = 0;
@@ -134,11 +157,11 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                     col.g = g;
                     col.b = b;
                 }
-                
+
             }
 
             float strength = 1.0f;
-            if(_weather == 1)
+            if (_weather == 1)
             {
                 r = col.r * 0.8f;
                 g = col.g * 0.8f;
@@ -181,7 +204,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
             float angle = 180.0f - 180.0f * f;
             Quaternion r1 = Quaternion.Euler(0, -30, 0);
             Quaternion r2 = Quaternion.Euler(angle, 0, 0);
-            _sunLight.transform.rotation = r2*r1;
+            _sunLight.transform.rotation = r2 * r1;
             _sunLight.GetComponent<Light>().color = col;
             _sunLight.GetComponent<Light>().shadowStrength = strength;
 
