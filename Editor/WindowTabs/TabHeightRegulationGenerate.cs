@@ -19,6 +19,8 @@ namespace LandscapeDesignTool.Editor.WindowTabs
         /// 広い範囲を指定しても円柱が浮かないように長めにします。
         /// </summary>
         private const float heightRegulationDisplayLength = 3000f;
+
+        private const int LayerIdGround = 31;
         
         public void OnGUI()
         {
@@ -126,7 +128,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                 if (ev.type == EventType.MouseDown)
                 {
                     RaycastHit hit;
-                    int layerMask = 1 << 31 | 1 << 29;
+                    int layerMask = 1 << LayerIdGround;
                     Vector3 mousePosition = Event.current.mousePosition;
                     Ray ray = HandleUtility.GUIPointToWorldRay(mousePosition);
 
