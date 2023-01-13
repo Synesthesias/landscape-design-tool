@@ -9,7 +9,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
     /// <summary>
     /// 視点場作成のGUIを描画します。
     /// </summary>
-    public class TabViewPointGenerate
+    public class TabViewPointGenerate : IGuiTabContents
     {
         private EditorWindow _parentWindow;
         private Vector2 _scrollPosition;
@@ -40,7 +40,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
             _lastCameraPose = newCameraPose;
         }
 
-        public void Draw()
+        public void OnGUI()
         {
             LDTTools.CheckTag("ViewPoint");
 
@@ -52,6 +52,11 @@ namespace LandscapeDesignTool.Editor.WindowTabs
             DrawCameraPreview();
 
             EditorGUILayout.EndScrollView();
+        }
+
+        public void OnSceneGUI()
+        {
+            
         }
 
         private void DrawCreatePanel()

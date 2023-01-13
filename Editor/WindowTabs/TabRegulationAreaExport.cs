@@ -6,12 +6,12 @@ using UnityEngine;
 
 namespace LandscapeDesignTool.Editor.WindowTabs
 {
-    public class TabRegulationAreaExport
+    public class TabRegulationAreaExport : IGuiTabContents
     {
         string _regulationAreaExportPath = "";
         private PLATEAUInstancedCityModel _cityModel;
 
-        public void Draw()
+        public void OnGUI()
         {
             EditorGUILayout.Space();
             LandscapeEditorStyle.Header("ShapeFile出力");
@@ -72,6 +72,15 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                 LDTTools.WriteShapeFile(_regulationAreaExportPath, "RegurationArea", types, cols, heights, v2,
                     contours);
             }
+        }
+
+        public void OnSceneGUI()
+        {
+        }
+
+        public void Update()
+        {
+            
         }
     }
 }

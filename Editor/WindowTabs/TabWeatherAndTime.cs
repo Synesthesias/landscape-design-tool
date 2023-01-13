@@ -8,7 +8,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
     /// <summary>
     /// 「天候と時間」タブを描画します。
     /// </summary>
-    public class TabWeatherAndTime
+    public class TabWeatherAndTime : IGuiTabContents
     {
         float _time = 12;
 
@@ -187,6 +187,16 @@ namespace LandscapeDesignTool.Editor.WindowTabs
 
 
 
+        }
+
+        public void OnSceneGUI()
+        {
+            
+        }
+
+        public void Update()
+        {
+            
         }
     }
 }

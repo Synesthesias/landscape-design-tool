@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace LandscapeDesignTool.Editor.WindowTabs
 {
-    public class TabRegulationAreaGenerate
+    public class TabRegulationAreaGenerate : IGuiTabContents
     {
         bool _isCreatingContour = false;
 
@@ -20,7 +20,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
             _parentWindow = parentWindow;
         }
 
-        public void Draw()
+        public void OnGUI()
         {
             LDTTools.CheckTag("RegulationArea");
 
@@ -198,6 +198,11 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                 if (renderer == null) continue;
                 renderer.enabled = isActive;
             }
+        }
+
+        public void Update()
+        {
+            
         }
     }
 }

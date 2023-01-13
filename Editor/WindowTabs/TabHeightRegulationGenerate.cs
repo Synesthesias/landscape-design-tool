@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace LandscapeDesignTool.Editor.WindowTabs
 {
-    public class TabHeightRegulationGenerate
+    public class TabHeightRegulationGenerate : IGuiTabContents
     {
         float _heightAreaHeight = 30.0f;
         float _heightAreaRadius = 100.0f;
@@ -13,7 +13,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
         Color _areaColor = new Color(0, 1, 1, 0.5f);
         bool _editMode = false;
         
-        public void Draw()
+        public void OnGUI()
         {
             LDTTools.CheckTag("HeightRegulationArea");
             EditorGUILayout.Space();
@@ -128,6 +128,11 @@ namespace LandscapeDesignTool.Editor.WindowTabs
 
                 }
             }
+        }
+
+        public void Update()
+        {
+            
         }
 
         void HeightRegulationAreaList()

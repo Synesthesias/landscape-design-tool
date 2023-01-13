@@ -6,7 +6,7 @@ using Object = UnityEngine.Object;
 
 namespace LandscapeDesignTool.Editor.WindowTabs
 {
-    public class TabViewportRegulationGenerate
+    public class TabViewportRegulationGenerate : IGuiTabContents
     {
         private float _screenWidth = 80.0f;
         private float _screenHeight = 80.0f;
@@ -15,7 +15,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
         private ViewRegulationGUI _viewRegulationGUI;
         private ViewRegulation _selectedViewRegulation;
 
-        public void Draw()
+        public void OnGUI()
         {
             EditorGUILayout.Space();
             
@@ -68,6 +68,11 @@ namespace LandscapeDesignTool.Editor.WindowTabs
             _viewRegulationGUI?.OnSceneGUI(_selectedViewRegulation);
         }
 
+        public void Update()
+        {
+            
+        }
+
         private static void ViewportRegulationRendererSetActive(bool isActive)
         {
             var regulations = Object.FindObjectsOfType<ViewRegulation>();
@@ -87,6 +92,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                 }
             }
         }
+        
         
     }
 }
