@@ -7,11 +7,18 @@ namespace LandscapeDesignTool.Editor.WindowTabs
     {
         float _heightAreaHeight = 30.0f;
         float _heightAreaRadius = 100.0f;
-        bool _heightReguratoinAreaEdit = false;
+        bool _heightRegulationAreaEdit = false;
         // Vector3 _targetViewPoint;
         HeightRegulationAreaHandler _heightRegulationArea;
         Color _areaColor = new Color(0, 1, 1, 0.5f);
         bool _editMode = false;
+
+        /// <summary>
+        /// 高さ規制は円柱で表示されますが、その円柱の高さです。
+        /// この円柱の高さのうち、規制の高さ分が地面の上に出て、残りは地面の下に埋まります。
+        /// 広い範囲を指定しても円柱が浮かないように長めにします。
+        /// </summary>
+        private const float heightRegulationDisplayLength = 3000f;
         
         public void OnGUI()
         {
@@ -27,14 +34,14 @@ namespace LandscapeDesignTool.Editor.WindowTabs
             _heightAreaRadius = EditorGUILayout.FloatField("直径", _heightAreaRadius);
             _areaColor = EditorGUILayout.ColorField("色の設定", _areaColor);
 
-            if (_heightReguratoinAreaEdit)
+            if (_heightRegulationAreaEdit)
             {
                 if (_editMode)
                 {
                     if (GUILayout.Button("編集完了"))
                     {
                         _editMode = false;
-                        _heightReguratoinAreaEdit = false;
+                        _heightRegulationAreaEdit = false;
 
                         SetupRegulationArea(_heightRegulationArea);
                     }
@@ -44,14 +51,14 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                     GUI.color = Color.green;
                     if (GUILayout.Button("高さ規制エリア作成"))
                     {
-                        _heightReguratoinAreaEdit = false;
+                        _heightRegulationAreaEdit = false;
                         SetupRegulationArea(_heightRegulationArea);
                     }
 
                     GUI.color = Color.white;
                     if (GUILayout.Button("キャンセル"))
                     {
-                        _heightReguratoinAreaEdit = false;
+                        _heightRegulationAreaEdit = false;
                     }
                 }
             }
@@ -62,7 +69,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                     if (GUILayout.Button("編集完了"))
                     {
                         _editMode = false;
-                        _heightReguratoinAreaEdit = false;
+                        _heightRegulationAreaEdit = false;
                         SetupRegulationArea(_heightRegulationArea);
                     }
                 }
@@ -74,7 +81,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                         GameObject grp = GameObject.Find("HeitRegurationAreaGroup");
                         if (!grp)
                         {
-                            _heightReguratoinAreaEdit = true;
+                            _heightRegulationAreaEdit = true;
                             GameObject cylinder = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
                             cylinder.layer = LayerMask.NameToLayer("RegulationArea");
                             HeightRegulationAreaHandler area = cylinder.AddComponent<HeightRegulationAreaHandler>();
@@ -95,20 +102,23 @@ namespace LandscapeDesignTool.Editor.WindowTabs
         private void SetupRegulationArea(HeightRegulationAreaHandler regulationArea)
         {
             // Unityのデフォルト円柱は高さが2mであることに注意
-            regulationArea.transform.localScale = new Vector3(_heightAreaRadius, _heightAreaHeight / 2f, _heightAreaRadius);
+            // regulationArea.transform.localScale = new Vector3(_heightAreaRadius, _heightAreaHeight / 2f, _heightAreaRadius);
+            regulationArea.transform.localScale =
+                new Vector3(_heightAreaRadius, heightRegulationDisplayLength / 2f, _heightAreaRadius);
+            
             regulationArea.SetColor(_areaColor);
             regulationArea.SetHeight(_heightAreaHeight);
             regulationArea.SetRadius(_heightAreaRadius);
 
             var targetPoint = regulationArea.GetPoint();
-            regulationArea.transform.position = new Vector3(targetPoint.x, _heightAreaHeight / 2.0f + targetPoint.y, targetPoint.z);
+            regulationArea.transform.position = new Vector3(targetPoint.x, targetPoint.y - heightRegulationDisplayLength / 2f + _heightAreaHeight, targetPoint.z);
             Material mat = LDTTools.MakeMaterial(_areaColor);
             regulationArea.GetComponent<Renderer>().material = mat;
         }
 
         public void OnSceneGUI()
         {
-            if (_heightReguratoinAreaEdit)
+            if (_heightRegulationAreaEdit)
             {
                 HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
 
