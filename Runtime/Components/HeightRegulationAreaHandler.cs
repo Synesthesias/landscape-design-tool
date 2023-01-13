@@ -3,7 +3,7 @@ using UnityEditor;
 
 namespace LandscapeDesignTool
 {
-    public class HeightRegurationAreaHandler : MonoBehaviour
+    public class HeightRegulationAreaHandler : MonoBehaviour
     {
         [SerializeField] float areaHeight = 10;
         [SerializeField] float areaRadius = 10;
@@ -67,7 +67,7 @@ namespace LandscapeDesignTool
 
 
 #if UNITY_EDITOR
-            [CustomEditor(typeof(HeightRegurationAreaHandler))]
+            [CustomEditor(typeof(HeightRegulationAreaHandler))]
         [CanEditMultipleObjects]
         public class HeightRegurationAreaEditor : Editor
         {
@@ -78,8 +78,8 @@ namespace LandscapeDesignTool
             float _radius = 10;
             private void Awake()
             {
-                _height = Selection.activeGameObject.GetComponent<HeightRegurationAreaHandler>().areaHeight;
-                _radius = Selection.activeGameObject.GetComponent<HeightRegurationAreaHandler>().areaRadius;
+                _height = Selection.activeGameObject.GetComponent<HeightRegulationAreaHandler>().areaHeight;
+                _radius = Selection.activeGameObject.GetComponent<HeightRegulationAreaHandler>().areaRadius;
             }
 
             public override void OnInspectorGUI()

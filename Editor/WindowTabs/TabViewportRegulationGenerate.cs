@@ -6,7 +6,7 @@ using Object = UnityEngine.Object;
 
 namespace LandscapeDesignTool.Editor.WindowTabs
 {
-    public class TabViewportRegulationGenerate
+    public class TabViewportRegulationGenerate : IGuiTabContents
     {
         private float _screenWidth = 80.0f;
         private float _screenHeight = 80.0f;
@@ -15,10 +15,14 @@ namespace LandscapeDesignTool.Editor.WindowTabs
         private ViewRegulationGUI _viewRegulationGUI;
         private ViewRegulation _selectedViewRegulation;
 
-        public void Draw(GUIStyle labelStyle)
+        public void OnGUI()
         {
             EditorGUILayout.Space();
-            EditorGUILayout.LabelField("<size=15>眺望対象からの眺望規制作成</size>", labelStyle);
+            
+            LandscapeEditorStyle.Header("表示設定");
+            LandscapeEditorStyle.ButtonSwitchDisplay(ViewportRegulationRendererSetActive);
+            
+            LandscapeEditorStyle.Header("眺望対象からの眺望規制作成");
             EditorGUILayout.HelpBox("眺望対象地点での幅と高さを設定し眺望規制作成をクリックしてください", MessageType.Info);
 
             _viewRegulationAreaObjName = EditorGUILayout.TextField("ゲームオブジェクト名", _viewRegulationAreaObjName);
@@ -63,5 +67,32 @@ namespace LandscapeDesignTool.Editor.WindowTabs
         {
             _viewRegulationGUI?.OnSceneGUI(_selectedViewRegulation);
         }
+
+        public void Update()
+        {
+            
+        }
+
+        private static void ViewportRegulationRendererSetActive(bool isActive)
+        {
+            var regulations = Object.FindObjectsOfType<ViewRegulation>();
+            foreach (var reg in regulations)
+            {
+                ChildLineRenderersSetActiveRecursive(reg.transform, isActive);
+            }
+
+            static void ChildLineRenderersSetActiveRecursive(Transform trans, bool isActive)
+            {
+                var renderer = trans.GetComponent<LineRenderer>();
+                if (renderer != null) renderer.enabled = isActive;
+                int childCount = trans.childCount;
+                for (int i = 0; i < childCount; i++)
+                {
+                    ChildLineRenderersSetActiveRecursive(trans.GetChild(i), isActive);
+                }
+            }
+        }
+        
+        
     }
 }
