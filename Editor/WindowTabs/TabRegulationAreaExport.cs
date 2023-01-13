@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using PLATEAU.CityGML;
 using PLATEAU.CityInfo;
 using UnityEditor;
 using UnityEngine;
@@ -8,7 +10,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
 {
     public class TabRegulationAreaExport : IGuiTabContents
     {
-        string _regulationAreaExportPath = "";
+        // string _regulationAreaExportPath = "";
         private PLATEAUInstancedCityModel _cityModel;
 
         public void OnGUI()
@@ -23,55 +25,58 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                     typeof(PLATEAUInstancedCityModel), true);
             if (_cityModel == null) return;
 
-            using (new EditorGUI.DisabledScope(true))
-            {
-                EditorGUILayout.TextField("エクスポート先", _regulationAreaExportPath);
-            }
+            // using (new EditorGUI.DisabledScope(true))
+            // {
+            //     EditorGUILayout.TextField("エクスポート先", _regulationAreaExportPath);
+            // }
 
-            if (GUILayout.Button("エクスポート先選択"))
+            if (GUILayout.Button("エクスポート"))
             {
                 var selectedPath = EditorUtility.SaveFilePanel("保存先", "", "Shapefile", "shp");
                 if (!string.IsNullOrEmpty(selectedPath))
                 {
-                    _regulationAreaExportPath = selectedPath;
+                    // _regulationAreaExportPath = selectedPath;
+                    ExportShapefile(selectedPath, _cityModel);
+                    var dirPath = new DirectoryInfo(selectedPath).FullName;
+                    EditorUtility.RevealInFinder(dirPath);
                 }
             }
+        }
 
-            if (GUILayout.Button("規制エリア出力"))
+        private static void ExportShapefile(string exportPath, PLATEAUInstancedCityModel cityModel)
+        {
+            List<List<Vector2>> contours = new List<List<Vector2>>();
+
+            GameObject[] objects = GameObject.FindGameObjectsWithTag("RegulationArea");
+            int objCount = objects.Length;
+            string[] types = new string[objCount];
+            Color[] cols = new Color[objCount];
+            float[] heights = new float[objCount];
+            Vector2[,] v2 = new Vector2[objCount, 2];
+            var referencePoint = cityModel.GeoReference.ReferencePoint;
+            for (int i = 0; i < objCount; i++)
             {
-                List<List<Vector2>> contours = new List<List<Vector2>>();
-
-                GameObject[] objects = GameObject.FindGameObjectsWithTag("RegulationArea");
-                int objCount = objects.Length;
-                string[] types = new string[objCount];
-                Color[] cols = new Color[objCount];
-                float[] heights = new float[objCount];
-                Vector2[,] v2 = new Vector2[objCount, 2];
-                var referencePoint = _cityModel.GeoReference.ReferencePoint;
-                for (int i = 0; i < objCount; i++)
+                if (objects[i].GetComponent<RegulationArea>())
                 {
-                    if (objects[i].GetComponent<RegulationArea>())
-                    {
-                        List<Vector2> p = new List<Vector2>();
-                        RegulationArea obj =
-                            objects[i].GetComponent<RegulationArea>();
-                        types[i] = "PolygonArea";
-                        heights[i] = obj.GetHeight();
-                        cols[i] = obj.GetAreaColor();
-                        v2[i, 0] = new Vector2(0, 0);
-                        v2[i, 1] = new Vector2(0, 0);
+                    List<Vector2> p = new List<Vector2>();
+                    RegulationArea obj =
+                        objects[i].GetComponent<RegulationArea>();
+                    types[i] = "PolygonArea";
+                    heights[i] = obj.GetHeight();
+                    cols[i] = obj.GetAreaColor();
+                    v2[i, 0] = new Vector2(0, 0);
+                    v2[i, 1] = new Vector2(0, 0);
 
-                        List<Vector2> cnt = obj.GetVertex2D();
-                        var convertedCnt = cnt.Select(c =>
-                                new Vector2(c.x + (float)referencePoint.X, c.y + (float)referencePoint.Z))
-                            .ToList();
-                        contours.Add(convertedCnt);
-                    }
+                    List<Vector2> cnt = obj.GetVertex2D();
+                    var convertedCnt = cnt.Select(c =>
+                            new Vector2(c.x + (float)referencePoint.X, c.y + (float)referencePoint.Z))
+                        .ToList();
+                    contours.Add(convertedCnt);
                 }
-
-                LDTTools.WriteShapeFile(_regulationAreaExportPath, "RegurationArea", types, cols, heights, v2,
-                    contours);
             }
+
+            LDTTools.WriteShapeFile(exportPath, "RegurationArea", types, cols, heights, v2,
+                contours);
         }
 
         public void OnSceneGUI()
