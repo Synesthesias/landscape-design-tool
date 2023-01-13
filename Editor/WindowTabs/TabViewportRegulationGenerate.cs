@@ -18,6 +18,10 @@ namespace LandscapeDesignTool.Editor.WindowTabs
         public void Draw()
         {
             EditorGUILayout.Space();
+            
+            LandscapeEditorStyle.Header("表示設定");
+            LandscapeEditorStyle.ButtonSwitchDisplay(ViewportRegulationRendererSetActive);
+            
             LandscapeEditorStyle.Header("眺望対象からの眺望規制作成");
             EditorGUILayout.HelpBox("眺望対象地点での幅と高さを設定し眺望規制作成をクリックしてください", MessageType.Info);
 
@@ -63,5 +67,26 @@ namespace LandscapeDesignTool.Editor.WindowTabs
         {
             _viewRegulationGUI?.OnSceneGUI(_selectedViewRegulation);
         }
+
+        private static void ViewportRegulationRendererSetActive(bool isActive)
+        {
+            var regulations = Object.FindObjectsOfType<ViewRegulation>();
+            foreach (var reg in regulations)
+            {
+                ChildLineRenderersSetActiveRecursive(reg.transform, isActive);
+            }
+
+            static void ChildLineRenderersSetActiveRecursive(Transform trans, bool isActive)
+            {
+                var renderer = trans.GetComponent<LineRenderer>();
+                if (renderer != null) renderer.enabled = isActive;
+                int childCount = trans.childCount;
+                for (int i = 0; i < childCount; i++)
+                {
+                    ChildLineRenderersSetActiveRecursive(trans.GetChild(i), isActive);
+                }
+            }
+        }
+        
     }
 }
