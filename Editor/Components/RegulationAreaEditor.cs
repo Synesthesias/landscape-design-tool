@@ -27,14 +27,14 @@ namespace LandscapeDesignTool.Editor
         {
             Active = this;
 
-            var newHeight = EditorGUILayout.FloatField("‚‚³§ŒÀ", heightProperty.floatValue);
+            var newHeight = EditorGUILayout.FloatField("é«˜ã•åˆ¶é™", heightProperty.floatValue);
             if (Math.Abs(newHeight - heightProperty.floatValue) > 0.01f)
                 ((RegulationArea)target).SetHeight(newHeight);
 
             if (Target.IsEditMode)
             {
                 GUI.color = Color.green;
-                if (GUILayout.Button("’¸“_‚Ì•ÒW‚ğŠ®—¹"))
+                if (GUILayout.Button("é ‚ç‚¹ã®ç·¨é›†ã‚’å®Œäº†"))
                 {
                     Target.IsEditMode = false;
                     SceneView.lastActiveSceneView.Repaint();
@@ -43,7 +43,7 @@ namespace LandscapeDesignTool.Editor
             }
             else
             {
-                if (GUILayout.Button("’¸“_‚ğ•ÒW‚·‚é"))
+                if (GUILayout.Button("é ‚ç‚¹ã‚’ç·¨é›†ã™ã‚‹"))
                 {
                     Target.IsEditMode = true;
                     SceneView.lastActiveSceneView.Repaint();
@@ -55,11 +55,11 @@ namespace LandscapeDesignTool.Editor
 
         private void DrawBuildingColorEditPanel()
         {
-            EditorGUILayout.HelpBox("Œš•¨‚ÌƒJƒ‰[‚ğ•ÏX‚µ‚Ü‚·", MessageType.Info);
+            EditorGUILayout.HelpBox("å»ºç‰©ã®ã‚«ãƒ©ãƒ¼ã‚’å¤‰æ›´ã—ã¾ã™", MessageType.Info);
             if (isBuildSelecting == false)
             {
                 GUI.color = Color.white;
-                if (GUILayout.Button("Œš•¨‚ÌƒJƒ‰[‚ğ•ÏX"))
+                if (GUILayout.Button("å»ºç‰©ã®ã‚«ãƒ©ãƒ¼ã‚’å¤‰æ›´"))
                 {
                     SceneView.lastActiveSceneView.Focus();
                     isBuildSelecting = true;
@@ -68,7 +68,7 @@ namespace LandscapeDesignTool.Editor
             else
             {
                 GUI.color = Color.green;
-                if (GUILayout.Button("ƒJƒ‰[•ÏX‚ğI—¹"))
+                if (GUILayout.Button("ã‚«ãƒ©ãƒ¼å¤‰æ›´ã‚’çµ‚äº†"))
                 {
                     isBuildSelecting = false;
                 }

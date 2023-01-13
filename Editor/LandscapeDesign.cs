@@ -10,7 +10,7 @@ namespace LandscapeDesignTool.Editor
     {
 
         private readonly string[] _tabToggles =
-            { "‹“_êì¬", "‹K§ƒGƒŠƒAì¬", "’­–]‹K§ì¬", "‚‚³‹K§ƒGƒŠƒAì¬", "ShapeFile“Ç", "ShapeFile‘‚«o‚µ" };
+            { "è¦–ç‚¹å ´ä½œæˆ", "è¦åˆ¶ã‚¨ãƒªã‚¢ä½œæˆ", "çœºæœ›è¦åˆ¶ä½œæˆ", "é«˜ã•è¦åˆ¶ã‚¨ãƒªã‚¢ä½œæˆ", "ShapeFileèª­è¾¼", "ShapeFileæ›¸ãå‡ºã—" };
 
         private int _tabIndex;
         private readonly TabViewPointGenerate _tabViewPointGenerate;
@@ -28,11 +28,11 @@ namespace LandscapeDesignTool.Editor
             _tabRegulationAreaGenerate = new TabRegulationAreaGenerate(this);
         }
 
-        [MenuItem("PLATEAU/ŒiŠÏ‚Ü‚¿‚Ã‚­‚è/ŒiŠÏŒv‰æ")]
+        [MenuItem("PLATEAU/æ™¯è¦³ã¾ã¡ã¥ãã‚Š/æ™¯è¦³è¨ˆç”»")]
         public static void ShowWindow()
         {
             TagAdder.ConfigureTags();
-            EditorWindow.GetWindow(typeof(LandscapeDesign), true, "ŒiŠÏŒv‰æ‰æ–Ê");
+            EditorWindow.GetWindow(typeof(LandscapeDesign), true, "æ™¯è¦³è¨ˆç”»ç”»é¢");
         }
 
         void OnEnable()

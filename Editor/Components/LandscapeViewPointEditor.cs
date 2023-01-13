@@ -13,9 +13,9 @@ namespace LandscapeDesignTool.Editor
         {
             Active = this;
 
-            Target.gameObject.name = EditorGUILayout.TextField("‹“_ê–¼", Target.gameObject.name);
+            Target.gameObject.name = EditorGUILayout.TextField("è¦–ç‚¹å ´å", Target.gameObject.name);
 
-            Target.Fov = EditorGUILayout.FloatField("‹–ìŠp", Target.Fov);
+            Target.Fov = EditorGUILayout.FloatField("è¦–é‡è§’", Target.Fov);
             Target.Camera.fieldOfView = Target.Fov;
 
             serializedObject.ApplyModifiedProperties();

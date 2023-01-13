@@ -45,17 +45,17 @@ namespace LandscapeDesignTool
             {
                 var shapeItem = (ShapeItem)target;
                 shapeItem.material =
-                    (Material)EditorGUILayout.ObjectField("マテリアル",
+                    (Material)EditorGUILayout.ObjectField("繝槭ユ繝ｪ繧｢繝ｫ",
                         shapeItem.material, typeof(Material), false);
 
                 shapeItem.height =
-                    EditorGUILayout.FloatField("高さ",
+                    EditorGUILayout.FloatField("鬮倥＆",
                         shapeItem.height);
-                if (GUILayout.Button("変更する"))
+                if (GUILayout.Button("螟画峩縺吶ｋ"))
                 {
                     shapeItem.ReConstruct();
                 }
-                EditorGUILayout.LabelField($"頂点数: {shapeItem.Contours?.Count ?? 0}");
+                EditorGUILayout.LabelField($"鬆らせ謨ｰ: {shapeItem.Contours?.Count ?? 0}");
             }
         }
 #endif
