@@ -38,18 +38,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
             EditorGUILayout.Space();
             
             LandscapeEditorStyle.Header("表示設定");
-            using (new GUILayout.HorizontalScope())
-            {
-                if (GUILayout.Button("表示する"))
-                {
-                    RegulationAreaRendererSetActive(true);
-                }
-
-                if (GUILayout.Button("非表示にする"))
-                {
-                    RegulationAreaRendererSetActive(false);
-                }
-            }
+            LandscapeEditorStyle.ButtonSwitchDisplay(RegulationAreaRendererSetActive);
 
             LandscapeEditorStyle.Header("規制エリア作成");
 

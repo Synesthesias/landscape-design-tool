@@ -17,6 +17,10 @@ namespace LandscapeDesignTool.Editor.WindowTabs
         {
             LDTTools.CheckTag("HeightRegulationArea");
             EditorGUILayout.Space();
+            
+            LandscapeEditorStyle.Header("表示設定");
+            LandscapeEditorStyle.ButtonSwitchDisplay(HeightRegulationRendererSetActive);
+            
             LandscapeEditorStyle.Header("高さ規制エリア作成");
             EditorGUILayout.HelpBox("高さ規制リアの高さ直径を設定しタイプを選択して規制エリア作成をクリックしてください", MessageType.Info);
             _heightAreaHeight = EditorGUILayout.FloatField("高さ", _heightAreaHeight);
@@ -148,6 +152,17 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                 }
 
                 n++;
+            }
+        }
+
+        private static void HeightRegulationRendererSetActive(bool isActive)
+        {
+            var regulations = Object.FindObjectsOfType<HeightRegulationAreaHandler>();
+            foreach (var reg in regulations)
+            {
+                var renderer = reg.GetComponent<MeshRenderer>();
+                if (renderer == null) continue;
+                renderer.enabled = isActive;
             }
         }
     }
