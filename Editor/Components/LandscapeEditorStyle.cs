@@ -12,7 +12,9 @@ namespace LandscapeDesignTool.Editor
         
         public static void Header(string text)
         {
+            EditorGUILayout.Space(15);
             EditorGUILayout.LabelField($"<size=15>{text}</size>", styleLabelRichText);
+            EditorGUILayout.Space(5);
         }
     }
 }

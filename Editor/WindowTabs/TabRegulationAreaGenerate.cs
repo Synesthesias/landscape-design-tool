@@ -36,6 +36,20 @@ namespace LandscapeDesignTool.Editor.WindowTabs
         private void DrawCreateRegulation()
         {
             EditorGUILayout.Space();
+            
+            LandscapeEditorStyle.Header("表示設定");
+            using (new GUILayout.HorizontalScope())
+            {
+                if (GUILayout.Button("表示する"))
+                {
+                    RegulationAreaRendererSetActive(true);
+                }
+
+                if (GUILayout.Button("非表示にする"))
+                {
+                    RegulationAreaRendererSetActive(false);
+                }
+            }
 
             LandscapeEditorStyle.Header("規制エリア作成");
 
@@ -186,7 +200,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
             regulationArea.AddVertex(hits[0].point);
         }
 
-        public static void SetActiveRegulationAreaRenderer(bool isActive)
+        public static void RegulationAreaRendererSetActive(bool isActive)
         {
             var regulations = Object.FindObjectsOfType<RegulationArea>();
             foreach (var reg in regulations)
