@@ -64,13 +64,13 @@ namespace LandscapeDesignTool.Editor
             switch (_tabIndex)
             {
                 case 0:
-                    _tabViewPointGenerate.Draw(style);
+                    _tabViewPointGenerate.Draw();
                     break;
                 case 1:
-                    _tabShapefileLoad.Draw(style);
+                    _tabShapefileLoad.Draw();
                     break;
                 case 2:
-                    _tabWeatherAndTime.OnGUI(style);
+                    _tabWeatherAndTime.OnGUI();
                     break;
             }
 

@@ -15,10 +15,10 @@ namespace LandscapeDesignTool.Editor.WindowTabs
         private ViewRegulationGUI _viewRegulationGUI;
         private ViewRegulation _selectedViewRegulation;
 
-        public void Draw(GUIStyle labelStyle)
+        public void Draw()
         {
             EditorGUILayout.Space();
-            EditorGUILayout.LabelField("<size=15>眺望対象からの眺望規制作成</size>", labelStyle);
+            LandscapeEditorStyle.Header("眺望対象からの眺望規制作成");
             EditorGUILayout.HelpBox("眺望対象地点での幅と高さを設定し眺望規制作成をクリックしてください", MessageType.Info);
 
             _viewRegulationAreaObjName = EditorGUILayout.TextField("ゲームオブジェクト名", _viewRegulationAreaObjName);

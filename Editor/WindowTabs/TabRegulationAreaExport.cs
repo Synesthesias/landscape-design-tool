@@ -11,10 +11,10 @@ namespace LandscapeDesignTool.Editor.WindowTabs
         string _regulationAreaExportPath = "";
         private PLATEAUInstancedCityModel _cityModel;
 
-        public void Draw(GUIStyle labelStyle)
+        public void Draw()
         {
             EditorGUILayout.Space();
-            EditorGUILayout.LabelField("<size=15>ShapeFile出力</size>", labelStyle);
+            LandscapeEditorStyle.Header("ShapeFile出力");
 
             string[] options = { "規制エリア", "高さ規制エリア", "眺望規制エリア" };
 

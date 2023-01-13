@@ -9,7 +9,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
     {
         private readonly ShapeFileEditorHelper _shapeFileEditorHelper = new ShapeFileEditorHelper();
 
-        public void Draw(GUIStyle labelStyle)
+        public void Draw()
         {
             _shapeFileEditorHelper.DrawGui();
         }

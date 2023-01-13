@@ -21,7 +21,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
 
         int _weather = 0;
         
-        public void OnGUI(GUIStyle labelStyle)
+        public void OnGUI()
         {
             // _sunLight = GameObject.Find("SunSource").gameObject;
             _sunLight = RenderSettings.sun.gameObject;
@@ -32,14 +32,14 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                 EditorGUILayout.ObjectField("光源指定", _sunLight, typeof(GameObject), true);
             }
             */
-            EditorGUILayout.LabelField("<size=15>光源</size>", labelStyle);
+            LandscapeEditorStyle.Header("光源");
             EditorGUILayout.ObjectField("光源", _sunLight, typeof(GameObject), true);
-            EditorGUILayout.LabelField("<size=15>時間の設定</size>", labelStyle);
+            LandscapeEditorStyle.Header("時間の指定");
             _time = EditorGUILayout.Slider("時間", _time, _morningTime, _nightTime);
 
 
             EditorGUILayout.Space();
-            EditorGUILayout.LabelField("<size=15>天候の設定</size>", labelStyle);
+            LandscapeEditorStyle.Header("天候の設定");
             GUIContent[] popupItem = new[]
             {
                 new GUIContent("晴れ"),

@@ -13,11 +13,11 @@ namespace LandscapeDesignTool.Editor.WindowTabs
         Color _areaColor = new Color(0, 1, 1, 0.5f);
         bool _editMode = false;
         
-        public void Draw(GUIStyle labelStyle)
+        public void Draw()
         {
             LDTTools.CheckTag("HeightRegulationArea");
             EditorGUILayout.Space();
-            EditorGUILayout.LabelField("<size=15>高さ規制エリア作成</size>", labelStyle);
+            LandscapeEditorStyle.Header("高さ規制エリア作成");
             EditorGUILayout.HelpBox("高さ規制リアの高さ直径を設定しタイプを選択して規制エリア作成をクリックしてください", MessageType.Info);
             _heightAreaHeight = EditorGUILayout.FloatField("高さ", _heightAreaHeight);
             _heightAreaRadius = EditorGUILayout.FloatField("直径", _heightAreaRadius);
