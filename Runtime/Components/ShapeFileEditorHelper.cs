@@ -96,10 +96,8 @@ namespace LandscapeDesignTool
             foreach (var contour in _contours)
             {
                 var regulationArea = RegulationArea.Create(parentTransform);
-                
-                // 最後の頂点は飛ばします。
-                // 最初と最後の頂点位置が同じになる多角形表現から、最後の頂点を除きます。
-                for (int i = 0; i < contour.Count - 1; i++)
+
+                for (int i = 0; i < contour.Count; i++)
                 {
                     var point = contour[i];
                     var pos = new Vector3(point.x, 0, point.y);
