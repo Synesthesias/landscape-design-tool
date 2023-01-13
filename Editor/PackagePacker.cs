@@ -5,15 +5,15 @@ using UnityEditor.PackageManager;
 namespace LandscapeDesignTool.Editor
 {
     /// <summary>
-    /// PackagesƒtƒHƒ‹ƒ_‚É“ü‚Á‚Ä‚¢‚é ŒiŠÏ‚Ü‚¿‚Ã‚­‚èƒc[ƒ‹ ‚ğ tarball Œ`®‚Åo—Í‚µ‚Ü‚·B
-    /// ƒfƒvƒƒC‚Å—˜—p‚µ‚Ü‚·B
+    /// Packagesãƒ•ã‚©ãƒ«ãƒ€ã«å…¥ã£ã¦ã„ã‚‹ æ™¯è¦³ã¾ã¡ã¥ãã‚Šãƒ„ãƒ¼ãƒ« ã‚’ tarball å½¢å¼ã§å‡ºåŠ›ã—ã¾ã™ã€‚
+    /// ãƒ‡ãƒ—ãƒ­ã‚¤ã§åˆ©ç”¨ã—ã¾ã™ã€‚
     /// </summary>
     public static class PackagePacker
     {
-        [MenuItem("PLATEAU/ŒiŠÏ‚Ü‚¿‚Ã‚­‚è/ŠJ”­ÒŒü‚¯/Package‚ğtarball‚Éo—Í")]
+        [MenuItem("PLATEAU/æ™¯è¦³ã¾ã¡ã¥ãã‚Š/é–‹ç™ºè€…å‘ã‘/Packageã‚’tarballã«å‡ºåŠ›")]
         public static void Pack()
         {
-            var destDir = EditorUtility.SaveFolderPanel("o—Íæ", "", "");
+            var destDir = EditorUtility.SaveFolderPanel("å‡ºåŠ›å…ˆ", "", "");
             if (string.IsNullOrEmpty(destDir)) return;
             UnityEditor.PackageManager.Client.Pack("Packages/com.synesthesias.landscape-design-tool", destDir);
         }

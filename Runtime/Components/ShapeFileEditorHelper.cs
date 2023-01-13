@@ -34,15 +34,15 @@ namespace LandscapeDesignTool
         public void DrawGui()
         {
             _cityModel =
-                (PLATEAUInstancedCityModel)EditorGUILayout.ObjectField("‘ÎÛ“ss", _cityModel,
+                (PLATEAUInstancedCityModel)EditorGUILayout.ObjectField("å¯¾è±¡éƒ½å¸‚", _cityModel,
                     typeof(PLATEAUInstancedCityModel), true);
-            EditorGUILayout.LabelField("“Çƒtƒ@ƒCƒ‹:");
-            string displayPath = string.IsNullOrEmpty(_shapefileLoadPath) ? "–¢‘I‘ğ" : _shapefileLoadPath;
+            EditorGUILayout.LabelField("èª­è¾¼ãƒ•ã‚¡ã‚¤ãƒ«:");
+            string displayPath = string.IsNullOrEmpty(_shapefileLoadPath) ? "æœªé¸æŠ" : _shapefileLoadPath;
 
             EditorGUILayout.LabelField(displayPath);
-            if (GUILayout.Button("ƒtƒ@ƒCƒ‹‘I‘ğ"))
+            if (GUILayout.Button("ãƒ•ã‚¡ã‚¤ãƒ«é¸æŠ"))
             {
-                string selectedPath = EditorUtility.OpenFilePanel("ShapeFile‘I‘ğ", "", "shp");
+                string selectedPath = EditorUtility.OpenFilePanel("ShapeFileé¸æŠ", "", "shp");
                 if (!string.IsNullOrEmpty(selectedPath))
                 {
                     _shapefileLoadPath = selectedPath;
@@ -51,18 +51,18 @@ namespace LandscapeDesignTool
             
             if (string.IsNullOrEmpty(_shapefileLoadPath)) return;
 
-            _generateGameObjName = EditorGUILayout.TextField("ƒQ[ƒ€ƒIƒuƒWƒFƒNƒg–¼: ", _generateGameObjName);
+            _generateGameObjName = EditorGUILayout.TextField("ã‚²ãƒ¼ãƒ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆå: ", _generateGameObjName);
 
-            // _materialColor = EditorGUILayout.ColorField("F", _materialColor);
+            // _materialColor = EditorGUILayout.ColorField("è‰²", _materialColor);
 
             _areaHeight =
-                EditorGUILayout.FloatField("‚‚³",
+                EditorGUILayout.FloatField("é«˜ã•",
                     _areaHeight);
             if (_cityModel == null)
             {
-                EditorGUILayout.HelpBox("‘ÎÛ“ss‚ğw’è‚µ‚Ä‚­‚¾‚³‚¢B", MessageType.Error);
+                EditorGUILayout.HelpBox("å¯¾è±¡éƒ½å¸‚ã‚’æŒ‡å®šã—ã¦ãã ã•ã„ã€‚", MessageType.Error);
             }
-            else if (GUILayout.Button("ƒƒbƒVƒ…ƒf[ƒ^‚Ìì¬"))
+            else if (GUILayout.Button("ãƒ¡ãƒƒã‚·ãƒ¥ãƒ‡ãƒ¼ã‚¿ã®ä½œæˆ"))
             {
                 var parentObj = new GameObject(_generateGameObjName);
                 BuildMesh(_shapefileLoadPath, parentObj.transform, _cityModel.GeoReference);
@@ -117,8 +117,8 @@ namespace LandscapeDesignTool
             {
                 var regulationArea = RegulationArea.Create(parentTransform);
                 
-                // ÅŒã‚Ì’¸“_‚Í”ò‚Î‚µ‚Ü‚·B
-                // Å‰‚ÆÅŒã‚Ì’¸“_ˆÊ’u‚ª“¯‚¶‚É‚È‚é‘½ŠpŒ`•\Œ»‚©‚çAÅŒã‚Ì’¸“_‚ğœ‚«‚Ü‚·B
+                // æœ€å¾Œã®é ‚ç‚¹ã¯é£›ã°ã—ã¾ã™ã€‚
+                // æœ€åˆã¨æœ€å¾Œã®é ‚ç‚¹ä½ç½®ãŒåŒã˜ã«ãªã‚‹å¤šè§’å½¢è¡¨ç¾ã‹ã‚‰ã€æœ€å¾Œã®é ‚ç‚¹ã‚’é™¤ãã¾ã™ã€‚
                 for (int i = 0; i < contour.Count - 1; i++)
                 {
                     var point = contour[i];
