@@ -10,12 +10,14 @@ namespace LandScapeDesignTool
         [SerializeField] GameObject menuPanel;
         [SerializeField] GameObject viewpointPanel;
         [SerializeField] GameObject weatherPanel;
+        [SerializeField] GameObject ChangeColorPanel;
         // Start is called before the first frame update
         void Start()
         {
             menuPanel.SetActive(false);
             viewpointPanel.SetActive(false);
             weatherPanel.SetActive(false);
+            ChangeColorPanel.SetActive(false);
         }
 
         // Update is called once per frame
@@ -46,9 +48,16 @@ namespace LandScapeDesignTool
 
         public void ToggleWeatherPanel()
         {
-            Debug.Log("ToggleWeatherPanel");
             weatherPanel.SetActive(weatherPanel.activeSelf ? false : true);
             if (weatherPanel.activeSelf == false)
+            {
+                menuPanel.SetActive(true);
+            }
+        }
+        public void ToggleColorPanel()
+        {
+            ChangeColorPanel.SetActive(ChangeColorPanel.activeSelf ? false : true);
+            if (ChangeColorPanel.activeSelf == false)
             {
                 menuPanel.SetActive(true);
             }
