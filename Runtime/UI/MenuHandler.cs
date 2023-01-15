@@ -11,6 +11,7 @@ namespace LandScapeDesignTool
         [SerializeField] GameObject viewpointPanel;
         [SerializeField] GameObject weatherPanel;
         [SerializeField] GameObject ChangeColorPanel;
+        [SerializeField] GameObject ChangeHeightPanel;
         // Start is called before the first frame update
         void Start()
         {
@@ -18,6 +19,7 @@ namespace LandScapeDesignTool
             viewpointPanel.SetActive(false);
             weatherPanel.SetActive(false);
             ChangeColorPanel.SetActive(false);
+            ChangeHeightPanel.SetActive(false);
         }
 
         // Update is called once per frame
@@ -58,6 +60,15 @@ namespace LandScapeDesignTool
         {
             ChangeColorPanel.SetActive(ChangeColorPanel.activeSelf ? false : true);
             if (ChangeColorPanel.activeSelf == false)
+            {
+                menuPanel.SetActive(true);
+            }
+        }
+
+        public void ToggleHeightrPanel()
+        {
+            ChangeHeightPanel.SetActive(ChangeHeightPanel.activeSelf ? false : true);
+            if (ChangeHeightPanel.activeSelf == false)
             {
                 menuPanel.SetActive(true);
             }
