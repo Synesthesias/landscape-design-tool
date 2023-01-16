@@ -30,6 +30,12 @@ namespace LandscapeDesignTool.Editor
                 new TabRegulationAreaExport()
             };
         }
+        private void Awake()
+        {
+
+            LDTTools.SetUI();
+        }
+
 
         [MenuItem("PLATEAU/景観まちづくり/景観計画")]
         public static void ShowWindow()
