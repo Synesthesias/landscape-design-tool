@@ -16,6 +16,7 @@ namespace LandscapeDesignTool.Editor
         public override void OnInspectorGUI()
         {
             if (_gui == null) Init();
+            serializedObject.Update();
             _gui.Draw((ViewRegulation)target);
         }
 

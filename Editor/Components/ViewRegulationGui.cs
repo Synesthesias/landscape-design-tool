@@ -10,36 +10,38 @@ namespace LandscapeDesignTool.Editor
         int selectIndex = 0;
         bool selectingTarget = false;
         GameObject vpgroup;
-        Color _areaColor = new Color(0, 1, 0, 0.2f);
-        Color _areaInvalidColor = new Color(1, 0, 0, 0.2f);
-        private float _wsize;
-        private float _hsize;
-        float _interval = 3.0f;
         private Vector3 _prevPos;
         private const string ObjNameLineOfSight = "LineOfSight";
         private const string ObjNameCoveringMesh = "CoveringMesh";
 
         public ViewRegulationGUI(ViewRegulation target)
         {
-            _wsize = target.screenWidth;
-            _hsize = target.screenHeight;
             _prevPos = target.transform.position;
         }
 
-        public void Draw(ViewRegulation target)
+        /// <summary>
+        /// 視線規制の設定GUIを描画します。
+        /// </summary>
+        /// <returns>ユーザーがGUIで何らかの設定変更をしたときにtrueを返します。</returns>
+        public bool Draw(ViewRegulation target)
         {
             var style = new GUIStyle(EditorStyles.label);
             style.richText = true;
-            // this.serializedObject.Update();
 
             SceneView sceneView = SceneView.lastActiveSceneView;
 
-            EditorGUILayout.HelpBox("視点場を選択して眺望対象をシーン内で選択してください", MessageType.Info);
-            _wsize = EditorGUILayout.FloatField("眺望対象での横サイズ(m)", _wsize);
-            _hsize = EditorGUILayout.FloatField("眺望対象での縦サイズ(m)", _hsize);
-            _areaColor = EditorGUILayout.ColorField("色の設定", _areaColor);
-            _areaInvalidColor = EditorGUILayout.ColorField("規制色の設定", _areaInvalidColor);
-            _interval = EditorGUILayout.FloatField("障害物の判定間隔(m)", _interval);
+            bool isGuiChanged = false;
+            using (var checkChange = new EditorGUI.ChangeCheckScope())
+            {
+                EditorGUILayout.HelpBox("視点場を選択して眺望対象をシーン内で選択してください", MessageType.Info);
+                target.screenWidth = EditorGUILayout.FloatField("眺望対象での横サイズ(m)", target.screenWidth);
+                target.screenHeight = EditorGUILayout.FloatField("眺望対象での縦サイズ(m)", target.screenHeight);
+                target.lineColorValid = EditorGUILayout.ColorField("色の設定", target.lineColorValid);
+                target.lineColorInvalid = EditorGUILayout.ColorField("規制色の設定", target.lineColorInvalid);
+                target.lineInterval = EditorGUILayout.FloatField("障害物の判定間隔(m)", target.lineInterval);
+                isGuiChanged |= checkChange.changed;
+            }
+            
 
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("<size=12>視点場</size>", style);
@@ -48,7 +50,7 @@ namespace LandscapeDesignTool.Editor
             if (vpGroupComponent == null || vpGroupComponent.transform.childCount == 0)
             {
                 EditorGUILayout.HelpBox("視点場を作成してください", MessageType.Error);
-                return;
+                return false;
             }
             vpgroup = vpGroupComponent.gameObject;
             
@@ -70,6 +72,8 @@ namespace LandscapeDesignTool.Editor
                 sceneView.Focus();
                 selectingTarget = true;
             }
+
+            return isGuiChanged;
         }
 
         public enum SurfaceType
@@ -78,12 +82,10 @@ namespace LandscapeDesignTool.Editor
             Transparent
         }
 
-        private Vector3 targetPosition;
 
         public void OnSceneGUI(ViewRegulation target)
         {
             var trans = target.transform;
-            // var posStart = trans.position;
 
             bool posStartChanged = false;
             bool posEndChanged = false;
@@ -105,8 +107,8 @@ namespace LandscapeDesignTool.Editor
             // 視線の終点ハンドルを描画します。
             using (var check = new EditorGUI.ChangeCheckScope())
             {
-                Handles.Label(targetPosition, "視線 終点");
-                targetPosition = Handles.PositionHandle(targetPosition, Quaternion.identity);
+                Handles.Label(target.endPos, "視線 終点");
+                target.endPos = Handles.PositionHandle(target.endPos, Quaternion.identity);
                 if (check.changed)
                 {
                     posEndChanged = true;
@@ -117,8 +119,7 @@ namespace LandscapeDesignTool.Editor
             if (posStartChanged || posEndChanged)
             {
                 var startPos = trans.position;
-                float lineLength = (targetPosition - startPos).magnitude;
-                CreateViewRegulation(target, startPos, targetPosition, lineLength);
+                CreateOrUpdateViewRegulation(target);
             }
 
             _prevPos = trans.position;
@@ -147,23 +148,29 @@ namespace LandscapeDesignTool.Editor
                     selectingTarget = false;
                     float length = Vector3.Distance(originPoint, targetPoint);
 
-                    CreateViewRegulation(target, originPoint, targetPoint, length);
+                    CreateOrUpdateViewRegulation(target);
                 }
                 ev.Use();
             }
             
         }
 
-        void CreateViewRegulation(ViewRegulation targetViewRegulation, Vector3 originPoint, Vector3 targetPoint, float length)
+        /// <summary>
+        /// 視線を表示するためのゲームオブジェクトを生成します。
+        /// すでにあれば、生成の代わりに更新します。
+        /// </summary>
+        public void CreateOrUpdateViewRegulation(ViewRegulation targetViewRegulation)
         {
-            CreateCoveringMesh(targetViewRegulation, originPoint, targetPosition, length);
-            CreateLineOfSight(targetViewRegulation, originPoint, targetPosition);
+            var originPoint = targetViewRegulation.StartPos;
+            var targetPoint = targetViewRegulation.endPos;
+            CreateCoveringMesh(targetViewRegulation, originPoint, targetPoint);
+            CreateLineOfSight(targetViewRegulation, originPoint, targetPoint);
         }
 
         /// <summary>
         /// 選択判定のためのメッシュを生成します。
         /// </summary>
-        private void CreateCoveringMesh(ViewRegulation target, Vector3 originPoint, Vector3 targetPoint, float length)
+        private void CreateCoveringMesh(ViewRegulation target, Vector3 originPoint, Vector3 targetPoint)
         {
             // 以前の CoveringMesh があれば削除します。
             var trans = target.transform;
@@ -175,13 +182,16 @@ namespace LandscapeDesignTool.Editor
                     Object.DestroyImmediate(child.gameObject);
                 }
             }
-            
+
+            var wSize = target.screenWidth;
+            var hSize = target.screenHeight;
+            float length = (targetPoint - originPoint).magnitude;
             Vector3[] vertex = new Vector3[6];
             vertex[0] = new Vector3(0, 0, 0);
-            vertex[1] = new Vector3(-_wsize / 2.0f, -_hsize / 2.0f, length);
-            vertex[2] = new Vector3(-_wsize / 2.0f, _hsize / 2.0f, length);
-            vertex[3] = new Vector3(_wsize / 2.0f, _hsize / 2.0f, length);
-            vertex[4] = new Vector3(_wsize / 2.0f, -_hsize / 2.0f, length);
+            vertex[1] = new Vector3(-wSize / 2.0f, -hSize / 2.0f, length);
+            vertex[2] = new Vector3(-wSize / 2.0f, hSize / 2.0f, length);
+            vertex[3] = new Vector3(wSize / 2.0f, hSize / 2.0f, length);
+            vertex[4] = new Vector3(wSize / 2.0f, -hSize / 2.0f, length);
             vertex[5] = new Vector3(0, 0, length);
 
             int[] idx = {
@@ -209,18 +219,18 @@ namespace LandscapeDesignTool.Editor
             if (mr == null)
                 mr = go.AddComponent<MeshRenderer>();
 
-            Material material = LDTTools.MakeMaterial(_areaColor);
+            Material material = LDTTools.MakeMaterial(target.lineColorValid);
 
             mr.sharedMaterial = material;
             mf.mesh = mesh;
 
             go.transform.position = originPoint;
             go.transform.LookAt(targetPoint, Vector3.up);
-            go.transform.parent = ((ViewRegulation)target).transform;
+            go.transform.parent = (target).transform;
             mr.enabled = false;
         }
 
-        void ClearLineOfSight(ViewRegulation target)
+        private static void ClearLineOfSight(ViewRegulation target)
         {
             var root = (target).transform;
             for (int i = 0; i < root.childCount; ++i)
@@ -242,27 +252,27 @@ namespace LandscapeDesignTool.Editor
             obj.transform.parent = ((ViewRegulation)target).transform;
 
             float result = -1;
-
-            int divx = (int)(_wsize / _interval);
-            int divy = (int)(_hsize / _interval);
+            float interval = target.lineInterval;
+            int divx = (int)(target.screenWidth / interval);
+            int divy = (int)(target.screenHeight / interval);
 
             for (int i = 0; i < divx + 1; i++)
             {
                 for (int j = 0; j < divy + 1; j++)
                 {
-                    float x = destination.x - (_wsize / 2.0f) + _interval * i;
-                    float y = destination.y - (_hsize / 2.0f) + _interval * j;
+                    float x = destination.x - (target.screenWidth / 2.0f) + interval * i;
+                    float y = destination.y - (target.screenHeight / 2.0f) + interval * j;
                     Vector3 d = new Vector3(x, y, destination.z);
                     RaycastHit hit;
 
                     if (RaycastBuildings(target, origin, d, out hit))
                     {
-                        DrawLine(origin, hit.point, obj, _areaColor);
-                        DrawLine(hit.point, d, obj, _areaInvalidColor);
+                        DrawLine(origin, hit.point, obj, target.lineColorValid);
+                        DrawLine(hit.point, d, obj, target.lineColorInvalid);
                     }
                     else
                     {
-                        DrawLine(origin, d, obj, _areaColor);
+                        DrawLine(origin, d, obj, target.lineColorValid);
                     }
                 }
             }
@@ -329,5 +339,6 @@ namespace LandscapeDesignTool.Editor
 
             return result;
         }
+        
     }
 }

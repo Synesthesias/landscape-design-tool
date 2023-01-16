@@ -38,29 +38,34 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                     name = _viewRegulationAreaObjName,
                     layer = LayerMask.NameToLayer("RegulationArea")
                 };
-
+                // 視線を生成します。
                 ViewRegulation handler = grp.AddComponent<ViewRegulation>();
-                handler.screenHeight = _screenHeight;
-                handler.screenWidth = _screenWidth;
+                handler.UpdateParams(_screenWidth, _screenHeight, new Vector3(100,0,0) );
+                EditorUtility.SetDirty(handler);
             }
             EditorGUILayout.Space(10);
+            LandscapeEditorStyle.Header("眺望規制の設定変更");
             EditorGUILayout.LabelField("眺望規制選択");
             // TODO 毎フレーム検索はちょっと重い
             var viewRegulations = Object.FindObjectsOfType<ViewRegulation>();
             var viewRegulationOptions = viewRegulations.Select(v => v.name).ToArray();
             if (viewRegulations.Length == 0) return;
             _selectViewRegulationIdx = Math.Min(_selectViewRegulationIdx, viewRegulations.Length);
-            using (var check = new EditorGUI.ChangeCheckScope())
+            using (var checkTargetRegulationChanged = new EditorGUI.ChangeCheckScope())
             {
                 _selectViewRegulationIdx = EditorGUILayout.Popup("眺望規制", _selectViewRegulationIdx, viewRegulationOptions);
                 _selectedViewRegulation = viewRegulations[_selectViewRegulationIdx];
-                if (check.changed || _viewRegulationGUI == null)
+                if (checkTargetRegulationChanged.changed || _viewRegulationGUI == null)
                 {
                     _viewRegulationGUI = new ViewRegulationGUI(_selectedViewRegulation);
                 }
             }
-            _viewRegulationGUI?.Draw(_selectedViewRegulation);
-            
+            if(_viewRegulationGUI?.Draw(_selectedViewRegulation) is true)
+            {
+                _viewRegulationGUI.CreateOrUpdateViewRegulation(_selectedViewRegulation);
+                EditorUtility.SetDirty(_selectedViewRegulation);
+            }
+
         }
 
         public void OnSceneGUI()
@@ -73,6 +78,9 @@ namespace LandscapeDesignTool.Editor.WindowTabs
             
         }
 
+        /// <summary>
+        /// 視線表示のON/OFfを切り替えます。
+        /// </summary>
         private static void ViewportRegulationRendererSetActive(bool isActive)
         {
             var regulations = Object.FindObjectsOfType<ViewRegulation>();
