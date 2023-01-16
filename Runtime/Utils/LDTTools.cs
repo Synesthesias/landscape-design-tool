@@ -1,5 +1,6 @@
 using System;
 using EGIS.ShapeFileLib;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
@@ -17,6 +18,23 @@ namespace LandscapeDesignTool
         }
 
         public static string MaterialName = "RegurationAreaMaterial";
+
+
+        public static void SetUI()
+        {
+
+            GameObject ui = GameObject.Find("PlayerPanel");
+            if (ui == null)
+            {
+                string absolute = Path.GetFullPath("Packages/landscape-design-tool/Prefabs/PlayerPanel.prefab");
+                Debug.Log(absolute);
+                GameObject prefab = (GameObject)AssetDatabase.LoadAssetAtPath("Packages/com.synesthesias.landscape-design-tool/Prefabs/PlayerPanel.prefab", typeof(GameObject));
+                GameObject panel = GameObject.Instantiate(prefab);
+                panel.name = "PlayerPanel";
+
+            }
+
+        }
 
         public static Material MakeMaterial(Color col)
         {
@@ -186,6 +204,7 @@ namespace LandscapeDesignTool
 
             return title + "-" + rval.ToString();
         }
+
     }
 
 #if UNITY_EDITOR
