@@ -6,7 +6,7 @@ using Object = UnityEngine.Object;
 
 namespace LandscapeDesignTool.Editor.WindowTabs
 {
-    public class TabViewportRegulationGenerate
+    public class TabViewportRegulationGenerate : IGuiTabContents
     {
         private float _screenWidth = 80.0f;
         private float _screenHeight = 80.0f;
@@ -15,10 +15,14 @@ namespace LandscapeDesignTool.Editor.WindowTabs
         private ViewRegulationGUI _viewRegulationGUI;
         private ViewRegulation _selectedViewRegulation;
 
-        public void Draw(GUIStyle labelStyle)
+        public void OnGUI()
         {
             EditorGUILayout.Space();
-            EditorGUILayout.LabelField("<size=15>眺望対象からの眺望規制作成</size>", labelStyle);
+            
+            LandscapeEditorStyle.Header("表示設定");
+            LandscapeEditorStyle.ButtonSwitchDisplay(ViewportRegulationRendererSetActive);
+            
+            LandscapeEditorStyle.Header("眺望対象からの眺望規制作成");
             EditorGUILayout.HelpBox("眺望対象地点での幅と高さを設定し眺望規制作成をクリックしてください", MessageType.Info);
 
             _viewRegulationAreaObjName = EditorGUILayout.TextField("ゲームオブジェクト名", _viewRegulationAreaObjName);
@@ -34,34 +38,69 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                     name = _viewRegulationAreaObjName,
                     layer = LayerMask.NameToLayer("RegulationArea")
                 };
-
+                // 視線を生成します。
                 ViewRegulation handler = grp.AddComponent<ViewRegulation>();
-                handler.screenHeight = _screenHeight;
-                handler.screenWidth = _screenWidth;
+                handler.UpdateParams(_screenWidth, _screenHeight, new Vector3(100,0,0) );
+                EditorUtility.SetDirty(handler);
             }
             EditorGUILayout.Space(10);
+            LandscapeEditorStyle.Header("眺望規制の設定変更");
             EditorGUILayout.LabelField("眺望規制選択");
             // TODO 毎フレーム検索はちょっと重い
             var viewRegulations = Object.FindObjectsOfType<ViewRegulation>();
             var viewRegulationOptions = viewRegulations.Select(v => v.name).ToArray();
             if (viewRegulations.Length == 0) return;
             _selectViewRegulationIdx = Math.Min(_selectViewRegulationIdx, viewRegulations.Length);
-            using (var check = new EditorGUI.ChangeCheckScope())
+            using (var checkTargetRegulationChanged = new EditorGUI.ChangeCheckScope())
             {
                 _selectViewRegulationIdx = EditorGUILayout.Popup("眺望規制", _selectViewRegulationIdx, viewRegulationOptions);
                 _selectedViewRegulation = viewRegulations[_selectViewRegulationIdx];
-                if (check.changed || _viewRegulationGUI == null)
+                if (checkTargetRegulationChanged.changed || _viewRegulationGUI == null)
                 {
                     _viewRegulationGUI = new ViewRegulationGUI(_selectedViewRegulation);
                 }
             }
-            _viewRegulationGUI?.Draw(_selectedViewRegulation);
-            
+            if(_viewRegulationGUI?.Draw(_selectedViewRegulation) is true)
+            {
+                _viewRegulationGUI.CreateOrUpdateViewRegulation(_selectedViewRegulation);
+                EditorUtility.SetDirty(_selectedViewRegulation);
+            }
+
         }
 
         public void OnSceneGUI()
         {
             _viewRegulationGUI?.OnSceneGUI(_selectedViewRegulation);
         }
+
+        public void Update()
+        {
+            
+        }
+
+        /// <summary>
+        /// 視線表示のON/OFfを切り替えます。
+        /// </summary>
+        private static void ViewportRegulationRendererSetActive(bool isActive)
+        {
+            var regulations = Object.FindObjectsOfType<ViewRegulation>();
+            foreach (var reg in regulations)
+            {
+                ChildLineRenderersSetActiveRecursive(reg.transform, isActive);
+            }
+
+            static void ChildLineRenderersSetActiveRecursive(Transform trans, bool isActive)
+            {
+                var renderer = trans.GetComponent<LineRenderer>();
+                if (renderer != null) renderer.enabled = isActive;
+                int childCount = trans.childCount;
+                for (int i = 0; i < childCount; i++)
+                {
+                    ChildLineRenderersSetActiveRecursive(trans.GetChild(i), isActive);
+                }
+            }
+        }
+        
+        
     }
 }

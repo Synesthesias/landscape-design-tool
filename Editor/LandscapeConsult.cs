@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using LandscapeDesignTool.Editor.WindowTabs;
@@ -21,10 +22,8 @@ namespace LandscapeDesignTool.Editor
          */
         string[] layerName = { "RegulationArea" };
         int[] layerId = { 30 };
-
-        private readonly TabViewPointGenerate _tabViewPointGenerate;
-        private readonly TabShapefileLoad _tabShapefileLoad = new TabShapefileLoad();
-        private readonly TabWeatherAndTime _tabWeatherAndTime = new TabWeatherAndTime();
+        
+        private readonly IGuiTabContents[] _tabContents;
 
         int _regulationType;
         float _regulationHeight;
@@ -36,7 +35,18 @@ namespace LandscapeDesignTool.Editor
 
         public LandscapeConsult()
         {
-            _tabViewPointGenerate = new TabViewPointGenerate(this);
+            _tabContents = new IGuiTabContents[]
+            {
+                new TabViewPointGenerate(this),
+                new TabShapefileLoad(),
+                new TabWeatherAndTime()
+            };
+        }
+
+        private void Awake()
+        {
+
+            LDTTools.SetUI();
         }
 
         private void Awake()
@@ -54,7 +64,7 @@ namespace LandscapeDesignTool.Editor
 
         private void Update()
         {
-            _tabViewPointGenerate.Update();
+            _tabContents[_tabIndex].Update();
         }
 
         private void OnGUI()
@@ -67,24 +77,13 @@ namespace LandscapeDesignTool.Editor
 
             var style = new GUIStyle(EditorStyles.label);
             style.richText = true;
-            switch (_tabIndex)
-            {
-                case 0:
-                    _tabViewPointGenerate.Draw(style);
-                    break;
-                case 1:
-                    _tabShapefileLoad.Draw(style);
-                    break;
-                case 2:
-                    _tabWeatherAndTime.OnGUI(style);
-                    break;
-            }
+            _tabContents[_tabIndex].OnGUI();
 
         }
 
         private void OnInspectorUpdate()
         {
-            _tabWeatherAndTime.OnInspectorUpdate();
+            ((TabWeatherAndTime)_tabContents.First(c => c is TabWeatherAndTime)).OnInspectorUpdate();
         }
     }
 

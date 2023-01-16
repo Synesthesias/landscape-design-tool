@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace LandscapeDesignTool.Editor.WindowTabs
 {
-    public class TabRegulationAreaGenerate
+    public class TabRegulationAreaGenerate : IGuiTabContents
     {
         bool _isCreatingContour = false;
 
@@ -13,7 +13,6 @@ namespace LandscapeDesignTool.Editor.WindowTabs
         RegulationArea regulationArea;
 
         private EditorWindow _parentWindow;
-        private GUIStyle _labelStyle;
         private Vector2 _scrollPosition = Vector2.zero;
 
         public TabRegulationAreaGenerate(EditorWindow parentWindow)
@@ -21,13 +20,11 @@ namespace LandscapeDesignTool.Editor.WindowTabs
             _parentWindow = parentWindow;
         }
 
-        public void Draw(GUIStyle labelStyle)
+        public void OnGUI()
         {
             LDTTools.CheckTag("RegulationArea");
 
             _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
-
-            _labelStyle = labelStyle;
 
             DrawCreateRegulation();
             DrawEditRegulationArea();
@@ -39,8 +36,11 @@ namespace LandscapeDesignTool.Editor.WindowTabs
         private void DrawCreateRegulation()
         {
             EditorGUILayout.Space();
+            
+            LandscapeEditorStyle.Header("表示設定");
+            LandscapeEditorStyle.ButtonSwitchDisplay(RegulationAreaRendererSetActive);
 
-            EditorGUILayout.LabelField("<size=15>規制エリア作成</size>", _labelStyle);
+            LandscapeEditorStyle.Header("規制エリア作成");
 
             GUI.enabled = true;
 
@@ -104,7 +104,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
         private void DrawEditRegulationArea()
         {
             EditorGUILayout.Space();
-            EditorGUILayout.LabelField("<size=15>規制エリア編集</size>", _labelStyle);
+            LandscapeEditorStyle.Header("規制エリア編集");
 
             DrawRegurationAreaList();
 
@@ -153,7 +153,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                 return;
 
             EditorGUILayout.Space();
-            EditorGUILayout.LabelField("<size=15>規制エリア削除</size>", _labelStyle);
+            LandscapeEditorStyle.Header("規制エリア削除");
 
             GUI.color = Color.red;
             if (GUILayout.Button("選択中の規制エリアを削除"))
@@ -187,6 +187,22 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                 return;
 
             regulationArea.AddVertex(hits[0].point);
+        }
+
+        public static void RegulationAreaRendererSetActive(bool isActive)
+        {
+            var regulations = Object.FindObjectsOfType<RegulationArea>();
+            foreach (var reg in regulations)
+            {
+                var renderer = reg.GetComponent<MeshRenderer>();
+                if (renderer == null) continue;
+                renderer.enabled = isActive;
+            }
+        }
+
+        public void Update()
+        {
+            
         }
     }
 }
