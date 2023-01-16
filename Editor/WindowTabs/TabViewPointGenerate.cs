@@ -9,9 +9,8 @@ namespace LandscapeDesignTool.Editor.WindowTabs
     /// <summary>
     /// 視点場作成のGUIを描画します。
     /// </summary>
-    public class TabViewPointGenerate
+    public class TabViewPointGenerate : IGuiTabContents
     {
-        private GUIStyle _labelStyle;
         private EditorWindow _parentWindow;
         private Vector2 _scrollPosition;
 
@@ -41,13 +40,11 @@ namespace LandscapeDesignTool.Editor.WindowTabs
             _lastCameraPose = newCameraPose;
         }
 
-        public void Draw(GUIStyle labelStyle)
+        public void OnGUI()
         {
             LDTTools.CheckTag("ViewPoint");
 
             _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
-
-            _labelStyle = labelStyle;
 
             DrawCreatePanel();
             DrawEditPanel();
@@ -57,10 +54,15 @@ namespace LandscapeDesignTool.Editor.WindowTabs
             EditorGUILayout.EndScrollView();
         }
 
+        public void OnSceneGUI()
+        {
+            
+        }
+
         private void DrawCreatePanel()
         {
             EditorGUILayout.Space();
-            EditorGUILayout.LabelField("<size=15>視点場の作成</size>", _labelStyle);
+            LandscapeEditorStyle.Header("視点場の作成");
 
             if (GUILayout.Button("視点場の追加"))
             {
@@ -139,7 +141,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                 return;
 
             EditorGUILayout.Space();
-            EditorGUILayout.LabelField("<size=15>視点場削除</size>", _labelStyle);
+            LandscapeEditorStyle.Header("視点場削除");
 
             GUI.color = Color.red;
             if (GUILayout.Button("選択中の視点場を削除"))
