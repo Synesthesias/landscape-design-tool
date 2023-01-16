@@ -45,8 +45,8 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                 new GUIContent("晴れ"),
                 new GUIContent("薄曇り"),
                 new GUIContent("曇り"),
-                new GUIContent("雨"),
-                new GUIContent("雪")
+                // new GUIContent("雨"),
+                // new GUIContent("雪")
             };
 
             _weather = EditorGUILayout.Popup(
@@ -151,13 +151,6 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                 g = col.g * 0.6f;
                 b = col.b * 0.6f;
                 strength = 0.4f;
-            }
-            else if (_weather == 3 || _weather == 4)
-            {
-                r = col.r * 0.3f;
-                g = col.g * 0.3f;
-                b = col.b * 0.3f;
-                strength = 0.1f;
             }
             else
             {
