@@ -129,7 +129,7 @@ namespace LandscapeDesignTool.Editor
             var ev = Event.current;
 
             RaycastHit hit;
-            if (ev.type == EventType.KeyUp && ev.keyCode == KeyCode.LeftShift)
+            if (ev.type == EventType.MouseDown)
             {
 
                 Transform origin = vpgroup.transform.GetChild(selectIndex);
@@ -143,12 +143,12 @@ namespace LandscapeDesignTool.Editor
                     Debug.Log(hit.collider.name);
                     Debug.Log(hit.collider.bounds.center);
 
-                    Vector3 targetPoint = hit.collider.bounds.center;
+                    Vector3 targetPoint = hit.point;
 
                     selectingTarget = false;
-                    float length = Vector3.Distance(originPoint, targetPoint);
-
+                    target.endPos = targetPoint;
                     CreateOrUpdateViewRegulation(target);
+                    
                 }
                 ev.Use();
             }
@@ -158,6 +158,7 @@ namespace LandscapeDesignTool.Editor
         /// <summary>
         /// 視線を表示するためのゲームオブジェクトを生成します。
         /// すでにあれば、生成の代わりに更新します。
+        /// どこに線を出すかは、引数 <paramref name="targetViewRegulation"/> の position, endPos, lineInterval が利用されます。
         /// </summary>
         public void CreateOrUpdateViewRegulation(ViewRegulation targetViewRegulation)
         {
