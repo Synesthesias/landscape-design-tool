@@ -10,19 +10,12 @@ namespace LandscapeDesignTool.Editor
         int selectIndex = 0;
         bool selectingTarget = false;
         GameObject vpgroup;
-        // Color _areaColor = new Color(0, 1, 0, 0.2f);
-        // Color _areaInvalidColor = new Color(1, 0, 0, 0.2f);
-        // private float _wsize;
-        // private float _hsize;
-        // float _interval = 3.0f;
         private Vector3 _prevPos;
         private const string ObjNameLineOfSight = "LineOfSight";
         private const string ObjNameCoveringMesh = "CoveringMesh";
 
         public ViewRegulationGUI(ViewRegulation target)
         {
-            // _wsize = target.screenWidth;
-            // _hsize = target.screenHeight;
             _prevPos = target.transform.position;
         }
 
@@ -34,7 +27,6 @@ namespace LandscapeDesignTool.Editor
         {
             var style = new GUIStyle(EditorStyles.label);
             style.richText = true;
-            // this.serializedObject.Update();
 
             SceneView sceneView = SceneView.lastActiveSceneView;
 
@@ -90,12 +82,10 @@ namespace LandscapeDesignTool.Editor
             Transparent
         }
 
-        // private Vector3 targetPosition;
 
         public void OnSceneGUI(ViewRegulation target)
         {
             var trans = target.transform;
-            // var posStart = trans.position;
 
             bool posStartChanged = false;
             bool posEndChanged = false;
