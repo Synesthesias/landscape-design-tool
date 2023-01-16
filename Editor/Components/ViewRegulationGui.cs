@@ -146,9 +146,9 @@ namespace LandscapeDesignTool.Editor
                     Vector3 targetPoint = hit.collider.bounds.center;
 
                     selectingTarget = false;
-                    float length = Vector3.Distance(originPoint, targetPoint);
-
+                    target.endPos = targetPoint;
                     CreateOrUpdateViewRegulation(target);
+                    
                 }
                 ev.Use();
             }
