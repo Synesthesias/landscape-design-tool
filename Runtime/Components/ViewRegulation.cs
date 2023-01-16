@@ -11,16 +11,14 @@ public class ViewRegulation : MonoBehaviour
 
     public float screenWidth = 80.0f;
     public float screenHeight = 80.0f;
+    
+    /// <summary> 視線の向かう先 </summary>
     public Vector3 endPos;
+
+    public float lineInterval = 4;
     [SerializeField] List<GameObject> ignoreObject = new List<GameObject>();
 
-    public Vector3 StartPos
-    {
-        get
-        {
-            return transform.position;
-        }
-    }
+    public Vector3 StartPos => transform.position;
 
     public void UpdateParams(float screenWidthArg, float screenHeightArg, Vector3 endPosArg)
     {
@@ -29,7 +27,5 @@ public class ViewRegulation : MonoBehaviour
         endPos = endPosArg;
     }
 
-    // public const string NameOfScreenWidth = nameof(screenWidth);
-    // public const string NameOfScreenHeight = nameof(screenHeight);
 }
 

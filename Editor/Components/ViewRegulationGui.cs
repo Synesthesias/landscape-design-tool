@@ -14,7 +14,7 @@ namespace LandscapeDesignTool.Editor
         Color _areaInvalidColor = new Color(1, 0, 0, 0.2f);
         // private float _wsize;
         // private float _hsize;
-        float _interval = 3.0f;
+        // float _interval = 3.0f;
         private Vector3 _prevPos;
         private const string ObjNameLineOfSight = "LineOfSight";
         private const string ObjNameCoveringMesh = "CoveringMesh";
@@ -46,7 +46,7 @@ namespace LandscapeDesignTool.Editor
                 target.screenHeight = EditorGUILayout.FloatField("眺望対象での縦サイズ(m)", target.screenHeight);
                 _areaColor = EditorGUILayout.ColorField("色の設定", _areaColor);
                 _areaInvalidColor = EditorGUILayout.ColorField("規制色の設定", _areaInvalidColor);
-                _interval = EditorGUILayout.FloatField("障害物の判定間隔(m)", _interval);
+                target.lineInterval = EditorGUILayout.FloatField("障害物の判定間隔(m)", target.lineInterval);
                 isGuiChanged |= checkChange.changed;
             }
             
@@ -262,16 +262,16 @@ namespace LandscapeDesignTool.Editor
             obj.transform.parent = ((ViewRegulation)target).transform;
 
             float result = -1;
-
-            int divx = (int)(target.screenWidth / _interval);
-            int divy = (int)(target.screenHeight / _interval);
+            float interval = target.lineInterval;
+            int divx = (int)(target.screenWidth / interval);
+            int divy = (int)(target.screenHeight / interval);
 
             for (int i = 0; i < divx + 1; i++)
             {
                 for (int j = 0; j < divy + 1; j++)
                 {
-                    float x = destination.x - (target.screenWidth / 2.0f) + _interval * i;
-                    float y = destination.y - (target.screenHeight / 2.0f) + _interval * j;
+                    float x = destination.x - (target.screenWidth / 2.0f) + interval * i;
+                    float y = destination.y - (target.screenHeight / 2.0f) + interval * j;
                     Vector3 d = new Vector3(x, y, destination.z);
                     RaycastHit hit;
 
