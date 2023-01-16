@@ -129,7 +129,7 @@ namespace LandscapeDesignTool.Editor
             var ev = Event.current;
 
             RaycastHit hit;
-            if (ev.type == EventType.KeyUp && ev.keyCode == KeyCode.LeftShift)
+            if (ev.type == EventType.MouseDown)
             {
 
                 Transform origin = vpgroup.transform.GetChild(selectIndex);
@@ -143,7 +143,7 @@ namespace LandscapeDesignTool.Editor
                     Debug.Log(hit.collider.name);
                     Debug.Log(hit.collider.bounds.center);
 
-                    Vector3 targetPoint = hit.collider.bounds.center;
+                    Vector3 targetPoint = hit.point;
 
                     selectingTarget = false;
                     target.endPos = targetPoint;
