@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using PlasticGui.Configuration.CloudEdition.Welcome;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 
 public class ViewRegulation : MonoBehaviour
