@@ -70,6 +70,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
 
         public void OnSceneGUI()
         {
+            if (_selectedViewRegulation == null) return;
             _viewRegulationGUI?.OnSceneGUI(_selectedViewRegulation);
         }
 
