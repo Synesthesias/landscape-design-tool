@@ -16,6 +16,8 @@ public class ViewRegulation : MonoBehaviour
     public Vector3 endPos;
 
     public float lineInterval = 4;
+    public Color lineColorValid = new Color(0, 1, 0, 0.2f);
+    public Color lineColorInvalid = new Color(1, 0, 0, 0.2f);
     [SerializeField] List<GameObject> ignoreObject = new List<GameObject>();
 
     public Vector3 StartPos => transform.position;

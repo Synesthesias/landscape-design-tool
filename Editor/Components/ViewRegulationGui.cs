@@ -10,8 +10,8 @@ namespace LandscapeDesignTool.Editor
         int selectIndex = 0;
         bool selectingTarget = false;
         GameObject vpgroup;
-        Color _areaColor = new Color(0, 1, 0, 0.2f);
-        Color _areaInvalidColor = new Color(1, 0, 0, 0.2f);
+        // Color _areaColor = new Color(0, 1, 0, 0.2f);
+        // Color _areaInvalidColor = new Color(1, 0, 0, 0.2f);
         // private float _wsize;
         // private float _hsize;
         // float _interval = 3.0f;
@@ -44,8 +44,8 @@ namespace LandscapeDesignTool.Editor
                 EditorGUILayout.HelpBox("視点場を選択して眺望対象をシーン内で選択してください", MessageType.Info);
                 target.screenWidth = EditorGUILayout.FloatField("眺望対象での横サイズ(m)", target.screenWidth);
                 target.screenHeight = EditorGUILayout.FloatField("眺望対象での縦サイズ(m)", target.screenHeight);
-                _areaColor = EditorGUILayout.ColorField("色の設定", _areaColor);
-                _areaInvalidColor = EditorGUILayout.ColorField("規制色の設定", _areaInvalidColor);
+                target.lineColorValid = EditorGUILayout.ColorField("色の設定", target.lineColorValid);
+                target.lineColorInvalid = EditorGUILayout.ColorField("規制色の設定", target.lineColorInvalid);
                 target.lineInterval = EditorGUILayout.FloatField("障害物の判定間隔(m)", target.lineInterval);
                 isGuiChanged |= checkChange.changed;
             }
@@ -229,18 +229,18 @@ namespace LandscapeDesignTool.Editor
             if (mr == null)
                 mr = go.AddComponent<MeshRenderer>();
 
-            Material material = LDTTools.MakeMaterial(_areaColor);
+            Material material = LDTTools.MakeMaterial(target.lineColorValid);
 
             mr.sharedMaterial = material;
             mf.mesh = mesh;
 
             go.transform.position = originPoint;
             go.transform.LookAt(targetPoint, Vector3.up);
-            go.transform.parent = ((ViewRegulation)target).transform;
+            go.transform.parent = (target).transform;
             mr.enabled = false;
         }
 
-        void ClearLineOfSight(ViewRegulation target)
+        private static void ClearLineOfSight(ViewRegulation target)
         {
             var root = (target).transform;
             for (int i = 0; i < root.childCount; ++i)
@@ -277,12 +277,12 @@ namespace LandscapeDesignTool.Editor
 
                     if (RaycastBuildings(target, origin, d, out hit))
                     {
-                        DrawLine(origin, hit.point, obj, _areaColor);
-                        DrawLine(hit.point, d, obj, _areaInvalidColor);
+                        DrawLine(origin, hit.point, obj, target.lineColorValid);
+                        DrawLine(hit.point, d, obj, target.lineColorInvalid);
                     }
                     else
                     {
-                        DrawLine(origin, d, obj, _areaColor);
+                        DrawLine(origin, d, obj, target.lineColorValid);
                     }
                 }
             }
