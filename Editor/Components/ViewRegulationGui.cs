@@ -158,6 +158,7 @@ namespace LandscapeDesignTool.Editor
         /// <summary>
         /// 視線を表示するためのゲームオブジェクトを生成します。
         /// すでにあれば、生成の代わりに更新します。
+        /// どこに線を出すかは、引数 <paramref name="targetViewRegulation"/> の position, endPos, lineInterval が利用されます。
         /// </summary>
         public void CreateOrUpdateViewRegulation(ViewRegulation targetViewRegulation)
         {
