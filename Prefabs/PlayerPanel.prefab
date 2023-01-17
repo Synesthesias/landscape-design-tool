@@ -1229,6 +1229,7 @@ MonoBehaviour:
   weatherPanel: {fileID: 3391346145672389792}
   ChangeColorPanel: {fileID: 4377504485007313108}
   ChangeHeightPanel: {fileID: 5223057292618685467}
+  HeightRegulationAreatPanel: {fileID: 0}
 --- !u!1 &3345187747121946766
 GameObject:
   m_ObjectHideFlags: 0
@@ -3896,7 +3897,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2563087909179689567}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4394553716650561294}
+        m_TargetAssemblyTypeName: LandScapeDesignTool.MenuHandler, LandscapeDesignTool
+        m_MethodName: ToggleHeightRegulationPanelPanel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &7472608810017945206
 GameObject:
   m_ObjectHideFlags: 0
