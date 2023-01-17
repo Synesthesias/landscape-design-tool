@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace LandScapeDesignTool
@@ -11,7 +12,8 @@ namespace LandScapeDesignTool
         void Start()
         {
 
-            objects = GameObject.FindGameObjectsWithTag("ViewRegulationArea");
+            // objects = GameObject.FindGameObjectsWithTag("ViewRegulationArea");
+            objects = FindObjectsOfType<ViewRegulation>().Select(regulation => regulation.gameObject).ToArray();
         }
 
         // Update is called once per frame
