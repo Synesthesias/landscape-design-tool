@@ -3,7 +3,8 @@ using UnityEngine;
 public class WalkThruHandler : MonoBehaviour
 {
     private const float AngleDelta = 1.0f;
-    private const float MoveDelta = 0.5f;
+    private const float MoveDelta = 1f;
+    private const float RotateDelta = 1f;
     // Start is called before the first frame update
     void Start()
     {
@@ -13,71 +14,60 @@ public class WalkThruHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.LeftArrow))
-        {
-            Quaternion q = gameObject.transform.rotation;
-            float x = q.eulerAngles.x;
-            float y = q.eulerAngles.y;
-            Quaternion r = Quaternion.Euler(x,y-AngleDelta,0);
-            gameObject.transform.rotation = r;
 
-        }
-
-        if (Input.GetKey(KeyCode.RightArrow))
-        {
-            Quaternion q = gameObject.transform.rotation;
-            float x = q.eulerAngles.x;
-            float y = q.eulerAngles.y;
-            Quaternion r = Quaternion.Euler(x,y+AngleDelta,0);
-            gameObject.transform.rotation = r;
-            
-        }
-        if (Input.GetKey(KeyCode.UpArrow))
-        {
-            Quaternion q = gameObject.transform.rotation;
-            float x = q.eulerAngles.x;
-            float y = q.eulerAngles.y;
-            Quaternion r = Quaternion.Euler(x-AngleDelta,y,0);
-            gameObject.transform.rotation = r;
-            
-        }
-        if (Input.GetKey(KeyCode.DownArrow))
-        {
-            Quaternion q = gameObject.transform.rotation;
-            float x = q.eulerAngles.x;
-            float y = q.eulerAngles.y;
-            Quaternion r = Quaternion.Euler(x+AngleDelta,y,0);
-            gameObject.transform.rotation = r;
-            
-        }
-
-        RaycastHit hit;
         if (Input.GetKey(KeyCode.W))
         {
             Vector3 p = gameObject.transform.position;
             Vector3 ff = gameObject.transform.forward;
             Vector3 dst = p + ff * MoveDelta;
-            dst.y += 100.0f;
-            if (Physics.Raycast(dst, new Vector3(0, -1, 0), out hit, Mathf.Infinity))
-            {
-                Vector3 hitp = hit.point;
-                hitp.y += 1.6f;
-                gameObject.transform.position = hitp;
-            }
+            transform.position = dst;
         }
-        
-        if (Input.GetKey(KeyCode.Q))
+
+        if (Input.GetKey(KeyCode.S))
         {
             Vector3 p = gameObject.transform.position;
             Vector3 bb = -gameObject.transform.forward;
             Vector3 dst = p + bb * MoveDelta;
-            dst.y += 100.0f;
-            if (Physics.Raycast(dst, new Vector3(0, -1, 0), out hit, Mathf.Infinity))
-            {
-                Vector3 hitp = hit.point;
-                hitp.y += 1.6f;
-                gameObject.transform.position = hitp;
-            }
+            transform.position = dst;
+        }
+
+        if (Input.GetKey(KeyCode.A))
+        {
+            Vector3 p = gameObject.transform.position;
+            Vector3 bb = -gameObject.transform.right;
+            Vector3 dst = p + bb * MoveDelta;
+            transform.position = dst;
+
+        }
+
+        if (Input.GetKey(KeyCode.D))
+        {
+            Vector3 p = gameObject.transform.position;
+            Vector3 bb = gameObject.transform.right;
+            Vector3 dst = p + bb * MoveDelta;
+            transform.position = dst;
+        }
+
+        if(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        {
+            Vector3 p = transform.position;
+            Vector3 bb = -transform.up;
+            Vector3 dst = p + bb * MoveDelta;
+            transform.position = dst;
+        }
+
+        if (Input.GetKey(KeyCode.Space))
+        {
+            Vector3 p = transform.position;
+            Vector3 bb = transform.up;
+            Vector3 dst = p + bb * MoveDelta;
+            transform.position = dst;
+        }
+
+        // Right-click + mouse to rotate
+        if (Input.GetMouseButton(1))
+        {
+            transform.eulerAngles += RotateDelta * new Vector3(-Input.GetAxis("Mouse Y"), Input.GetAxis("Mouse X"), 0);
         }
     }
 }

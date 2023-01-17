@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 namespace LandscapeDesignTool.Editor
 {
     /// <summary>
-    /// “ssŒv‰æƒc[ƒ‹‚ğ“®ì‚³‚¹‚é‚É‚ ‚½‚Á‚Ä•K—v‚Èƒ^ƒOİ’è‚ğs‚¢‚Ü‚·B
+    /// éƒ½å¸‚è¨ˆç”»ãƒ„ãƒ¼ãƒ«ã‚’å‹•ä½œã•ã›ã‚‹ã«ã‚ãŸã£ã¦å¿…è¦ãªã‚¿ã‚°è¨­å®šã‚’è¡Œã„ã¾ã™ã€‚
     /// </summary>
     public static class TagAdder
     {
@@ -15,17 +15,19 @@ namespace LandscapeDesignTool.Editor
         private static readonly Func<Transform, bool> predIsGround = trans => trans.name.Contains("_dem_");
         private const string LayerNameBuilding = "Building";
         private const string LayerNameGround = "Ground";
+        private const string LayerNameRagulationArea = "RegulationArea";
         private const int LayerIdBuilding = 29;
         private const int LayerIdGround = 31;
+        private const int LayerIdRagulationArea = 30;
 
         /// <summary>
-        /// ƒvƒƒWƒFƒNƒgİ’è‚ÌƒŒƒCƒ„[İ’è‚ÅABuilding, Ground ‚ğİ’è‚µ‚Ü‚·B
-        /// ƒV[ƒ“’†‚Ì–¼‘O‚É _bldg_ ‚ğŠÜ‚ŞƒQ[ƒ€ƒIƒuƒWƒFƒNƒg‚Ìƒ^ƒO‚ğ Building ‚Éİ’è‚µ‚Ü‚·B
-        /// ƒV[ƒ“’†‚Ì–¼‘O‚É _dem_  ‚ğŠÜ‚ŞƒQ[ƒ€ƒIƒuƒWƒFƒNƒg‚Ìƒ^ƒO‚ğ Ground   ‚Éİ’è‚µ‚Ü‚·B
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆè¨­å®šã®ãƒ¬ã‚¤ãƒ¤ãƒ¼è¨­å®šã§ã€Building, Ground ã‚’è¨­å®šã—ã¾ã™ã€‚
+        /// ã‚·ãƒ¼ãƒ³ä¸­ã®åå‰ã« _bldg_ ã‚’å«ã‚€ã‚²ãƒ¼ãƒ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ã‚¿ã‚°ã‚’ Building ã«è¨­å®šã—ã¾ã™ã€‚
+        /// ã‚·ãƒ¼ãƒ³ä¸­ã®åå‰ã« _dem_  ã‚’å«ã‚€ã‚²ãƒ¼ãƒ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ã‚¿ã‚°ã‚’ Ground   ã«è¨­å®šã—ã¾ã™ã€‚
         /// </summary>
         public static void ConfigureTags()
         {
-            EditorUtility.DisplayProgressBar("", "ƒ^ƒO‚ğİ’è’†‚Å‚·...", 30f);
+            EditorUtility.DisplayProgressBar("", "ã‚¿ã‚°ã‚’è¨­å®šä¸­ã§ã™...", 30f);
             try
             {
                 ConfigureLayerName();
@@ -53,9 +55,9 @@ namespace LandscapeDesignTool.Editor
         }
 
         /// <summary>
-        /// ŠJ‚¢‚Ä‚¢‚éŠeƒV[ƒ“’†‚ÌŠeƒ‹[ƒgƒIƒuƒWƒFƒNƒg‚É‚Â‚¢‚ÄA‚»‚ê‚ç‚Æ‚»‚Ìq‚ğ’Tõ‚µ‚Ü‚·B
-        /// <paramref name="pred"/> ‚É‡’v‚·‚é‚à‚Ì‚ğƒŠƒXƒg‚Å•Ô‚µ‚Ü‚·B
-        /// ‚½‚¾‚µA pred‚É‡’v‚·‚é GameObject ‚Ìq‚Í’Tõ‘ÎÛ‚©‚çŠO‚µ‚Ü‚·B
+        /// é–‹ã„ã¦ã„ã‚‹å„ã‚·ãƒ¼ãƒ³ä¸­ã®å„ãƒ«ãƒ¼ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ã¤ã„ã¦ã€ãã‚Œã‚‰ã¨ãã®å­ã‚’æ¢ç´¢ã—ã¾ã™ã€‚
+        /// <paramref name="pred"/> ã«åˆè‡´ã™ã‚‹ã‚‚ã®ã‚’ãƒªã‚¹ãƒˆã§è¿”ã—ã¾ã™ã€‚
+        /// ãŸã ã—ã€ predã«åˆè‡´ã™ã‚‹ GameObject ã®å­ã¯æ¢ç´¢å¯¾è±¡ã‹ã‚‰å¤–ã—ã¾ã™ã€‚
         /// </summary>
         private static List<Transform> Search(Func<Transform, bool> pred)
         {
@@ -79,7 +81,7 @@ namespace LandscapeDesignTool.Editor
             if (pred(trans))
             {
                 ret.Add(trans);
-                // ğŒ‚É‡’v‚µ‚½‚à‚Ì‚Ìq‚Ü‚Å‚Í’Tõ‚µ‚Ü‚¹‚ñB
+                // æ¡ä»¶ã«åˆè‡´ã—ãŸã‚‚ã®ã®å­ã¾ã§ã¯æ¢ç´¢ã—ã¾ã›ã‚“ã€‚
                 return;
             }
             int childCount = trans.childCount;
@@ -102,8 +104,8 @@ namespace LandscapeDesignTool.Editor
         }
 
         /// <summary>
-        /// ƒvƒƒWƒFƒNƒgİ’è‚ÌƒŒƒCƒ„[–¼‚ğ•ÏX‚µABuilding, Ground ‚Æ‚¢‚¤–¼‘O‚ÌƒŒƒCƒ„[‚ğì‚è‚Ü‚·B
-        /// Ql: <see href="https://forum.unity.com/threads/adding-layer-by-script.41970/#post-2274824"/>
+        /// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆè¨­å®šã®ãƒ¬ã‚¤ãƒ¤ãƒ¼åã‚’å¤‰æ›´ã—ã€Building, Ground ã¨ã„ã†åå‰ã®ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’ä½œã‚Šã¾ã™ã€‚
+        /// å‚è€ƒ: <see href="https://forum.unity.com/threads/adding-layer-by-script.41970/#post-2274824"/>
         /// </summary>
         private static void ConfigureLayerName()
         {
@@ -121,7 +123,9 @@ namespace LandscapeDesignTool.Editor
 
             var layersToSet = new (int id, string name)[]
             {
-                (LayerIdBuilding, LayerNameBuilding), (LayerIdGround, LayerNameGround)
+                (LayerIdBuilding, LayerNameBuilding),
+                (LayerIdGround, LayerNameGround),
+                (LayerIdRagulationArea, LayerNameRagulationArea)
             };
             foreach (var layerTuple in layersToSet)
             {
@@ -131,6 +135,8 @@ namespace LandscapeDesignTool.Editor
                     layerProperty.stringValue = layerTuple.name;
                 }
             }
+
+            tagManager.ApplyModifiedPropertiesWithoutUndo();
         }
     }
 }

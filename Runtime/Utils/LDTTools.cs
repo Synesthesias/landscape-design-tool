@@ -1,3 +1,4 @@
+using System;
 using EGIS.ShapeFileLib;
 using System.Collections;
 using System.Collections.Generic;
@@ -37,7 +38,26 @@ namespace LandscapeDesignTool
 
         public static Material MakeMaterial(Color col)
         {
-            Material material = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
+            //ãƒ¬ãƒ³ãƒ€ãƒ¼ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ã«å¿œã˜ãŸ Unlitã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚’æ±‚ã‚ã¾ã™ã€‚
+            var pipelineAsset = GraphicsSettings.renderPipelineAsset;
+            Shader shader;
+            if (pipelineAsset == null)
+            {
+                shader = Shader.Find("Unlit/Transparent Colored");
+            }
+            else if (pipelineAsset.name == "UniversalRenderPipelineAsset")
+            {
+                shader = Shader.Find("Universal Render Pipeline/Unlit");
+            }
+            else if (pipelineAsset.name.Contains("HighDefinition"))
+            {
+                shader = Shader.Find("HDRP/Unlit");
+            }
+            else
+            {
+                throw new Exception("Unknown Pipeline.");
+            }
+            Material material = new Material(shader);
             material.SetFloat("_SrcBlend", (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
             material.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
             material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
@@ -113,7 +133,7 @@ namespace LandscapeDesignTool
 #if UNITY_EDITOR
             SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
 
-            //layerî•ñ‚ğæ“¾
+            //layeræƒ…å ±ã‚’å–å¾—
             var layersProp = tagManager.FindProperty("layers");
             var index = 0;
             foreach (var layerId in layerId)
@@ -141,7 +161,7 @@ namespace LandscapeDesignTool
             #if UNITY_EDITOR
             SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
 
-            //layerî•ñ‚ğæ“¾
+            //layeræƒ…å ±ã‚’å–å¾—
             var tags = tagManager.FindProperty("tags");
 
             for (int i = 0; i < tags.arraySize; ++i)
@@ -212,24 +232,24 @@ namespace LandscapeDesignTool
 
         void OnGUI()
         {
-            EditorGUILayout.LabelField("İ’è‚·‚éF‚ğ‘I‘ğ", EditorStyles.wordWrappedLabel);
+            EditorGUILayout.LabelField("è¨­å®šã™ã‚‹è‰²ã‚’é¸æŠ", EditorStyles.wordWrappedLabel);
             GUILayout.Space(70);
 
             colorChange.Invoke(_col);
 
-            _col = EditorGUILayout.ColorField("F‚Ìİ’è", _col);
+            _col = EditorGUILayout.ColorField("è‰²ã®è¨­å®š", _col);
             GUILayout.Space(10);
-            if (GUILayout.Button("F‚ğİ’è"))
+            if (GUILayout.Button("è‰²ã‚’è¨­å®š"))
             {
                 colorChange.Invoke(_col);
                 this.Close();
             }
-            if (GUILayout.Button("F‚ğíœ"))
+            if (GUILayout.Button("è‰²ã‚’å‰Šé™¤"))
             {
                 colorRemove.Invoke();
                 this.Close();
             }
-            if (GUILayout.Button("ƒLƒƒƒ“ƒZƒ‹"))
+            if (GUILayout.Button("ã‚­ãƒ£ãƒ³ã‚»ãƒ«"))
             {
                 if (!hasMaterial)
                 {

@@ -81,7 +81,7 @@ namespace LandScapeDesignTool
 
         public void OnApply()
         {
-            float h = _targetArea.GetComponent<HeightRegurationAreaHandler>().GetHeight();
+            float h = _targetArea.GetComponent<HeightRegulationAreaHandler>().GetHeight();
             CollisionHandler handler = _targetArea.GetComponent<CollisionHandler>();
             if (handler.isApply)
             {

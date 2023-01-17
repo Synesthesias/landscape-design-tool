@@ -1,7 +1,4 @@
-using System;
 using UnityEditor;
-using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace LandscapeDesignTool.Editor
 {
@@ -19,6 +16,7 @@ namespace LandscapeDesignTool.Editor
         public override void OnInspectorGUI()
         {
             if (_gui == null) Init();
+            serializedObject.Update();
             _gui.Draw((ViewRegulation)target);
         }
 
