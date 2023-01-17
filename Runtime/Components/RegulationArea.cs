@@ -34,7 +34,7 @@ namespace LandscapeDesignTool
             go.tag = "RegulationArea";
             go.transform.parent = parentTrans;
             var regulationArea = go.AddComponent<RegulationArea>();
-            regulationArea.SetAreaColor(new Color(0.8f, 0.3f, 0.3f, 0.4f));
+            regulationArea.SetAreaColor(new Color(0.3f, 0.3f, 0.8f, 0.4f));
             return regulationArea;
         }
 
@@ -95,7 +95,7 @@ namespace LandscapeDesignTool
             return true;
         }
 
-        private static bool TryGetGroundPosition(Vector3 position, out Vector3 result)
+        public static bool TryGetGroundPosition(Vector3 position, out Vector3 result)
         {
             int layerMask = 1 << 31; // Ground
             var origin = position + Vector3.up * 10000f;
@@ -160,7 +160,10 @@ namespace LandscapeDesignTool
 
             MeshCollider meshCollider = gameObject.GetComponent<MeshCollider>();
             if (meshCollider == null)
+            {
                 meshCollider = gameObject.AddComponent<MeshCollider>();
+                meshCollider.convex = true;
+            }
 
             meshCollider.sharedMesh = mesh;
 
@@ -255,20 +258,20 @@ namespace LandscapeDesignTool
                     int k3 = k1 + 1;
                     int k4 = k2 + 1;
 
-                    // TODO: 外形が右回りの場合側面のメッシュが内向きになってしまう問題の解消
+                    // TODO: 外形が左回りの場合側面のメッシュが内向きになってしまう問題の解消
                     triangles[n++] = k1;
+                    triangles[n++] = k4;
                     triangles[n++] = k3;
-                    triangles[n++] = k4;
                     triangles[n++] = k1;
-                    triangles[n++] = k4;
                     triangles[n++] = k2;
+                    triangles[n++] = k4;
                 }
                 triangles[n++] = vco - 1;
+                triangles[n++] = vco;
                 triangles[n++] = 0;
-                triangles[n++] = vco;
                 triangles[n++] = vco - 1;
-                triangles[n++] = vco;
                 triangles[n++] = vco * 2 - 1;
+                triangles[n++] = vco;
             }
 
             mesh.vertices = nv;

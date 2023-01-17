@@ -12,7 +12,7 @@ namespace LandscapeDesignTool.Editor
     {
 
         private readonly string[] _tabToggles =
-            { "視点場作成", "規制エリア作成", "眺望規制作成", "高さ規制エリア作成", "ShapeFile読込", "ShapeFile書き出し" };
+            { "視点場作成", "規制エリア作成", "眺望規制作成", "高さ制限エリア作成", "ShapeFile読込", "ShapeFile書き出し" };
 
         private readonly IGuiTabContents[] _tabContents;
 

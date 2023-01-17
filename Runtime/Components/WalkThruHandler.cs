@@ -46,6 +46,15 @@ public class WalkThruHandler : MonoBehaviour
             isMoving = true;
         }
 
+        var wheelInput = Input.GetAxis("Mouse ScrollWheel");
+        if (wheelInput != 0)
+        {
+            Vector3 p = gameObject.transform.position;
+            Vector3 bb = gameObject.transform.forward;
+            Vector3 dst = p + bb * wheelInput * 40f;
+            transform.position = dst;
+        }
+
         if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
         {
             Vector3 p = transform.position;

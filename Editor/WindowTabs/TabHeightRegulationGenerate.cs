@@ -30,8 +30,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
             LandscapeEditorStyle.Header("表示設定");
             LandscapeEditorStyle.ButtonSwitchDisplay(HeightRegulationRendererSetActive);
             
-            LandscapeEditorStyle.Header("高さ規制エリア作成");
-            EditorGUILayout.HelpBox("高さ規制リアの高さ直径を設定しタイプを選択して規制エリア作成をクリックしてください", MessageType.Info);
+            LandscapeEditorStyle.Header("眺望対象中心の高さ制限エリア");
             _heightAreaHeight = EditorGUILayout.FloatField("高さ", _heightAreaHeight);
             _heightAreaRadius = EditorGUILayout.FloatField("直径", _heightAreaRadius);
             _areaColor = EditorGUILayout.ColorField("色の設定", _areaColor);
@@ -51,7 +50,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                 else
                 {
                     GUI.color = Color.green;
-                    if (GUILayout.Button("高さ規制エリア作成"))
+                    if (GUILayout.Button("高さ制限エリア作成"))
                     {
                         _heightRegulationAreaEdit = false;
                         SetupRegulationArea(_heightRegulationArea);
@@ -77,7 +76,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                 }
                 else
                 {
-                    if (GUILayout.Button("規制地点を選択"))
+                    if (GUILayout.Button("眺望対象(中心地点)を選択"))
                     {
                         GUI.color = Color.white;
                         GameObject grp = GameObject.Find("HeitRegurationAreaGroup");
@@ -89,12 +88,14 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                             HeightRegulationAreaHandler area = cylinder.AddComponent<HeightRegulationAreaHandler>();
                             _heightRegulationArea = area;
                             cylinder.transform.localScale = new Vector3(0, 0, 0);
-                            cylinder.name = LDTTools.GetNumberWithTag("HeightRegulationArea", "高さ規制エリア");
+                            cylinder.name = LDTTools.GetNumberWithTag("HeightRegulationArea", "高さ制限エリア");
                             cylinder.tag = "HeightRegulationArea";
 
                             Selection.activeGameObject = cylinder;
                         }
                     }
+
+                    LandscapeEditorStyle.Header("眺望対象中心の高さ制限エリアの編集");
 
                     HeightRegulationAreaList();
                 }
@@ -137,7 +138,6 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                         // _targetViewPoint = hit.point;
                         _heightRegulationArea.SetPoint(hit.point);
                     }
-
                 }
             }
         }
