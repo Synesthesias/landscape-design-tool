@@ -30,7 +30,7 @@ namespace LandscapeDesignTool
         {
             GameObject go = new GameObject();
             go.layer = LayerMask.NameToLayer("RegulationArea");
-            go.name = LDTTools.GetNumberWithTag("RegulationArea", "‹K§ƒGƒŠƒA");
+            go.name = LDTTools.GetNumberWithTag("RegulationArea", "è¦åˆ¶ã‚¨ãƒªã‚¢");
             go.tag = "RegulationArea";
             go.transform.parent = parentTrans;
             var regulationArea = go.AddComponent<RegulationArea>();
@@ -75,7 +75,7 @@ namespace LandscapeDesignTool
 
         public bool TrySetVertexOnGround(int index, Vector3 vertex)
         {
-            // ’n–Ê‚Ì‚‚³‚ÉC³
+            // åœ°é¢ã®é«˜ã•ã«ä¿®æ­£
             var result = TryGetGroundPosition(vertex, out var point);
             if (!result)
                 return false;
@@ -86,7 +86,7 @@ namespace LandscapeDesignTool
 
         public bool TryAddVertexOnGround(Vector3 vertex)
         {
-            // ’n–Ê‚Ì‚‚³‚ÉC³
+            // åœ°é¢ã®é«˜ã•ã«ä¿®æ­£
             var result = TryGetGroundPosition(vertex, out var point);
             if (!result)
                 return false;
@@ -255,7 +255,7 @@ namespace LandscapeDesignTool
                     int k3 = k1 + 1;
                     int k4 = k2 + 1;
 
-                    // TODO: ŠOŒ`‚ª‰E‰ñ‚è‚Ìê‡‘¤–Ê‚ÌƒƒbƒVƒ…‚ª“àŒü‚«‚É‚È‚Á‚Ä‚µ‚Ü‚¤–â‘è‚Ì‰ğÁ
+                    // TODO: å¤–å½¢ãŒå³å›ã‚Šã®å ´åˆå´é¢ã®ãƒ¡ãƒƒã‚·ãƒ¥ãŒå†…å‘ãã«ãªã£ã¦ã—ã¾ã†å•é¡Œã®è§£æ¶ˆ
                     triangles[n++] = k1;
                     triangles[n++] = k3;
                     triangles[n++] = k4;

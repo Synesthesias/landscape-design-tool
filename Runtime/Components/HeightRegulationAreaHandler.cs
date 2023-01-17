@@ -3,7 +3,7 @@ using UnityEditor;
 
 namespace LandscapeDesignTool
 {
-    public class HeightRegurationAreaHandler : MonoBehaviour
+    public class HeightRegulationAreaHandler : MonoBehaviour
     {
         [SerializeField] float areaHeight = 10;
         [SerializeField] float areaRadius = 10;
@@ -67,7 +67,7 @@ namespace LandscapeDesignTool
 
 
 #if UNITY_EDITOR
-            [CustomEditor(typeof(HeightRegurationAreaHandler))]
+            [CustomEditor(typeof(HeightRegulationAreaHandler))]
         [CanEditMultipleObjects]
         public class HeightRegurationAreaEditor : Editor
         {
@@ -78,25 +78,25 @@ namespace LandscapeDesignTool
             float _radius = 10;
             private void Awake()
             {
-                _height = Selection.activeGameObject.GetComponent<HeightRegurationAreaHandler>().areaHeight;
-                _radius = Selection.activeGameObject.GetComponent<HeightRegurationAreaHandler>().areaRadius;
+                _height = Selection.activeGameObject.GetComponent<HeightRegulationAreaHandler>().areaHeight;
+                _radius = Selection.activeGameObject.GetComponent<HeightRegulationAreaHandler>().areaRadius;
             }
 
             public override void OnInspectorGUI()
             {
                  /*
                  SceneView sceneView = SceneView.lastActiveSceneView;
-                 EditorGUILayout.HelpBox("’­–]‘ÎÛ‚©‚ç‚Ì‚‚³‹K§ƒGƒŠƒA‚ğ¶¬‚µ‚Ü‚·", MessageType.Info);
+                 EditorGUILayout.HelpBox("çœºæœ›å¯¾è±¡ã‹ã‚‰ã®é«˜ã•è¦åˆ¶ã‚¨ãƒªã‚¢ã‚’ç”Ÿæˆã—ã¾ã™", MessageType.Info);
 
-                 _height = EditorGUILayout.FloatField("‚‚³(m)", _height);
-                 _radius = EditorGUILayout.FloatField("”¼Œa(m)", _radius);
+                 _height = EditorGUILayout.FloatField("é«˜ã•(m)", _height);
+                 _radius = EditorGUILayout.FloatField("åŠå¾„(m)", _radius);
 
-                 _areaColor = EditorGUILayout.ColorField("F‚Ìİ’è", _areaColor);
+                 _areaColor = EditorGUILayout.ColorField("è‰²ã®è¨­å®š", _areaColor);
                  EditorGUILayout.Space();
                  if (_pointing == false)
                  {
                      GUI.color = Color.white;
-                     if (GUILayout.Button("’­–]‘ÎÛ‚ğ‘I‘ğ"))
+                     if (GUILayout.Button("çœºæœ›å¯¾è±¡ã‚’é¸æŠ"))
                      {
                          sceneView.Focus();
                          _pointing = true;
@@ -105,7 +105,7 @@ namespace LandscapeDesignTool
                  else
                  {
                      GUI.color = Color.green;
-                     if (GUILayout.Button("’­–]‘ÎÛ‚ğ‘I‘ğ"))
+                     if (GUILayout.Button("çœºæœ›å¯¾è±¡ã‚’é¸æŠ"))
                      {
                          _pointing = false;
                      }
