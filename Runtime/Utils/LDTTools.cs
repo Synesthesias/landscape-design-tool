@@ -26,14 +26,14 @@ namespace LandscapeDesignTool
             GameObject ui = GameObject.Find("PlayerPanel");
             if (ui == null)
             {
+#if UNITY_EDITOR
                 string absolute = Path.GetFullPath("Packages/landscape-design-tool/Prefabs/PlayerPanel.prefab");
                 Debug.Log(absolute);
                 GameObject prefab = (GameObject)AssetDatabase.LoadAssetAtPath("Packages/com.synesthesias.landscape-design-tool/Prefabs/PlayerPanel.prefab", typeof(GameObject));
                 GameObject panel = GameObject.Instantiate(prefab);
                 panel.name = "PlayerPanel";
-
+#endif
             }
-
         }
 
         public static Material MakeMaterial(Color col)
