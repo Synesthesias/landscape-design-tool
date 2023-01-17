@@ -21,7 +21,7 @@ namespace LandScapeDesignTool
 
         GameObject _target = null;
         GameObject _box;
-        HeightRegurationAreaHandler _targethandler;
+        HeightRegulationAreaHandler _targethandler;
         bool newflag = false;
         Vector3 newPosition;
         Color _areaColor = new Color(0, 1, 1, 0.5f);
@@ -58,7 +58,7 @@ namespace LandScapeDesignTool
 
                             _target = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
                             _target.layer = LayerMask.NameToLayer("RegulationArea");
-                            _targethandler = _target.AddComponent<HeightRegurationAreaHandler>();
+                            _targethandler = _target.AddComponent<HeightRegulationAreaHandler>();
                             _target.transform.localScale = new Vector3(30, 15, 30);
                             _target.transform.position = new Vector3(newPosition.x, 30, newPosition.z);
                             _target.name = LDTTools.GetNumberWithTag("HeightRegulationArea", "çÇÇ≥ãKêßÉGÉäÉA");
@@ -106,7 +106,7 @@ namespace LandScapeDesignTool
                             areaName.color = Color.green;
                             areaName.text = _target.name;
 
-                            _targethandler = _target.GetComponent<HeightRegurationAreaHandler>();
+                            _targethandler = _target.GetComponent<HeightRegulationAreaHandler>();
                             ShowPanel();
                             heightField.text = _targethandler.GetHeight().ToString();
                             diameterField.text = _targethandler.GetRadius().ToString();
