@@ -13,6 +13,8 @@ namespace LandScapeDesignTool
         [SerializeField] GameObject ChangeColorPanel;
         [SerializeField] GameObject ChangeHeightPanel;
         [SerializeField] GameObject HeightRegulationAreatPanel;
+        [SerializeField] GameObject ViewRegulationAreaPanel;
+        [SerializeField] GameObject RegulationAreaPanel;
 
         // Start is called before the first frame update
         void Start()
@@ -23,6 +25,22 @@ namespace LandScapeDesignTool
             ChangeColorPanel.SetActive(false);
             ChangeHeightPanel.SetActive(false);
             HeightRegulationAreatPanel.SetActive(false);
+            ViewRegulationAreaPanel.SetActive(false);
+            RegulationAreaPanel.SetActive(false);
+
+            for ( int i=0; i<int.MaxValue; i++)
+            {
+                string s = "Ž‹“_ê-"+i.ToString();
+                GameObject vp = GameObject.Find(s);
+                if( vp != null)
+                {
+                    Camera.main.transform.position = vp.transform.position;
+                    Camera.main.transform.rotation = vp.transform.rotation;
+                    Camera.main.fieldOfView = vp.GetComponent<LandscapeViewPoint>().Fov;
+                    break;
+                }
+                
+            }
         }
 
         // Update is called once per frame
@@ -76,10 +94,26 @@ namespace LandScapeDesignTool
                 menuPanel.SetActive(true);
             }
         }
-        public void ToggleHeightRegulationPanelPanel()
+        public void ToggleHeightRegulationPanel()
         {
             HeightRegulationAreatPanel.SetActive(HeightRegulationAreatPanel.activeSelf ? false : true);
             if (HeightRegulationAreatPanel.activeSelf == false)
+            {
+                menuPanel.SetActive(true);
+            }
+        }
+        public void ToggleViewRegulationPanel()
+        {
+            ViewRegulationAreaPanel.SetActive(ViewRegulationAreaPanel.activeSelf ? false : true);
+            if (ViewRegulationAreaPanel.activeSelf == false)
+            {
+                menuPanel.SetActive(true);
+            }
+        }
+        public void ToggleRegulationPanel()
+        {
+            RegulationAreaPanel.SetActive(RegulationAreaPanel.activeSelf ? false : true);
+            if (RegulationAreaPanel.activeSelf == false)
             {
                 menuPanel.SetActive(true);
             }

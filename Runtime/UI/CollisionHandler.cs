@@ -45,16 +45,18 @@ namespace LandScapeDesignTool
             {
                 var mesh = target.GetComponent<MeshFilter>().mesh;
                 var bounds = mesh.bounds;
-                Debug.Log(target.name + " : height=" + bounds.size.y);
-                if(  bounds.size.y > h)
+                float targetHeight = bounds.center.y + (bounds.size.y /2.0f);
+                Debug.Log(target.name + " : height=" + targetHeight);
+                Debug.Log("regulation height=" + h);
+                if (targetHeight > h)
                 {
                     if (target.GetComponent<TmpHeight>() == null)
                     {
                         target.AddComponent<TmpHeight>();
                     }
-                    TmpHeight tmp =target.AddComponent<TmpHeight>();
+                    TmpHeight tmp =target.GetComponent<TmpHeight>();
                     tmp.StoreOrg();
-                    float dy = bounds.size.y - h;
+                    float dy = targetHeight - h;
                     Vector3 p = target.transform.position;
                     Vector3 np = new Vector3(p.x, p.y - dy, p.z);
                     target.transform.position = np;
@@ -74,6 +76,7 @@ namespace LandScapeDesignTool
                 if (tmpH)
                 {
                     tmpH.Restore();
+                    Destroy(tmpH);
                 }
             }
         }
