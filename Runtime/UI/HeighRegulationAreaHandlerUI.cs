@@ -25,12 +25,14 @@ namespace LandScapeDesignTool
         bool newflag = false;
         Vector3 newPosition;
         Color _areaColor = new Color(0, 1, 1, 0.5f);
+        GameObject[] objects;
 
         // Start is called before the first frame update
         void Start()
         {
             newflag = false;
             panel.SetActive(false);
+            objects = GameObject.FindGameObjectsWithTag("HeightRegulationArea");
         }
 
         // Update is called once per frame
@@ -59,8 +61,8 @@ namespace LandScapeDesignTool
                             _target = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
                             _target.layer = LayerMask.NameToLayer("RegulationArea");
                             _targethandler = _target.AddComponent<HeightRegulationAreaHandler>();
-                            _target.transform.localScale = new Vector3(30, 15, 30);
-                            _target.transform.position = new Vector3(newPosition.x, 30, newPosition.z);
+                            _target.transform.localScale = new Vector3(30, 30, 30);
+                            _target.transform.position = new Vector3(newPosition.x, 0, newPosition.z);
                             _target.name = LDTTools.GetNumberWithTag("HeightRegulationArea", "çÇÇ≥ãKêßÉGÉäÉA");
                             _target.tag = "HeightRegulationArea";
                             Material mat = LDTTools.MakeMaterial(_areaColor);
@@ -146,8 +148,10 @@ namespace LandScapeDesignTool
                 float x = _target.transform.position.x;
                 float y = _target.transform.position.y;
                 float z = _target.transform.position.z;
-                _targethandler.transform.localScale = new Vector3(d, h/2, d);
-                _targethandler.transform.position = new Vector3(x, h, z);
+                _targethandler.transform.localScale = new Vector3(d, h, d);
+                _targethandler.transform.position = new Vector3(x, 0, z);
+                _targethandler.SetHeight(h);
+                _targethandler.SetRadius(d);
                 _target.GetComponent<Renderer>().enabled = true;
             }
         }
@@ -162,6 +166,22 @@ namespace LandScapeDesignTool
         public void MovePosition()
         {
 
+        }
+
+        public void OnShow()
+        {
+            foreach (var obj in objects)
+            {
+                obj.SetActive(true);
+            }
+        }
+
+        public void OnHide()
+        {
+            foreach (var obj in objects)
+            {
+                obj.SetActive(false);
+            }
         }
     }
 }
