@@ -11,8 +11,6 @@ namespace LandScapeDesignTool
         // Start is called before the first frame update
         void Start()
         {
-
-            // objects = GameObject.FindGameObjectsWithTag("ViewRegulationArea");
             objects = FindObjectsOfType<ViewRegulation>().Select(regulation => regulation.gameObject).ToArray();
         }
 

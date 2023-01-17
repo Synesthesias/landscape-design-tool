@@ -33,8 +33,7 @@ namespace LandScapeDesignTool
 
                 if (Physics.Raycast(ray, out hit))
                 {
-                    Debug.Log(hit.collider.gameObject.name);
-                    if (hit.collider.gameObject.tag == "HeightRegulationArea")
+                    if (hit.collider.gameObject.tag == "RegulationArea")
                     {
                         if(_targetArea != null)
                         {
@@ -56,7 +55,6 @@ namespace LandScapeDesignTool
                         if(handler.isApply)
                         {
                             applyButon.transform.GetChild(0).gameObject.GetComponent<Text>().text = "å≥ÇÃçÇÇ≥Ç…ñﬂÇ∑";
-
                         }
                         else
                         {
@@ -81,7 +79,7 @@ namespace LandScapeDesignTool
 
         public void OnApply()
         {
-            float h = _targetArea.GetComponent<HeightRegulationAreaHandler>().GetHeight();
+            float h = _targetArea.GetComponent<RegulationArea>().GetHeight();
             CollisionHandler handler = _targetArea.GetComponent<CollisionHandler>();
             if (handler.isApply)
             {
@@ -90,7 +88,6 @@ namespace LandScapeDesignTool
             else
             {
                 handler.ApplyHeight(h);
-
             }
             if (handler.isApply)
             {

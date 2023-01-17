@@ -26,14 +26,13 @@ namespace LandscapeDesignTool
             GameObject ui = GameObject.Find("PlayerPanel");
             if (ui == null)
             {
+#if UNITY_EDITOR
                 string absolute = Path.GetFullPath("Packages/landscape-design-tool/Prefabs/PlayerPanel.prefab");
-                Debug.Log(absolute);
                 GameObject prefab = (GameObject)AssetDatabase.LoadAssetAtPath("Packages/com.synesthesias.landscape-design-tool/Prefabs/PlayerPanel.prefab", typeof(GameObject));
                 GameObject panel = GameObject.Instantiate(prefab);
                 panel.name = "PlayerPanel";
-
+#endif
             }
-
         }
 
         public static Material MakeMaterial(Color col)
@@ -58,6 +57,15 @@ namespace LandscapeDesignTool
                 throw new Exception("Unknown Pipeline.");
             }
             Material material = new Material(shader);
+
+#if UNITY_EDITOR
+            if (pipelineAsset.name == "UniversalRenderPipelineAsset")
+            {
+                var originalMaterial = (Material)AssetDatabase.LoadAssetAtPath("Packages/com.synesthesias.landscape-design-tool/Materials/RegulationArea.mat", typeof(Material));
+                material.CopyPropertiesFromMaterial(originalMaterial);
+            }
+#endif
+
             material.SetFloat("_SrcBlend", (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
             material.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
             material.DisableKeyword("_ALPHAPREMULTIPLY_ON");

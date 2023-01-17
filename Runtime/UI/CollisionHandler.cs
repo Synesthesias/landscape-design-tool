@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using LandscapeDesignTool;
 using UnityEngine;
 
 namespace LandScapeDesignTool
@@ -12,51 +13,40 @@ namespace LandScapeDesignTool
         List<GameObject> targetbjects = new List<GameObject>();
         public bool isApply = false;
 
-        int nobjects;
-
         // Start is called before the first frame update
         void Start()
         {
-            nobjects = 0;
             isApply = false;
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-        
         }
 
         private void OnTriggerEnter(Collider other)
         {
-
             GameObject target = other.gameObject;
-
-            targetbjects.Add(target);
-
-            // Debug.Log(other.gameObject.name+" : height="+bounds.size.y);
+            if (target.layer == LayerMask.NameToLayer("Building"))
+                targetbjects.Add(target);
         }
 
         public void ApplyHeight(float h)
         {
 
             isApply = true;
-            foreach ( var target in targetbjects)
+            foreach (var target in targetbjects)
             {
                 var mesh = target.GetComponent<MeshFilter>().mesh;
                 var bounds = mesh.bounds;
-                float targetHeight = bounds.center.y + (bounds.size.y /2.0f);
-                Debug.Log(target.name + " : height=" + targetHeight);
-                Debug.Log("regulation height=" + h);
-                if (targetHeight > h)
+
+                // ’n–Ê‚Ì‚‚³Žæ“¾
+                if (!RegulationArea.TryGetGroundPosition(bounds.center, out var groundPosition))
+                    continue;
+
+                float targetHeight = bounds.center.y + (bounds.size.y / 2.0f);
+                if (targetHeight - groundPosition.y > h)
                 {
                     if (target.GetComponent<TmpHeight>() == null)
                     {
                         target.AddComponent<TmpHeight>();
                     }
-                    TmpHeight tmp =target.GetComponent<TmpHeight>();
-                    tmp.StoreOrg();
-                    float dy = targetHeight - h;
+                    float dy = targetHeight - groundPosition.y - h;
                     Vector3 p = target.transform.position;
                     Vector3 np = new Vector3(p.x, p.y - dy, p.z);
                     target.transform.position = np;
@@ -64,7 +54,6 @@ namespace LandScapeDesignTool
 
                 areaHeight = h;
             }
-
         }
 
         public void UndoHeight()
@@ -72,12 +61,9 @@ namespace LandScapeDesignTool
             isApply = false;
             foreach (var target in targetbjects)
             {
-                TmpHeight tmpH = target.GetComponent<TmpHeight>();
-                if (tmpH)
-                {
-                    tmpH.Restore();
-                    Destroy(tmpH);
-                }
+                var newPosition = target.transform.position;
+                newPosition.y = 0f;
+                target.transform.position = newPosition;
             }
         }
     }
