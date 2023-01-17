@@ -35,12 +35,6 @@ namespace LandscapeDesignTool.Editor
 
             LDTTools.SetUI();
         }
-        private void Awake()
-        {
-
-            LDTTools.SetUI();
-        }
-
 
 
         [MenuItem("PLATEAU/景観まちづくり/景観計画")]
