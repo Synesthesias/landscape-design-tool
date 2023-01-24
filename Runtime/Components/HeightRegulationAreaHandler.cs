@@ -9,11 +9,14 @@ namespace LandscapeDesignTool
         [SerializeField] float areaDiameter = 10;
         [SerializeField] Vector3 targetPoint= Vector3.zero;
         [SerializeField] Color areaColor;
-        // Start is called before the first frame update
-        void Start()
-        {
-
-        }
+        
+        /// <summary>
+        /// 高さ規制は円柱で表示されますが、その円柱の高さです。
+        /// この円柱の高さのうち、規制の高さ分が地面の上に出て、残りは地面の下に埋まります。
+        /// 広い範囲を指定しても円柱が浮かないように長めにします。
+        /// </summary>
+        private const float heightRegulationDisplayLength = 3000f;
+        
 
         // Update is called once per frame
         void Update()
@@ -88,6 +91,23 @@ namespace LandscapeDesignTool
                 EditorGUILayout.LabelField($"高さ: {regulation.areaHeight}");
                 EditorGUILayout.LabelField($"直径: {regulation.areaDiameter}");
             }
+        }
+        
+        public static void SetupRegulationArea(HeightRegulationAreaHandler regulationArea, float diameter, Color color, float height)
+        {
+            // Unityのデフォルト円柱は高さが2mであることに注意
+            // regulationArea.transform.localScale = new Vector3(_heightAreaRadius, _heightAreaHeight / 2f, _heightAreaRadius);
+            regulationArea.transform.localScale =
+                new Vector3(diameter, heightRegulationDisplayLength / 2f, diameter);
+            
+            regulationArea.SetColor(color);
+            regulationArea.SetHeight(height);
+            regulationArea.SetDiameter(diameter);
+
+            var targetPoint = regulationArea.GetPoint();
+            regulationArea.transform.position = new Vector3(targetPoint.x, targetPoint.y - heightRegulationDisplayLength / 2f + height, targetPoint.z);
+            Material mat = LDTTools.MakeMaterial(color);
+            regulationArea.GetComponent<Renderer>().material = mat;
         }
 #endif
     }

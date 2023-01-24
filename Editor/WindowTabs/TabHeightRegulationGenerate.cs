@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using LandScapeDesignTool;
+using UnityEditor;
 using UnityEngine;
 
 namespace LandscapeDesignTool.Editor.WindowTabs
@@ -12,14 +13,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
         HeightRegulationAreaHandler _heightRegulationArea;
         Color _areaColor = new Color(0, 1, 1, 0.5f);
         bool _editMode = false;
-
-        /// <summary>
-        /// 高さ規制は円柱で表示されますが、その円柱の高さです。
-        /// この円柱の高さのうち、規制の高さ分が地面の上に出て、残りは地面の下に埋まります。
-        /// 広い範囲を指定しても円柱が浮かないように長めにします。
-        /// </summary>
-        private const float heightRegulationDisplayLength = 3000f;
-
+        
         private const int LayerIdGround = 31;
         
         public void OnGUI()
@@ -44,7 +38,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                         _editMode = false;
                         _heightRegulationAreaEdit = false;
 
-                        SetupRegulationArea(_heightRegulationArea);
+                        HeightRegulationAreaHandler.SetupRegulationArea(_heightRegulationArea, _heightAreaDiameter, _areaColor, _heightAreaHeight);
                     }
                 }
                 else
@@ -53,7 +47,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                     if (GUILayout.Button("高さ制限エリア作成"))
                     {
                         _heightRegulationAreaEdit = false;
-                        SetupRegulationArea(_heightRegulationArea);
+                        HeightRegulationAreaHandler.SetupRegulationArea(_heightRegulationArea, _heightAreaDiameter, _areaColor, _heightAreaHeight);
                     }
 
                     GUI.color = Color.white;
@@ -71,7 +65,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                     {
                         _editMode = false;
                         _heightRegulationAreaEdit = false;
-                        SetupRegulationArea(_heightRegulationArea);
+                        HeightRegulationAreaHandler.SetupRegulationArea(_heightRegulationArea, _heightAreaDiameter, _areaColor, _heightAreaHeight);
                     }
                 }
                 else
@@ -108,22 +102,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
             }
         }
 
-        private void SetupRegulationArea(HeightRegulationAreaHandler regulationArea)
-        {
-            // Unityのデフォルト円柱は高さが2mであることに注意
-            // regulationArea.transform.localScale = new Vector3(_heightAreaRadius, _heightAreaHeight / 2f, _heightAreaRadius);
-            regulationArea.transform.localScale =
-                new Vector3(_heightAreaDiameter, heightRegulationDisplayLength / 2f, _heightAreaDiameter);
-            
-            regulationArea.SetColor(_areaColor);
-            regulationArea.SetHeight(_heightAreaHeight);
-            regulationArea.SetDiameter(_heightAreaDiameter);
-
-            var targetPoint = regulationArea.GetPoint();
-            regulationArea.transform.position = new Vector3(targetPoint.x, targetPoint.y - heightRegulationDisplayLength / 2f + _heightAreaHeight, targetPoint.z);
-            Material mat = LDTTools.MakeMaterial(_areaColor);
-            regulationArea.GetComponent<Renderer>().material = mat;
-        }
+        
 
         public void OnSceneGUI()
         {
