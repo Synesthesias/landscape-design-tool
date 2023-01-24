@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace LandScapeDesignTool
@@ -42,6 +43,13 @@ namespace LandScapeDesignTool
                     mainCam.fieldOfView = firstViewPoint.GetComponent<LandscapeViewPoint>().Fov;
                 }
                 
+            }
+            
+            // InputModuleが存在しなければ、新たに作ります。
+            if (FindObjectOfType<StandaloneInputModule>() == null)
+            {
+                var obj = new GameObject("StandaloneInputModule");
+                obj.AddComponent<StandaloneInputModule>();
             }
         }
 
