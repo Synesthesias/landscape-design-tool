@@ -90,6 +90,12 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                             cylinder.transform.localScale = new Vector3(0, 0, 0);
                             cylinder.name = LDTTools.GetNumberWithTag("HeightRegulationArea", "高さ制限エリア");
                             cylinder.tag = "HeightRegulationArea";
+                            
+                            // 円柱にデフォルトで付いているカプセルコライダーでは上の方をクリックしにくくなるので、MeshColliderに置き換えます。
+                            Object.DestroyImmediate(cylinder.GetComponent<CapsuleCollider>());
+                            var meshCollider = cylinder.AddComponent<MeshCollider>();
+                            meshCollider.convex = true;
+                            
 
                             Selection.activeGameObject = cylinder;
                         }
