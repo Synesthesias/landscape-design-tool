@@ -59,7 +59,7 @@ namespace LandscapeDesignTool
             Material material = new Material(shader);
 
 #if UNITY_EDITOR
-            if (pipelineAsset.name == "UniversalRenderPipelineAsset")
+            if (pipelineAsset != null && pipelineAsset.name == "UniversalRenderPipelineAsset")
             {
                 var originalMaterial = (Material)AssetDatabase.LoadAssetAtPath("Packages/com.synesthesias.landscape-design-tool/Materials/RegulationArea.mat", typeof(Material));
                 material.CopyPropertiesFromMaterial(originalMaterial);
