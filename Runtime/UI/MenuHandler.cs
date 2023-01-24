@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace LandScapeDesignTool
@@ -28,18 +29,27 @@ namespace LandScapeDesignTool
             ViewRegulationAreaPanel.SetActive(false);
             RegulationAreaPanel.SetActive(false);
 
-            for ( int i=0; i<int.MaxValue; i++)
+            // Playモード開始時、カメラをViewPointの1つに移動します。
+            var firstViewPoint = FindObjectOfType<LandscapeViewPoint>();
+            if (firstViewPoint != null)
             {
-                string s = "���_��-"+i.ToString();
-                GameObject vp = GameObject.Find(s);
-                if( vp != null)
+                var mainCam = Camera.main;
+                if (mainCam != null)
                 {
-                    Camera.main.transform.position = vp.transform.position;
-                    Camera.main.transform.rotation = vp.transform.rotation;
-                    Camera.main.fieldOfView = vp.GetComponent<LandscapeViewPoint>().Fov;
-                    break;
+                    var camTrans = mainCam.transform;
+                    var vpTrans = firstViewPoint.transform;
+                    camTrans.position = vpTrans.position;
+                    camTrans.rotation = vpTrans.rotation;
+                    mainCam.fieldOfView = firstViewPoint.GetComponent<LandscapeViewPoint>().Fov;
                 }
                 
+            }
+            
+            // InputModuleが存在しなければ、新たに作ります。
+            if (FindObjectOfType<StandaloneInputModule>() == null)
+            {
+                var obj = new GameObject("StandaloneInputModule");
+                obj.AddComponent<StandaloneInputModule>();
             }
         }
 
