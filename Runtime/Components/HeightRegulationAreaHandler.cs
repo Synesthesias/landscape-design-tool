@@ -6,14 +6,17 @@ namespace LandscapeDesignTool
     public class HeightRegulationAreaHandler : MonoBehaviour
     {
         [SerializeField] float areaHeight = 10;
-        [SerializeField] float areaRadius = 10;
+        [SerializeField] float areaDiameter = 10;
         [SerializeField] Vector3 targetPoint= Vector3.zero;
         [SerializeField] Color areaColor;
-        // Start is called before the first frame update
-        void Start()
-        {
-
-        }
+        
+        /// <summary>
+        /// 高さ規制は円柱で表示されますが、その円柱の高さです。
+        /// この円柱の高さのうち、規制の高さ分が地面の上に出て、残りは地面の下に埋まります。
+        /// 広い範囲を指定しても円柱が浮かないように長めにします。
+        /// </summary>
+        private const float heightRegulationDisplayLength = 3000f;
+        
 
         // Update is called once per frame
         void Update()
@@ -40,13 +43,13 @@ namespace LandscapeDesignTool
         {
             return areaHeight;
         }
-        public void SetRadius(float r)
+        public void SetDiameter(float r)
         {
-            areaRadius = r;
+            areaDiameter = r;
         }
-        public float GetRadius()
+        public float GetDiameter()
         {
-            return areaRadius;
+            return areaDiameter;
         }
         public void SetPoint( Vector3 p)
         {
@@ -79,81 +82,32 @@ namespace LandscapeDesignTool
             private void Awake()
             {
                 _height = Selection.activeGameObject.GetComponent<HeightRegulationAreaHandler>().areaHeight;
-                _radius = Selection.activeGameObject.GetComponent<HeightRegulationAreaHandler>().areaRadius;
+                _radius = Selection.activeGameObject.GetComponent<HeightRegulationAreaHandler>().areaDiameter;
             }
 
             public override void OnInspectorGUI()
             {
-                 /*
-                 SceneView sceneView = SceneView.lastActiveSceneView;
-                 EditorGUILayout.HelpBox("眺望対象からの高さ規制エリアを生成します", MessageType.Info);
-
-                 _height = EditorGUILayout.FloatField("高さ(m)", _height);
-                 _radius = EditorGUILayout.FloatField("半径(m)", _radius);
-
-                 _areaColor = EditorGUILayout.ColorField("色の設定", _areaColor);
-                 EditorGUILayout.Space();
-                 if (_pointing == false)
-                 {
-                     GUI.color = Color.white;
-                     if (GUILayout.Button("眺望対象を選択"))
-                     {
-                         sceneView.Focus();
-                         _pointing = true;
-                     }
-                 }
-                 else
-                 {
-                     GUI.color = Color.green;
-                     if (GUILayout.Button("眺望対象を選択"))
-                     {
-                         _pointing = false;
-                     }
-                 }
-                 */
+                var regulation = (HeightRegulationAreaHandler)target;
+                EditorGUILayout.LabelField($"高さ: {regulation.areaHeight}");
+                EditorGUILayout.LabelField($"直径: {regulation.areaDiameter}");
             }
-            private void OnSceneGUI()
-            {
-                
-                /*if (_pointing)
-                {
-                    var ev = Event.current;
+        }
+        
+        public void SetupRegulationArea(float diameter, Color color, float height)
+        {
+            // Unityのデフォルト円柱は高さが2mであることに注意
+            // regulationArea.transform.localScale = new Vector3(_heightAreaRadius, _heightAreaHeight / 2f, _heightAreaRadius);
+            transform.localScale =
+                new Vector3(diameter, heightRegulationDisplayLength / 2f, diameter);
+            
+            SetColor(color);
+            SetHeight(height);
+            SetDiameter(diameter);
 
-
-                    RaycastHit hit;
-                    if (ev.type == EventType.KeyUp && ev.keyCode == KeyCode.LeftShift)
-                    {
-                        Vector3 mousePosition = Event.current.mousePosition;
-
-
-                        Ray ray = HandleUtility.GUIPointToWorldRay(mousePosition);
-                        if (Physics.Raycast(ray, out hit, Mathf.Infinity))
-                        {
-                            Debug.Log("height");
-                            Vector3 targetPoint = hit.collider.bounds.center;
-                            Debug.Log(targetPoint);
-                            Debug.Log(hit.point);
-                            GameObject cylinder = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-                            cylinder.layer = LayerMask.NameToLayer("RegulationArea");
-                            var area = cylinder.AddComponent<HeightRegurationAreaHandler>();
-                            cylinder.transform.localScale = new Vector3(_radius, _height, _radius);
-                            area.areaColor = _areaColor;
-                            area.areaHeight = _height;
-                            area.areaRadius = _radius;
-
-                            cylinder.transform.position = new Vector3( targetPoint.x, _height/2.0f, targetPoint.z);
-                            Material mat = LDTTools.MakeMaterial(_areaColor);
-                            cylinder.GetComponent<Renderer>().material = mat;
-
-                            cylinder.transform.SetParent(Selection.activeGameObject.transform);
-                            _pointing = false;
-
-                        }
-                        
-                    }
-                }
-                */
-            }
+            var targetPoint = GetPoint();
+            transform.position = new Vector3(targetPoint.x, targetPoint.y - heightRegulationDisplayLength / 2f + height, targetPoint.z);
+            Material mat = LDTTools.MakeMaterial(color);
+            GetComponent<Renderer>().material = mat;
         }
 #endif
     }

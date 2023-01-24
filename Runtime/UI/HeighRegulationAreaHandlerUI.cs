@@ -16,7 +16,10 @@ namespace LandScapeDesignTool
         [SerializeField] InputField heightField;
         [SerializeField] InputField diameterField;
         [SerializeField] InputField centerxField;
+        
+        // TODO y座標は利用していないので削除してよい。高さは heightField で指定するので。
         [SerializeField] InputField centeryField;
+        
         [SerializeField] InputField centerzField;
 
         GameObject _target = null;
@@ -75,7 +78,7 @@ namespace LandScapeDesignTool
                             heightField.text = "30";
                             diameterField.text = "30";
                             _targethandler.SetHeight(30);
-                            _targethandler.SetRadius(30);
+                            _targethandler.SetDiameter(30);
 
                             centerxField.text = _target.transform.position.x.ToString();
                             centeryField.text = _target.transform.position.y.ToString();
@@ -101,17 +104,17 @@ namespace LandScapeDesignTool
                     if (Physics.Raycast(ray, out hit))
                     {
                         Debug.Log(hit.collider.gameObject.name);
-                        if (hit.collider.gameObject.tag == "HeightRegulationArea")
+                        if (hit.collider.gameObject.CompareTag("HeightRegulationArea"))
                         {
                             _target = hit.collider.gameObject;
-                            _target.GetComponent<Renderer>().enabled = false;
+                            // _target.GetComponent<Renderer>().enabled = false;
                             areaName.color = Color.green;
                             areaName.text = _target.name;
 
                             _targethandler = _target.GetComponent<HeightRegulationAreaHandler>();
                             ShowPanel();
                             heightField.text = _targethandler.GetHeight().ToString();
-                            diameterField.text = _targethandler.GetRadius().ToString();
+                            diameterField.text = _targethandler.GetDiameter().ToString();
                             /*
                             centerxField.text = _targethandler.GetPoint().x.ToString();
                             centeryField.text = _targethandler.GetPoint().y.ToString();
@@ -137,23 +140,20 @@ namespace LandScapeDesignTool
 
         public void Apply()
         {
-            if(_targethandler != null){
-                float d = float.Parse(diameterField.text);
-                float h = float.Parse(heightField.text);
-                /*
-                float x = float.Parse(centerxField.text);
-                float y = float.Parse(centerxField.text);
-                float z = float.Parse(centerxField.text);
-                */
-                float x = _target.transform.position.x;
-                float y = _target.transform.position.y;
-                float z = _target.transform.position.z;
-                _targethandler.transform.localScale = new Vector3(d, h, d);
-                _targethandler.transform.position = new Vector3(x, 0, z);
-                _targethandler.SetHeight(h);
-                _targethandler.SetRadius(d);
-                _target.GetComponent<Renderer>().enabled = true;
-            }
+            if (_targethandler == null) return;
+            float d = float.Parse(diameterField.text);
+            float h = float.Parse(heightField.text);
+
+            float x = float.Parse(centerxField.text);
+            float y = float.Parse(centerxField.text);
+            float z = float.Parse(centerxField.text);
+            var trans = _targethandler.transform;
+            trans.localScale = new Vector3(d, h, d);
+            trans.position = new Vector3(x, 0, z);
+            _targethandler.SetHeight(h);
+            _targethandler.SetDiameter(d);
+            _targethandler.SetupRegulationArea(d, _targethandler.GetColor(), h);
+            // _target.GetComponent<Renderer>().enabled = true;
         }
 
         public void NewArea()

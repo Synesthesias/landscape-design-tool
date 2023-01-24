@@ -35,7 +35,7 @@ namespace LandScapeDesignTool
                 var mesh = target.GetComponent<MeshFilter>().mesh;
                 var bounds = mesh.bounds;
 
-                // ’n–Ê‚Ì‚‚³æ“¾
+                // åœ°é¢ã®é«˜ã•å–å¾—
                 if (!RegulationArea.TryGetGroundPosition(bounds.center, out var groundPosition))
                     continue;
 
