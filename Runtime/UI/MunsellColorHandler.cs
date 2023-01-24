@@ -649,7 +649,7 @@ public class MunsellColorHandler : MonoBehaviour
         {
             var col = rgbColorSelectUI.Color;
 
-            bool hasColor = false;
+            // bool hasColor = false;
             Material[] materials = targetObject.GetComponent<Renderer>().sharedMaterials;
 
             //_oldMat = new Material[materials.Length];
@@ -662,8 +662,9 @@ public class MunsellColorHandler : MonoBehaviour
 
             foreach (var mat in materials)
             {
-                mat.SetColor("_BaseColor", col / 2f);
-                hasColor = true;
+                // mat.SetColor("_BaseColor", col / 2f);
+                mat.color = col / 2f;
+                // hasColor = true;
             }
         }
     }
