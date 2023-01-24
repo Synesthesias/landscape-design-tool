@@ -93,21 +93,21 @@ namespace LandscapeDesignTool
             }
         }
         
-        public static void SetupRegulationArea(HeightRegulationAreaHandler regulationArea, float diameter, Color color, float height)
+        public void SetupRegulationArea(float diameter, Color color, float height)
         {
             // Unityのデフォルト円柱は高さが2mであることに注意
             // regulationArea.transform.localScale = new Vector3(_heightAreaRadius, _heightAreaHeight / 2f, _heightAreaRadius);
-            regulationArea.transform.localScale =
+            transform.localScale =
                 new Vector3(diameter, heightRegulationDisplayLength / 2f, diameter);
             
-            regulationArea.SetColor(color);
-            regulationArea.SetHeight(height);
-            regulationArea.SetDiameter(diameter);
+            SetColor(color);
+            SetHeight(height);
+            SetDiameter(diameter);
 
-            var targetPoint = regulationArea.GetPoint();
-            regulationArea.transform.position = new Vector3(targetPoint.x, targetPoint.y - heightRegulationDisplayLength / 2f + height, targetPoint.z);
+            var targetPoint = GetPoint();
+            transform.position = new Vector3(targetPoint.x, targetPoint.y - heightRegulationDisplayLength / 2f + height, targetPoint.z);
             Material mat = LDTTools.MakeMaterial(color);
-            regulationArea.GetComponent<Renderer>().material = mat;
+            GetComponent<Renderer>().material = mat;
         }
 #endif
     }

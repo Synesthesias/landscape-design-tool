@@ -38,7 +38,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                         _editMode = false;
                         _heightRegulationAreaEdit = false;
 
-                        HeightRegulationAreaHandler.SetupRegulationArea(_heightRegulationArea, _heightAreaDiameter, _areaColor, _heightAreaHeight);
+                        _heightRegulationArea.SetupRegulationArea(_heightAreaDiameter, _areaColor, _heightAreaHeight);
                     }
                 }
                 else
@@ -47,7 +47,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                     if (GUILayout.Button("高さ制限エリア作成"))
                     {
                         _heightRegulationAreaEdit = false;
-                        HeightRegulationAreaHandler.SetupRegulationArea(_heightRegulationArea, _heightAreaDiameter, _areaColor, _heightAreaHeight);
+                        _heightRegulationArea.SetupRegulationArea(_heightAreaDiameter, _areaColor, _heightAreaHeight);
                     }
 
                     GUI.color = Color.white;
@@ -65,7 +65,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                     {
                         _editMode = false;
                         _heightRegulationAreaEdit = false;
-                        HeightRegulationAreaHandler.SetupRegulationArea(_heightRegulationArea, _heightAreaDiameter, _areaColor, _heightAreaHeight);
+                        _heightRegulationArea.SetupRegulationArea(_heightAreaDiameter, _areaColor, _heightAreaHeight);
                     }
                 }
                 else
