@@ -4207,8 +4207,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeText: {fileID: 944155074590609129}
-  rain: {fileID: 305847309528493956, guid: 1278d9e2f4c888f44a13f71c51756812, type: 3}
-  snow: {fileID: 867598351910249999, guid: e5206cd2b67e0bc4698e8e31bd1e68ef, type: 3}
+  rainBuiltInRpPrefab: {fileID: 305847309528493956, guid: 1278d9e2f4c888f44a13f71c51756812, type: 3}
+  snowBuiltInRpPrefab: {fileID: 867598351910249999, guid: e5206cd2b67e0bc4698e8e31bd1e68ef, type: 3}
+  rainUrpPrefab: {fileID: 305847309528493956, guid: 87495c1fe8310f845b905a257963744f, type: 3}
+  snowUrpPrefab: {fileID: 867598351910249999, guid: 6b4d04aedb9a0704aa3dadbce2fc6568, type: 3}
 --- !u!1 &3439932768340861812
 GameObject:
   m_ObjectHideFlags: 0

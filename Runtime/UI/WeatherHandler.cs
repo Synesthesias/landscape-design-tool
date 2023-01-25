@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 namespace LandScapeDesignTool
@@ -8,8 +9,10 @@ namespace LandScapeDesignTool
     public class WeatherHandler : MonoBehaviour
     {
         [SerializeField] Text timeText;
-        [SerializeField] GameObject rain;
-        [SerializeField] GameObject snow;
+        [SerializeField] GameObject rainBuiltInRpPrefab;
+        [SerializeField] GameObject snowBuiltInRpPrefab;
+        [SerializeField] private GameObject rainUrpPrefab;
+        [SerializeField] private GameObject snowUrpPrefab;
 
         GameObject _sunLight = null;
         int _weather = 0;
@@ -27,10 +30,16 @@ namespace LandScapeDesignTool
         {
             _sunLight = RenderSettings.sun.gameObject;
 
-            _rain = Instantiate(rain);
-            _snow = Instantiate(snow);
-            _rain.transform.parent = Camera.main.transform;
-            _snow.transform.parent = Camera.main.transform;
+            // Built-In Render Pipeline と Universal Render Pipeline で場合分けしてプレハブを生成します。
+            // FIXME: HDRP には未対応です。
+            var pipelineAsset = GraphicsSettings.renderPipelineAsset;
+            _rain = pipelineAsset == null ? Instantiate(rainBuiltInRpPrefab) : Instantiate(rainUrpPrefab);
+            _snow = pipelineAsset == null ? Instantiate(snowBuiltInRpPrefab) : Instantiate(snowUrpPrefab);
+            var mainCam = Camera.main;
+            if (mainCam == null) return;
+            var mainCamTrans = mainCam.transform;
+            _rain.transform.parent = mainCamTrans;
+            _snow.transform.parent = mainCamTrans;
             _snow.SetActive(false);
             _snow.transform.localPosition = new Vector3(0, 10, 0);
             _rain.SetActive(false);
