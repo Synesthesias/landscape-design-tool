@@ -14,6 +14,9 @@ namespace LandscapeDesignTool
         private string _generateGameObjName = "LoadedShapeFile";
 
         private List<List<Vector2>> _contours;
+        List<Color> _colors = new List<Color>();
+        List<float> _heights = new List<float>();
+        
         
         private PLATEAUInstancedCityModel _cityModel;
 
@@ -41,9 +44,11 @@ namespace LandscapeDesignTool
 
             _generateGameObjName = EditorGUILayout.TextField("ゲームオブジェクト名: ", _generateGameObjName);
 
+            /*
             _areaHeight =
                 EditorGUILayout.FloatField("高さ",
                     _areaHeight);
+            */
             if (_cityModel == null)
             {
                 EditorGUILayout.HelpBox("対象都市を指定してください。", MessageType.Error);
@@ -63,6 +68,55 @@ namespace LandscapeDesignTool
             Debug.Log(shapefilePath);
             var shp = new ShapeFile(shapefilePath);
             ShapeFileEnumerator sfEnum = shp.GetShapeFileEnumerator();
+
+            int keynoColor = -1;
+            int keynoHeight = -1;
+            string[] keys = shp.GetAttributeFieldNames();
+            for( int i=0; i< keys.Length; i++)
+            {
+                if( keys[i] == "COLOR")
+                {
+                    keynoColor = i;
+                }
+                if( keys[i] == "HEIGHT")
+                {
+                    keynoHeight = i;
+                }
+            }
+
+            for( int i=0; i<shp.RecordCount; i++)
+            {
+                string[] valus = shp.GetAttributeFieldValues(i);
+                if( keynoColor > -1)
+                {
+                    string cols = valus[keynoColor];
+                    string[] carr = cols.Split(',');
+                    float r = float.Parse(carr[0]);
+                    float g = float.Parse(carr[1]);
+                    float b = float.Parse(carr[2]);
+                    float a = float.Parse(carr[3]);
+                    Color col = new Color(r, g, b, a);
+                    _colors.Add(col);
+                }
+                else
+                {
+
+                    Color col = new Color(1, 1, 1, 0.5f);
+                    _colors.Add(col);
+                }
+
+                if( keynoHeight > -1)
+                {
+                    float h = float.Parse(valus[keynoHeight]);
+                    _heights.Add(h);
+                }
+                else
+                {
+                    float h = 10.0f;
+                    _heights.Add(h);
+
+                }
+            }
 
             _contours = new List<List<Vector2>>();
 
@@ -93,6 +147,7 @@ namespace LandscapeDesignTool
 
             }
 
+            int count = 0;
             foreach (var contour in _contours)
             {
                 var regulationArea = RegulationArea.Create(parentTransform);
@@ -103,7 +158,14 @@ namespace LandscapeDesignTool
                     var pos = new Vector3(point.x, 0, point.y);
                     regulationArea.TryAddVertexOnGround(pos);
                 }
+
+                Color col = _colors[count];
+                float h = _heights[count];
+                regulationArea.SetHeight(h);
+                regulationArea.SetAreaColor(col);
                 regulationArea.GenMesh();
+
+                count++;
             }
 
         }
