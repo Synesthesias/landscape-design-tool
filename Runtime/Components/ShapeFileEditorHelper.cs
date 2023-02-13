@@ -77,7 +77,7 @@ namespace LandscapeDesignTool
                     if (pts.Length < 3) continue;
                     List<Vector2> contour = new List<Vector2>();
 
-                    Debug.Log(string.Format("[NumPoints:{0}]", pts.Length));
+                    // Debug.Log(string.Format("[NumPoints:{0}]", pts.Length));
 
 
                     for (int n = 0; n < pts.Length; ++n)
