@@ -48,34 +48,96 @@ namespace LandscapeDesignTool.Editor.WindowTabs
             List<List<Vector2>> contours = new List<List<Vector2>>();
 
             GameObject[] objects = GameObject.FindGameObjectsWithTag("RegulationArea");
-            int objCount = objects.Length;
+            GameObject[] viewregurationObjects = GameObject.FindGameObjectsWithTag("ViewRegulationArea");
+
+
+            int objCount = objects.Length + viewregurationObjects.Length;
+            // int objCount = objects.Length;
             string[] types = new string[objCount];
-            Color[] cols = new Color[objCount];
+            Color[] cols1 = new Color[objCount];
+            Color[] cols2 = new Color[objCount];
             float[] heights = new float[objCount];
             Vector2[,] v2 = new Vector2[objCount, 2];
+            Vector3[] originpoint = new Vector3[objCount];
+            Vector3[] targetpoint = new Vector3[objCount];
+            string[] shapetype = new string[objCount];
+
+            int counter = 0;
             var referencePoint = cityModel.GeoReference.ReferencePoint;
-            for (int i = 0; i < objCount; i++)
+            for (int i = 0; i < objects.Length; i++)
             {
-                if (objects[i].GetComponent<RegulationArea>())
+                shapetype[counter] = "RegurationArea";
+                if (objects[counter].GetComponent<RegulationArea>())
                 {
                     List<Vector2> p = new List<Vector2>();
                     RegulationArea obj =
-                        objects[i].GetComponent<RegulationArea>();
-                    types[i] = "PolygonArea";
-                    heights[i] = obj.GetHeight();
-                    cols[i] = obj.GetAreaColor();
-                    v2[i, 0] = new Vector2(0, 0);
-                    v2[i, 1] = new Vector2(0, 0);
+                        objects[counter].GetComponent<RegulationArea>();
+                    types[counter] = "PolygonArea";
+                    heights[counter] = obj.GetHeight();
+                    cols1[counter] = obj.GetAreaColor();
+                    cols2[counter] = obj.GetAreaColor();
+                    v2[counter, 0] = new Vector2(0, 0);
+                    v2[counter, 1] = new Vector2(0, 0);
+                    originpoint[counter] = Vector3.zero;
+                    targetpoint[counter] = Vector3.zero;
 
                     List<Vector2> cnt = obj.GetVertex2D();
                     var convertedCnt = cnt.Select(c =>
                             new Vector2(c.x + (float)referencePoint.X, c.y + (float)referencePoint.Z))
                         .ToList();
                     contours.Add(convertedCnt);
+
+                    counter++;
+
                 }
             }
 
-            LDTTools.WriteShapeFile(exportPath, "RegurationArea", types, cols, heights, v2,
+            Debug.Log("varea : " + viewregurationObjects.Length);
+            for (int i = 0; i < viewregurationObjects.Length; i++)
+            {
+                shapetype[counter] = "ViewRegulationArea";
+                if (viewregurationObjects[i].GetComponent<ViewRegulation>())
+                {
+                    List<Vector2> p = new List<Vector2>();
+                    ViewRegulation obj =
+                        viewregurationObjects[i].GetComponent<ViewRegulation>();
+                    types[counter] = "no type";
+                    heights[counter] = 0;
+                    cols1[counter] = obj.LineColorValid;
+                    cols2[counter] = obj.LineColorInvalid;
+                    v2[counter, 0] = new Vector2(obj.ScreenWidth, obj.ScreenHeight);
+                    v2[counter, 1] = new Vector2(0, 0);
+                    originpoint[counter] = obj.StartPos;
+                    targetpoint[counter] = obj.EndPos;
+
+                    GameObject outlineNode = obj.transform.Find("CoveringMesh").gameObject;
+                    MeshFilter mf = outlineNode.GetComponent<MeshFilter>();
+                    Matrix4x4 localToWorld = outlineNode.transform.localToWorldMatrix;
+                    int n = 0;
+                    List<Vector2> cnt = new List<Vector2>();
+
+                    Debug.Log("nvertex : " + mf.mesh.vertices.Length);
+                    foreach ( Vector3 point in mf.mesh.vertices)
+                    {
+                        Vector3 world_v = localToWorld.MultiplyPoint3x4(point);
+
+                        if( n== 0 || n==1 || n == 3)
+                        {
+                            cnt.Add(new Vector2(world_v.x + (float)referencePoint.X, world_v.z + (float)referencePoint.Z));
+                        }
+
+                        n++;
+                    }
+                    contours.Add(cnt);
+
+
+                    counter++;
+
+                }
+       
+            }
+
+            LDTTools.WriteShapeFile(exportPath, shapetype, types, cols1,cols2, heights, originpoint, targetpoint, v2,
                 contours);
         }
 

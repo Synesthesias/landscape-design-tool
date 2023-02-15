@@ -81,20 +81,25 @@ namespace LandscapeDesignTool
             return material;
         }
 
-        public static void WriteShapeFile(string exportFilePath, string areatype, string[] type, Color[] col, float[] height, Vector2[,] specpoint, List<List<Vector2>> vertexlist/*,  List<int> instanceList*/)
+        public static void WriteShapeFile(string exportFilePath, string[] areatype, string[] type, Color[] col1, Color[] col2, float[] height, Vector3[] originpoint, Vector3[] targetpoint, 
+            Vector2[,] specpoint, List<List<Vector2>> vertexlist/*,  List<int> instanceList*/)
         {
 
             int nblock = vertexlist.Count;
 
             Debug.Log("WriteShapeFile to : " + exportFilePath);
-            DbfFieldDesc[] fields = new DbfFieldDesc[7];
+            DbfFieldDesc[] fields = new DbfFieldDesc[10];
             fields[0] = new DbfFieldDesc { FieldName = "ID", FieldType = DbfFieldType.Character, FieldLength = 14, RecordOffset = 0 };
             fields[1] = new DbfFieldDesc { FieldName = "AREATYPE", FieldType = DbfFieldType.Character, FieldLength = 14, RecordOffset = 0 };
             fields[2] = new DbfFieldDesc { FieldName = "TYPE", FieldType = DbfFieldType.Character, FieldLength = 14, RecordOffset = 0 };
             fields[3] = new DbfFieldDesc { FieldName = "HEIGHT", FieldType = DbfFieldType.Character, FieldLength = 14, RecordOffset = 0 };
-            fields[4] = new DbfFieldDesc { FieldName = "COLOR", FieldType = DbfFieldType.Character, FieldLength = 128, RecordOffset = 0 };
-            fields[5] = new DbfFieldDesc { FieldName = "POINT1", FieldType = DbfFieldType.Character, FieldLength = 128, RecordOffset = 0 };
-            fields[6] = new DbfFieldDesc { FieldName = "POINT2", FieldType = DbfFieldType.Character, FieldLength = 128, RecordOffset = 0 };
+            fields[4] = new DbfFieldDesc { FieldName = "COLOR1", FieldType = DbfFieldType.Character, FieldLength = 128, RecordOffset = 0 };
+            fields[5] = new DbfFieldDesc { FieldName = "COLOR2", FieldType = DbfFieldType.Character, FieldLength = 128, RecordOffset = 0 };
+            fields[6] = new DbfFieldDesc { FieldName = "POINT1", FieldType = DbfFieldType.Character, FieldLength = 128, RecordOffset = 0 };
+            fields[7] = new DbfFieldDesc { FieldName = "POINT2", FieldType = DbfFieldType.Character, FieldLength = 128, RecordOffset = 0 };
+            fields[8] = new DbfFieldDesc { FieldName = "ORIGIN", FieldType = DbfFieldType.Character, FieldLength = 128, RecordOffset = 0 };
+            fields[9] = new DbfFieldDesc { FieldName = "TARGET", FieldType = DbfFieldType.Character, FieldLength = 128, RecordOffset = 0 };
+
 
             string exportBaseDirPath = Directory.GetParent(exportFilePath)?.FullName;
             if (string.IsNullOrEmpty(exportBaseDirPath))
@@ -104,6 +109,7 @@ namespace LandscapeDesignTool
             }
             ShapeFileWriter sfw = ShapeFileWriter.CreateWriter(exportBaseDirPath, Path.GetFileNameWithoutExtension(exportFilePath), ShapeType.Polygon, fields);
 
+            Debug.Log("nblock:" + nblock);
             for (int i = 0; i < nblock; i++)
             {
                 List<Vector2> vlist = vertexlist[i];
@@ -118,15 +124,22 @@ namespace LandscapeDesignTool
                     Debug.Log(vertex[n - 1].ToString());
                 }
 
-                string[] fielddata = new string[7];
+                string[] fielddata = new string[10];
                 fielddata[0] = i.ToString();
-                fielddata[1] = areatype;
+                fielddata[1] = areatype[i];
                 fielddata[2] = type[i];
                 fielddata[3] = height[i].ToString();
-                fielddata[4] = col[i].r.ToString() + "," + col[i].g.ToString() + "," + col[i].b.ToString() + "," + col[i].a.ToString();
-                Debug.Log(fielddata[4]);
-                fielddata[5] = specpoint[i, 0].x.ToString() + ", " + specpoint[i, 0].y.ToString();
-                fielddata[6] = specpoint[i, 1].x.ToString() + ", " + specpoint[i, 1].y.ToString();
+                fielddata[4] = col1[i].r.ToString() + "," + col1[i].g.ToString() + "," + col1[i].b.ToString() + "," + col1[i].a.ToString();
+                fielddata[5] = col2[i].r.ToString() + "," + col2[i].g.ToString() + "," + col2[i].b.ToString() + "," + col2[i].a.ToString();
+                fielddata[6] = specpoint[i, 0].x.ToString() + ", " + specpoint[i, 0].y.ToString();
+                fielddata[7] = specpoint[i, 1].x.ToString() + ", " + specpoint[i, 1].y.ToString();
+                fielddata[8] = originpoint[i].x.ToString() + ", " + originpoint[i].y.ToString() + ", " + originpoint[i].z.ToString();
+                fielddata[9] = targetpoint[i].x.ToString() + ", " + targetpoint[i].y.ToString() + ", " + targetpoint[i].z.ToString();
+
+                for( int k=0; k<10; k++)
+                {
+                    Debug.Log("k="+k+"   "+fielddata[k]);
+                }
 
                 sfw.AddRecord(vertex, vertex.Length, fielddata);
             }

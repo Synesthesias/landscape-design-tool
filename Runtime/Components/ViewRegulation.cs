@@ -7,18 +7,55 @@ public class ViewRegulation : MonoBehaviour
     public Material highlightMaterial;
     public Material areaMaterial;
 
-    public float screenWidth = 80.0f;
-    public float screenHeight = 80.0f;
-    
+    [SerializeField] float screenWidth = 80.0f;
+    [SerializeField] float screenHeight = 80.0f;
+
     /// <summary> 視線の向かう先 </summary>
-    public Vector3 endPos;
+    [SerializeField] Vector3 endPos;
+    [SerializeField] Vector3 startPos;
 
-    public float lineInterval = 4;
-    public Color lineColorValid = new Color(0, 1, 0, 0.2f);
-    public Color lineColorInvalid = new Color(1, 0, 0, 0.2f);
-    [SerializeField] List<GameObject> ignoreObject = new List<GameObject>();
+    [SerializeField] float lineInterval = 4;
+    [SerializeField] Color lineColorValid = new Color(0, 1, 0, 0.2f);
+    [SerializeField] Color lineColorInvalid = new Color(1, 0, 0, 0.2f);
 
-    public Vector3 StartPos => transform.position;
+
+    public float ScreenWidth
+    {
+        get => screenWidth;
+        set => screenWidth = value;
+    }
+    public float ScreenHeight
+    {
+        get => screenHeight;
+        set => screenHeight = value;
+    }
+    public Vector3 EndPos
+    {
+        get => endPos;
+        set => endPos = value;
+    }
+    public Vector3 StartPos
+    {
+        get => startPos;
+        set => startPos = value;
+    }
+
+    public Color LineColorValid
+    {
+        get => lineColorValid;
+        set => lineColorValid = value;
+    }
+    public Color LineColorInvalid
+    {
+        get => lineColorInvalid;
+        set => lineColorInvalid = value;
+    }
+    public float LineInterval
+    {
+        get => lineInterval;
+        set => lineInterval = value;
+    }
+
 
     public void UpdateParams(float screenWidthArg, float screenHeightArg, Vector3 endPosArg)
     {

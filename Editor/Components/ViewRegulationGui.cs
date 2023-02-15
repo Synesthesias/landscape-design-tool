@@ -34,11 +34,11 @@ namespace LandscapeDesignTool.Editor
             using (var checkChange = new EditorGUI.ChangeCheckScope())
             {
                 EditorGUILayout.HelpBox("視点場を選択して眺望対象をシーン内で選択してください", MessageType.Info);
-                target.screenWidth = EditorGUILayout.FloatField("眺望対象での横サイズ(m)", target.screenWidth);
-                target.screenHeight = EditorGUILayout.FloatField("眺望対象での縦サイズ(m)", target.screenHeight);
-                target.lineColorValid = EditorGUILayout.ColorField("色の設定", target.lineColorValid);
-                target.lineColorInvalid = EditorGUILayout.ColorField("規制色の設定", target.lineColorInvalid);
-                target.lineInterval = EditorGUILayout.FloatField("障害物の判定間隔(m)", target.lineInterval);
+                target.ScreenWidth = EditorGUILayout.FloatField("眺望対象での横サイズ(m)", target.ScreenWidth);
+                target.ScreenHeight = EditorGUILayout.FloatField("眺望対象での縦サイズ(m)", target.ScreenHeight);
+                target.LineColorValid = EditorGUILayout.ColorField("色の設定", target.LineColorValid);
+                target.LineColorInvalid = EditorGUILayout.ColorField("規制色の設定", target.LineColorInvalid);
+                target.LineInterval = EditorGUILayout.FloatField("障害物の判定間隔(m)", target.LineInterval);
                 isGuiChanged |= checkChange.changed;
             }
             
@@ -107,8 +107,8 @@ namespace LandscapeDesignTool.Editor
             // 視線の終点ハンドルを描画します。
             using (var check = new EditorGUI.ChangeCheckScope())
             {
-                Handles.Label(target.endPos, "視線 終点");
-                target.endPos = Handles.PositionHandle(target.endPos, Quaternion.identity);
+                Handles.Label(target.EndPos, "視線 終点");
+                target.EndPos = Handles.PositionHandle(target.EndPos, Quaternion.identity);
                 if (check.changed)
                 {
                     posEndChanged = true;
@@ -146,7 +146,7 @@ namespace LandscapeDesignTool.Editor
                     Vector3 targetPoint = hit.point;
 
                     selectingTarget = false;
-                    target.endPos = targetPoint;
+                    target.EndPos = targetPoint;
                     CreateOrUpdateViewRegulation(target);
                     
                 }
@@ -163,7 +163,7 @@ namespace LandscapeDesignTool.Editor
         public void CreateOrUpdateViewRegulation(ViewRegulation targetViewRegulation)
         {
             var originPoint = targetViewRegulation.StartPos;
-            var targetPoint = targetViewRegulation.endPos;
+            var targetPoint = targetViewRegulation.EndPos;
             CreateCoveringMesh(targetViewRegulation, originPoint, targetPoint);
             CreateLineOfSight(targetViewRegulation, originPoint, targetPoint);
         }
@@ -184,8 +184,8 @@ namespace LandscapeDesignTool.Editor
                 }
             }
 
-            var wSize = target.screenWidth;
-            var hSize = target.screenHeight;
+            var wSize = target.ScreenWidth;
+            var hSize = target.ScreenHeight;
             float length = (targetPoint - originPoint).magnitude;
             Vector3[] vertex = new Vector3[6];
             vertex[0] = new Vector3(0, 0, 0);
@@ -220,7 +220,7 @@ namespace LandscapeDesignTool.Editor
             if (mr == null)
                 mr = go.AddComponent<MeshRenderer>();
 
-            Material material = LDTTools.MakeMaterial(target.lineColorValid);
+            Material material = LDTTools.MakeMaterial(target.LineColorValid);
 
             mr.sharedMaterial = material;
             mf.mesh = mesh;
@@ -253,27 +253,27 @@ namespace LandscapeDesignTool.Editor
             obj.transform.parent = ((ViewRegulation)target).transform;
 
             float result = -1;
-            float interval = target.lineInterval;
-            int divx = (int)(target.screenWidth / interval);
-            int divy = (int)(target.screenHeight / interval);
+            float interval = target.LineInterval;
+            int divx = (int)(target.ScreenWidth / interval);
+            int divy = (int)(target.ScreenHeight / interval);
 
             for (int i = 0; i < divx + 1; i++)
             {
                 for (int j = 0; j < divy + 1; j++)
                 {
-                    float x = destination.x - (target.screenWidth / 2.0f) + interval * i;
-                    float y = destination.y - (target.screenHeight / 2.0f) + interval * j;
+                    float x = destination.x - (target.ScreenWidth / 2.0f) + interval * i;
+                    float y = destination.y - (target.ScreenHeight / 2.0f) + interval * j;
                     Vector3 d = new Vector3(x, y, destination.z);
                     RaycastHit hit;
 
                     if (RaycastBuildings(target, origin, d, out hit))
                     {
-                        DrawLine(origin, hit.point, obj, target.lineColorValid);
-                        DrawLine(hit.point, d, obj, target.lineColorInvalid);
+                        DrawLine(origin, hit.point, obj, target.LineColorValid);
+                        DrawLine(hit.point, d, obj, target.LineColorInvalid);
                     }
                     else
                     {
-                        DrawLine(origin, d, obj, target.lineColorValid);
+                        DrawLine(origin, d, obj, target.LineColorValid);
                     }
                 }
             }

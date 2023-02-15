@@ -38,6 +38,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                     name = _viewRegulationAreaObjName,
                     layer = LayerMask.NameToLayer("RegulationArea")
                 };
+                grp.tag = "ViewRegulationArea";
                 // 視線を生成します。
                 ViewRegulation handler = grp.AddComponent<ViewRegulation>();
                 handler.UpdateParams(_screenWidth, _screenHeight, new Vector3(100,0,0) );
