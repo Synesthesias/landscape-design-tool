@@ -250,9 +250,13 @@ namespace LandscapeDesignTool
 
             int count = 0;
             foreach (var contour in _contours)
-            {
-                if (_areatype[count] == "RegurationArea")
+            {;
+                Debug.Log("areatype " + _areatype[count]);
+
+                
+                if (string.Compare(_areatype[count],"RegurationArea") ==0)
                 {
+                    Debug.Log("RA");
                     var regulationArea = RegulationArea.Create(parentTransform);
 
                     for (int i = 0; i < contour.Count; i++)
@@ -268,8 +272,9 @@ namespace LandscapeDesignTool
                     regulationArea.SetAreaColor(col);
                     regulationArea.GenMesh();
                 }
-                else if(_areatype[count] == "ViewRegulation")
+                else if(string.Compare(_areatype[count], "ViewRegulation") == 0)
                 {
+                    Debug.Log("VR");
                     GameObject go = new GameObject();
                     go.name = "RegulationArea";
                     go.transform.parent = parentTransform;
