@@ -117,8 +117,8 @@ namespace LandscapeDesignTool.Editor
 
             // 移動があったら視線を生成しなおします。
             if (posStartChanged || posEndChanged)
-            {
-                var startPos = trans.position;
+            { 
+                target.StartPos = trans.position;
                 CreateOrUpdateViewRegulation(target);
             }
 
