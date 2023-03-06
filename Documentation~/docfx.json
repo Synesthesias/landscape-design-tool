@@ -60,7 +60,7 @@
         ]
       }
     ],
-    "dest": "_site",
+    "dest": "../.docs/_site",
     "globalMetadataFiles": [],
     "fileMetadataFiles": [],
     "template": [
