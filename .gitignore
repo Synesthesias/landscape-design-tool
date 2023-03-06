@@ -4,6 +4,7 @@ Documentation~/api
 .docs/_site
 .docs/obj
 Documentation~/obj
+**/obj/xdoc/cache/**
 
 # This .gitignore file should be placed at the root of your Unity project directory
 #
