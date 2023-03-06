@@ -1,0 +1,252 @@
+{
+  "api/LandscapeDesignTool.Editor.html": {
+    "href": "api/LandscapeDesignTool.Editor.html",
+    "title": "Namespace LandscapeDesignTool.Editor | 景観まちづくり支援ツール",
+    "keywords": "Namespace LandscapeDesignTool.Editor Classes LandscapeViewPoint LandscapeViewPointGroup LDTHandles MunsellColorHandler ShapeGeometryHelper ViewRegulation WalkThruHandler Enums LDTHandles.DragHandleResult"
+  },
+  "api/LandscapeDesignTool.Editor.LandScapeDesignTool.ChangeHeightHandler.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.ChangeHeightHandler.html",
+    "title": "Class ChangeHeightHandler | 景観まちづくり支援ツール",
+    "keywords": "Class ChangeHeightHandler Inheritance System.Object ChangeHeightHandler Namespace : LandscapeDesignTool.Editor.LandScapeDesignTool Assembly : cs.temp.dll.dll Syntax public class ChangeHeightHandler : MonoBehaviour Methods OnApply() Declaration public void OnApply() OnClose() Declaration public void OnClose()"
+  },
+  "api/LandscapeDesignTool.Editor.LandScapeDesignTool.CollisionHandler.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.CollisionHandler.html",
+    "title": "Class CollisionHandler | 景観まちづくり支援ツール",
+    "keywords": "Class CollisionHandler Inheritance System.Object CollisionHandler Namespace : LandscapeDesignTool.Editor.LandScapeDesignTool Assembly : cs.temp.dll.dll Syntax public class CollisionHandler : MonoBehaviour Fields areaHeight Declaration public float areaHeight Field Value Type Description System.Single isApply Declaration public bool isApply Field Value Type Description System.Boolean Methods ApplyHeight(Single) Declaration public void ApplyHeight(float h) Parameters Type Name Description System.Single h UndoHeight() Declaration public void UndoHeight()"
+  },
+  "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.html",
+    "title": "Namespace LandscapeDesignTool.Editor.LandscapeDesignTool.Editor | 景観まちづくり支援ツール",
+    "keywords": "Namespace LandscapeDesignTool.Editor.LandscapeDesignTool.Editor Classes LandscapeEditorStyle LandScapeViewPointEditor PackagePacker Packagesフォルダに入っている 景観まちづくりツール を tarball 形式で出力します。 デプロイで利用します。 RegulationAreaEditor TagAdder 都市計画ツールを動作させるにあたって必要なタグ設定を行います。 ViewRegulationEditor ViewRegulationGUI Enums ViewRegulationGUI.SurfaceType"
+  },
+  "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.LandscapeEditorStyle.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.LandscapeEditorStyle.html",
+    "title": "Class LandscapeEditorStyle | 景観まちづくり支援ツール",
+    "keywords": "Class LandscapeEditorStyle Inheritance System.Object LandscapeEditorStyle Inherited Members System.Object.ToString() System.Object.Equals(System.Object) System.Object.Equals(System.Object, System.Object) System.Object.ReferenceEquals(System.Object, System.Object) System.Object.GetHashCode() System.Object.GetType() System.Object.MemberwiseClone() Namespace : LandscapeDesignTool.Editor.LandscapeDesignTool.Editor Assembly : cs.temp.dll.dll Syntax public static class LandscapeEditorStyle Methods ButtonSwitchDisplay(Action<Boolean>) 「表示する」「非表示にする」の2つのボタンを表示します。 前者が押された時、 onButtonPushed (true) を実行し、 後者が押された時、 onButtonPushed (false) を実行します。 Declaration public static void ButtonSwitchDisplay(Action<bool> onButtonPushed) Parameters Type Name Description Action < System.Boolean > onButtonPushed Header(String) Declaration public static void Header(string text) Parameters Type Name Description System.String text"
+  },
+  "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.LandScapeViewPointEditor.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.LandScapeViewPointEditor.html",
+    "title": "Class LandScapeViewPointEditor | 景観まちづくり支援ツール",
+    "keywords": "Class LandScapeViewPointEditor Inheritance System.Object LandScapeViewPointEditor Namespace : LandscapeDesignTool.Editor.LandscapeDesignTool.Editor Assembly : cs.temp.dll.dll Syntax public class LandScapeViewPointEditor : UnityEditor.Editor Fields Active Declaration public static LandScapeViewPointEditor Active Field Value Type Description LandScapeViewPointEditor Properties Target Declaration public LandscapeViewPoint Target { get; } Property Value Type Description LandscapeViewPoint Methods OnInspectorGUI() Declaration public override void OnInspectorGUI()"
+  },
+  "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.PackagePacker.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.PackagePacker.html",
+    "title": "Class PackagePacker | 景観まちづくり支援ツール",
+    "keywords": "Class PackagePacker Packagesフォルダに入っている 景観まちづくりツール を tarball 形式で出力します。 デプロイで利用します。 Inheritance System.Object PackagePacker Inherited Members System.Object.ToString() System.Object.Equals(System.Object) System.Object.Equals(System.Object, System.Object) System.Object.ReferenceEquals(System.Object, System.Object) System.Object.GetHashCode() System.Object.GetType() System.Object.MemberwiseClone() Namespace : LandscapeDesignTool.Editor.LandscapeDesignTool.Editor Assembly : cs.temp.dll.dll Syntax public static class PackagePacker Methods Pack() Declaration public static void Pack()"
+  },
+  "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.RegulationAreaEditor.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.RegulationAreaEditor.html",
+    "title": "Class RegulationAreaEditor | 景観まちづくり支援ツール",
+    "keywords": "Class RegulationAreaEditor Inheritance System.Object RegulationAreaEditor Namespace : LandscapeDesignTool.Editor.LandscapeDesignTool.Editor Assembly : cs.temp.dll.dll Syntax public class RegulationAreaEditor : UnityEditor.Editor Fields Active Declaration public static RegulationAreaEditor Active Field Value Type Description RegulationAreaEditor Properties Target Declaration public RegulationArea Target { get; } Property Value Type Description RegulationArea Methods OnInspectorGUI() Declaration public override void OnInspectorGUI()"
+  },
+  "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.TagAdder.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.TagAdder.html",
+    "title": "Class TagAdder | 景観まちづくり支援ツール",
+    "keywords": "Class TagAdder 都市計画ツールを動作させるにあたって必要なタグ設定を行います。 Inheritance System.Object TagAdder Inherited Members System.Object.ToString() System.Object.Equals(System.Object) System.Object.Equals(System.Object, System.Object) System.Object.ReferenceEquals(System.Object, System.Object) System.Object.GetHashCode() System.Object.GetType() System.Object.MemberwiseClone() Namespace : LandscapeDesignTool.Editor.LandscapeDesignTool.Editor Assembly : cs.temp.dll.dll Syntax public static class TagAdder Methods ConfigureTags() プロジェクト設定のレイヤー設定で、Building, Ground を設定します。 シーン中の名前に bldg を含むゲームオブジェクトのタグを Building に設定します。 シーン中の名前に dem を含むゲームオブジェクトのタグを Ground に設定します。 Declaration public static void ConfigureTags()"
+  },
+  "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.ViewRegulationEditor.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.ViewRegulationEditor.html",
+    "title": "Class ViewRegulationEditor | 景観まちづくり支援ツール",
+    "keywords": "Class ViewRegulationEditor Inheritance System.Object ViewRegulationEditor Namespace : LandscapeDesignTool.Editor.LandscapeDesignTool.Editor Assembly : cs.temp.dll.dll Syntax public class ViewRegulationEditor : UnityEditor.Editor Methods OnInspectorGUI() Declaration public override void OnInspectorGUI() OnSceneGUI() Declaration public void OnSceneGUI()"
+  },
+  "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.ViewRegulationGUI.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.ViewRegulationGUI.html",
+    "title": "Class ViewRegulationGUI | 景観まちづくり支援ツール",
+    "keywords": "Class ViewRegulationGUI Inheritance System.Object ViewRegulationGUI Inherited Members System.Object.ToString() System.Object.Equals(System.Object) System.Object.Equals(System.Object, System.Object) System.Object.ReferenceEquals(System.Object, System.Object) System.Object.GetHashCode() System.Object.GetType() System.Object.MemberwiseClone() Namespace : LandscapeDesignTool.Editor.LandscapeDesignTool.Editor Assembly : cs.temp.dll.dll Syntax public class ViewRegulationGUI Constructors ViewRegulationGUI(ViewRegulation) Declaration public ViewRegulationGUI(ViewRegulation target) Parameters Type Name Description ViewRegulation target Methods CreateOrUpdateViewRegulation(ViewRegulation) 視線を表示するためのゲームオブジェクトを生成します。 すでにあれば、生成の代わりに更新します。 どこに線を出すかは、引数 targetViewRegulation の position, endPos, lineInterval が利用されます。 Declaration public void CreateOrUpdateViewRegulation(ViewRegulation targetViewRegulation) Parameters Type Name Description ViewRegulation targetViewRegulation Draw(ViewRegulation) 視線規制の設定GUIを描画します。 Declaration public bool Draw(ViewRegulation target) Parameters Type Name Description ViewRegulation target Returns Type Description System.Boolean ユーザーがGUIで何らかの設定変更をしたときにtrueを返します。 OnSceneGUI(ViewRegulation) Declaration public void OnSceneGUI(ViewRegulation target) Parameters Type Name Description ViewRegulation target"
+  },
+  "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.ViewRegulationGUI.SurfaceType.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.ViewRegulationGUI.SurfaceType.html",
+    "title": "Enum ViewRegulationGUI.SurfaceType | 景観まちづくり支援ツール",
+    "keywords": "Enum ViewRegulationGUI.SurfaceType Namespace : LandscapeDesignTool.Editor.LandscapeDesignTool.Editor Assembly : cs.temp.dll.dll Syntax public enum SurfaceType Fields Name Description Opaque Transparent"
+  },
+  "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.html",
+    "title": "Namespace LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs | 景観まちづくり支援ツール",
+    "keywords": "Namespace LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs Classes TabHeightRegulationGenerate TabRegulationAreaExport TabRegulationAreaGenerate TabShapefileLoad Shapefile読込のタブを描画します。 TabViewPointGenerate 視点場作成のGUIを描画します。 TabViewportRegulationGenerate TabWeatherAndTime 「天候と時間」タブを描画します。 Interfaces IGuiTabContents"
+  },
+  "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.IGuiTabContents.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.IGuiTabContents.html",
+    "title": "Interface IGuiTabContents | 景観まちづくり支援ツール",
+    "keywords": "Interface IGuiTabContents Namespace : LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs Assembly : cs.temp.dll.dll Syntax public interface IGuiTabContents Methods OnGUI() Declaration void OnGUI() OnSceneGUI() Declaration void OnSceneGUI() Update() Declaration void Update()"
+  },
+  "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabHeightRegulationGenerate.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabHeightRegulationGenerate.html",
+    "title": "Class TabHeightRegulationGenerate | 景観まちづくり支援ツール",
+    "keywords": "Class TabHeightRegulationGenerate Inheritance System.Object TabHeightRegulationGenerate Implements IGuiTabContents Inherited Members System.Object.ToString() System.Object.Equals(System.Object) System.Object.Equals(System.Object, System.Object) System.Object.ReferenceEquals(System.Object, System.Object) System.Object.GetHashCode() System.Object.GetType() System.Object.MemberwiseClone() Namespace : LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs Assembly : cs.temp.dll.dll Syntax public class TabHeightRegulationGenerate : IGuiTabContents Methods OnGUI() Declaration public void OnGUI() OnSceneGUI() Declaration public void OnSceneGUI() Update() Declaration public void Update() Implements IGuiTabContents"
+  },
+  "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabRegulationAreaExport.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabRegulationAreaExport.html",
+    "title": "Class TabRegulationAreaExport | 景観まちづくり支援ツール",
+    "keywords": "Class TabRegulationAreaExport Inheritance System.Object TabRegulationAreaExport Implements IGuiTabContents Inherited Members System.Object.ToString() System.Object.Equals(System.Object) System.Object.Equals(System.Object, System.Object) System.Object.ReferenceEquals(System.Object, System.Object) System.Object.GetHashCode() System.Object.GetType() System.Object.MemberwiseClone() Namespace : LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs Assembly : cs.temp.dll.dll Syntax public class TabRegulationAreaExport : IGuiTabContents Methods OnGUI() Declaration public void OnGUI() OnSceneGUI() Declaration public void OnSceneGUI() Update() Declaration public void Update() Implements IGuiTabContents"
+  },
+  "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabRegulationAreaGenerate.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabRegulationAreaGenerate.html",
+    "title": "Class TabRegulationAreaGenerate | 景観まちづくり支援ツール",
+    "keywords": "Class TabRegulationAreaGenerate Inheritance System.Object TabRegulationAreaGenerate Implements IGuiTabContents Inherited Members System.Object.ToString() System.Object.Equals(System.Object) System.Object.Equals(System.Object, System.Object) System.Object.ReferenceEquals(System.Object, System.Object) System.Object.GetHashCode() System.Object.GetType() System.Object.MemberwiseClone() Namespace : LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs Assembly : cs.temp.dll.dll Syntax public class TabRegulationAreaGenerate : IGuiTabContents Constructors TabRegulationAreaGenerate(EditorWindow) Declaration public TabRegulationAreaGenerate(EditorWindow parentWindow) Parameters Type Name Description EditorWindow parentWindow Methods OnGUI() Declaration public void OnGUI() OnSceneGUI() Declaration public void OnSceneGUI() RegulationAreaRendererSetActive(Boolean) Declaration public static void RegulationAreaRendererSetActive(bool isActive) Parameters Type Name Description System.Boolean isActive Update() Declaration public void Update() Implements IGuiTabContents"
+  },
+  "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabShapefileLoad.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabShapefileLoad.html",
+    "title": "Class TabShapefileLoad | 景観まちづくり支援ツール",
+    "keywords": "Class TabShapefileLoad Shapefile読込のタブを描画します。 Inheritance System.Object TabShapefileLoad Implements IGuiTabContents Inherited Members System.Object.ToString() System.Object.Equals(System.Object) System.Object.Equals(System.Object, System.Object) System.Object.ReferenceEquals(System.Object, System.Object) System.Object.GetHashCode() System.Object.GetType() System.Object.MemberwiseClone() Namespace : LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs Assembly : cs.temp.dll.dll Syntax public class TabShapefileLoad : IGuiTabContents Methods OnGUI() Declaration public void OnGUI() OnSceneGUI() Declaration public void OnSceneGUI() Update() Declaration public void Update() Implements IGuiTabContents"
+  },
+  "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabViewPointGenerate.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabViewPointGenerate.html",
+    "title": "Class TabViewPointGenerate | 景観まちづくり支援ツール",
+    "keywords": "Class TabViewPointGenerate 視点場作成のGUIを描画します。 Inheritance System.Object TabViewPointGenerate Implements IGuiTabContents Inherited Members System.Object.ToString() System.Object.Equals(System.Object) System.Object.Equals(System.Object, System.Object) System.Object.ReferenceEquals(System.Object, System.Object) System.Object.GetHashCode() System.Object.GetType() System.Object.MemberwiseClone() Namespace : LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs Assembly : cs.temp.dll.dll Syntax public class TabViewPointGenerate : IGuiTabContents Constructors TabViewPointGenerate(EditorWindow) Declaration public TabViewPointGenerate(EditorWindow parentWindow) Parameters Type Name Description EditorWindow parentWindow Methods OnGUI() Declaration public void OnGUI() OnSceneGUI() Declaration public void OnSceneGUI() Update() Declaration public void Update() Implements IGuiTabContents"
+  },
+  "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabViewportRegulationGenerate.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabViewportRegulationGenerate.html",
+    "title": "Class TabViewportRegulationGenerate | 景観まちづくり支援ツール",
+    "keywords": "Class TabViewportRegulationGenerate Inheritance System.Object TabViewportRegulationGenerate Implements IGuiTabContents Inherited Members System.Object.ToString() System.Object.Equals(System.Object) System.Object.Equals(System.Object, System.Object) System.Object.ReferenceEquals(System.Object, System.Object) System.Object.GetHashCode() System.Object.GetType() System.Object.MemberwiseClone() Namespace : LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs Assembly : cs.temp.dll.dll Syntax public class TabViewportRegulationGenerate : IGuiTabContents Methods OnGUI() Declaration public void OnGUI() OnSceneGUI() Declaration public void OnSceneGUI() Update() Declaration public void Update() Implements IGuiTabContents"
+  },
+  "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabWeatherAndTime.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabWeatherAndTime.html",
+    "title": "Class TabWeatherAndTime | 景観まちづくり支援ツール",
+    "keywords": "Class TabWeatherAndTime 「天候と時間」タブを描画します。 Inheritance System.Object TabWeatherAndTime Implements IGuiTabContents Inherited Members System.Object.ToString() System.Object.Equals(System.Object) System.Object.Equals(System.Object, System.Object) System.Object.ReferenceEquals(System.Object, System.Object) System.Object.GetHashCode() System.Object.GetType() System.Object.MemberwiseClone() Namespace : LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs Assembly : cs.temp.dll.dll Syntax public class TabWeatherAndTime : IGuiTabContents Methods OnGUI() Declaration public void OnGUI() OnInspectorUpdate() Declaration public void OnInspectorUpdate() OnSceneGUI() Declaration public void OnSceneGUI() Update() Declaration public void Update() Implements IGuiTabContents"
+  },
+  "api/LandscapeDesignTool.Editor.LandScapeDesignTool.HeighRegulationAreaHandlerUI.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.HeighRegulationAreaHandlerUI.html",
+    "title": "Class HeighRegulationAreaHandlerUI | 景観まちづくり支援ツール",
+    "keywords": "Class HeighRegulationAreaHandlerUI Inheritance System.Object HeighRegulationAreaHandlerUI Namespace : LandscapeDesignTool.Editor.LandScapeDesignTool Assembly : cs.temp.dll.dll Syntax public class HeighRegulationAreaHandlerUI : MonoBehaviour Methods Apply() Declaration public void Apply() MovePosition() Declaration public void MovePosition() NewArea() Declaration public void NewArea() OnHide() Declaration public void OnHide() OnShow() Declaration public void OnShow()"
+  },
+  "api/LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.html",
+    "title": "Class HeightRegulationAreaHandler | 景観まちづくり支援ツール",
+    "keywords": "Class HeightRegulationAreaHandler Inheritance System.Object HeightRegulationAreaHandler Namespace : LandscapeDesignTool.Editor.LandscapeDesignTool Assembly : cs.temp.dll.dll Syntax public class HeightRegulationAreaHandler : MonoBehaviour Methods GetColor() Declaration public Color GetColor() Returns Type Description Color GetDiameter() Declaration public float GetDiameter() Returns Type Description System.Single GetHeight() Declaration public float GetHeight() Returns Type Description System.Single GetPoint() Declaration public Vector3 GetPoint() Returns Type Description Vector3 SetColor(Color) Declaration public void SetColor(Color c) Parameters Type Name Description Color c SetDiameter(Single) Declaration public void SetDiameter(float r) Parameters Type Name Description System.Single r SetHeight(Single) Declaration public void SetHeight(float h) Parameters Type Name Description System.Single h SetPoint(Vector3) Declaration public void SetPoint(Vector3 p) Parameters Type Name Description Vector3 p"
+  },
+  "api/LandscapeDesignTool.Editor.LandscapeDesignTool.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.html",
+    "title": "Namespace LandscapeDesignTool.Editor.LandscapeDesignTool | 景観まちづくり支援ツール",
+    "keywords": "Namespace LandscapeDesignTool.Editor.LandscapeDesignTool Classes HeightRegulationAreaHandler LDTShapeFileHandler LDTTools RegulationArea ShapeFileEditorHelper ShapeItem Enums LDTTools.AreaType"
+  },
+  "api/LandscapeDesignTool.Editor.LandscapeDesignTool.LDTShapeFileHandler.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.LDTShapeFileHandler.html",
+    "title": "Class LDTShapeFileHandler | 景観まちづくり支援ツール",
+    "keywords": "Class LDTShapeFileHandler Inheritance System.Object LDTShapeFileHandler Inherited Members System.Object.ToString() System.Object.Equals(System.Object) System.Object.Equals(System.Object, System.Object) System.Object.ReferenceEquals(System.Object, System.Object) System.Object.GetHashCode() System.Object.GetType() System.Object.MemberwiseClone() Namespace : LandscapeDesignTool.Editor.LandscapeDesignTool Assembly : cs.temp.dll.dll Syntax public class LDTShapeFileHandler Fields areaType Declaration public string areaType Field Value Type Description System.String col Declaration public Color col Field Value Type Description Color height Declaration public float height Field Value Type Description System.Single points Declaration public List<Vector2> points Field Value Type Description List < Vector2 > type Declaration public string type Field Value Type Description System.String Methods AddPoint(Vector2) Declaration public void AddPoint(Vector2 pos) Parameters Type Name Description Vector2 pos Save(Int32) Declaration public void Save(int instanceID) Parameters Type Name Description System.Int32 instanceID"
+  },
+  "api/LandscapeDesignTool.Editor.LandscapeDesignTool.LDTTools.AreaType.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.LDTTools.AreaType.html",
+    "title": "Enum LDTTools.AreaType | 景観まちづくり支援ツール",
+    "keywords": "Enum LDTTools.AreaType Namespace : LandscapeDesignTool.Editor.LandscapeDesignTool Assembly : cs.temp.dll.dll Syntax public enum AreaType Fields Name Description CIRCLE_REGURATION POLYCGON_REGURATION"
+  },
+  "api/LandscapeDesignTool.Editor.LandscapeDesignTool.LDTTools.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.LDTTools.html",
+    "title": "Class LDTTools | 景観まちづくり支援ツール",
+    "keywords": "Class LDTTools Inheritance System.Object LDTTools Inherited Members System.Object.ToString() System.Object.Equals(System.Object) System.Object.Equals(System.Object, System.Object) System.Object.ReferenceEquals(System.Object, System.Object) System.Object.GetHashCode() System.Object.GetType() System.Object.MemberwiseClone() Namespace : LandscapeDesignTool.Editor.LandscapeDesignTool Assembly : cs.temp.dll.dll Syntax public static class LDTTools Fields MaterialName Declaration public static string MaterialName Field Value Type Description System.String Methods CheckLayers() Declaration public static void CheckLayers() CheckTag(String) Declaration public static void CheckTag(string tagname) Parameters Type Name Description System.String tagname GetNumberWithTag(String, String) Declaration public static string GetNumberWithTag(string tagname, string title) Parameters Type Name Description System.String tagname System.String title Returns Type Description System.String MakeMaterial(Color) Declaration public static Material MakeMaterial(Color col) Parameters Type Name Description Color col Returns Type Description Material SetUI() Declaration public static void SetUI() WriteShapeFile(String, String[], String[], Color[], Color[], Single[], Vector3[], Vector3[], Vector2[,], List<List<Vector2>>) Declaration public static void WriteShapeFile(string exportFilePath, string[] areatype, string[] type, Color[] col1, Color[] col2, float[] height, Vector3[] originpoint, Vector3[] targetpoint, Vector2[, ] specpoint, List<List<Vector2>> vertexlist) Parameters Type Name Description System.String exportFilePath System.String [] areatype System.String [] type Color [] col1 Color [] col2 System.Single [] height Vector3 [] originpoint Vector3 [] targetpoint Vector2 [,] specpoint List < List < Vector2 >> vertexlist"
+  },
+  "api/LandscapeDesignTool.Editor.LandScapeDesignTool.MenuHandler.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.MenuHandler.html",
+    "title": "Class MenuHandler | 景観まちづくり支援ツール",
+    "keywords": "Class MenuHandler Inheritance System.Object MenuHandler Namespace : LandscapeDesignTool.Editor.LandScapeDesignTool Assembly : cs.temp.dll.dll Syntax public class MenuHandler : MonoBehaviour Methods ToggleColorPanel() Declaration public void ToggleColorPanel() ToggleHeightRegulationPanel() Declaration public void ToggleHeightRegulationPanel() ToggleHeightrPanel() Declaration public void ToggleHeightrPanel() ToggleMenu() Declaration public void ToggleMenu() ToggleRegulationPanel() Declaration public void ToggleRegulationPanel() ToggleViewPointPanel() Declaration public void ToggleViewPointPanel() ToggleViewRegulationPanel() Declaration public void ToggleViewRegulationPanel() ToggleWeatherPanel() Declaration public void ToggleWeatherPanel()"
+  },
+  "api/LandscapeDesignTool.Editor.LandscapeDesignTool.RegulationArea.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.RegulationArea.html",
+    "title": "Class RegulationArea | 景観まちづくり支援ツール",
+    "keywords": "Class RegulationArea Inheritance System.Object RegulationArea Namespace : LandscapeDesignTool.Editor.LandscapeDesignTool Assembly : cs.temp.dll.dll Syntax public class RegulationArea : MonoBehaviour Fields _Contours Declaration public List<Vector2> _Contours Field Value Type Description List < Vector2 > Vertexes Declaration public List<Vector2> Vertexes Field Value Type Description List < Vector2 > Properties AreaInvalidColor Declaration public Color AreaInvalidColor { get; set; } Property Value Type Description Color IsEditMode Declaration public bool IsEditMode { get; set; } Property Value Type Description System.Boolean IsMeshGenerated Declaration public bool IsMeshGenerated { get; } Property Value Type Description System.Boolean Vertices Declaration public List<Vector3> Vertices { get; } Property Value Type Description List < Vector3 > Methods AddVertex(Vector3) Declaration public void AddVertex(Vector3 vertex) Parameters Type Name Description Vector3 vertex Create(Transform) Declaration public static RegulationArea Create(Transform parentTrans) Parameters Type Name Description Transform parentTrans Returns Type Description RegulationArea GenMesh() Declaration public void GenMesh() GetAreaColor() Declaration public Color GetAreaColor() Returns Type Description Color GetHeight() Declaration public float GetHeight() Returns Type Description System.Single GetVertex2D() Declaration public List<Vector2> GetVertex2D() Returns Type Description List < Vector2 > SetAreaColor(Color) Declaration public void SetAreaColor(Color c) Parameters Type Name Description Color c SetHeight(Single) Declaration public void SetHeight(float h) Parameters Type Name Description System.Single h TryAddVertexOnGround(Vector3) Declaration public bool TryAddVertexOnGround(Vector3 vertex) Parameters Type Name Description Vector3 vertex Returns Type Description System.Boolean TryGetGroundPosition(Vector3, out Vector3) Declaration public static bool TryGetGroundPosition(Vector3 position, out Vector3 result) Parameters Type Name Description Vector3 position Vector3 result Returns Type Description System.Boolean TrySetVertexOnGround(Int32, Vector3) Declaration public bool TrySetVertexOnGround(int index, Vector3 vertex) Parameters Type Name Description System.Int32 index Vector3 vertex Returns Type Description System.Boolean"
+  },
+  "api/LandscapeDesignTool.Editor.LandScapeDesignTool.RegulationAreaHandlerUI.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.RegulationAreaHandlerUI.html",
+    "title": "Class RegulationAreaHandlerUI | 景観まちづくり支援ツール",
+    "keywords": "Class RegulationAreaHandlerUI Inheritance System.Object RegulationAreaHandlerUI Namespace : LandscapeDesignTool.Editor.LandScapeDesignTool Assembly : cs.temp.dll.dll Syntax public class RegulationAreaHandlerUI : MonoBehaviour Methods HideRegulationarea() Declaration public void HideRegulationarea() ShowRegulaitonArea() Declaration public void ShowRegulaitonArea()"
+  },
+  "api/LandscapeDesignTool.Editor.LandScapeDesignTool.RGBColorSelectUI.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.RGBColorSelectUI.html",
+    "title": "Class RGBColorSelectUI | 景観まちづくり支援ツール",
+    "keywords": "Class RGBColorSelectUI Inheritance System.Object RGBColorSelectUI Namespace : LandscapeDesignTool.Editor.LandScapeDesignTool Assembly : cs.temp.dll.dll Syntax public class RGBColorSelectUI : MonoBehaviour Properties Color Declaration public Color Color { get; set; } Property Value Type Description Color"
+  },
+  "api/LandscapeDesignTool.Editor.LandScapeDesignTool.RGBColorSelectUIElement.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.RGBColorSelectUIElement.html",
+    "title": "Class RGBColorSelectUIElement | 景観まちづくり支援ツール",
+    "keywords": "Class RGBColorSelectUIElement Inheritance System.Object RGBColorSelectUIElement Namespace : LandscapeDesignTool.Editor.LandScapeDesignTool Assembly : cs.temp.dll.dll Syntax public class RGBColorSelectUIElement : MonoBehaviour Methods GetValue() Declaration public float GetValue() Returns Type Description System.Single SetValue(Single) Declaration public void SetValue(float value) Parameters Type Name Description System.Single value"
+  },
+  "api/LandscapeDesignTool.Editor.LandscapeDesignTool.ShapeFileEditorHelper.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.ShapeFileEditorHelper.html",
+    "title": "Class ShapeFileEditorHelper | 景観まちづくり支援ツール",
+    "keywords": "Class ShapeFileEditorHelper Inheritance System.Object ShapeFileEditorHelper Inherited Members System.Object.ToString() System.Object.Equals(System.Object) System.Object.Equals(System.Object, System.Object) System.Object.ReferenceEquals(System.Object, System.Object) System.Object.GetHashCode() System.Object.GetType() System.Object.MemberwiseClone() Namespace : LandscapeDesignTool.Editor.LandscapeDesignTool Assembly : cs.temp.dll.dll Syntax public class ShapeFileEditorHelper Methods CreateOrUpdateViewRegulation(ViewRegulation) Declaration public void CreateOrUpdateViewRegulation(ViewRegulation targetViewRegulation) Parameters Type Name Description ViewRegulation targetViewRegulation"
+  },
+  "api/LandscapeDesignTool.Editor.LandscapeDesignTool.ShapeItem.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.ShapeItem.html",
+    "title": "Class ShapeItem | 景観まちづくり支援ツール",
+    "keywords": "Class ShapeItem Inheritance System.Object ShapeItem Namespace : LandscapeDesignTool.Editor.LandscapeDesignTool Assembly : cs.temp.dll.dll Syntax public class ShapeItem : MonoBehaviour Fields Contours Declaration public List<Vector2> Contours Field Value Type Description List < Vector2 > fields Declaration public LDTShapeFileHandler fields Field Value Type Description LDTShapeFileHandler height Declaration public float height Field Value Type Description System.Single material Declaration public Material material Field Value Type Description Material oldHeight Declaration public float oldHeight Field Value Type Description System.Single Methods SetVertex(List<Vector2>) Declaration public void SetVertex(List<Vector2> org) Parameters Type Name Description List < Vector2 > org"
+  },
+  "api/LandscapeDesignTool.Editor.LandScapeDesignTool.TmpHeight.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.TmpHeight.html",
+    "title": "Class TmpHeight | 景観まちづくり支援ツール",
+    "keywords": "Class TmpHeight Inheritance System.Object TmpHeight Namespace : LandscapeDesignTool.Editor.LandScapeDesignTool Assembly : cs.temp.dll.dll Syntax public class TmpHeight : MonoBehaviour Methods Restore() Declaration public void Restore() StoreOrg() Declaration public void StoreOrg()"
+  },
+  "api/LandscapeDesignTool.Editor.LandScapeDesignTool.ViewPointUIHandler.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.ViewPointUIHandler.html",
+    "title": "Class ViewPointUIHandler | 景観まちづくり支援ツール",
+    "keywords": "Class ViewPointUIHandler Inheritance System.Object ViewPointUIHandler Namespace : LandscapeDesignTool.Editor.LandScapeDesignTool Assembly : cs.temp.dll.dll Syntax public class ViewPointUIHandler : MonoBehaviour Methods OnViewpointButton(LandscapeViewPoint) Declaration public void OnViewpointButton(LandscapeViewPoint vp) Parameters Type Name Description LandscapeViewPoint vp"
+  },
+  "api/LandscapeDesignTool.Editor.LandScapeDesignTool.ViewRegulationAreaHandlerUI.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.ViewRegulationAreaHandlerUI.html",
+    "title": "Class ViewRegulationAreaHandlerUI | 景観まちづくり支援ツール",
+    "keywords": "Class ViewRegulationAreaHandlerUI Inheritance System.Object ViewRegulationAreaHandlerUI Namespace : LandscapeDesignTool.Editor.LandScapeDesignTool Assembly : cs.temp.dll.dll Syntax public class ViewRegulationAreaHandlerUI : MonoBehaviour Methods HideViewRegulationarea() Declaration public void HideViewRegulationarea() ShowViewRegulaitonArea() Declaration public void ShowViewRegulaitonArea()"
+  },
+  "api/LandscapeDesignTool.Editor.LandScapeDesignTool.WeatherHandler.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.WeatherHandler.html",
+    "title": "Class WeatherHandler | 景観まちづくり支援ツール",
+    "keywords": "Class WeatherHandler Inheritance System.Object WeatherHandler Namespace : LandscapeDesignTool.Editor.LandScapeDesignTool Assembly : cs.temp.dll.dll Syntax public class WeatherHandler : MonoBehaviour Methods OnTimeChange(Single) Declaration public void OnTimeChange(float value) Parameters Type Name Description System.Single value OnWeatherChange(Int32) Declaration public void OnWeatherChange(int n) Parameters Type Name Description System.Int32 n"
+  },
+  "api/LandscapeDesignTool.Editor.LandScapeDesignTool_1.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandScapeDesignTool_1.html",
+    "title": "Namespace LandscapeDesignTool.Editor.LandScapeDesignTool | 景観まちづくり支援ツール",
+    "keywords": "Namespace LandscapeDesignTool.Editor.LandScapeDesignTool Classes ChangeHeightHandler CollisionHandler HeighRegulationAreaHandlerUI MenuHandler RegulationAreaHandlerUI RGBColorSelectUI RGBColorSelectUIElement TmpHeight ViewPointUIHandler ViewRegulationAreaHandlerUI WeatherHandler"
+  },
+  "api/LandscapeDesignTool.Editor.LandscapeViewPoint.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandscapeViewPoint.html",
+    "title": "Class LandscapeViewPoint | 景観まちづくり支援ツール",
+    "keywords": "Class LandscapeViewPoint Inheritance System.Object LandscapeViewPoint Namespace : LandscapeDesignTool.Editor Assembly : cs.temp.dll.dll Syntax public class LandscapeViewPoint : MonoBehaviour Properties Camera Declaration public Camera Camera { get; } Property Value Type Description Camera Fov Declaration public float Fov { get; set; } Property Value Type Description System.Single Name Declaration public string Name { get; } Property Value Type Description System.String"
+  },
+  "api/LandscapeDesignTool.Editor.LandscapeViewPointGroup.html": {
+    "href": "api/LandscapeDesignTool.Editor.LandscapeViewPointGroup.html",
+    "title": "Class LandscapeViewPointGroup | 景観まちづくり支援ツール",
+    "keywords": "Class LandscapeViewPointGroup Inheritance System.Object LandscapeViewPointGroup Namespace : LandscapeDesignTool.Editor Assembly : cs.temp.dll.dll Syntax public class LandscapeViewPointGroup : MonoBehaviour"
+  },
+  "api/LandscapeDesignTool.Editor.LDTHandles.DragHandleResult.html": {
+    "href": "api/LandscapeDesignTool.Editor.LDTHandles.DragHandleResult.html",
+    "title": "Enum LDTHandles.DragHandleResult | 景観まちづくり支援ツール",
+    "keywords": "Enum LDTHandles.DragHandleResult Namespace : LandscapeDesignTool.Editor Assembly : cs.temp.dll.dll Syntax public enum DragHandleResult Fields Name Description LMBClick LMBDoubleClick LMBDrag LMBPress LMBRelease none RMBClick RMBDoubleClick RMBDrag RMBPress RMBRelease"
+  },
+  "api/LandscapeDesignTool.Editor.LDTHandles.html": {
+    "href": "api/LandscapeDesignTool.Editor.LDTHandles.html",
+    "title": "Class LDTHandles | 景観まちづくり支援ツール",
+    "keywords": "Class LDTHandles Inheritance System.Object LDTHandles Inherited Members System.Object.ToString() System.Object.Equals(System.Object) System.Object.Equals(System.Object, System.Object) System.Object.ReferenceEquals(System.Object, System.Object) System.Object.GetHashCode() System.Object.GetType() System.Object.MemberwiseClone() Namespace : LandscapeDesignTool.Editor Assembly : cs.temp.dll.dll Syntax public class LDTHandles Fields lastDragHandleID Declaration public static int lastDragHandleID Field Value Type Description System.Int32"
+  },
+  "api/LandscapeDesignTool.Editor.MunsellColorHandler.html": {
+    "href": "api/LandscapeDesignTool.Editor.MunsellColorHandler.html",
+    "title": "Class MunsellColorHandler | 景観まちづくり支援ツール",
+    "keywords": "Class MunsellColorHandler Inheritance System.Object MunsellColorHandler Namespace : LandscapeDesignTool.Editor Assembly : cs.temp.dll.dll Syntax public class MunsellColorHandler : MonoBehaviour Methods CancelColor() Declaration public void CancelColor() HueValue(Single) Declaration public void HueValue(float val) Parameters Type Name Description System.Single val OnClose() Declaration public void OnClose() SelectColor(Int32) Declaration public void SelectColor(int n) Parameters Type Name Description System.Int32 n"
+  },
+  "api/LandscapeDesignTool.Editor.ShapeGeometryHelper.html": {
+    "href": "api/LandscapeDesignTool.Editor.ShapeGeometryHelper.html",
+    "title": "Class ShapeGeometryHelper | 景観まちづくり支援ツール",
+    "keywords": "Class ShapeGeometryHelper Inheritance System.Object ShapeGeometryHelper Namespace : LandscapeDesignTool.Editor Assembly : cs.temp.dll.dll Syntax public class ShapeGeometryHelper : MonoBehaviour"
+  },
+  "api/LandscapeDesignTool.Editor.ViewRegulation.html": {
+    "href": "api/LandscapeDesignTool.Editor.ViewRegulation.html",
+    "title": "Class ViewRegulation | 景観まちづくり支援ツール",
+    "keywords": "Class ViewRegulation Inheritance System.Object ViewRegulation Namespace : LandscapeDesignTool.Editor Assembly : cs.temp.dll.dll Syntax public class ViewRegulation : MonoBehaviour Fields areaMaterial Declaration public Material areaMaterial Field Value Type Description Material highlightMaterial Declaration public Material highlightMaterial Field Value Type Description Material Properties EndPos Declaration public Vector3 EndPos { get; set; } Property Value Type Description Vector3 LineColorInvalid Declaration public Color LineColorInvalid { get; set; } Property Value Type Description Color LineColorValid Declaration public Color LineColorValid { get; set; } Property Value Type Description Color LineInterval Declaration public float LineInterval { get; set; } Property Value Type Description System.Single ScreenHeight Declaration public float ScreenHeight { get; set; } Property Value Type Description System.Single ScreenWidth Declaration public float ScreenWidth { get; set; } Property Value Type Description System.Single StartPos Declaration public Vector3 StartPos { get; set; } Property Value Type Description Vector3 Methods UpdateParams(Single, Single, Vector3) Declaration public void UpdateParams(float screenWidthArg, float screenHeightArg, Vector3 endPosArg) Parameters Type Name Description System.Single screenWidthArg System.Single screenHeightArg Vector3 endPosArg"
+  },
+  "api/LandscapeDesignTool.Editor.WalkThruHandler.html": {
+    "href": "api/LandscapeDesignTool.Editor.WalkThruHandler.html",
+    "title": "Class WalkThruHandler | 景観まちづくり支援ツール",
+    "keywords": "Class WalkThruHandler Inheritance System.Object WalkThruHandler Namespace : LandscapeDesignTool.Editor Assembly : cs.temp.dll.dll Syntax public class WalkThruHandler : MonoBehaviour"
+  },
+  "index.html": {
+    "href": "index.html",
+    "title": "景観まちづくり支援ツール | 景観まちづくり支援ツール",
+    "keywords": "景観まちづくり支援ツール TODO ここにツールの説明を書きます。"
+  },
+  "manual/howToUse.html": {
+    "href": "manual/howToUse.html",
+    "title": "利用方法 | 景観まちづくり支援ツール",
+    "keywords": "利用方法 TODO ここに利用方法を書きます。内容は Confluence のコピペで事足りると思います。"
+  },
+  "manual/install.html": {
+    "href": "manual/install.html",
+    "title": "インストール方法 | 景観まちづくり支援ツール",
+    "keywords": "インストール方法 このページでは景観まちづくり支援ツールのインストール方法を説明します。 TODO PLATEAUのマニュアル を参考に書いてください。 具体的には、次の内容を含めるようにします。 そしてその内容は、 Confluence のコピペで事足りると思います。 Unity Hubのインストール Unityのインストール PLATEAU SDK for Unity のインストール 景観まちづくり支援ツールのインストール PLATEAU SDKで都市をインポート"
+  }
+}

@@ -1,0 +1,719 @@
+{
+  "homepages": [],
+  "source_base_path": "D:/a/LandscapeDesignTool/LandscapeDesignTool/Documentation~",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "Resource",
+      "output": {
+        "resource": {
+          "relative_path": "index.json"
+        }
+      },
+      "is_incremental": false
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LDTHandles.DragHandleResult.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LDTHandles.DragHandleResult.html",
+          "hash": "+0Ik2W2srXSAsYsz2bJWMmqS6qOKhbngmKK6svAaCqc="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LDTHandles.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LDTHandles.html",
+          "hash": "5q+Zbk4Auhe/sU+CmJsFdj0Z4cKZXhcMVygaA7t2+Oo="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.ChangeHeightHandler.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.ChangeHeightHandler.html",
+          "hash": "YzZDlyhmL/TpTv4qdmyqZyqA7k8u7MGvtGQqiIzt6eU="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.CollisionHandler.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.CollisionHandler.html",
+          "hash": "/4vEyatcrNkybGgb3QTuCMEtU7Gaibf5my0hz6SvoW4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.HeighRegulationAreaHandlerUI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.HeighRegulationAreaHandlerUI.html",
+          "hash": "3k6UDwU0ZOycRO9iG7fg/W06V9al7HQYaBe2oWffzB0="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.MenuHandler.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.MenuHandler.html",
+          "hash": "vIP66aobanOdoZafZ5yvi1rFooH1mNJTVNrS9SYo3E0="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.RGBColorSelectUI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.RGBColorSelectUI.html",
+          "hash": "tYEsDXB9bhzjnW6+T28xuC/5jiYyPDaQjg6TMn7AAf4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.RGBColorSelectUIElement.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.RGBColorSelectUIElement.html",
+          "hash": "ot1u+dxeDghNt/dMk7fRLjrYGQdtJVmuTPqVDyJc3+Q="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.RegulationAreaHandlerUI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.RegulationAreaHandlerUI.html",
+          "hash": "44PrWSBJQQLBQiLSYBdd2GnPHMpX+KnVwnouNZbNW4g="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.TmpHeight.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.TmpHeight.html",
+          "hash": "nCVnGWuUTAATXrzDKdyXonxyNLw4yFAysPBfcsPyAcY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.ViewPointUIHandler.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.ViewPointUIHandler.html",
+          "hash": "oe+5MhiLILyjCYG69MauwZ8Nro+OGWZGtVOMZmN10Pk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.ViewRegulationAreaHandlerUI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.ViewRegulationAreaHandlerUI.html",
+          "hash": "yblyU0y5Q886V6LUUuwNJUwWb0yZ5M8kCIdjzAuK6e4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.WeatherHandler.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.WeatherHandler.html",
+          "hash": "H0Tog9hBvFd8GOLE2JyGvECCdevSeSKt+B7KLyQ3rGg="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool_1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool_1.html",
+          "hash": "FKB1MHhR59xQXJbG7oCM/+H2ePzdr2cRy97Wkv+EIMw="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.LandScapeViewPointEditor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.LandScapeViewPointEditor.html",
+          "hash": "rQLLwH2fSof+MKG21UzZThO8zpQrkjDlQLJVTmjGXJY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.LandscapeEditorStyle.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.LandscapeEditorStyle.html",
+          "hash": "8BCd/Ui6cQe+ejaUmthTOke/R0XOAwhV4HE/1fbCKIE="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.PackagePacker.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.PackagePacker.html",
+          "hash": "a8sxZHzE8e3/AV3o+pCd8T981KsA5dsPp8Yw+Ranvwo="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.RegulationAreaEditor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.RegulationAreaEditor.html",
+          "hash": "5zefu0DcWzoB7NOg4O00+oSU2sGkNkYUunmHai040SA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.TagAdder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.TagAdder.html",
+          "hash": "s6ET463BsfJbOex7x63m1GPK7Ai3zRYhHFg7r7Ufw0w="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.ViewRegulationEditor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.ViewRegulationEditor.html",
+          "hash": "sweVbZmMVGri+/jB7Y2SKUfQ1wANe3lVTMBq5TtWjpI="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.ViewRegulationGUI.SurfaceType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.ViewRegulationGUI.SurfaceType.html",
+          "hash": "hNVQfHj43CdALNbZjmS2aOiLtxxImbaSg+zpVJiWFso="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.ViewRegulationGUI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.ViewRegulationGUI.html",
+          "hash": "KFIGwAicxzozMD2MVkZncfIpMlpfeqZUJlVe9pDrgUI="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.IGuiTabContents.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.IGuiTabContents.html",
+          "hash": "6Z3LI2kZu8UaEOSgMsrP+xUC/fpBqBePjZNNLbFOdGY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabHeightRegulationGenerate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabHeightRegulationGenerate.html",
+          "hash": "vABw5Wee5R6m1ncrVrhqMtNzPQ8h5d/EUFwY7auYyts="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabRegulationAreaExport.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabRegulationAreaExport.html",
+          "hash": "P6wia0GoG8Gi6a65/uURpW6TqgcquTzdAH8umm4UFRg="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabRegulationAreaGenerate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabRegulationAreaGenerate.html",
+          "hash": "cWmPF0ypw1wCdZM+DgluT3MijB+lkrKY6nTfXmiq/ms="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabShapefileLoad.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabShapefileLoad.html",
+          "hash": "E+sjvsd3YpeC19CFnB6PLH0DRe3GXUc2n+NofJHshk8="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabViewPointGenerate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabViewPointGenerate.html",
+          "hash": "l49Nr8Wwz76CwI6wilKr9lYd+B28B5aBS1qK6UwIJKY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabViewportRegulationGenerate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabViewportRegulationGenerate.html",
+          "hash": "haWaYawZQBtP/Jjii6ox9ClGbCRxLZYTJgLM9QknYck="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabWeatherAndTime.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabWeatherAndTime.html",
+          "hash": "g2eDy7Ym4LvD1PbKXwTP3n3GkeRcV7vbYkovD2ehdQU="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.html",
+          "hash": "FbU2H9om57hiFfZV4VHGsMHBiYPJpzdy3GSENVOl3r0="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.html",
+          "hash": "yBMq7kiD8vwNTBT/P5+pM4sIqw5B8DJaqghqKrOOJx4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.html",
+          "hash": "Klk2AAehkh1NZJtDxZ8gdFKwgRuT3NLDpPM7oqx3NjA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.LDTShapeFileHandler.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.LDTShapeFileHandler.html",
+          "hash": "BXJwsDxQBbUbSYKEZmrhZF9ZJto5xEP2e3WrrVDmwN4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.LDTTools.AreaType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.LDTTools.AreaType.html",
+          "hash": "/OGuvMVpHknPV+Kjm7aeH3OFKnrrkWMmJ3OL+UcgxvQ="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.LDTTools.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.LDTTools.html",
+          "hash": "UrWdES91XACusM5Eoym0veTczTi0er2ZxTzceqPVzXw="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.RegulationArea.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.RegulationArea.html",
+          "hash": "s/4vl7j3ipbUPt+sasnBjyneLn8uraVyV5A2yNAjKvo="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.ShapeFileEditorHelper.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.ShapeFileEditorHelper.html",
+          "hash": "frKNj9XKmBWqAn0c+uCeaGbf20xtlgvTnxFrWckK1s0="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.ShapeItem.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.ShapeItem.html",
+          "hash": "VD49jGAoe+QqPR+64M2KQ/6/jwVRm6+2HxtcBuYvBBM="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.html",
+          "hash": "PY4wO1ddJVEfZvLP0aR+2d6mzxzTn8fSiGZndiagdBQ="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeViewPoint.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeViewPoint.html",
+          "hash": "I75S36ZIChD0MmqwGdImMcSYm+Np7f9y8e00srjqEog="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeViewPointGroup.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeViewPointGroup.html",
+          "hash": "F/BSJnGNfU4OIMH6v8hGYV5kumwRP1SDbiUoTgYCa14="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.MunsellColorHandler.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.MunsellColorHandler.html",
+          "hash": "hnB+scz2c6L71EY/Wm59u77od1AWoWtAWUq4T0qI0as="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.ShapeGeometryHelper.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.ShapeGeometryHelper.html",
+          "hash": "038bQdgnMm/HyaQ4iLw/LRYph+yC902FuJ3DweCaZ68="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.ViewRegulation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.ViewRegulation.html",
+          "hash": "KT0Mp1dLDG3T7Zj2wvqRU1LCjg5pl5B6OoqcDdaJyuc="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.WalkThruHandler.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.WalkThruHandler.html",
+          "hash": "3vVsXvI4HGHgCm9o+PZCOYHhH347cAtaCoGXEYhJ600="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LandscapeDesignTool.Editor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LandscapeDesignTool.Editor.html",
+          "hash": "0D75I6hnd1l4jI2yLUQ9652MdnHup7Q8s+FbtGClZ2w="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html",
+          "hash": "29Z+o3SJOWg8y4Zu5TDB7CCzujyWkpbsCPc7wEvDejs="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html",
+          "hash": "zr0GVryhDSlBftgffDSI/t6aXou1CeHV5PyReEb7v5M="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "manual/howToUse.md",
+      "output": {
+        ".html": {
+          "relative_path": "manual/howToUse.html",
+          "hash": "xnFneSg4JSfE20EFXGcaiO9ax4GYWcxAoiN02eKf6bE="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "manual/install.md",
+      "output": {
+        ".html": {
+          "relative_path": "manual/install.html",
+          "hash": "VhtX7eh3ar1aDe0SULMu8x/0pL0NBNN554lAgcss0aA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "manual/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "manual/toc.html",
+          "hash": "8gFAy1eWZKKVhchYeKTs4TjXVABwKrJQ8CJIAo1ffd8="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/index/topImage.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/index/topImage.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html",
+          "hash": "ZLDSNDhkIh1OuvsIQ9nspt1NTIH2noIb3CLLquZKSbA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    }
+  ],
+  "incremental_info": [
+    {
+      "status": {
+        "can_incremental": false,
+        "details": "Cannot build incrementally because last build info is missing.",
+        "incrementalPhase": "build",
+        "total_file_count": 0,
+        "skipped_file_count": 0,
+        "full_build_reason_code": "NoAvailableBuildCache"
+      },
+      "processors": {
+        "ConceptualDocumentProcessor": {
+          "can_incremental": false,
+          "incrementalPhase": "build",
+          "total_file_count": 3,
+          "skipped_file_count": 0
+        },
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": false,
+          "incrementalPhase": "build",
+          "total_file_count": 47,
+          "skipped_file_count": 0
+        },
+        "ResourceDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor ResourceDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build",
+          "total_file_count": 0,
+          "skipped_file_count": 0
+        },
+        "TocDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build",
+          "total_file_count": 0,
+          "skipped_file_count": 0
+        }
+      }
+    },
+    {
+      "status": {
+        "can_incremental": false,
+        "details": "Cannot support incremental post processing, the reason is: should not trace intermediate info.",
+        "incrementalPhase": "postProcessing",
+        "total_file_count": 0,
+        "skipped_file_count": 0
+      },
+      "processors": {}
+    }
+  ],
+  "version_info": {},
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}
