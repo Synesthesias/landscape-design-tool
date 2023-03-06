@@ -3,37 +3,49 @@
     {
       "src": [
         {
+          "src": "..",
           "files": [
-            "src/**.csproj"
+            "Editor/**/*.cs",
+            "Runtime/**/*.cs"
           ]
         }
       ],
-      "dest": "api",
-      "disableGitFeatures": false,
-      "disableDefaultFilter": false
+      "dest": "api"
     }
   ],
   "build": {
+    "globalMetadata": {
+      "_appTitle": "景観まちづくり支援ツール",
+      "_appFooter": "景観まちづくり支援ツール",
+      "_enableSearch": true
+    },
     "content": [
       {
         "files": [
-          "api/**.yml",
-          "api/index.md"
+          "toc.yml",
+          "index.md"
         ]
       },
       {
+        "src": "api",
         "files": [
-          "articles/**.md",
-          "articles/**/toc.yml",
+          "*.yml"
+        ],
+        "dest": "api"
+      },
+      {
+        "src": "manual",
+        "files": [
           "toc.yml",
           "*.md"
-        ]
+        ],
+        "dest": "manual"
       }
     ],
     "resource": [
       {
         "files": [
-          "images/**"
+          "resources/**/*"
         ]
       }
     ],

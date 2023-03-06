@@ -1,0 +1,4 @@
+- name: インストール方法
+  href: install.md
+- name: 利用方法
+  href: howToUse.md
