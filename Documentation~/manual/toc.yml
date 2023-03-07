@@ -4,7 +4,13 @@
   items:
   - name: インストール方法
     href: install.md
-  - name: 利用方法
-    href: howToUse.md
   - name: 景観計画支援ツール
     href: landscapeDesign.md
+  - name: 景観協議支援ツール
+    href: landscapeDiscussion.md
+  - name: ビルドアプリ
+    href: buildApp.md
+  - name: 新規建築物の読み込み
+    href: loadingNewBuildings.md
+  - name: Web向けのビルド
+    href: buildForWeb.md
