@@ -79,20 +79,74 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="インストール方法">インストール方法</h1>
 
-<p>このページでは景観まちづくり支援ツールのインストール方法を説明します。</p>
+<h2 id="unityインストール">Unityインストール</h2>
 <ul>
-<li>TODO <a href="https://synesthesias.github.io/PLATEAU-SDK-for-Unity/manual/Installation.html">PLATEAUのマニュアル</a> を参考に書いてください。<br>
-具体的には、次の内容を含めるようにします。<br>
-そしてその内容は、<a href="https://synesthesias.atlassian.net/wiki/spaces/KEIKAN/pages/10747948">Confluence</a> のコピペで事足りると思います。
+<li>Unity Hub を<a href="https://unity3d.com/jp/get-unity/download">こちら</a>からインストールします。</li>
+<li>Unity Hub とは、Unityのお好きなバージョンをインストールして起動することのできるソフトウェアです。</li>
+<li>Unity Hubを起動し、左のサイドバーからインストール → 右上のボタンからエディターをインストール をクリックします。</li>
+</ul>
+<p><img src="..%5Cresources%5Cinstall%5CunityHubMenu.png" alt=""></p>
+<p>Unity 2020.3 で始まるバージョンを選択し、インストールを押します。</p>
+<p><img src="..%5Cresources%5Cinstall%5CunityHubInstall.png" alt=""></p>
+<h2 id="unityプロジェクトを作成">Unityプロジェクトを作成</h2>
+<p>Unity Hub を起動します。左サイドバーの <code>プロジェクト</code> を押し、右上の <code>新しいプロジェクト</code> ボタンをクリックします。</p>
+<p><img src="..%5Cresources%5Cinstall%5CunityHubProject.png" alt=""></p>
+<p>新しいプロジェクトの設定画面で、次のように設定します。</p>
 <ul>
-<li>Unity Hubのインストール</li>
-<li>Unityのインストール</li>
-<li>PLATEAU SDK for Unity のインストール</li>
-<li>景観まちづくり支援ツールのインストール</li>
-<li>PLATEAU SDKで都市をインポート</li>
+<li>画面上部の <code>エディターバージョン</code> を <code>2020.3</code> で始まる番号にします。</li>
+<li>画面中部の <code>テンプレート</code> は <code>3D</code> を選択します。</li>
+<li>画面右下のプロジェクト名をお好みのものに設定します。</li>
+<li><code>プロジェクトを作成</code> ボタンを押します。</li>
 </ul>
-</li>
+<p><img src="..%5Cresources%5Cinstall%5CcreateProject.png" alt=""></p>
+<h2 id="ツールをunityにインポート">ツールをUnityにインポート</h2>
+<ul>
+<li>提供されているLandscapeDesignToolのtgzファイルをダウンロードします。</li>
+<li><a href="https://github.com/Synesthesias/PLATEAU-SDK-for-Unity/releases/download/v0.6.0/PLATEAU-SDK-for-Unity-v0.6.0.tgz">https://github.com/Synesthesias/PLATEAU-SDK-for-Unity/releases/download/v0.6.0/PLATEAU-SDK-for-Unity-v0.6.0.tgz</a>
+から、PLATEAU SDKのtgzファイルをダウンロードします。</li>
+<li>Unityのメニューバーから <code>Window</code> → <code>Package Manager</code> を選択します。</li>
+<li>Package Manager ウィンドウの左上の <code>＋</code> ボタンから <code>Add pacakge from tarball...</code> を選択します。</li>
 </ul>
+<p><img src="..%5Cresources%5Cinstall%5CaddPacakge.png" alt=""></p>
+<ul>
+<li>先ほどダウンロードした PLATEAU SDK の tgz ファイルを指定します。するとウィンドウのパッケージ一覧に <code>Plateau Unity SDK</code> が表示されます。</li>
+</ul>
+<p><img src="..%5Cresources%5Cinstall%5CpackageManager.png" alt=""></p>
+<ul>
+<li>次に 同じく <code>＋</code> ボタンから <code>Add pacakge from tarball...</code> を選択し、景観まちづくりツールの tgz ファイルを指定します。するとパッケージ一覧に 景観まちづくり支援ツール が表示されます。</li>
+<li>Package Manager ウィンドウを閉じます。</li>
+</ul>
+<h2 id="プロジェクトの設定">プロジェクトの設定</h2>
+<p>Unityのプロジェクト設定をします。メニューバーから Edit → Project Settings… を選びます。</p>
+<p><img src="..%5Cresources%5Cinstall%5CeditMenu.png" alt=""></p>
+<p>Project Settings ウィンドウの左側のパネルから「Player」を選択し、「Api Compatibility Level」を「.NET Standard 2.0」に変更して設定ウィンドウを閉じます。</p>
+<p><img src="..%5Cresources%5Cinstall%5CapiCompatibilityLevel.png" alt=""></p>
+<h2 id="事前準備">事前準備</h2>
+<h3 id="plateauの都市モデルcitygmlデータの用意">PLATEAUの都市モデル(CityGML)データの用意</h3>
+<p>事前にG空間情報センターの<a href="https://www.geospatial.jp/ckan/dataset/plateau">3D都市モデル（Project PLATEAU）ポータルサイト</a>から景観計画・協議を行いたいエリアの都市モデルデータ(CityGMLファイル一式)をダウンロード、解凍してください。</p>
+<div class="NOTE">
+<h5>Note</h5>
+<p>都市モデルデータには地形(demフォルダ), 建築物(bldgフォルダ)が含まれている必要があります。</p>
+</div>
+<h2 id="都市モデルのインポート">都市モデルのインポート</h2>
+<h3 id="都市モデルインポート画面を開く">都市モデルインポート画面を開く</h3>
+<p>メニューから <code>PLATEAU-&gt;PLATEAU SDK</code> を選択します。</p>
+<p><img src="..%5Cresources%5Cinstall%5CplateauMenu.png" alt=""></p>
+<p>表示されるウィンドウで都市インポートの設定を行います。インポート元を選択し、基準座標系を選んで「範囲選択」ボタンを押してください。インポート元は、ローカルの場合は 「udx」という名前のフォルダの1つ上のフォルダになります。</p>
+<p>詳しくは <a href="https://synesthesias.github.io/PLATEAU-SDK-for-Unity/manual/ImportCityModels.html">PLATEAUマニュアル: インポート</a> をご覧ください。</p>
+<p><img src="..%5Cresources%5Cinstall%5CplateauSdkMenu.png" alt=""></p>
+<h3 id="範囲選択">範囲選択</h3>
+<p>範囲選択画面では、マウスホイールの上下でズームイン・ズームアウト、右クリックのドラッグで視点移動します。オレンジ色の球体をドラッグして範囲を選択し、シーンビュー左上の「決定」ボタンを押します。</p>
+<p><img src="..%5Cresources%5Cinstall%5CrangeSelectionScreen.png" alt=""></p>
+<p>インポートに含める地物の種類を選択します。
+景観まちづくり機能を利用するには、次をすべて満たす設定にしておく必要があります。</p>
+<ul>
+<li>「建築物」と「土地起伏」で、「インポートする」にチェックが入っていること</li>
+<li>「建築物」と「土地起伏」で、「MeshColliderをセットする」にチェックが入っていること</li>
+<li>「建築物」で、「モデル結合」はそのまま（主要地物単位）にしておくこと</li>
+</ul>
+<p><img src="..%5Cresources%5Cinstall%5CgeographicFeatureSetting.png" alt=""></p>
+<p>設定したら「モデルをインポート」ボタンを押します。そのままウィンドウを下にスクロールすると処理の進行状況が表示されるので、すべて「完了」になったらインポートは完了です。</p>
 </article>
           </div>
           
@@ -101,7 +155,7 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/Synesthesias/LandscapeDesignTool/blob/main/Documentation~/manual/install.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/Synesthesias/PLATEAU-UC22-045-landscape-design-tool/blob/main/Documentation~/manual/install.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>
