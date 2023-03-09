@@ -13,7 +13,7 @@
 
 ## 利用手順
 
-[こちらのマニュアル](https://synesthesias.github.io/LandscapeDesignTool/) をご覧ください。
+[こちらのマニュアル](https://synesthesias.github.io/PLATEAU-UC22-045-landscape-design-tool) をご覧ください。
 
 ## ライセンス
 
