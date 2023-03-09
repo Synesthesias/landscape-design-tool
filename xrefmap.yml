@@ -250,6 +250,19 @@ references:
   isSpec: "True"
   fullName: LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.TagAdder.ConfigureTags
   nameWithType: TagAdder.ConfigureTags
+- uid: LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.TagAdder.CreateTagIfNotExist(System.String)
+  name: CreateTagIfNotExist(String)
+  href: api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.TagAdder.html#LandscapeDesignTool_Editor_LandscapeDesignTool_Editor_TagAdder_CreateTagIfNotExist_System_String_
+  commentId: M:LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.TagAdder.CreateTagIfNotExist(System.String)
+  fullName: LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.TagAdder.CreateTagIfNotExist(System.String)
+  nameWithType: TagAdder.CreateTagIfNotExist(String)
+- uid: LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.TagAdder.CreateTagIfNotExist*
+  name: CreateTagIfNotExist
+  href: api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.TagAdder.html#LandscapeDesignTool_Editor_LandscapeDesignTool_Editor_TagAdder_CreateTagIfNotExist_
+  commentId: Overload:LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.TagAdder.CreateTagIfNotExist
+  isSpec: "True"
+  fullName: LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.TagAdder.CreateTagIfNotExist
+  nameWithType: TagAdder.CreateTagIfNotExist
 - uid: LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.ViewRegulationEditor
   name: ViewRegulationEditor
   href: api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.ViewRegulationEditor.html
