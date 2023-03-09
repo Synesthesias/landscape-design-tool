@@ -14,11 +14,16 @@ namespace LandscapeDesignTool.Editor
         private static readonly Func<Transform, bool> predIsBuilding = trans => trans.name.Contains("_bldg_");
         private static readonly Func<Transform, bool> predIsGround = trans => trans.name.Contains("_dem_");
         private const string LayerNameBuilding = "Building";
-        private const string LayerNameGround = "Ground";
         private const string LayerNameRagulationArea = "RegulationArea";
+        private const string LayerNameGround = "Ground";
         private const int LayerIdBuilding = 29;
-        private const int LayerIdGround = 31;
         private const int LayerIdRagulationArea = 30;
+        private const int LayerIdGround = 31;
+
+        private static readonly string[] necessaryTags = new string[]
+        {
+            "ViewRegulationArea", "RegulationArea", "HeightRegulationArea", "ViewPoint"
+        };
 
         /// <summary>
         /// プロジェクト設定のレイヤー設定で、Building, Ground を設定します。
@@ -30,7 +35,7 @@ namespace LandscapeDesignTool.Editor
             EditorUtility.DisplayProgressBar("", "タグを設定中です...", 30f);
             try
             {
-                ConfigureLayerName();
+                ConfigureLayerNameAndTag();
                 SetTagOfBuildingAndGround();
             }
             finally
@@ -104,11 +109,18 @@ namespace LandscapeDesignTool.Editor
         }
 
         /// <summary>
-        /// プロジェクト設定のレイヤー名を変更し、Building, Ground という名前のレイヤーを作ります。
+        /// プロジェクト設定のレイヤー名を変更し、Building, Ground という名前のレイヤーを作ります。必要なタグを作ります。
         /// 参考: <see href="https://forum.unity.com/threads/adding-layer-by-script.41970/#post-2274824"/>
         /// </summary>
-        private static void ConfigureLayerName()
+        private static void ConfigureLayerNameAndTag()
         {
+            // タグをセットします。
+            foreach(string tagName in necessaryTags)
+            {
+                CreateTagIfNotExist(tagName);
+            }
+            
+            // レイヤーをセットします。
             SerializedObject tagManager =
                 new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
 
@@ -120,12 +132,12 @@ namespace LandscapeDesignTool.Editor
                 Debug.LogWarning("Layers is null: " + (layers == null));
                 return;
             }
-
+            
             var layersToSet = new (int id, string name)[]
             {
                 (LayerIdBuilding, LayerNameBuilding),
                 (LayerIdGround, LayerNameGround),
-                (LayerIdRagulationArea, LayerNameRagulationArea)
+                (LayerIdRagulationArea, LayerNameRagulationArea),
             };
             foreach (var layerTuple in layersToSet)
             {
@@ -137,6 +149,43 @@ namespace LandscapeDesignTool.Editor
             }
 
             tagManager.ApplyModifiedPropertiesWithoutUndo();
+        }
+        
+        /// <summary>
+        /// プロジェクトに タグ<paramref name="tagName"/> が設定されていない場合、設定します。
+        /// </summary>
+        // 参考 : https://forum.unity.com/threads/create-tags-and-layers-in-the-editor-using-script-both-edit-and-runtime-modes.732119/
+        public static void CreateTagIfNotExist(string tagName)
+        {
+            // Open tag manager
+            SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
+            // Tags Property
+            SerializedProperty tagsProp = tagManager.FindProperty("tags");
+            // if not found, add it
+            if (PropertyExists(tagsProp, 0, tagsProp.arraySize, tagName)) return;
+            int index = tagsProp.arraySize;
+            // Insert new array element
+            tagsProp.InsertArrayElementAtIndex(index);
+            SerializedProperty sp = tagsProp.GetArrayElementAtIndex(index);
+            // Set array element to tagName
+            sp.stringValue = tagName;
+            Debug.Log("Tag: " + tagName + " has been added");
+            // Save settings
+            tagManager.ApplyModifiedProperties();
+        }
+        
+        // 参考 : https://forum.unity.com/threads/create-tags-and-layers-in-the-editor-using-script-both-edit-and-runtime-modes.732119/
+        private static bool PropertyExists(SerializedProperty property, int start, int end, string value)
+        {
+            for (int i = start; i < end; i++)
+            {
+                SerializedProperty t = property.GetArrayElementAtIndex(i);
+                if (t.stringValue.Equals(value))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

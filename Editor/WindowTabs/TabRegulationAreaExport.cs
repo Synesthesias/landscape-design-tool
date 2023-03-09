@@ -96,11 +96,12 @@ namespace LandscapeDesignTool.Editor.WindowTabs
             for (int i = 0; i < viewregurationObjects.Length; i++)
             {
                 shapetype[counter] = "ViewRegulationArea";
-                if (viewregurationObjects[i].GetComponent<ViewRegulation>())
+                var viewRegObj = viewregurationObjects[i];
+                if (viewRegObj.GetComponent<ViewRegulation>())
                 {
                     List<Vector2> p = new List<Vector2>();
                     ViewRegulation obj =
-                        viewregurationObjects[i].GetComponent<ViewRegulation>();
+                        viewRegObj.GetComponent<ViewRegulation>();
                     types[counter] = "no type";
                     heights[counter] = 0;
                     cols1[counter] = obj.LineColorValid;
@@ -110,9 +111,14 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                     originpoint[counter] = obj.StartPos;
                     targetpoint[counter] = obj.EndPos;
 
-                    GameObject outlineNode = obj.transform.Find("CoveringMesh").gameObject;
-                    MeshFilter mf = outlineNode.GetComponent<MeshFilter>();
-                    Matrix4x4 localToWorld = outlineNode.transform.localToWorldMatrix;
+                    var outlineNodeTrans = obj.transform.Find("CoveringMesh");
+                    if (outlineNodeTrans == null)
+                    {
+                        Debug.LogWarning($"{viewRegObj.name} は適切に設定されていないためスキップします。");
+                        continue;
+                    }
+                    MeshFilter mf = outlineNodeTrans.GetComponent<MeshFilter>();
+                    Matrix4x4 localToWorld = outlineNodeTrans.localToWorldMatrix;
                     int n = 0;
                     List<Vector2> cnt = new List<Vector2>();
 
