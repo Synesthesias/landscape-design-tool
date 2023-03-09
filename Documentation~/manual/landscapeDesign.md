@@ -2,7 +2,7 @@
 ## 規制エリアファイルの読み込み
 景観計画画面または景観協議画面から「ShapeFile読み込み」タブを選択します。
 
-![](..\resources\index\8f7de2f8-7d11-4c2d-abec-0eca60f81562.png)
+![](../resources/index/8f7de2f8-7d11-4c2d-abec-0eca60f81562.png)
 
 「対象都市」でインポートした都市モデルを指定します。これは座標計算の基準点に利用されます。
 「ファイル選択」で shpファイルを選択します。
@@ -18,39 +18,39 @@
 ### 景観計画画面を開く
 メニューから`PLATEAU -> 景観まちづくり -> 景観計画`を選択し、景観計画画面を開きます。
 
-![](..\resources\landscapeDesign\landscapePlanningButton.png)
+![](../resources/landscapeDesign/landscapePlanningButton.png)
 
 「規制エリア作成」タブを開き、「新規規制エリア作成」を押します。
 
-![](..\resources\landscapeDesign\creationOfNewRestrictedArea.png)
+![](../resources/landscapeDesign/creationOfNewRestrictedArea.png)
 
 地面をクリックして頂点を追加していきます。
 
-![](..\resources\landscapeDesign\addingVertices.png)
+![](../resources/landscapeDesign/addingVertices.png)
 
 完了ボタンを押すと規制エリアが生成されます。
 
-![](..\resources\landscapeDesign\generationOfRegulatedAreas.pngv)
+![](../resources/landscapeDesign/generationOfRegulatedAreas.pngv)
 
 ## 規制エリアの編集
 ### 規制エリアを選択
 「規制エリアタブ」で「編集対象」から規制エリアを選択します。頂点を編集したい場合「頂点を編集する」をクリックします。
 
-![](..\resources\landscapeDesign\editingVertices.png)
+![](../resources/landscapeDesign/editingVertices.png)
 
 青い球をドラッグすることで規制エリアを編集できます。
 
-![](..\resources\landscapeDesign\editRegulationArea.png)
+![](../resources/landscapeDesign/editRegulationArea.png)
 
 ## 眺望規制の作成
 眺望規制の機能では、ある地点から視線がどのくらい通るかを表示できます。
 
-![](..\resources\landscapeDesign\restrictionsOnViews.png)
+![](../resources/landscapeDesign/restrictionsOnViews.png)
 
 上図の見方について、緑の線は山への視線が通る箇所、赤の線は山への視線が建物で塞がれている箇所を示します。
 このように眺望を表示する方法を説明します。
 
-![](..\resources\landscapeDesign\indicationOfViewRestrictions.png)
+![](../resources/landscapeDesign/indicationOfViewRestrictions.png)
 
 - メニューバーの PLATEAU → 景観まちづくり → 景観計画 から画面を開きます。
 - 「眺望規制作成」タブを選択します。
@@ -59,19 +59,19 @@
 - 「眺望対象の選択」ボタンを押してから対象を選びます。選ぶにはシーン中で視線の対象にマウスカーソルを合わせて左Shiftキーを押します。
 - すると視線が表示されます。
 
-![](..\resources\landscapeDesign\lineOfSightDisplay.png)
+![](../resources/landscapeDesign/lineOfSightDisplay.png)
 
 - 視線の始点と終点には、それぞれ上図のように矢印が表示されます。これをドラッグすることで始点と終点を変更できます。
 
 ## 眺望対象中心の高さ制限エリアの作成
 眺望対象中心の高さ制限エリアの機能では、眺望対象を中心とした一定範囲・一定標高での高さ制限エリアを作成することができます。
 
-![](..\resources\landscapeDesign\heightRestrictedArea.png)
+![](../resources/landscapeDesign/heightRestrictedArea.png)
 
 - メニューバーから PLATEAU → 景観まちづくり → 景観計画 を選択してウィンドウを出します。
 - 「高さ規制エリア作成」タブを選択します。
 
-![](..\resources\landscapeDesign\creationOfHeightRestrictedArea.png)
+![](../resources/landscapeDesign/creationOfHeightRestrictedArea.png)
 
 - 高さ、直径、色を設定し、「眺望対象(中心地店)を選択」ボタンを押します。
 - シーン内の地面をクリックして地点を選び、「高さ制限エリア作成」ボタンを押すと高さのガイドが生成されます。
@@ -80,7 +80,7 @@
 ## 規制エリアファイルの書き出し
 景観計画画面から「ShapeFile書き出し」タブを選択します。
 
-![](..\resources\landscapeDesign\shapeFileExport.png)
+![](../resources/landscapeDesign/shapeFileExport.png)
 
 対象都市を選択します。上図のオレンジ色の四角で囲ったアイコンを選択すると都市の一覧が表示されるので、そこから選択します。
 次に「エクスポート先を選択」で出力先を選択し、「規制エリア出力」でシーン内に追加されている規制エリアがshapeファイルとして出力されます。
