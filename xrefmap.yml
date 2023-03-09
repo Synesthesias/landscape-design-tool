@@ -866,6 +866,58 @@ references:
   commentId: T:LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler
   fullName: LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler
   nameWithType: HeightRegulationAreaHandler
+- uid: LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.AreaColor
+  name: AreaColor
+  href: api/LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.html#LandscapeDesignTool_Editor_LandscapeDesignTool_HeightRegulationAreaHandler_AreaColor
+  commentId: P:LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.AreaColor
+  fullName: LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.AreaColor
+  nameWithType: HeightRegulationAreaHandler.AreaColor
+- uid: LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.AreaColor*
+  name: AreaColor
+  href: api/LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.html#LandscapeDesignTool_Editor_LandscapeDesignTool_HeightRegulationAreaHandler_AreaColor_
+  commentId: Overload:LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.AreaColor
+  isSpec: "True"
+  fullName: LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.AreaColor
+  nameWithType: HeightRegulationAreaHandler.AreaColor
+- uid: LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.AreaDiameter
+  name: AreaDiameter
+  href: api/LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.html#LandscapeDesignTool_Editor_LandscapeDesignTool_HeightRegulationAreaHandler_AreaDiameter
+  commentId: P:LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.AreaDiameter
+  fullName: LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.AreaDiameter
+  nameWithType: HeightRegulationAreaHandler.AreaDiameter
+- uid: LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.AreaDiameter*
+  name: AreaDiameter
+  href: api/LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.html#LandscapeDesignTool_Editor_LandscapeDesignTool_HeightRegulationAreaHandler_AreaDiameter_
+  commentId: Overload:LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.AreaDiameter
+  isSpec: "True"
+  fullName: LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.AreaDiameter
+  nameWithType: HeightRegulationAreaHandler.AreaDiameter
+- uid: LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.AreaHeight
+  name: AreaHeight
+  href: api/LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.html#LandscapeDesignTool_Editor_LandscapeDesignTool_HeightRegulationAreaHandler_AreaHeight
+  commentId: P:LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.AreaHeight
+  fullName: LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.AreaHeight
+  nameWithType: HeightRegulationAreaHandler.AreaHeight
+- uid: LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.AreaHeight*
+  name: AreaHeight
+  href: api/LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.html#LandscapeDesignTool_Editor_LandscapeDesignTool_HeightRegulationAreaHandler_AreaHeight_
+  commentId: Overload:LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.AreaHeight
+  isSpec: "True"
+  fullName: LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.AreaHeight
+  nameWithType: HeightRegulationAreaHandler.AreaHeight
+- uid: LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.CreateRegulationArea(System.Single,Color,System.Single,Vector3)
+  name: CreateRegulationArea(Single, Color, Single, Vector3)
+  href: api/LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.html#LandscapeDesignTool_Editor_LandscapeDesignTool_HeightRegulationAreaHandler_CreateRegulationArea_System_Single_Color_System_Single_Vector3_
+  commentId: M:LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.CreateRegulationArea(System.Single,Color,System.Single,Vector3)
+  fullName: LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.CreateRegulationArea(System.Single, Color, System.Single, Vector3)
+  nameWithType: HeightRegulationAreaHandler.CreateRegulationArea(Single, Color, Single, Vector3)
+- uid: LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.CreateRegulationArea*
+  name: CreateRegulationArea
+  href: api/LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.html#LandscapeDesignTool_Editor_LandscapeDesignTool_HeightRegulationAreaHandler_CreateRegulationArea_
+  commentId: Overload:LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.CreateRegulationArea
+  isSpec: "True"
+  fullName: LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.CreateRegulationArea
+  nameWithType: HeightRegulationAreaHandler.CreateRegulationArea
 - uid: LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.GetColor
   name: GetColor()
   href: api/LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.html#LandscapeDesignTool_Editor_LandscapeDesignTool_HeightRegulationAreaHandler_GetColor
@@ -970,6 +1022,19 @@ references:
   isSpec: "True"
   fullName: LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.SetPoint
   nameWithType: HeightRegulationAreaHandler.SetPoint
+- uid: LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.TargetPoint
+  name: TargetPoint
+  href: api/LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.html#LandscapeDesignTool_Editor_LandscapeDesignTool_HeightRegulationAreaHandler_TargetPoint
+  commentId: P:LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.TargetPoint
+  fullName: LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.TargetPoint
+  nameWithType: HeightRegulationAreaHandler.TargetPoint
+- uid: LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.TargetPoint*
+  name: TargetPoint
+  href: api/LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.html#LandscapeDesignTool_Editor_LandscapeDesignTool_HeightRegulationAreaHandler_TargetPoint_
+  commentId: Overload:LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.TargetPoint
+  isSpec: "True"
+  fullName: LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.TargetPoint
+  nameWithType: HeightRegulationAreaHandler.TargetPoint
 - uid: LandscapeDesignTool.Editor.LandscapeDesignTool.LDTShapeFileHandler
   name: LDTShapeFileHandler
   href: api/LandscapeDesignTool.Editor.LandscapeDesignTool.LDTShapeFileHandler.html

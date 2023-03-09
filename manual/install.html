@@ -86,14 +86,14 @@
 <li>Unity Hubを起動し、左のサイドバーからインストール → 右上のボタンからエディターをインストール をクリックします。</li>
 </ul>
 <p><img src="../resources/install/unityHubMenu.png" alt=""></p>
-<p>Unity 2020.3 で始まるバージョンを選択し、インストールを押します。</p>
+<p>Unity 2021.3 で始まるバージョンを選択し、インストールを押します。</p>
 <p><img src="../resources/install/unityHubInstall.png" alt=""></p>
 <h2 id="unityプロジェクトを作成">Unityプロジェクトを作成</h2>
 <p>Unity Hub を起動します。左サイドバーの <code>プロジェクト</code> を押し、右上の <code>新しいプロジェクト</code> ボタンをクリックします。</p>
 <p><img src="../resources/install/unityHubProject.png" alt=""></p>
 <p>新しいプロジェクトの設定画面で、次のように設定します。</p>
 <ul>
-<li>画面上部の <code>エディターバージョン</code> を <code>2020.3</code> で始まる番号にします。</li>
+<li>画面上部の <code>エディターバージョン</code> を <code>2021.3</code> で始まる番号にします。</li>
 <li>画面中部の <code>テンプレート</code> は <code>3D</code> を選択します。</li>
 <li>画面右下のプロジェクト名をお好みのものに設定します。</li>
 <li><code>プロジェクトを作成</code> ボタンを押します。</li>
@@ -101,15 +101,15 @@
 <p><img src="../resources/install/createProject.png" alt=""></p>
 <h2 id="ツールをunityにインポート">ツールをUnityにインポート</h2>
 <ul>
-<li>提供されているLandscapeDesignToolのtgzファイルをダウンロードします。</li>
-<li><a href="https://github.com/Synesthesias/PLATEAU-SDK-for-Unity/releases/download/v0.6.0/PLATEAU-SDK-for-Unity-v0.6.0.tgz">https://github.com/Synesthesias/PLATEAU-SDK-for-Unity/releases/download/v0.6.0/PLATEAU-SDK-for-Unity-v0.6.0.tgz</a>
+<li><a href="https://github.com/Synesthesias/PLATEAU-UC22-045-landscape-design-tool/releases/download/v1.1.0/LandscapeDesignTool-v1.1.0.tgz">LandscapeDesignToolのtgzファイルをダウンロードします。</a></li>
+<li><a href="https://github.com/Project-PLATEAU/PLATEAU-SDK-for-Unity/releases/tag/v1.1.0">PLATEAU SDK for Unityのリリースページ</a>
 から、PLATEAU SDKのtgzファイルをダウンロードします。</li>
 <li>Unityのメニューバーから <code>Window</code> → <code>Package Manager</code> を選択します。</li>
 <li>Package Manager ウィンドウの左上の <code>＋</code> ボタンから <code>Add pacakge from tarball...</code> を選択します。</li>
 </ul>
 <p><img src="../resources/install/addPacakge.png" alt=""></p>
 <ul>
-<li>先ほどダウンロードした PLATEAU SDK の tgz ファイルを指定します。するとウィンドウのパッケージ一覧に <code>Plateau Unity SDK</code> が表示されます。</li>
+<li>先ほどダウンロードした PLATEAU SDK の tgz ファイルを指定します。するとウィンドウのパッケージ一覧に <code>PLATEAU SDK for Unity</code> が表示されます。</li>
 </ul>
 <p><img src="../resources/install/packageManager.png" alt=""></p>
 <ul>
@@ -119,7 +119,7 @@
 <h2 id="プロジェクトの設定">プロジェクトの設定</h2>
 <p>Unityのプロジェクト設定をします。メニューバーから Edit → Project Settings… を選びます。</p>
 <p><img src="../resources/install/editMenu.png" alt=""></p>
-<p>Project Settings ウィンドウの左側のパネルから「Player」を選択し、「Api Compatibility Level」を「.NET Standard 2.0」に変更して設定ウィンドウを閉じます。</p>
+<p>Project Settings ウィンドウの左側のパネルから「Player」を選択し、「Api Compatibility Level」が「.NET Standard 2.1」ではない場合「.NET Standard 2.1」に変更して設定ウィンドウを閉じます。</p>
 <p><img src="../resources/install/apiCompatibilityLevel.png" alt=""></p>
 <h2 id="事前準備">事前準備</h2>
 <h3 id="plateauの都市モデルcitygmlデータの用意">PLATEAUの都市モデル(CityGML)データの用意</h3>
@@ -133,7 +133,7 @@
 <p>メニューから <code>PLATEAU-&gt;PLATEAU SDK</code> を選択します。</p>
 <p><img src="../resources/install/plateauMenu.png" alt=""></p>
 <p>表示されるウィンドウで都市インポートの設定を行います。インポート元を選択し、基準座標系を選んで「範囲選択」ボタンを押してください。インポート元は、ローカルの場合は 「udx」という名前のフォルダの1つ上のフォルダになります。</p>
-<p>詳しくは <a href="https://synesthesias.github.io/PLATEAU-SDK-for-Unity/manual/ImportCityModels.html">PLATEAUマニュアル: インポート</a> をご覧ください。</p>
+<p>詳しくは <a href="https://project-plateau.github.io/PLATEAU-SDK-for-Unity/manual/ImportCityModels.html">PLATEAUマニュアル: インポート</a> をご覧ください。</p>
 <p><img src="../resources/install/plateauSdkMenu.png" alt=""></p>
 <h3 id="範囲選択">範囲選択</h3>
 <p>範囲選択画面では、マウスホイールの上下でズームイン・ズームアウト、右クリックのドラッグで視点移動します。オレンジ色の球体をドラッグして範囲を選択し、シーンビュー左上の「決定」ボタンを押します。</p>
