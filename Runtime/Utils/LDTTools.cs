@@ -121,7 +121,6 @@ namespace LandscapeDesignTool
                 foreach (var v in vlist)
                 {
                     vertex[n++] = new PointD(v.x, v.y);
-                    Debug.Log(vertex[n - 1].ToString());
                 }
 
                 string[] fielddata = new string[10];
@@ -135,12 +134,7 @@ namespace LandscapeDesignTool
                 fielddata[7] = specpoint[i, 1].x.ToString() + ", " + specpoint[i, 1].y.ToString();
                 fielddata[8] = originpoint[i].x.ToString() + ", " + originpoint[i].y.ToString() + ", " + originpoint[i].z.ToString();
                 fielddata[9] = targetpoint[i].x.ToString() + ", " + targetpoint[i].y.ToString() + ", " + targetpoint[i].z.ToString();
-
-                for( int k=0; k<10; k++)
-                {
-                    Debug.Log("k="+k+"   "+fielddata[k]);
-                }
-
+                
                 sfw.AddRecord(vertex, vertex.Length, fielddata);
             }
 

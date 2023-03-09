@@ -7,22 +7,21 @@ namespace LandscapeDesignTool
     {
         [SerializeField] float areaHeight = 10;
         [SerializeField] float areaDiameter = 10;
-        [SerializeField] Vector3 targetPoint= Vector3.zero;
+        [SerializeField] Vector3 targetPoint = Vector3.zero;
         [SerializeField] Color areaColor;
-        
+
         /// <summary>
         /// 高さ規制は円柱で表示されますが、その円柱の高さです。
         /// この円柱の高さのうち、規制の高さ分が地面の上に出て、残りは地面の下に埋まります。
         /// 広い範囲を指定しても円柱が浮かないように長めにします。
         /// </summary>
         private const float heightRegulationDisplayLength = 3000f;
-        
 
-        // Update is called once per frame
-        void Update()
-        {
+        public float AreaHeight => this.areaHeight;
+        public float AreaDiameter => this.areaDiameter;
+        public Vector3 TargetPoint => this.targetPoint;
+        public Color AreaColor => this.areaColor;
 
-        }
         private void OnDrawGizmosSelected()
         {
 
@@ -35,7 +34,7 @@ namespace LandscapeDesignTool
             Gizmos.DrawCube(v0, new Vector3(10, 10, 10));
         }
 
-        public void SetHeight( float h)
+        public void SetHeight(float h)
         {
             areaHeight = h;
         }
@@ -51,7 +50,7 @@ namespace LandscapeDesignTool
         {
             return areaDiameter;
         }
-        public void SetPoint( Vector3 p)
+        public void SetPoint(Vector3 p)
         {
             targetPoint = new Vector3(p.x, p.y, p.z);
         }
@@ -68,9 +67,33 @@ namespace LandscapeDesignTool
             return areaColor;
         }
 
+        public static HeightRegulationAreaHandler CreateRegulationArea(float diameter, Color color, float height, Vector3 targetPoint)
+        {
+            GameObject cylinder = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            cylinder.layer = LayerMask.NameToLayer("RegulationArea");
+            cylinder.tag = "HeightRegulationArea";
+            cylinder.name = "HeightRestrictionArea";
+            var heightRestriction = cylinder.AddComponent<HeightRegulationAreaHandler>();
+
+            heightRestriction.SetColor(color);
+            heightRestriction.SetHeight(height);
+            heightRestriction.SetDiameter(diameter);
+            heightRestriction.SetPoint(targetPoint);
+
+            cylinder.transform.position = new Vector3(targetPoint.x, targetPoint.y - heightRegulationDisplayLength / 2f + height, targetPoint.z);
+            Material mat = LDTTools.MakeMaterial(color);
+            cylinder.GetComponent<Renderer>().material = mat;
+
+            // Unityのデフォルト円柱は高さが2mであることに注意
+            // regulationArea.transform.localScale = new Vector3(_heightAreaRadius, _heightAreaHeight / 2f, _heightAreaRadius);
+            heightRestriction.transform.localScale =
+                new Vector3(diameter, heightRegulationDisplayLength / 2f, diameter);
+
+            return heightRestriction;
+        }
 
 #if UNITY_EDITOR
-            [CustomEditor(typeof(HeightRegulationAreaHandler))]
+        [CustomEditor(typeof(HeightRegulationAreaHandler))]
         [CanEditMultipleObjects]
         public class HeightRegurationAreaEditor : Editor
         {
@@ -92,14 +115,14 @@ namespace LandscapeDesignTool
                 EditorGUILayout.LabelField($"直径: {regulation.areaDiameter}");
             }
         }
-        
+
         public void SetupRegulationArea(float diameter, Color color, float height)
         {
             // Unityのデフォルト円柱は高さが2mであることに注意
             // regulationArea.transform.localScale = new Vector3(_heightAreaRadius, _heightAreaHeight / 2f, _heightAreaRadius);
             transform.localScale =
                 new Vector3(diameter, heightRegulationDisplayLength / 2f, diameter);
-            
+
             SetColor(color);
             SetHeight(height);
             SetDiameter(diameter);
