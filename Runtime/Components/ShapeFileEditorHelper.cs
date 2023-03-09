@@ -4,6 +4,7 @@ using UnityEditor;
 using EGIS.ShapeFileLib;
 using PLATEAU.CityInfo;
 using PLATEAU.Geometries;
+using UnityEditor.Experimental.GraphView;
 
 namespace LandscapeDesignTool
 {
@@ -23,7 +24,7 @@ namespace LandscapeDesignTool
         List<Vector3> _origin = new List<Vector3>();
         List<Vector3> _target = new List<Vector3>();
         List<Vector2> _size = new List<Vector2>();
-        
+
         private PLATEAUInstancedCityModel _cityModel;
 
 #if UNITY_EDITOR
@@ -45,7 +46,7 @@ namespace LandscapeDesignTool
                     _shapefileLoadPath = selectedPath;
                 }
             }
-            
+
             if (string.IsNullOrEmpty(_shapefileLoadPath)) return;
 
             _generateGameObjName = EditorGUILayout.TextField("ゲームオブジェクト名: ", _generateGameObjName);
@@ -83,9 +84,9 @@ namespace LandscapeDesignTool
             int keyTarget = -1;
             int keySize = -1;
             string[] keys = shp.GetAttributeFieldNames();
-            for( int i=0; i< keys.Length; i++)
+            for (int i = 0; i < keys.Length; i++)
             {
-                if( keys[i] == "COLOR1")
+                if (keys[i] == "COLOR1")
                 {
                     keynoColor1 = i;
                 }
@@ -93,7 +94,7 @@ namespace LandscapeDesignTool
                 {
                     keynoColor2 = i;
                 }
-                if ( keys[i] == "HEIGHT")
+                if (keys[i] == "HEIGHT")
                 {
                     keynoHeight = i;
                 }
@@ -117,15 +118,15 @@ namespace LandscapeDesignTool
 
             Debug.Log("keys");
 
-            for( int i=0; i<shp.RecordCount; i++)
+            for (int i = 0; i < shp.RecordCount; i++)
             {
                 string[] valus = shp.GetAttributeFieldValues(i);
-                if( keyAreaTpe > -1)
+                if (keyAreaTpe > -1)
                 {
                     _areatype.Add(valus[keyAreaTpe]);
                 }
 
-                if( keynoColor1 > -1)
+                if (keynoColor1 > -1)
                 {
                     string cols = valus[keynoColor1];
                     string[] carr = cols.Split(',');
@@ -160,7 +161,7 @@ namespace LandscapeDesignTool
                     _colors2.Add(col);
                 }
 
-                if ( keynoHeight > -1)
+                if (keynoHeight > -1)
                 {
                     float h = float.Parse(valus[keynoHeight]);
                     _heights.Add(h);
@@ -172,7 +173,7 @@ namespace LandscapeDesignTool
 
                 }
 
-                if( keyOrigin > -1)
+                if (keyOrigin > -1)
                 {
                     string cols = valus[keyOrigin];
                     string[] carr = cols.Split(',');
@@ -209,7 +210,7 @@ namespace LandscapeDesignTool
                     string[] carr = cols.Split(',');
                     float w = float.Parse(carr[0]);
                     float h = float.Parse(carr[1]);
-                    Vector2 size = new Vector2(w,h);
+                    Vector2 size = new Vector2(w, h);
                     _size.Add(size);
                 }
                 else
@@ -250,13 +251,13 @@ namespace LandscapeDesignTool
 
             int count = 0;
             foreach (var contour in _contours)
-            {;
+            {
+                ;
                 Debug.Log("areatype " + _areatype[count]);
 
-                
-                if (string.Compare(_areatype[count],"RegurationArea") ==0)
+
+                if (string.Compare(_areatype[count], "RegulationArea") == 0)
                 {
-                    Debug.Log("RA");
                     var regulationArea = RegulationArea.Create(parentTransform);
 
                     for (int i = 0; i < contour.Count; i++)
@@ -272,11 +273,12 @@ namespace LandscapeDesignTool
                     regulationArea.SetAreaColor(col);
                     regulationArea.GenMesh();
                 }
-                else if(string.Compare(_areatype[count], "ViewRegulation") == 0)
+                else if (string.Compare(_areatype[count], "ViewRegulation") == 0)
                 {
-                    Debug.Log("VR");
                     GameObject go = new GameObject();
                     go.name = "RegulationArea";
+                    go.tag = "ViewRegulationArea";
+                    go.layer = LayerMask.NameToLayer("RegulationArea");
                     go.transform.parent = parentTransform;
                     ViewRegulation viewregulation = go.AddComponent<ViewRegulation>();
                     viewregulation.StartPos = _origin[count];
@@ -286,6 +288,18 @@ namespace LandscapeDesignTool
                     viewregulation.LineColorValid = _colors1[count];
                     viewregulation.LineColorInvalid = _colors2[count];
                     CreateOrUpdateViewRegulation(viewregulation);
+                }
+                else if (string.Compare(_areatype[count], "HeightRestrict") == 0)
+                {
+                    Debug.Log("AAAA");
+                    var diameter = (_target[count] - _origin[count]).magnitude * 2;
+                    var height = _heights[count];
+                    var color = _colors1[count];
+
+                    var heightRegulation = HeightRegulationAreaHandler.CreateRegulationArea(
+                        diameter, color, height, _origin[count]
+                        );
+                    heightRegulation.transform.parent = parentTransform;
                 }
 
                 count++;

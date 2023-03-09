@@ -49,10 +49,9 @@ namespace LandscapeDesignTool.Editor.WindowTabs
 
             GameObject[] objects = GameObject.FindGameObjectsWithTag("RegulationArea");
             GameObject[] viewregurationObjects = GameObject.FindGameObjectsWithTag("ViewRegulationArea");
+            GameObject[] heightRestrictionObjects = GameObject.FindObjectsOfType<HeightRegulationAreaHandler>().Select(component => component.gameObject).ToArray();
 
-
-            int objCount = objects.Length + viewregurationObjects.Length;
-            // int objCount = objects.Length;
+            int objCount = objects.Length + viewregurationObjects.Length + heightRestrictionObjects.Length;
             string[] types = new string[objCount];
             Color[] cols1 = new Color[objCount];
             Color[] cols2 = new Color[objCount];
@@ -66,7 +65,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
             var referencePoint = cityModel.GeoReference.ReferencePoint;
             for (int i = 0; i < objects.Length; i++)
             {
-                shapetype[counter] = "RegurationArea";
+                shapetype[counter] = "RegulationArea";
                 if (objects[counter].GetComponent<RegulationArea>())
                 {
                     List<Vector2> p = new List<Vector2>();
@@ -92,10 +91,9 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                 }
             }
 
-            Debug.Log("varea : " + viewregurationObjects.Length);
             for (int i = 0; i < viewregurationObjects.Length; i++)
             {
-                shapetype[counter] = "ViewRegulationArea";
+                shapetype[counter] = "ViewRegulation";
                 var viewRegObj = viewregurationObjects[i];
                 if (viewRegObj.GetComponent<ViewRegulation>())
                 {
@@ -123,11 +121,11 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                     List<Vector2> cnt = new List<Vector2>();
 
                     Debug.Log("nvertex : " + mf.mesh.vertices.Length);
-                    foreach ( Vector3 point in mf.mesh.vertices)
+                    foreach (Vector3 point in mf.mesh.vertices)
                     {
                         Vector3 world_v = localToWorld.MultiplyPoint3x4(point);
 
-                        if( n== 0 || n==1 || n == 3)
+                        if (n == 0 || n == 1 || n == 3)
                         {
                             cnt.Add(new Vector2(world_v.x + (float)referencePoint.X, world_v.z + (float)referencePoint.Z));
                         }
@@ -136,14 +134,53 @@ namespace LandscapeDesignTool.Editor.WindowTabs
                     }
                     contours.Add(cnt);
 
-
                     counter++;
-
                 }
-       
             }
 
-            LDTTools.WriteShapeFile(exportPath, shapetype, types, cols1,cols2, heights, originpoint, targetpoint, v2,
+            for (int i = 0; i < heightRestrictionObjects.Length; i++)
+            {
+                shapetype[counter] = "HeightRestrict";
+                Debug.Log(shapetype[counter]);
+                var obj = heightRestrictionObjects[i];
+                var heightRestriction = obj.GetComponent<HeightRegulationAreaHandler>();
+                if (heightRestriction == null)
+                {
+                    counter++;
+                    continue;
+                }
+                types[counter] = "no type";
+                heights[counter] = heightRestriction.AreaHeight;
+                cols1[counter] = heightRestriction.AreaColor;
+                cols2[counter] = heightRestriction.AreaColor;
+                originpoint[counter] = heightRestriction.TargetPoint;
+                targetpoint[counter] = heightRestriction.TargetPoint + Vector3.right * heightRestriction.AreaDiameter / 2;
+
+                v2[counter, 0] = new Vector2(0, 0);
+                v2[counter, 1] = new Vector2(0, 0);
+
+                // 可視化用の円形上生成
+                var contour = new List<Vector2>();
+                var center = new Vector2(heightRestriction.TargetPoint.x, heightRestriction.TargetPoint.z);
+                var radius = heightRestriction.AreaDiameter / 2;
+                for (int j = 0; j < 10; j++)
+                {
+                    var point = center +
+                                new Vector2(
+                                    radius * Mathf.Sin(Mathf.PI * 2f * j / 10),
+                                    radius * Mathf.Cos(Mathf.PI * 2f * j / 10));
+                    var worldPoint =
+                        new Vector2(point.x + (float)referencePoint.X, point.y + (float)referencePoint.Z);
+
+                    contour.Add(worldPoint);
+                }
+
+                contours.Add(contour);
+
+                counter++;
+            }
+
+            LDTTools.WriteShapeFile(exportPath, shapetype, types, cols1, cols2, heights, originpoint, targetpoint, v2,
                 contours);
         }
 
@@ -153,7 +190,7 @@ namespace LandscapeDesignTool.Editor.WindowTabs
 
         public void Update()
         {
-            
+
         }
     }
 }
