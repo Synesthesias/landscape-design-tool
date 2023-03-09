@@ -10,7 +10,7 @@
 
 Unity画面内の再生ボタン(画像上の▷ボタン)を押してシーンを再生することでビルドアプリの動作を確認できます。再生後、右上のメニューボタンを押すことで各機能にアクセスできます。
 
-![](..\resources\buildApp\buildAppMenu.png)
+![](../resources/buildApp/buildAppMenu.png)
 
 ### ウォークスルー(視点移動)機能
 アプリ内での視点操作は以下のように行えます。
@@ -33,7 +33,7 @@ Unity画面内の再生ボタン(画像上の▷ボタン)を押してシーン�
 ### 建築物の意匠変更機能
 メニューから「建築物意匠変更」を選択します。
 
-![](..\resources\buildApp\buildingDesignChange.png)
+![](../resources/buildApp/buildingDesignChange.png)
 
 画面内で選択された建築物の意匠変更を行うことができます。設定方法はマンセル表からの指定とRGBでの指定が可能です。
 
@@ -49,4 +49,4 @@ Unity画面内の再生ボタン(画像上の▷ボタン)を押してシーン�
 
 時間帯の設定に加えて、「晴れ」「薄曇り」「曇り」「雨」「雪」から天候を設定することができます。
 
-![](..\resources\buildApp\weatherSetting.png)
+![](../resources/buildApp/weatherSetting.png)
