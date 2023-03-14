@@ -32,3 +32,4 @@ Unity 2021.3 以上
 ## 参考資料
 
 - 技術検証レポートは後日公開予定です。
+- PLATEAU Webサイト Use case ページ「景観まちづくりＤＸ」 [https://www.mlit.go.jp/plateau/use-case/uc22-045/](https://www.mlit.go.jp/plateau/use-case/uc22-045/)
