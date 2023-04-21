@@ -28,4 +28,5 @@
 
 ## 参考資料
 
-- 技術検証レポートは後日公開予定です。
+- ユースケースレポート : [https://www.mlit.go.jp/plateau/use-case/uc22-045/](https://www.mlit.go.jp/plateau/use-case/uc22-045/)
+- 技術レポート ： [https://www.mlit.go.jp/plateau/file/libraries/doc/plateau_tech_doc_0052_ver01.pdf](https://www.mlit.go.jp/plateau/file/libraries/doc/plateau_tech_doc_0052_ver01.pdf)
