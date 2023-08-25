@@ -25,7 +25,7 @@ Unity Hub を起動します。左サイドバーの `プロジェクト` を押
 
 ## ツールをUnityにインポート
 - [LandscapeDesignToolのtgzファイルをダウンロードします。](https://github.com/Synesthesias/PLATEAU-UC22-045-landscape-design-tool/releases/download/v1.1.0/LandscapeDesignTool-v1.1.0.tgz)
-- [PLATEAU SDK for Unityのリリースページ](https://github.com/Project-PLATEAU/PLATEAU-SDK-for-Unity/releases/tag/v1.1.0)
+- [PLATEAU SDK for Unityのリリースページ](https://github.com/Project-PLATEAU/PLATEAU-SDK-for-Unity/releases)
 から、PLATEAU SDKのtgzファイルをダウンロードします。
 - Unityのメニューバーから `Window` → `Package Manager` を選択します。
 - Package Manager ウィンドウの左上の `＋` ボタンから `Add pacakge from tarball...` を選択します。 
