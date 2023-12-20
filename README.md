@@ -13,7 +13,7 @@ Shapefile形式の景観規制データの読み込み、編集、三次元的�
 
 ## 利用手順
 
-[こちらのマニュアル](https://synesthesias.github.io/PLATEAU-UC22-045-landscape-design-tool) をご覧ください。
+[こちらのマニュアル](https://synesthesias.github.io/landscape-design-tool) をご覧ください。
 
 ## 動作環境
 Unity 2021.3 以上
