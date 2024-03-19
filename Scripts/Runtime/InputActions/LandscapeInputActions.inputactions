@@ -1,0 +1,78 @@
+{
+    "name": "LandscapeInputActions",
+    "maps": [
+        {
+            "name": "CameraMove",
+            "id": "6c44055c-1e86-4691-8401-8004faff279f",
+            "actions": [
+                {
+                    "name": "HorizontalMoveCameraByKeyboard",
+                    "type": "Value",
+                    "id": "065690cd-ff43-4aec-a1e7-2ef6b0b8b366",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "WASD-Key",
+                    "id": "90e42916-ac01-4f7a-af11-8e811bca95c7",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "InvertVector2",
+                    "groups": "",
+                    "action": "HorizontalMoveCameraByKeyboard",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "a3dd2bce-84b7-4ec4-83be-a318c04fa4f7",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "HorizontalMoveCameraByKeyboard",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "e7cded32-30a4-4441-9319-2f44f1e91749",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "HorizontalMoveCameraByKeyboard",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "780e53fd-952b-47d1-b572-7c225a6c2eb1",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "HorizontalMoveCameraByKeyboard",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "05845d7e-f207-483e-8c12-7de9f3c1164c",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "HorizontalMoveCameraByKeyboard",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
