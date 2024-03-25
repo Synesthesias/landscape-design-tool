@@ -1,0 +1,12 @@
+{
+    "name": "com.synesthesias.landscape-design-tool-2",
+    "version": "0.1.0",
+    "displayName": "Landscape-Design-Tool-2",
+    "description": "景観まちづくり支援ツールは、3D都市モデルを活用することで解像度の高い景観計画策定支援及び景観協議円滑化を可能にします。",
+    "unity": "2021.3",
+    "dependencies": {
+    },
+    "author": {
+        "name": "Synesthesias Inc."
+    }
+}
