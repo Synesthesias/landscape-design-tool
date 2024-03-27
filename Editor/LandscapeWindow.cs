@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
-using UnityEngine;
 
 namespace Landscape2.Editor
 {
@@ -15,11 +12,6 @@ namespace Landscape2.Editor
         {
             var window = GetWindow<LandscapeWindow>("Landscape 2");
             window.Show();
-        }
-
-        private void OnGUI()
-        {
-            
         }
     }
 }

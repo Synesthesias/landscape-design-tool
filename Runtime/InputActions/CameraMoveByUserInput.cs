@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,10 +8,15 @@ namespace Landscape2.Runtime
     /// </summary>
     public class CameraMoveByUserInput : LandscapeInputActions.ICameraMoveActions, ISubComponent
     {
-	    private Camera camera;
+	    private readonly Camera camera;
 	    private Vector2 horizontalMoveByKeyboard;
 	    private LandscapeInputActions.CameraMoveActions input;
 	    private const float MoveSpeedByKeyboard = 10f;
+
+	    /// <summary>
+	    /// キーボードでの移動を有効にするかどうかです
+	    /// </summary>
+	    public static bool IsKeyboardActive = true;
 
 	    public CameraMoveByUserInput(Camera camera)
 	    {
@@ -37,7 +40,8 @@ namespace Landscape2.Runtime
 		/// InputActionsからカメラ移動のキーボード操作を受け取り、カメラを移動します。
 		/// </summary>
         public void OnHorizontalMoveCameraByKeyboard(InputAction.CallbackContext context)
-		{
+        {
+	        if (!IsKeyboardActive) return;
 			if (context.performed)
 			{
 				var delta = context.ReadValue<Vector2>();

@@ -1,4 +1,6 @@
 *.unity filter=lfs diff=lfs merge=lfs -text
+# Fonts asset
+Runtime/UiCommon/Fonts/*.asset filter=lfs diff=lfs merge=lfs -text
 # PLATEAU Large File
 *.gml filter=lfs diff=lfs merge=lfs -text
 *.png filter=lfs diff=lfs merge=lfs -text
