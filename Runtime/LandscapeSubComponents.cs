@@ -1,5 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
+using Landscape2.Runtime.CameraPositionMemory;
 using UnityEngine;
 
 namespace Landscape2.Runtime
@@ -13,10 +13,13 @@ namespace Landscape2.Runtime
 
         private void Awake()
         {
+            var mainCam = Camera.main;
+            
             // 必要な機能をここに追加します
             subComponents = new List<ISubComponent>
             {
-                new CameraMoveByUserInput(Camera.main)
+                new CameraMoveByUserInput(mainCam),
+                new CameraPositionMemoryUi(new CameraPositionMemory.CameraPositionMemory(mainCam))
             };
         }
         
