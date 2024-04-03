@@ -6,7 +6,7 @@ namespace Landscape2.Runtime.UiCommon
     /// <summary>
     /// 実行時にUIDocumentを生成します。
     /// </summary>
-    public class UiDocumentFactory
+    public class UIDocumentFactory
     {
         private const string PanelSettingsName = "LandscapePanelSettings";
         private static readonly PanelSettings panelSettingsDefault = Resources.Load<PanelSettings>(PanelSettingsName);

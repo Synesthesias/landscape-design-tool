@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 
 namespace Landscape2.Runtime.UiCommon
 {
-    public class TabUi
+    public class TabUI
     {
         private readonly VisualElement tabRoot;
         private const string ClassNameTab = "tab";
@@ -15,7 +15,7 @@ namespace Landscape2.Runtime.UiCommon
         private VisualElement selectedTab;
         private Dictionary<VisualElement, VisualElement> tabToContent;
 
-        public TabUi(VisualElement tabRoot)
+        public TabUI(VisualElement tabRoot)
         {
             this.tabRoot = tabRoot;
             var tabs = GetAllTabs().ToList();

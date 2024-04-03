@@ -19,7 +19,7 @@ namespace Landscape2.Runtime
             subComponents = new List<ISubComponent>
             {
                 new CameraMoveByUserInput(mainCam),
-                new CameraPositionMemoryUi(new CameraPositionMemory.CameraPositionMemory(mainCam))
+                new CameraPositionMemoryUI(new CameraPositionMemory.CameraPositionMemory(mainCam))
             };
         }
         

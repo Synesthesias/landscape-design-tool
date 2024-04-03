@@ -1,5 +1,6 @@
 
 using Landscape2.Runtime.UiCommon;
+using Landscape2.Runtime.UiCommon;
 using UnityEngine.UIElements;
 
 namespace Landscape2.Runtime.CameraPositionMemory
@@ -7,7 +8,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
     /// <summary>
     /// カメラ位置保存スロットをリネームするためのUIです。
     /// </summary>
-    public class RenameCameraSlotUi
+    public class RenameCameraSlotUI
     {
         private int slotId;
         private string prevSlotName;
@@ -20,15 +21,15 @@ namespace Landscape2.Runtime.CameraPositionMemory
         private Label labelWarningNameLength;
 
         private CameraPositionMemory cameraPositionMemory;
-        private CameraPositionMemoryUi cameraPositionMemoryUi;
+        private CameraPositionMemoryUI cameraPositionMemoryUi;
 
         private const int MaxNameLength = 10;
         
-        public RenameCameraSlotUi(CameraPositionMemory cameraPositionMemoryArg, CameraPositionMemoryUi cameraPositionMemoryUiArg)
+        public RenameCameraSlotUI(CameraPositionMemory cameraPositionMemoryArg, CameraPositionMemoryUI cameraPositionMemoryUiArg)
         {
             cameraPositionMemory = cameraPositionMemoryArg;
 
-            uiRoot = new UiDocumentFactory().CreateWithUxmlName("UiRenameCameraSlot");
+            uiRoot = new UIDocumentFactory().CreateWithUxmlName("UIRenameCameraSlot");
             
             prevSlotNameLabel = uiRoot.Q<Label>("PrevSlotNameLabel");
             nextSlotNameTextField = uiRoot.Q<TextField>("TextFieldSlotName");

@@ -4,7 +4,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
 {
     /// <summary>
     /// カメラの位置を覚えておいて復元します。
-    /// UIは<see cref="CameraPositionMemoryUi"/>が担当します。
+    /// UIは<see cref="CameraPositionMemoryUI"/>が担当します。
     /// </summary>
     public class CameraPositionMemory
     {

@@ -8,7 +8,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
     /// カメラ位置の記憶と復元に関するUIと機能を管理します。
     /// ボタン押下時のメイン処理は <see cref="CameraPositionMemory"/>に委譲します。
     /// </summary>
-    public class CameraPositionMemoryUi : ISubComponent
+    public class CameraPositionMemoryUI : ISubComponent
     {
         private readonly CameraPositionMemory cameraPositionMemory;
         private readonly ButtonWithClickMessage[] saveButtons; // 添字はスロットID
@@ -16,31 +16,31 @@ namespace Landscape2.Runtime.CameraPositionMemory
         private readonly Button saveRestButton;
         private float timeToResetSaveButton;
         private float timeToResetRestoreButton;
-        private readonly RenameCameraSlotUi renameCameraSlotUi;
+        private readonly RenameCameraSlotUI renameCameraSlotUI;
 
-        private const string UiNameCameraRoot = "CameraPosition";
-        private const string UiNameCameraSaveButton = "CameraSaveSlot";
-        private const string UiNameCameraRestoreButton = "CameraRestoreSlot";
-        private const string UiNameSlotRenameButton = "CameraRenameSlot";
-        private const string UiNameResetSaveButton = "ResetCameraSaveButton";
+        private const string UINameCameraRoot = "CameraPosition";
+        private const string UINameCameraSaveButton = "CameraSaveSlot";
+        private const string UINameCameraRestoreButton = "CameraRestoreSlot";
+        private const string UINameSlotRenameButton = "CameraRenameSlot";
+        private const string UINameResetSaveButton = "ResetCameraSaveButton";
         
-        public CameraPositionMemoryUi(CameraPositionMemory cameraPositionMemory)
+        public CameraPositionMemoryUI(CameraPositionMemory cameraPositionMemory)
         {
             this.cameraPositionMemory = cameraPositionMemory;
-            this.renameCameraSlotUi = new RenameCameraSlotUi(cameraPositionMemory, this);
+            this.renameCameraSlotUI = new RenameCameraSlotUI(cameraPositionMemory, this);
 
-            var uiRoot = new UiDocumentFactory().CreateWithUxmlName("UiCameraPositionMemory");
+            var uiRoot = new UIDocumentFactory().CreateWithUxmlName("UICameraPositionMemory");
 
             int slotCount = CameraPositionMemory.SlotCount;
             saveButtons = new ButtonWithClickMessage[slotCount];
             restoreButtons = new ButtonWithClickMessage[slotCount];
-            var cameraUiRoot = uiRoot.Q(UiNameCameraRoot);
-            var cameraTab = new TabUi(cameraUiRoot);
+            var cameraUiRoot = uiRoot.Q(UINameCameraRoot);
+            var cameraTab = new TabUI(cameraUiRoot);
 
             // 保存ボタンの機能を構築
             for (int i = 0; i < slotCount; i++)
             {
-                string saveButtonName = UiNameCameraSaveButton + (i+1);
+                string saveButtonName = UINameCameraSaveButton + (i+1);
                 int slotIndex = i;
                 var buttonUi = cameraUiRoot.Q<Button>(saveButtonName);
                 saveButtons[i] = new ButtonWithClickMessage(
@@ -54,7 +54,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
             // 復元ボタンの機能を構築
             for (int i = 0; i < slotCount; i++)
             {
-                string restoreButtonName = UiNameCameraRestoreButton + (i+1);
+                string restoreButtonName = UINameCameraRestoreButton + (i+1);
                 int slotIndex = i;
                 var buttonUi = cameraUiRoot.Q<Button>(restoreButtonName);
                 restoreButtons[i] = new ButtonWithClickMessage(
@@ -67,7 +67,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
             // 名前変更ボタンの機能を構築
             for (int i = 0; i < slotCount; i++)
             {
-                string renameButtonName = UiNameSlotRenameButton + (i + 1);
+                string renameButtonName = UINameSlotRenameButton + (i + 1);
                 int slotIndex = i;
                 var buttonUis = cameraUiRoot.Query<Button>(renameButtonName);
                 buttonUis.ForEach(button =>
@@ -76,7 +76,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
                 });
             }
 
-            saveRestButton = uiRoot.Q<Button>(UiNameResetSaveButton);
+            saveRestButton = uiRoot.Q<Button>(UINameResetSaveButton);
             saveRestButton.clicked += OnClickedResetSaveButton; 
             
             UpdateButtonState();
@@ -123,7 +123,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
 
         private void OnClickedRenameButton(int slotId)
         {
-            renameCameraSlotUi.Open(slotId, cameraPositionMemory.GetName(slotId));
+            renameCameraSlotUI.Open(slotId, cameraPositionMemory.GetName(slotId));
         }
 
         /// <summary>
