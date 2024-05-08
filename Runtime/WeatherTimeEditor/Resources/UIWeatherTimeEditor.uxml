@@ -1,0 +1,19 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Packages/com.synesthesias.landscape-design-tool-2/Runtime/CameraPositionMemory/UICameraPositionMemoryUss.uss?fileID=7433441132597879392&amp;guid=815a80ab3dcda30469f65b48a26a2ad0&amp;type=3#UICameraPositionMemoryUss" />
+    <Style src="project://database/Packages/com.synesthesias.landscape-design-tool-2/Runtime/UICommon/UIStyleCommon.uss?fileID=7433441132597879392&amp;guid=5003ef441f4ce7e4881f663b95f4df1d&amp;type=3#UIStyleCommon" />
+    <ui:ScrollView show-horizontal-scroller="false" class="menu gis-background-window" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; left: 1%; top: 1%; height: 345px; width: 345px;">
+        <ui:Label text="天気・時間帯変更" display-tooltip-when-elided="true" name="WeatherTimeHeader" class="header" />
+        <ui:VisualElement name="WeatherTimeEditorTab" style="margin-top: 15px; margin-right: 5px; margin-bottom: 15px; margin-left: 5px;">
+            <ui:VisualElement name="WeatherTimeTabContents" class="tab-contents" style="height: 100%; width: 100%;">
+                <ui:VisualElement name="WeatherContent" class="tab-content">
+                    <ui:Label text="天気を変更します" display-tooltip-when-elided="true" class="menu-label" style="-unity-text-align: upper-center; font-size: 11px;" />
+                    <ui:RadioButtonGroup label="Weather" value="-1" choices="Sun,Rain,Cloud,Snow" tabindex="0" focusable="true" name="WeatherChangeButton" class="unity-radio-button-group unity-text-element unity-radio-button_checkmark" style="left: auto; width: auto;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="TimeContent" class="tab-content">
+                    <ui:Label text="時間帯を変更します" display-tooltip-when-elided="true" class="menu-label" style="-unity-text-align: upper-center; font-size: 11px;" />
+                    <ui:Slider label="Time" high-value="1" name="TimeChangeSlider" page-size="0" show-input-field="true" focusable="true" tabindex="0" class="weather-slider" style="width: 320px; height: 36px;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:ScrollView>
+</ui:UXML>
