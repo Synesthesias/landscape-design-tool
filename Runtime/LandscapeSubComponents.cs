@@ -18,9 +18,9 @@ namespace Landscape2.Runtime
             // 必要な機能をここに追加します
             subComponents = new List<ISubComponent>
             {
-                new CameraMoveByUserInput(mainCam),
-                new CameraPositionMemoryUI(new CameraPositionMemory.CameraPositionMemory(mainCam))
-                ,new Test()
+                new CameraMoveByUserInput(mainCam)
+                ,new CameraPositionMemoryUI(new CameraPositionMemory.CameraPositionMemory(mainCam))
+                ,new ArrangeAsset()
             };
         }
         

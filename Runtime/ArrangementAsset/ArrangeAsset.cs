@@ -17,40 +17,41 @@ using RuntimeHandle;
 
 namespace Landscape2.Runtime
 {
-    public class Test : ISubComponent
+    public class ArrangeAsset : ISubComponent
     {
         private RuntimeTransformHandle RuntimeTransformHandleScript;
         private GameObject runtimeTransformHandle;
-        private GameObject selectedPrefab;
-        private GameObject generatePrefab;
+        private GameObject selectedAsset;
+        private GameObject generateAsset;
         private Camera cam;
         private Ray ray;
         private string status;
         private Button deleteButton;
-        private ScrollView prefabListScroll;
+        private ScrollView assetListScroll;
         private VisualElement tabs;
         private VisualElement editTable;
-        private const string UINameRoot = "PrefabMenu";
-        
-        public Test()
+        private const string UINameRoot = "AssetArrageContent";
+        // ---------------------------------------------------------------------------------------------------------------------------------
+        public ArrangeAsset()
         {
-            var ArrangePrefabUI = new UIDocumentFactory().CreateWithUxmlName("PrefabList");
-            // Create Edit Deleteタブの初期化
-            var prefabUiRoot = ArrangePrefabUI.Q(UINameRoot);
-            var prefabTab = new TabUI(prefabUiRoot);
-            tabs = ArrangePrefabUI.Q<VisualElement>("tabs");
+            var ArrangementAssetUI = new UIDocumentFactory().CreateWithUxmlName("ArrangementAssetUI");
+            // Create Edit Deleteボタンの機能
+            var AssetArrageContent = ArrangementAssetUI.Q(UINameRoot);
+            var assetTab = new TabUI(AssetArrageContent);
+            tabs = ArrangementAssetUI.Q<VisualElement>("tabs");
             foreach(var child in tabs.Children())
             {
                 if (child is Button tab)
                 {
                     tab.clicked += () => 
                     {
+                        InitializeHandle();
                         status = tab.text; 
                     };
                 }
             }
-
-            editTable =  ArrangePrefabUI.Q<VisualElement>("EditTable");
+            // Transrate Rotate Scaleボタンの機能
+            editTable =  ArrangementAssetUI.Q<VisualElement>("EditTable");
             foreach(var child in editTable.Children())
             {
                 if (child is Button tab)
@@ -61,13 +62,26 @@ namespace Landscape2.Runtime
                     };
                 }
             }
-            prefabListScroll= ArrangePrefabUI.Q<ScrollView>("AssetScroll");
-            deleteButton = ArrangePrefabUI.Q<Button>("DeleteButton");
-            
-
-            status = "Create";
+            assetListScroll= ArrangementAssetUI.Q<ScrollView>("CreateTable");
+            deleteButton = ArrangementAssetUI.Q<Button>("DeleteButton");
         }
-
+        void InitializeHandle()
+        {
+            // 作成状態の初期化
+            if(generateAsset != null)
+            {
+                GameObject.Destroy(generateAsset);
+            }
+            // 編集状態の初期化
+            RuntimeTransformHandleScript.target = GameObject.Find("Scripts").transform;
+            // 削除状態の初期化
+            GameObject[] selectedObjects = GameObject.FindGameObjectsWithTag("DeleteAssets");
+            foreach(GameObject obj in selectedObjects)
+            {
+                obj.tag = "PlateauAssets_Props";
+                SetLayerRecursively(obj,0);
+            }
+        }
         void SetTransformType(string name)
         {
             if(RuntimeTransformHandleScript != null)
@@ -89,25 +103,22 @@ namespace Landscape2.Runtime
                 }
             }
         }
-
+        // ---------------------------------------------------------------------------------------------------------------------------------
         public async void OnEnable()
         {
-            // Addressables.LoadAssetAsyncで読み込む
-            AsyncOperationHandle<IList<GameObject>> prefabHandle = Addressables.LoadAssetsAsync<GameObject>("Plateau_Prefabs", null);
-            AsyncOperationHandle<GameObject> runtimeHandle = Addressables.LoadAssetAsync<GameObject>("Assets/ArragementAsset/Asset/RuntimeTransformHandle.prefab");
-
-            // .Taskで読み込み完了までawaitできる
+            // アセットの取得
+            AsyncOperationHandle<IList<GameObject>> assetHandle = Addressables.LoadAssetsAsync<GameObject>("PlateauProps_Assets", null);
+            IList<GameObject> assets = await assetHandle.Task;
+            // RuntimeTransformHandle.csの参照
+            AsyncOperationHandle<GameObject> runtimeHandle = Addressables.LoadAssetAsync<GameObject>("Packages/com.synesthesias.landscape-design-tool-2/Runtime/ArrangementAsset/Prefab/RuntimeTransformHandle.prefab");
             GameObject runtimeTransformHandle = await runtimeHandle.Task;
-            IList<GameObject> prefabs = await prefabHandle.Task;
-
             GameObject runtimeTransformHandleObject = GameObject.Instantiate(runtimeTransformHandle) as GameObject;
             RuntimeTransformHandleScript = GameObject.Find(runtimeTransformHandle.name + "(Clone)").GetComponent<RuntimeTransformHandle>();
+
             RuntimeTransformHandleScript.autoScale = true;
-            CreateButton(prefabs);
+            CreateButton(assets);
         }
-        // ボタンに関する関数
-        // ---------------------------------------------------------------------------------------------------------------------------------
-        private void CreateButton(IList<GameObject> prefabs)
+        private void CreateButton(IList<GameObject> assets)
         {
             // Flexコンテナを作成し、ScrollViewに追加
             VisualElement flexContainer = new VisualElement();
@@ -115,36 +126,36 @@ namespace Landscape2.Runtime
             flexContainer.style.flexWrap = Wrap.Wrap; // 子要素がコンテナを超えた場合に折り返し
             flexContainer.style.width = new Length(100, LengthUnit.Percent); // 100%の幅を持つように設定
             flexContainer.style.height = new Length(100, LengthUnit.Percent); // 高さも親の100%
-
-            foreach (GameObject prefab in prefabs)
+            // アセットをスクロールバーで表示させる
+            foreach (GameObject asset in assets)
             {
                 Button newButton = new Button()
                 {
-                    text = prefab.name,
-                    name = prefab.name // ボタンに名前を付ける
+                    text = asset.name,
+                    name = asset.name // ボタンに名前を付ける
                 };
                 newButton.style.height = 100;
                 newButton.style.width = flexContainer.style.width;
-                newButton.name = prefab.name;
+                newButton.name = asset.name;
                 newButton.clicked += () => 
                 {
-                    OnSetPrefab(prefab.name, prefabs);
+                    OnSetAsset(asset.name, assets);
                 };
                 flexContainer.Add(newButton);
             }
-            prefabListScroll.Add(flexContainer);
+            assetListScroll.Add(flexContainer);
 
-            deleteButton.clicked += OndeletePrefab;
+            deleteButton.clicked += OnDeleteAsset;
         }
-        // ---------------------------------------------------------------------------------------------------------------------------------
-        private void OnSetPrefab(string prefabName,IList<GameObject> prefabs)
+        
+        private void OnSetAsset(string assetName,IList<GameObject> assets)
         {
-            // 選択されたオブジェクトの生成
-            selectedPrefab = prefabs.FirstOrDefault(p => p.name == prefabName);
-            generatePrefabs();
-            status = "Set";
+            // 選択されたアセットを取得
+            selectedAsset = assets.FirstOrDefault(p => p.name == assetName);
+            generateAssets();
+            status = "Create";
         }
-        private void generatePrefabs()
+        private void generateAssets()
         {
             cam = Camera.main;
             ray = cam.ScreenPointToRay(Input.mousePosition);
@@ -153,69 +164,70 @@ namespace Landscape2.Runtime
                 // UI要素上でクリックが行われた場合、ここで処理を終了
                 if(EventSystem.current.IsPointerOverGameObject())
                 {
-                    GameObject.Destroy(generatePrefab);
+                    GameObject.Destroy(generateAsset);
                 }
-                generatePrefab = GameObject.Instantiate(selectedPrefab, hit.point, Quaternion.identity) as GameObject;
-                generatePrefab.tag = "PlateauAssets_Props";
-                int generateLayer = LayerMask.NameToLayer("generatePrefab");
-                SetLayerRecursively(generatePrefab, generateLayer); 
+                generateAsset = GameObject.Instantiate(selectedAsset, hit.point, Quaternion.identity) as GameObject;
+                generateAsset.tag = "PlateauAssets_Props";
+                int generateLayer = LayerMask.NameToLayer("generateAsset");
+
+                SetLayerRecursively(generateAsset, generateLayer); 
             }
         }
 
-        private void OndeletePrefab()
+        private void OnDeleteAsset()
         {
-            GameObject[] selectedObjects = GameObject.FindGameObjectsWithTag("DeletePrefabs");
+            GameObject[] selectedObjects = GameObject.FindGameObjectsWithTag("DeleteAssets");
             foreach(GameObject obj in selectedObjects)
             {
                 GameObject.Destroy(obj);
             }
         }
+        // ---------------------------------------------------------------------------------------------------------------------------------
 
         public void Update(float deltaTime)
         {
-            if(status == "Set")
+            if(status == "Create")
             {
-                SetPrefab();
+                CreateAsset();
             }
             else if(status == "Edit")
             {
-                EditPrefab();
+                EditAsset();
             }
             else if(status == "Delete")
             {
-                DeletePrefab();
+                DeleteAsset();
             }
         }
 
-        void SetPrefab()
+        void CreateAsset()
         {
             
             // 左クリックで位置確定
             if(Input.GetMouseButtonDown(0))
             {
-                SetLayerRecursively(generatePrefab,0);
-                generatePrefabs();
+                SetLayerRecursively(generateAsset,0);
+                generateAssets();
                 return;
             }
             // 右クリックで選択解除
             if(Input.GetMouseButtonDown(1))
             {
-                GameObject.Destroy(generatePrefab);
-                // SetLayerRecursively(generatePrefab,0);
+                GameObject.Destroy(generateAsset);
                 status = "";
                 return;
             }
 
             cam = Camera.main;
             ray = cam.ScreenPointToRay(Input.mousePosition);
-            int layerMask = LayerMask.GetMask("generatePrefab");
+            int layerMask = LayerMask.GetMask("generateAsset");
             layerMask = ~layerMask;
             if (Physics.Raycast(ray, out RaycastHit hit,Mathf.Infinity,layerMask))
             {
-                generatePrefab.transform.position = hit.point;
+                generateAsset.transform.position = hit.point;
             }
         }
-        void EditPrefab()
+        void EditAsset()
         {
             if(Input.GetMouseButtonDown(0))
             {
@@ -233,7 +245,7 @@ namespace Landscape2.Runtime
                 return;
             }
         }
-        void DeletePrefab()
+        void DeleteAsset()
         {
             if(Input.GetMouseButtonDown(0))
             {
@@ -243,14 +255,13 @@ namespace Landscape2.Runtime
                 {
                     if (hit.collider.tag == "PlateauAssets_Props")
                     {
-                        int deleteLayer = LayerMask.NameToLayer("deletePrefab");
+                        hit.collider.tag = "DeleteAssets";
+                        int deleteLayer = LayerMask.NameToLayer("deleteAsset");
                         SetLayerRecursively(hit.collider.gameObject, deleteLayer);
-                        hit.collider.tag = "DeletePrefabs";
                     }
-                    else if(hit.collider.tag == "DeletePrefabs")
+                    else if(hit.collider.tag == "DeleteAssets")
                     {
                         hit.collider.tag = "PlateauAssets_Props";
-                        int deleteLayer = LayerMask.NameToLayer("deletePrefab");
                         SetLayerRecursively(hit.collider.gameObject,0);
                     }
                 }
@@ -258,7 +269,7 @@ namespace Landscape2.Runtime
             }
             if(Input.GetMouseButtonDown(1))
             {
-                GameObject[] selectedObjects = GameObject.FindGameObjectsWithTag("DeletePrefabs");
+                GameObject[] selectedObjects = GameObject.FindGameObjectsWithTag("DeleteAssets");
                 foreach(GameObject obj in selectedObjects)
                 {
                     SetLayerRecursively(obj,0);
@@ -267,6 +278,7 @@ namespace Landscape2.Runtime
                 return;
             }
         }
+        // ---------------------------------------------------------------------------------------------------------------------------------
         void SetLayerRecursively(GameObject obj, int newLayer)
         {
             if (obj == null)
@@ -282,7 +294,7 @@ namespace Landscape2.Runtime
                 SetLayerRecursively(child.gameObject, newLayer);
             }
         }
-
+        // ---------------------------------------------------------------------------------------------------------------------------------
         public void OnDisable()
         {
         }
