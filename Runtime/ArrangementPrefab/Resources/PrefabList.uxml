@@ -1,0 +1,22 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/ArragementAsset/UI/UIStyleCommon.uss?fileID=7433441132597879392&amp;guid=55cf801ba6c04fb41973db0382c4d4e4&amp;type=3#UIStyleCommon" />
+    <Style src="project://database/Assets/ArragementAsset/UI/UICameraPositionMemoryUss.uss?fileID=7433441132597879392&amp;guid=1e9083e42ec777f4ca0ab67ddc7e2df6&amp;type=3#UICameraPositionMemoryUss" />
+    <ui:VisualElement name="PrefabMenu" class="gis-background-window" style="flex-grow: 1; position: absolute; right: 0; width: 30%; height: 14%;">
+        <ui:VisualElement name="tabs" class="tabs" style="flex-grow: 1;">
+            <ui:Button text="Create" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Create" class="menu-unity-button tab tab-leftmost tab-selected" style="width: 30%; height: 80%; top: 5%; position: absolute; left: 3%;" />
+            <ui:Button text="Edit" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Edit" class="menu-unity-button tab" style="width: 30%; height: 80%; top: 5%; position: absolute; left: 35%;" />
+            <ui:Button text="Delete" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Delete" class="menu-unity-button tab tab-rightmost" style="width: 30%; height: 80%; top: 5%; right: 3%; position: absolute;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="TabContents" class="tab-contents" style="flex-grow: 1; position: absolute; height: 547%; top: 141%; width: 100%;">
+            <ui:ScrollView name="AssetScroll" class="gis-background-window tab-content" style="height: 100%; right: auto; top: auto; width: 100%; position: relative;" />
+            <ui:VisualElement name="EditTable" class="tab-content" style="flex-grow: 1; width: 100%; height: 100%; position: relative; left: auto; background-color: rgba(0, 0, 0, 0.67);">
+                <ui:Button text="Transrate" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Transrate" class="menu-unity-button" style="width: 50%; position: relative;" />
+                <ui:Button text="Rotate" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Rotate" class="menu-unity-button" style="width: 50%; top: 33%; position: absolute;" />
+                <ui:Button text="Size" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Size" class="menu-unity-button" style="width: 50%; top: 66%; position: absolute;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="DeleteTable" class="tab-content" style="flex-grow: 1; width: 100%; height: 100%; position: relative;">
+                <ui:Button text="Delete" parse-escape-sequences="true" display-tooltip-when-elided="true" name="DeleteButton" style="position: absolute; width: 100%; bottom: 0;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
