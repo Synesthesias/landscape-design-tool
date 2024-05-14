@@ -1,5 +1,8 @@
 using UnityEngine;
 using PlateauToolkit.Rendering;
+using System;
+using Codice.Client.Common;
+using UnityEngine.UIElements;
 
 namespace Landscape2.Runtime.WeatherTimeEditor
 {
@@ -17,6 +20,7 @@ namespace Landscape2.Runtime.WeatherTimeEditor
             Snow
         }
         EnvironmentController environmentController;
+        Weather currentWeather = Weather.Sun; // 現在の天候
 
         public WeatherTimeEditor()
         {
@@ -27,8 +31,8 @@ namespace Landscape2.Runtime.WeatherTimeEditor
         /// </summary>
         public void SwitchWeather(int weatherID)
         {
-            Weather weather = (Weather)weatherID;
-            switch (weather)
+            currentWeather = (Weather)weatherID;
+            switch (currentWeather)
             {
                 case Weather.Sun:
                     environmentController.m_Rain = 0.0f;
@@ -59,8 +63,59 @@ namespace Landscape2.Runtime.WeatherTimeEditor
         /// </summary>
         public void EditTime(float timeValue)
         {
-            environmentController.m_TimeOfDay = timeValue;
+            // 晴れのときのみtimeValueをEnvironmentControllerのTimeOfDay値と同期させる
+            if (currentWeather == Weather.Sun)
+            {
+                environmentController.m_SunIntensity = 100000f;
+                environmentController.m_TimeOfDay = timeValue;  
+            }
+            else
+            {
+                // 空の色を固定する
+                environmentController.m_TimeOfDay = 0.5f;
+                // 雨・曇り・雪のときは太陽光の強さを変更することで時間帯を表現
+                // timeValueが0.5f(12:00)のとき太陽光の強さが最大, 0.0f(0:00)と1.0f(24:00)のとき最小
+                environmentController.m_SunIntensity = Mathf.Sin(2 * Mathf.PI * 0.5f * timeValue) * 100000f;
+            }
+        }
+        /// <summary>
+        /// timeValue値から時刻を計算
+        /// </summary>
+        DateTime CalculateTime(float timeValue)
+        {
+            int year = (int)environmentController.m_Date.x;
+            int month = (int)environmentController.m_Date.y;
+            int day = (int)environmentController.m_Date.z;
+            double totalHours = timeValue * 24;
+            int hour = (int)totalHours;
+            int minute = (int)((totalHours - hour) * 60);
+            int second = (int)((((totalHours - hour) * 60) - minute) * 60);
+            DateTime combinedDateTime;
+
+            if (timeValue >= 0.9999)
+            {
+                hour = hour % 24;
+            }
+
+            try
+            {
+                combinedDateTime = new DateTime(year, month, day, hour, minute, second, environmentController.m_TimeZone);
+            }
+            catch
+            {
+
+                combinedDateTime = DateTime.Now;
+            }
+
+            return combinedDateTime;
+        }
+        /// <summary>
+        /// timeValue値から(HH:mm)のフォーマットで時刻を取得
+        /// </summary>
+        public string GetTimeString(float timeValue)
+        {      
+            DateTime time = CalculateTime(timeValue);
+            return time.ToString("HH:mm");
         }
     }
-
 }
