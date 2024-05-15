@@ -47,8 +47,8 @@ namespace Landscape2.Runtime
 
             var arrangementAssetUI = new UIDocumentFactory().CreateWithUxmlName("ArrangementAssetUI");
             // Create Edit Deleteボタンの機能
-            var assetArrageContent = arrangementAssetUI.Q(UINameRoot);
-            var assetTab = new TabUI(assetArrageContent);
+            var assetArrangeContent = arrangementAssetUI.Q(UINameRoot);
+            var assetTab = new TabUI(assetArrangeContent);
             var tabs = arrangementAssetUI.Q<VisualElement>("tabs");
             foreach(var child in tabs.Children())
             {
@@ -157,14 +157,14 @@ namespace Landscape2.Runtime
         }
         public void OnSelect(InputAction.CallbackContext context)
         {
-            if(context.performed)
+            if(context.performed && currentMode != null)
             {
                 currentMode.OnSelect();
             }
         }
         public void OnCancel(InputAction.CallbackContext context)
         {
-            if(context.performed)
+            if(context.performed && currentMode != null)
             {
                 currentMode.OnCancel();
             }
