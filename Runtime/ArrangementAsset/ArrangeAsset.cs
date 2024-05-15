@@ -11,101 +11,85 @@ using UnityEditor;
 using UnityEngine.UIElements;
 using Landscape2.Runtime.UiCommon;
 
-using System.Linq;
-
 using RuntimeHandle;
+
+using UnityEngine.InputSystem;
 
 namespace Landscape2.Runtime
 {
-    public class ArrangeAsset : ISubComponent
+    // CreateAsset,EditAsset,DeleteAssetクラスの基底クラス
+    public abstract class ArrangeMode
     {
-        private RuntimeTransformHandle RuntimeTransformHandleScript;
-        private GameObject runtimeTransformHandle;
-        private GameObject selectedAsset;
-        private GameObject generateAsset;
-        private Camera cam;
-        private Ray ray;
-        private string status;
-        private Button deleteButton;
+        public virtual void OnEnable() {}
+        public virtual void OnDisable() {}
+        public abstract void Update();
+        public virtual void OnSelect(){}
+        public virtual void OnCancel(){}
+    }
+    public class ArrangeAsset : ISubComponent,LandscapeInputActions.IArrangeAssetActions
+    {
         private ScrollView assetListScroll;
-        private VisualElement tabs;
         private VisualElement editTable;
-        private const string UINameRoot = "AssetArrageContent";
-        // ---------------------------------------------------------------------------------------------------------------------------------
+        private const string UINameRoot = "AssetArrangeContent";
+        private LandscapeInputActions.ArrangeAssetActions input;
+
+
+        private ArrangeMode currentMode;
+        private CreateMode createMode;
+        private EditMode editMode;
+        private DeleteMode deleteMode;
+
         public ArrangeAsset()
         {
-            var ArrangementAssetUI = new UIDocumentFactory().CreateWithUxmlName("ArrangementAssetUI");
+            createMode = new CreateMode();
+            editMode = new EditMode();
+            deleteMode = new DeleteMode();
+
+            var arrangementAssetUI = new UIDocumentFactory().CreateWithUxmlName("ArrangementAssetUI");
             // Create Edit Deleteボタンの機能
-            var AssetArrageContent = ArrangementAssetUI.Q(UINameRoot);
-            var assetTab = new TabUI(AssetArrageContent);
-            tabs = ArrangementAssetUI.Q<VisualElement>("tabs");
+            var assetArrageContent = arrangementAssetUI.Q(UINameRoot);
+            var assetTab = new TabUI(assetArrageContent);
+            var tabs = arrangementAssetUI.Q<VisualElement>("tabs");
             foreach(var child in tabs.Children())
             {
                 if (child is Button tab)
                 {
                     tab.clicked += () => 
                     {
-                        InitializeHandle();
-                        status = tab.text; 
+                        SetMode(tab.name);
                     };
                 }
             }
-            // Transrate Rotate Scaleボタンの機能
-            editTable =  ArrangementAssetUI.Q<VisualElement>("EditTable");
+            // Position Rotation Scaleボタンの機能
+            editTable =  arrangementAssetUI.Q<VisualElement>("EditTable");
             foreach(var child in editTable.Children())
             {
                 if (child is Button tab)
                 {
                     tab.clicked += () => 
                     {
-                        SetTransformType(tab.text);
+                        editMode.SetTransformType(tab.name);
                     };
                 }
             }
-            assetListScroll= ArrangementAssetUI.Q<ScrollView>("CreateTable");
-            deleteButton = ArrangementAssetUI.Q<Button>("DeleteButton");
-        }
-        void InitializeHandle()
-        {
-            // 作成状態の初期化
-            if(generateAsset != null)
+            assetListScroll= arrangementAssetUI.Q<ScrollView>("CreateTable");
+
+            Button deleteButton = arrangementAssetUI.Q<Button>("DeleteButton");
+            deleteButton.clicked += () => 
             {
-                GameObject.Destroy(generateAsset);
-            }
-            // 編集状態の初期化
-            RuntimeTransformHandleScript.target = GameObject.Find("Scripts").transform;
-            // 削除状態の初期化
-            GameObject[] selectedObjects = GameObject.FindGameObjectsWithTag("DeleteAssets");
-            foreach(GameObject obj in selectedObjects)
-            {
-                obj.tag = "PlateauAssets_Props";
-                SetLayerRecursively(obj,0);
-            }
+                deleteMode.DeleteAsset();
+            };
+
         }
-        void SetTransformType(string name)
-        {
-            if(RuntimeTransformHandleScript != null)
-            {
-                if(name == "Transrate")
-                {
-                    RuntimeTransformHandleScript.type = HandleType.POSITION;
-                    RuntimeTransformHandleScript.axes = HandleAxes.XYZ;
-                }
-                if(name == "Rotate")
-                {
-                    RuntimeTransformHandleScript.type = HandleType.ROTATION;
-                    RuntimeTransformHandleScript.axes = HandleAxes.Y;
-                }
-                if(name == "Size")
-                {
-                    RuntimeTransformHandleScript.type = HandleType.SCALE;
-                    RuntimeTransformHandleScript.axes = HandleAxes.XYZ;
-                }
-            }
-        }
-        // ---------------------------------------------------------------------------------------------------------------------------------
+
         public async void OnEnable()
         {
+            // 作成するAssetの親オブジェクトの作成
+            GameObject createdAsset = new GameObject("CreatedAssets");
+            // ユーザーの操作を受け取る準備
+            input = new LandscapeInputActions.ArrangeAssetActions(new LandscapeInputActions());
+            input.SetCallbacks(this);
+            input.Enable();
             // アセットの取得
             AsyncOperationHandle<IList<GameObject>> assetHandle = Addressables.LoadAssetsAsync<GameObject>("PlateauProps_Assets", null);
             IList<GameObject> assets = await assetHandle.Task;
@@ -113,19 +97,15 @@ namespace Landscape2.Runtime
             AsyncOperationHandle<GameObject> runtimeHandle = Addressables.LoadAssetAsync<GameObject>("Packages/com.synesthesias.landscape-design-tool-2/Runtime/ArrangementAsset/Prefab/RuntimeTransformHandle.prefab");
             GameObject runtimeTransformHandle = await runtimeHandle.Task;
             GameObject runtimeTransformHandleObject = GameObject.Instantiate(runtimeTransformHandle) as GameObject;
-            RuntimeTransformHandleScript = GameObject.Find(runtimeTransformHandle.name + "(Clone)").GetComponent<RuntimeTransformHandle>();
-
-            RuntimeTransformHandleScript.autoScale = true;
+            runtimeTransformHandleObject.name = "runtimeTransformHandleObject";
             CreateButton(assets);
+
+            SetMode("Create");
         }
         private void CreateButton(IList<GameObject> assets)
         {
             // Flexコンテナを作成し、ScrollViewに追加
             VisualElement flexContainer = new VisualElement();
-            flexContainer.style.flexDirection = FlexDirection.Row; // 子要素を行方向に配置
-            flexContainer.style.flexWrap = Wrap.Wrap; // 子要素がコンテナを超えた場合に折り返し
-            flexContainer.style.width = new Length(100, LengthUnit.Percent); // 100%の幅を持つように設定
-            flexContainer.style.height = new Length(100, LengthUnit.Percent); // 高さも親の100%
             // アセットをスクロールバーで表示させる
             foreach (GameObject asset in assets)
             {
@@ -134,169 +114,64 @@ namespace Landscape2.Runtime
                     text = asset.name,
                     name = asset.name // ボタンに名前を付ける
                 };
-                newButton.style.height = 100;
-                newButton.style.width = flexContainer.style.width;
+                newButton.AddToClassList("AssetButton");
                 newButton.name = asset.name;
                 newButton.clicked += () => 
                 {
-                    OnSetAsset(asset.name, assets);
+                    createMode.SetAsset(asset.name, assets);
                 };
                 flexContainer.Add(newButton);
             }
-            assetListScroll.Add(flexContainer);
 
-            deleteButton.clicked += OnDeleteAsset;
+            assetListScroll.Add(flexContainer);
         }
         
-        private void OnSetAsset(string assetName,IList<GameObject> assets)
+        public void SetMode(string mode)
         {
-            // 選択されたアセットを取得
-            selectedAsset = assets.FirstOrDefault(p => p.name == assetName);
-            generateAssets();
-            status = "Create";
-        }
-        private void generateAssets()
-        {
-            cam = Camera.main;
-            ray = cam.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit,Mathf.Infinity))
+            if (currentMode != null)
             {
-                // UI要素上でクリックが行われた場合、ここで処理を終了
-                if(EventSystem.current.IsPointerOverGameObject())
-                {
-                    GameObject.Destroy(generateAsset);
-                }
-                generateAsset = GameObject.Instantiate(selectedAsset, hit.point, Quaternion.identity) as GameObject;
-                generateAsset.tag = "PlateauAssets_Props";
-                int generateLayer = LayerMask.NameToLayer("generateAsset");
-
-                SetLayerRecursively(generateAsset, generateLayer); 
+                currentMode.OnDisable();
             }
-        }
 
-        private void OnDeleteAsset()
-        {
-            GameObject[] selectedObjects = GameObject.FindGameObjectsWithTag("DeleteAssets");
-            foreach(GameObject obj in selectedObjects)
+            if (mode.Contains("Create"))
             {
-                GameObject.Destroy(obj);
+                currentMode = createMode;
             }
+            else if (mode.Contains("Edit"))
+            {
+                currentMode = editMode;
+            }
+            else if (mode.Contains("Delete"))
+            {
+                currentMode = deleteMode;
+            }
+            currentMode.OnEnable();
         }
-        // ---------------------------------------------------------------------------------------------------------------------------------
 
         public void Update(float deltaTime)
         {
-            if(status == "Create")
+            if(currentMode != null)
             {
-                CreateAsset();
-            }
-            else if(status == "Edit")
-            {
-                EditAsset();
-            }
-            else if(status == "Delete")
-            {
-                DeleteAsset();
+                currentMode.Update();
             }
         }
-
-        void CreateAsset()
+        public void OnSelect(InputAction.CallbackContext context)
         {
-            
-            // 左クリックで位置確定
-            if(Input.GetMouseButtonDown(0))
+            if(context.performed)
             {
-                SetLayerRecursively(generateAsset,0);
-                generateAssets();
-                return;
-            }
-            // 右クリックで選択解除
-            if(Input.GetMouseButtonDown(1))
-            {
-                GameObject.Destroy(generateAsset);
-                status = "";
-                return;
-            }
-
-            cam = Camera.main;
-            ray = cam.ScreenPointToRay(Input.mousePosition);
-            int layerMask = LayerMask.GetMask("generateAsset");
-            layerMask = ~layerMask;
-            if (Physics.Raycast(ray, out RaycastHit hit,Mathf.Infinity,layerMask))
-            {
-                generateAsset.transform.position = hit.point;
+                currentMode.OnSelect();
             }
         }
-        void EditAsset()
+        public void OnCancel(InputAction.CallbackContext context)
         {
-            if(Input.GetMouseButtonDown(0))
+            if(context.performed)
             {
-                
-                Camera cam = Camera.main;
-                Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-                if (Physics.Raycast(ray, out RaycastHit hit,Mathf.Infinity))
-                {
-                    // タグが一致した場合、オブジェクトの名前をログに出力
-                    if (hit.collider.tag == "PlateauAssets_Props")
-                    {
-                        RuntimeTransformHandleScript.target = hit.collider.gameObject.transform;                           
-                    }
-                }
-                return;
+                currentMode.OnCancel();
             }
         }
-        void DeleteAsset()
-        {
-            if(Input.GetMouseButtonDown(0))
-            {
-                Camera cam = Camera.main;
-                Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-                if (Physics.Raycast(ray, out RaycastHit hit,Mathf.Infinity))
-                {
-                    if (hit.collider.tag == "PlateauAssets_Props")
-                    {
-                        hit.collider.tag = "DeleteAssets";
-                        int deleteLayer = LayerMask.NameToLayer("deleteAsset");
-                        SetLayerRecursively(hit.collider.gameObject, deleteLayer);
-                    }
-                    else if(hit.collider.tag == "DeleteAssets")
-                    {
-                        hit.collider.tag = "PlateauAssets_Props";
-                        SetLayerRecursively(hit.collider.gameObject,0);
-                    }
-                }
-                return;
-            }
-            if(Input.GetMouseButtonDown(1))
-            {
-                GameObject[] selectedObjects = GameObject.FindGameObjectsWithTag("DeleteAssets");
-                foreach(GameObject obj in selectedObjects)
-                {
-                    SetLayerRecursively(obj,0);
-                    obj.tag = "PlateauAssets_Props";
-                }
-                return;
-            }
-        }
-        // ---------------------------------------------------------------------------------------------------------------------------------
-        void SetLayerRecursively(GameObject obj, int newLayer)
-        {
-            if (obj == null)
-                return;
-
-            obj.layer = newLayer;
-
-            foreach (Transform child in obj.transform)
-            {
-                if (child == null)
-                    continue;
-
-                SetLayerRecursively(child.gameObject, newLayer);
-            }
-        }
-        // ---------------------------------------------------------------------------------------------------------------------------------
         public void OnDisable()
         {
+            input.Disable();
         }
     }
 }

@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: 02_Selection_Fullscreen
-  m_Shader: {fileID: 4800000, guid: 487b78c49bcb1e04abf2137faf964558, type: 3}
+  m_Shader: {fileID: 4800000, guid: c2bf29db891d9074ea3a45cfa03d3ad9, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
