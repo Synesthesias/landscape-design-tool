@@ -29,9 +29,9 @@ namespace Landscape2.Runtime.WeatherTimeEditor
 
         public WeatherTimeEditor()
         {
-            environmentObj = GameObject.FindObjectOfType<EnvironmentController>().gameObject;
+            environmentController = GameObject.FindObjectOfType<EnvironmentController>();
             // EnvironmentControllerがSceneに存在しない場合はResourcesからEnvironmentプレハブを読み込み生成する
-            if (environmentObj == null)
+            if (environmentController == null)
             {
                 var environment = Resources.Load("Environment") as GameObject;
                 if (environment == null)
@@ -40,8 +40,12 @@ namespace Landscape2.Runtime.WeatherTimeEditor
                 }
                 environmentObj = GameObject.Instantiate(environment);
                 environmentObj.name = environment.name;
+                environmentController = environmentObj.GetComponent<EnvironmentController>();   
             }
-            environmentController = environmentObj.GetComponent<EnvironmentController>();
+            else 
+            { 
+                environmentObj = environmentController.gameObject;
+            }
 
             // EnvironmentプレハブのEnvironment VolumeにあるVolumeコンポーネントを取得
             volumeObj = environmentObj.transform.Find("Environment Volume").gameObject;
