@@ -1,8 +1,8 @@
 using UnityEngine;
 using PlateauToolkit.Rendering;
 using System;
-using Codice.Client.Common;
-using UnityEngine.UIElements;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.HighDefinition;
 
 namespace Landscape2.Runtime.WeatherTimeEditor
 {
@@ -19,12 +19,46 @@ namespace Landscape2.Runtime.WeatherTimeEditor
             Cloud,
             Snow
         }
-        EnvironmentController environmentController;
-        Weather currentWeather = Weather.Sun; // 現在の天候
+
+        private EnvironmentController environmentController;
+        private Weather currentWeather; // 現在の天候
+        private GameObject environmentObj; // Environmentプレハブを格納するGameObject
+        private GameObject volumeObj; // Environment Volumeを格納するGameObject
+        private Volume volume;
+        private VisualEnvironment visualEnvironment;
 
         public WeatherTimeEditor()
         {
-            environmentController = GameObject.Find("Environment").GetComponent<EnvironmentController>();
+            environmentObj = GameObject.FindObjectOfType<EnvironmentController>().gameObject;
+            // EnvironmentControllerがSceneに存在しない場合はResourcesからEnvironmentプレハブを読み込み生成する
+            if (environmentObj == null)
+            {
+                var environment = Resources.Load("Environment") as GameObject;
+                if (environment == null)
+                {
+                    Debug.LogError("Failed to load Environment Prefab.");
+                }
+                environmentObj = GameObject.Instantiate(environment);
+                environmentObj.name = environment.name;
+            }
+            environmentController = environmentObj.GetComponent<EnvironmentController>();
+
+            // EnvironmentプレハブのEnvironment VolumeにあるVolumeコンポーネントを取得
+            volumeObj = environmentObj.transform.Find("Environment Volume").gameObject;
+            if (volumeObj == null)
+            {
+                Debug.LogError("Failed to load Environment Volume.");
+            }
+            volume = volumeObj.GetComponent<Volume>();
+
+            // VolumeコンポーネントにあるVisualEnvironmentを取得
+            volume.profile.TryGet(out visualEnvironment);
+            if(visualEnvironment == null)
+            {
+                Debug.LogError("Failed to load VisualEnvironment.");
+            }
+
+            currentWeather = Weather.Sun;
         }
         /// <summary>
         /// 天候を変更
@@ -63,25 +97,24 @@ namespace Landscape2.Runtime.WeatherTimeEditor
         /// </summary>
         public void EditTime(float timeValue)
         {
-            // 晴れのときのみtimeValueをEnvironmentControllerのTimeOfDay値と同期させる
+            environmentController.m_TimeOfDay = timeValue;
+
+            // 晴れのときとそうでないときでSkyTypeを変更
             if (currentWeather == Weather.Sun)
             {
-                environmentController.m_SunIntensity = 100000f;
-                environmentController.m_TimeOfDay = timeValue;  
+                // SkyTypeをPhysically Based Skyに変更
+                visualEnvironment.skyType.value = (int)SkyType.PhysicallyBased;
             }
             else
             {
-                // 空の色を固定する
-                environmentController.m_TimeOfDay = 0.5f;
-                // 雨・曇り・雪のときは太陽光の強さを変更することで時間帯を表現
-                // timeValueが0.5f(12:00)のとき太陽光の強さが最大, 0.0f(0:00)と1.0f(24:00)のとき最小
-                environmentController.m_SunIntensity = Mathf.Sin(2 * Mathf.PI * 0.5f * timeValue) * 100000f;
+                // SkyTypeをHDRI Skyに変更
+                visualEnvironment.skyType.value = (int)SkyType.HDRI;
             }
         }
         /// <summary>
         /// timeValue値から時刻を計算
         /// </summary>
-        DateTime CalculateTime(float timeValue)
+        private DateTime CalculateTime(float timeValue)
         {
             int year = (int)environmentController.m_Date.x;
             int month = (int)environmentController.m_Date.y;
@@ -103,7 +136,6 @@ namespace Landscape2.Runtime.WeatherTimeEditor
             }
             catch
             {
-
                 combinedDateTime = DateTime.Now;
             }
 
