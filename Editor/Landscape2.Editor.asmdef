@@ -2,7 +2,9 @@
     "name": "Landscape2.Editor",
     "rootNamespace": "Landscape2.Editor",
     "references": [],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
