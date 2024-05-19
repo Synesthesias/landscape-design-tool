@@ -1,6 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="project://database/Assets/ArragementAsset/uss/UIStyleCommon.uss?fileID=7433441132597879392&amp;guid=a2cdf431c34ae2f48b72b36797b11586&amp;type=3#UIStyleCommon" />
-    <Style src="project://database/Assets/ArragementAsset/uss/UICameraPositionMemoryUss.uss?fileID=7433441132597879392&amp;guid=815a80ab3dcda30469f65b48a26a2ad0&amp;type=3#UICameraPositionMemoryUss" />
+    <Style src="project://database/Packages/com.synesthesias.landscape-design-tool-2/UI/UiStyleCommon.uss?fileID=7433441132597879392&amp;guid=5003ef441f4ce7e4881f663b95f4df1d&amp;type=3#UiStyleCommon" />
     <ui:VisualElement name="AssetArrangeContent" class="gis-background-window" style="flex-grow: 1; position: absolute; right: 0; width: 30%; height: 14%;">
         <ui:VisualElement name="tabs" class="tabs" style="flex-grow: 1;">
             <ui:Button text="Create" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Create" class="menu-unity-button tab tab-leftmost tab-selected" style="width: 30%; height: 80%; top: 5%; position: absolute; left: 3%;" />
