@@ -20,7 +20,8 @@ namespace Landscape2.Runtime
             {
                 new CameraMoveByUserInput(mainCam),
                 new CameraPositionMemoryUI(new CameraPositionMemory.CameraPositionMemory(mainCam)),
-                new RegulationAreaUI()
+                new RegulationAreaUI(),
+                new LandscapePlanLoaderUI()
             };
         }
         
