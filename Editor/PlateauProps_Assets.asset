@@ -1,0 +1,1111 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: PlateauProps_Assets
+  m_EditorClassIdentifier: 
+  m_GroupName: PlateauProps_Assets
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 96888946bf8a8b2419d80c974683aae3
+  m_SerializeEntries:
+  - m_GUID: 7ff0991ef68aece46bdc19417c2b1e5d
+    m_Address: Prop_Bench_04
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b5b13284962bc3a42b53efef8cc6f393
+    m_Address: Prop_Bench_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 43a7db1d8d0849d4fb9cb6f034ba68ec
+    m_Address: Prop_Bench_02
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c46f094740c56b74ca0a6b887f344119
+    m_Address: Prop_Bench_03
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4b467474d93974748ba794d5fec20663
+    m_Address: Prop_Bench_05
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 101fbb2ba17180a42b803f1f842c97ac
+    m_Address: Prop_BollardArched_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4b5747b08aee2054e8e6563d4d4e17dc
+    m_Address: Prop_BollardArched_02
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 30ed24ddb1a222846958ddf6a2381921
+    m_Address: Prop_BollardPole_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fc009a70b0e1cc64ab93ff27c0241ef9
+    m_Address: Prop_Bush_Abelia_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cb0dfabe6b44f8e4da6763300f9f5cce
+    m_Address: Prop_Bush_Tutuji_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 40dfbe4f5ac1ab94ab004b6c97f6e737
+    m_Address: Prop_Bush_Tutuji_02
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9f1361d28e12e9d41be3ab631bcafc71
+    m_Address: Prop_BusStop_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 93a532a9292828f4b8c4a7fcbf0380d5
+    m_Address: Prop_Cone_01_Blue
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fcc487199549ca64fa4daa9046676090
+    m_Address: Prop_Cone_01_Green
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5ce7f653af23dc24fa021b06d3053067
+    m_Address: Prop_Cone_01_Orange
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ace09a3558149a4418dfaf83a68d1cd7
+    m_Address: Prop_Cone_02_Blue
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f7a42040bf801624f90422f8213137e5
+    m_Address: Prop_Cone_02_Green
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 878c9fa36a4daee4cbbf73eb22e31b3b
+    m_Address: Prop_Cone_02_Orange
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c4be1d01da48ba740820dc2c5233ef96
+    m_Address: Prop_Cone_03
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e6b14f1595a8344448775c751f9dd535
+    m_Address: Prop_Drone_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 83c96e181504805458a4a91ee3286f48
+    m_Address: Prop_ElectricPole_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 17102dd8b9515d54185d1f25d00932b3
+    m_Address: Prop_ElectricPost_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e5f2adad06665d0428fb8322ca4ac554
+    m_Address: Prop_ElectricPost_02
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e69e4332d76aaf748aa1d72d1be548d6
+    m_Address: Prop_ElectricPost_03
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 390568d4f44928c45b7e6522d4a8be5a
+    m_Address: Prop_Fence_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 71a3ef23913852d47ad95780e3e188f5
+    m_Address: Prop_Fence_02
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 460f3053c3ce7e84e9ec6545c2b137b4
+    m_Address: Prop_Fence_03
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 81c0014118a4c8841a0686b7c0fd9e89
+    m_Address: Prop_Fence_04
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f9387011c333e6f4c99f1a251b603b5b
+    m_Address: Prop_Fence_05
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d7261680846c01f48b472ada6efe0b43
+    m_Address: Prop_Icon_ArrowBack_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 91857dd7da52c204d97d1b0027687212
+    m_Address: Prop_Icon_ArrowForward_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cda0a49253ee4c647ab3c74fd4198c38
+    m_Address: Prop_Icon_ArrowLeft_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 52198b848444f114e8ca3f165428f37e
+    m_Address: Prop_Icon_ArrowRight_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5c08385af13c0224fa4e19275736ca61
+    m_Address: Prop_Icon_Coin_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4874e0831f6dc704fa31191841e564e1
+    m_Address: Prop_Icon_Exclamation_02
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d2df28b581cfb934bb9089a3deede2f7
+    m_Address: Prop_Icon_GOAL_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6889f75051aa7cd4a8c1990507fac1f7
+    m_Address: Prop_Icon_Heart_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4be8b888cd211e84dbb34677dc643244
+    m_Address: Prop_Icon_Like_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c71c3ec1afce95f4a803ccfc4a00e699
+    m_Address: Prop_Icon_Question_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 00037b9395fa4bb4fbdba8074386f2d1
+    m_Address: Prop_Icon_Spot_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6b31acf697859094bafa330215e1c4c0
+    m_Address: Prop_Icon_SpotExclamation_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 74c850cf946e1b84380d68dc9d2d4fe1
+    m_Address: Prop_Icon_START_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ed325ff8fc6647c49a89929fac3fc83f
+    m_Address: Prop_Marking_ArrowRight_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6925a0e8582cb724f99c77a441ad5d94
+    m_Address: Prop_Marking_ArrowStraight_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 80b7a236bf9bef24d87806bb53d10f64
+    m_Address: Prop_Marking_ArrowStraightAndLeft_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1ecb1da4741ed87449efb1e01889a960
+    m_Address: Prop_Marking_CrossWalk_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 12832f99f5a0a734485916b60561b51e
+    m_Address: Prop_Marking_CrossWalk_02
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ac27b3b20e0d6884bbab7b5cad69383f
+    m_Address: Prop_Marking_Stop_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 486f517ba10684f4cbd96fb608f72be7
+    m_Address: Prop_Marking_StraightLine_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a94f8e4f08d28ce4cadcd3a59288dc22
+    m_Address: Prop_Marking_StreetSymbol_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1e489c3b8e32754499ebcc396f6c6f21
+    m_Address: Prop_Marking_StreetSymbol_02
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5d22cc74627612848ad533a02d5bb346
+    m_Address: Prop_Marking_StreetSymbol_03
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ad100b5a3d8b91b41bcaf8958a29b750
+    m_Address: Prop_PassageShelter_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 308ff17e6af240f40a25d4b966630618
+    m_Address: Prop_Planter_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a4b74199e38b35c44a72e5536fa239bf
+    m_Address: Prop_Planter_02
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f0992c2adeb479b43b5407ca775a08e1
+    m_Address: Prop_Planter_03
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7a584ebbc582d6942a98ab1173ef1a14
+    m_Address: Prop_PostBox_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e90a2f9701cdb6544b5a127342078dc4
+    m_Address: Prop_Sign_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 05b5367c482791f499dca7dfbb42c51d
+    m_Address: Prop_Sign_02
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ae0b4f0174237534d9d030d5a5ce447f
+    m_Address: Prop_Sign_03
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 28ac94af7b110ff49ab94ca91f3be3ba
+    m_Address: Prop_Sign_04
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ffa98027b202487438472986e166f5b2
+    m_Address: Prop_Sign_05
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 33878fc7a40da8148b093c87c3fc4839
+    m_Address: Prop_Sign_06
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 80a881b896860754db8192f90fec9ab8
+    m_Address: Prop_Sign_07
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4282a737e8f6bf247a776962880d1dc0
+    m_Address: Prop_Sign_CircularHanging_01_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e159954915595f34fb66f0db4bc414f7
+    m_Address: Prop_Sign_CircularHanging_01_02
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: afa2ceafad7ec8a40ba1e083e490cc94
+    m_Address: Prop_Sign_CircularHanging_01_03
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 584f4baf93c1f0241811da1c7a2f73b9
+    m_Address: Prop_Sign_CircularHanging_01_04
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9aab2fc15bc9f3a4e924844a1414de09
+    m_Address: Prop_Sign_CircularHanging_01_05
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6f4add293d85dd745934b37a9794d869
+    m_Address: Prop_Sign_CircularHanging_01_06
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 299981e63b78d8240bb8da647674fe70
+    m_Address: Prop_Sign_CircularHanging_01_07
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2a98c5e3525a194478952502abaebdfd
+    m_Address: Prop_Sign_CircularHanging_01_08
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 083727e405eea6842990265d518ffa8e
+    m_Address: Prop_Sign_CircularHanging_01_09
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f789f58c98e9164478d276856010f228
+    m_Address: Prop_Sign_CircularHanging_01_10
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3b4b6125de76d0041b4c7aeac707df66
+    m_Address: Prop_Sign_CircularHanging_01_11
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 29a9d2e37305df048bdcd23db4a0b33e
+    m_Address: Prop_Sign_CircularHanging_01_12
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 174f55ed0fb05a24484abeeabf9fd221
+    m_Address: Prop_Sign_CircularHanging_01_13
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a82784fd75ac4b247bfaa3fadd8e185d
+    m_Address: Prop_Sign_CircularHanging_01_14
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2b664f8628e279d428c3fd1e3b5922a0
+    m_Address: Prop_Sign_CircularHanging_01_15
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e00d03ec54383d848803e1a61873d3b8
+    m_Address: Prop_Sign_CircularHanging_01_16
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5f50b00ec6879ed44ba4654ac4848420
+    m_Address: Prop_Sign_CircularHanging_01_17
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9be8226101963a94a8f3680b6bb17fd4
+    m_Address: Prop_Sign_CircularHanging_01_18
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 575abbdab109c034ab63680ef2fbb87f
+    m_Address: Prop_Sign_CircularHanging_01_19
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f5542f3ea08e1fc4e9172cd6de861a85
+    m_Address: Prop_Sign_CircularHanging_01_20
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 25869e4c2318cff4cbcd68a02c021cf2
+    m_Address: Prop_Sign_CircularHanging_01_21
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 083e1e7f82af36a4f8e8976e0ac08cb0
+    m_Address: Prop_Sign_CircularHanging_01_22
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d1767033ef7c15f4cb33c18643f8d0ea
+    m_Address: Prop_Sign_CircularHanging_01_23
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bc9dff81675334641b058348c8e583bc
+    m_Address: Prop_Sign_CircularHanging_01_24
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9efbb65639382e94e9ea2c98603194ed
+    m_Address: Prop_Sign_CircularHanging_01_25
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d8004e39bc89b6e4d934b06a82554ad5
+    m_Address: Prop_Sign_CircularPost_01_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 64dcb71c3f42cfe4cadf3fdc686debbc
+    m_Address: Prop_Sign_CircularPost_01_02
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5da399be90cc7134e898767fe10f5084
+    m_Address: Prop_Sign_CircularPost_01_03
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 743a79500a1887949800e828f3721219
+    m_Address: Prop_Sign_CircularPost_01_04
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b3e352e36e2a688408c3345bb2ad5569
+    m_Address: Prop_Sign_CircularPost_01_05
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1e7b14c69c64963419cbcd8b68f4789d
+    m_Address: Prop_Sign_CircularPost_01_06
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fe6fd9f476b2cbf46b28078b597cc97f
+    m_Address: Prop_Sign_CircularPost_01_07
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6146279f1fb541d4396fdff97895d730
+    m_Address: Prop_Sign_CircularPost_01_08
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 52ce9f5b49bfd034cb3188a9384c4267
+    m_Address: Prop_Sign_CircularPost_01_09
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3ae9febc9e87fe0489d9644f36130f75
+    m_Address: Prop_Sign_CircularPost_01_10
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1efc4215442c2434190099c76044cb24
+    m_Address: Prop_Sign_CircularPost_01_11
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7a761d19f54ee6f4ca5cab9d53094fb4
+    m_Address: Prop_Sign_CircularPost_01_12
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0bb7d5fec264b114fb29a58bda8bc0a1
+    m_Address: Prop_Sign_CircularPost_01_13
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 877892c9904ff2b4e841e9115f3b3b65
+    m_Address: Prop_Sign_CircularPost_01_14
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9742c89f024399c409f72e7fca2fe1a5
+    m_Address: Prop_Sign_CircularPost_01_15
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7da8b0d4ceb57ec4c966888d3c6d161a
+    m_Address: Prop_Sign_CircularPost_01_16
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fc3c920098dbe874dafcb546edcc71ee
+    m_Address: Prop_Sign_CircularPost_01_17
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f76a9701c1c9ddb45bc93938a1603f5e
+    m_Address: Prop_Sign_CircularPost_01_18
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cdfbf6830f980dc468c0f84cf8a279c2
+    m_Address: Prop_Sign_CircularPost_01_19
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f8e23a1353cab9a45b7eb623a4553531
+    m_Address: Prop_Sign_CircularPost_01_20
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6dfe1d12122b66b448c982f52d1ef6e2
+    m_Address: Prop_Sign_CircularPost_01_21
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: aa0e0b18bed319644a38b2c98aa63143
+    m_Address: Prop_Sign_CircularPost_01_22
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 13dc6c326ddcf3c469be89106b6088c4
+    m_Address: Prop_Sign_CircularPost_01_23
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b664eb749868d254fa6ef8086d05e88f
+    m_Address: Prop_Sign_CircularPost_01_24
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 62cd4ce00ed1a494ba13ee6b644d74a4
+    m_Address: Prop_Sign_CircularPost_01_25
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ad4f9fb42ecc47642a4ba91c6906ad67
+    m_Address: Prop_Sign_DiamondHanging_01_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 789740982491c844b88de305a1926b2e
+    m_Address: Prop_Sign_DiamondHanging_01_02
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 52b610b0c1fa55c4680191a04a7d8644
+    m_Address: Prop_Sign_DiamondHanging_01_03
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f9e921c8922f30849b105d27540f11eb
+    m_Address: Prop_Sign_DiamondHanging_01_04
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6d7172f5253813449a5521deab312729
+    m_Address: Prop_Sign_DiamondHanging_01_05
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b9ac99d98b15ee247b5d832f6a5e13e2
+    m_Address: Prop_Sign_DiamondHanging_01_06
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dd33038d4b1de3a4b8e851442bd0cfca
+    m_Address: Prop_Sign_DiamondHanging_01_07
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1b56bfe3abf954945b2ab68845070c8f
+    m_Address: Prop_Sign_DiamondHanging_01_08
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3dfdf8a7f4110fc46b135cafdfae12b4
+    m_Address: Prop_Sign_DiamondHanging_01_09
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fcb790ea02d206b4a87dca2156c6924b
+    m_Address: Prop_Sign_DiamondPost_01_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bf0d3dbf5c7eae242bd6d9a8dcb35528
+    m_Address: Prop_Sign_DiamondPost_01_02
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: decd0b9eeb95cf448ab24b232ac1b0e9
+    m_Address: Prop_Sign_DiamondPost_01_03
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fa6c7e120a36dbf45a34fbf376f8f1fb
+    m_Address: Prop_Sign_DiamondPost_01_04
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 84406c12b2d505244808566a1ae686c9
+    m_Address: Prop_Sign_DiamondPost_01_05
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 257871fb64c196d4e8e3e18c1fb54030
+    m_Address: Prop_Sign_DiamondPost_01_06
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: eb04d83318afa0e46a45ac6277e07d31
+    m_Address: Prop_Sign_DiamondPost_01_07
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: eb7867126036ea543bc3a747c98b6a77
+    m_Address: Prop_Sign_DiamondPost_01_08
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 22e58bd0b5032c5449f3bdf31e735ed7
+    m_Address: Prop_Sign_DiamondPost_01_09
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bba4a8bf30967b443bbfada597625845
+    m_Address: Prop_Sign_MiscHanging_01_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fdc3e7dbd56dcde4292ddf6151531163
+    m_Address: Prop_Sign_MiscHanging_01_02
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 49f2f24d4d1c1684c840560e39e5ca33
+    m_Address: Prop_Sign_MiscHanging_02_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8890a6a99344dbe40951b57f9f6c4682
+    m_Address: Prop_Sign_MiscHanging_02_02
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4434297e3315e664291eb781071d2478
+    m_Address: Prop_Sign_MiscHanging_02_03
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c481ff20ab90679439863fd70aefaeca
+    m_Address: Prop_Sign_MiscPost_01_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 36a439a5f0d4c8c418694d587608c6d7
+    m_Address: Prop_Sign_MiscPost_01_02
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8cdef5416a490da44aef7b6686c06d9d
+    m_Address: Prop_Sign_MiscPost_02_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b48f992d9f7b21740a8f08421167f056
+    m_Address: Prop_Sign_MiscPost_02_02
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c61aa0a2d73a9454d879059aca1aee3e
+    m_Address: Prop_Sign_MiscPost_02_03
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fc95fbd4da2c03d4386a1521fd275f80
+    m_Address: Prop_Sign_NoBicycleParking
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b2f0bb8da609b244d9a168d0cf6625a0
+    m_Address: Prop_Sign_SquareHanging_01_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c05e577407945f343894af39ba8a9f66
+    m_Address: Prop_Sign_SquareHanging_01_02
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 649ee320f6d741d4fa0a8c78bd413de9
+    m_Address: Prop_Sign_SquareHanging_01_03
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 91b76fde734dd014d9bcff2293e947c7
+    m_Address: Prop_Sign_SquareHanging_01_04
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b1120d5644e97d24d84d54551a4017ca
+    m_Address: Prop_Sign_SquarePost_01_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e574303cfbdbe8b4187b9041fddfda9b
+    m_Address: Prop_Sign_SquarePost_01_02
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e60e79b848d39de4bac1d17bd3d6a2ca
+    m_Address: Prop_Sign_SquarePost_01_03
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a51104a1035ed3447ad3bc5a499d2630
+    m_Address: Prop_Sign_SquarePost_01_04
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b454c339437c7df42bf460298ea62a83
+    m_Address: Prop_Sign_TriangleHanging_01_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 19bbab5c5b5d3fc49b357adc527e8f2e
+    m_Address: Prop_Sign_TriangleHanging_01_02
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 66fd90373c6893b4cbb6055f240248f2
+    m_Address: Prop_Sign_TrianglePost_01_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 516bca4a87c9d014c8157dbed185d1fd
+    m_Address: Prop_Sign_TrianglePost_01_02
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e698449fb3314d549b5a746830d884f2
+    m_Address: Prop_Sign_Vertical_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 52ffde0986d88414c85f9e92cf2608fe
+    m_Address: Prop_Sign_Vertical_02
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dbf5c63601529b246a118215e3a89891
+    m_Address: Prop_Sign_Vertical_03
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5b6aaba12c3022740b15b5044cf1a7b0
+    m_Address: Prop_Sign_Vertical_04
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 733bb9ad95ce36546a85f9e912c62bd2
+    m_Address: Prop_Sign_Vertical_05
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2771d4ee48aed0740bbe9c25ca223302
+    m_Address: Prop_StreetLight_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 013d41f57c62701408f3fa1acc745546
+    m_Address: Prop_StreetLight_02
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 587f6da8f247a614186028744f2aae3a
+    m_Address: Prop_StreetLight_03
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b550a2d5e6c54c84abf6f9f261969be9
+    m_Address: Prop_StreetLight_04
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4b0bc6361dc9a774b8fac68ff1edb092
+    m_Address: Prop_StreetLight_05
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ce87272e4009ab54394f908c1f549c66
+    m_Address: Prop_StreetLight_06
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a53893a59382ce04b98aa29687fe49c5
+    m_Address: Prop_SubwayExit_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 18ef9347785252d4ea1cc3fe72bfed36
+    m_Address: Prop_TactilePavingGuidance_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: da95a7dd9a2209b4c9c6f890872f99d3
+    m_Address: Prop_TactilePavingWarning_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 00203827b4f660048ac3259db85aaa35
+    m_Address: Prop_Tile_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9bd5f59e18daaf74ea3c7bd6fa7b66c3
+    m_Address: Prop_TrafficCrossLight_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c5051db97f1451f4d856d4c5ab842f0a
+    m_Address: Prop_TrafficCrossLight_02
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 84ac8df17251ef543a397f8361be111e
+    m_Address: Prop_TrafficLight_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 172f79193e76de745a78ebd120ccfc5a
+    m_Address: Prop_TrafficLight_02
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6d1ae801cb34af341a2c4ba46281e250
+    m_Address: Prop_Tree_Ichou_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4d864b0070bbfd743b1bab407b3ad6d3
+    m_Address: Prop_Tree_Keyaki_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4c4c09ca374a58d4da530ab42ef2967e
+    m_Address: Prop_Tree_Medium_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d27a733ab02b1fd46a1ddfca39f02f64
+    m_Address: Prop_Tree_Sakura_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 517bb9e5ee5693840a29e5eebfb84359
+    m_Address: Prop_Tree_Small_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0752037bb789a6f4aafa6478c1331adc
+    m_Address: Prop_TSControlBox_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3dc9b7983c941504aada19e151c70c3d
+    m_Address: Prop_VendingMachine_01
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PlateauProps_Assets
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 8cb00641b15e8a2439832d69ac1e5e81, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 8bac6e21e82d3074e9f40ba1d32a4132, type: 2}
+    - {fileID: 11400000, guid: 4cae0944760565742bdace1058709718, type: 2}

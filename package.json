@@ -6,6 +6,7 @@
     "unity": "2021.3",
     "dependencies": {
         "com.unity.addressables": "1.21.20"
+        ,"com.shtif.runtimetransformhandle": "0.1.4"
     },
     "author": {
         "name": "Synesthesias Inc."

@@ -94,7 +94,7 @@ namespace Landscape2.Runtime
             AsyncOperationHandle<IList<GameObject>> assetHandle = Addressables.LoadAssetsAsync<GameObject>("PlateauProps_Assets", null);
             IList<GameObject> assets = await assetHandle.Task;
             // RuntimeTransformHandle.csの参照
-            AsyncOperationHandle<GameObject> runtimeHandle = Addressables.LoadAssetAsync<GameObject>("Packages/com.synesthesias.landscape-design-tool-2/Runtime/ArrangementAsset/Prefab/RuntimeTransformHandle.prefab");
+            AsyncOperationHandle<GameObject> runtimeHandle = Addressables.LoadAssetAsync<GameObject>("RuntimeTransformHandleScriptObject");
             GameObject runtimeTransformHandle = await runtimeHandle.Task;
             GameObject runtimeTransformHandleObject = GameObject.Instantiate(runtimeTransformHandle) as GameObject;
             runtimeTransformHandleObject.name = "runtimeTransformHandleObject";
