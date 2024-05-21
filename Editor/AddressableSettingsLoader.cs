@@ -8,14 +8,8 @@ using System.IO;
 
 namespace Landscape2.Editor
 {
-    [InitializeOnLoad]
     public static class AddressableSettingsLoader
     {
-        static AddressableSettingsLoader()
-        {
-            LoadAndAddSettings();
-        }
-
         public static void LoadAndAddSettings()
         {
             string path = "Packages/com.synesthesias.landscape-design-tool-2/Editor/PlateauProps_Assets.asset";
@@ -50,21 +44,20 @@ namespace Landscape2.Editor
 
         private static void AddGroupsToSettings(AddressableAssetSettings currentSettings, AddressableAssetGroup group)
         {
-            var assetEntries = new List<AddressableAssetEntry>(group.entries);
             var groupName = group.Name;
-            // var targetGroup = currentSettings.FindGroup(groupName);
-            // if (targetGroup == null)
-            // {
-            //     targetGroup = currentSettings.CreateGroup(groupName, false, false, false, new List<AddressableAssetGroupSchema>(),typeof(ContentUpdateGroupSchema), typeof(BundledAssetGroupSchema));
-            // }
+            var assetEntries = new List<AddressableAssetEntry>(group.entries);
+            var targetGroup = currentSettings.FindGroup(groupName);
+            if (targetGroup == null)
+            {
+                targetGroup = currentSettings.CreateGroup(groupName, false, false, false, new List<AddressableAssetGroupSchema>(),typeof(ContentUpdateGroupSchema), typeof(BundledAssetGroupSchema));
+            }
             if (groupName != "Built In Data")
             {
                 foreach (var entry in assetEntries)
                 {
                     var assetPath = AssetDatabase.GUIDToAssetPath(entry.guid);
                     var guid = AssetDatabase.AssetPathToGUID(assetPath);
-                    // var newEntry = currentSettings.CreateOrMoveEntry(guid, targetGroup);
-                    var newEntry = currentSettings.CreateOrMoveEntry(guid, currentSettings.DefaultGroup);
+                    var newEntry = currentSettings.CreateOrMoveEntry(guid, targetGroup);
                     newEntry.address = entry.address;
 
                     if (entry.labels.Contains("PlateauProps_Assets"))
@@ -76,16 +69,11 @@ namespace Landscape2.Editor
         }
     }
     
-    // public class CustomAssetPostprocessor : AssetPostprocessor
-    // {
-    //     static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
-    //     {
-    //         foreach (string assetPath in importedAssets)
-    //         {
-
-    //                 AddressableSettingsLoader.LoadAndAddSettings();
-                
-    //         }
-    //     }
-    // }
+    public class CustomAssetPostprocessor : AssetPostprocessor
+    {
+        static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
+        {
+            AddressableSettingsLoader.LoadAndAddSettings();
+        }
+    }
 }
