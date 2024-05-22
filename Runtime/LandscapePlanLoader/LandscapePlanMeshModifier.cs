@@ -1,7 +1,6 @@
 using PLATEAU.CityGML;
 using PLATEAU.CityInfo;
 using UnityEngine;
-using PlateauToolkit.Maps;
 
 namespace Landscape2.Runtime.LandscapePlanLoader
 {
