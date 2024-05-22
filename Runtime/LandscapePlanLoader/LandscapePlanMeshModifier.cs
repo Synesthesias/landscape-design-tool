@@ -3,53 +3,13 @@ using PLATEAU.CityInfo;
 using UnityEngine;
 using PlateauToolkit.Maps;
 
-namespace LandscapeDesignTool2.Runtime.LandscapePlanLoader
+namespace Landscape2.Runtime.LandscapePlanLoader
 {
     /// <summary>
-    /// the class to modify the area mesh of landscape plan to the target height along the ground.
+    /// The class to modify the area mesh of landscape plan to the target height along the ground.
     /// </summary>
-    public class LandscapePlanMeshModifier
+    public sealed class LandscapePlanMeshModifier
     {
-        /// <summary>
-        /// Transform and modify the area mesh to the limit height along the ground.
-        /// </summary>
-        /// <param name="meshObject">area mesh</param>
-        public void SetGISObjToLimitHeight(GameObject meshObject)
-        {
-            if (meshObject == null)
-            {
-                Debug.LogError("meshObject is null");
-                return;
-            }
-
-            MeshFilter meshFilter = meshObject.GetComponent<MeshFilter>();
-            DbfComponent dbf = meshObject.GetComponent<DbfComponent>();
-
-            if (meshFilter == null)
-            {
-                Debug.LogError("This GameObject have no MeshFilter Component" + "\n" + $"ObjectName:{meshObject.name}");
-                return;
-            }
-            if (meshFilter.sharedMesh == null)
-            {
-                Debug.LogError("Mesh in MeshFilter is null" + "\n" + $"ObjectName:{meshObject.name}");
-                return;
-            }
-            if (dbf == null)
-            {
-                Debug.LogError("This GameObject have no DbfComponent" + "\n" + $"ObjectName:{meshObject.name}");
-                return;
-            }
-
-
-            float heightLimit = float.Parse(dbf.Properties[3]); //read height data from dbf file
-            Mesh mesh = meshFilter.sharedMesh;  //read mesh data from meshFilter
-
-            if (!TryModifyMeshToTargetHeight(mesh, heightLimit, meshObject.transform.position)) //modify mesh data
-                Debug.LogError("This area is out of range of the loaded map" + "\n" + $"ObjectName:{meshObject.name}");
-        }
-
-
         /// <summary>
         /// Transform and modify the area mesh to the target height along the ground.
         /// 
@@ -61,7 +21,7 @@ namespace LandscapeDesignTool2.Runtime.LandscapePlanLoader
         /// <param name="targetHeight">Target height from ground</param>
         /// <param name="globalPos">Global Position of MeshObject</param>
         /// <returns>Result indicating if the modification was successful</returns>
-        bool TryModifyMeshToTargetHeight(Mesh mesh, float targetHeight, Vector3 globalPos)
+        public bool TryModifyMeshToTargetHeight(Mesh mesh, float targetHeight, Vector3 globalPos)
         {
             Vector3[] vertices = mesh.vertices; //read all vertices data from mesh
 
@@ -69,7 +29,6 @@ namespace LandscapeDesignTool2.Runtime.LandscapePlanLoader
             for (int verticeIndex = 0; verticeIndex < vertices.Length; verticeIndex++)
             {
                 Physics.queriesHitBackfaces = true;
-
 
                 //search the ground object for above the vertice
                 RaycastHit[] hitsAbove = Physics.RaycastAll(vertices[verticeIndex], Vector3.up, float.PositiveInfinity);
@@ -84,7 +43,6 @@ namespace LandscapeDesignTool2.Runtime.LandscapePlanLoader
                                 vertices[verticeIndex].z);
                     continue;
                 }
-
 
                 //search the ground object for below the vertice
                 RaycastHit[] hitsBelow = Physics.RaycastAll(vertices[verticeIndex], Vector3.down, float.PositiveInfinity);

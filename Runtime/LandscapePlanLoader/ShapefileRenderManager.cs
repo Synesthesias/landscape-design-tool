@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,7 +11,7 @@ using PlateauToolkit.Maps.Runtime;
 using PlateauToolkit.Maps;
 
 
-namespace LandscapeDesignTool2.Runtime.LandscapePlanLoader
+namespace Landscape2.Runtime.LandscapePlanLoader
 {
     public class ShapefileRenderManager : IDisposable
     {
@@ -53,7 +52,7 @@ namespace LandscapeDesignTool2.Runtime.LandscapePlanLoader
             m_DbfReader = null;
         }
 
-        public bool Read(float lineWidth, ref List<GameObject> listOfGISObjects)
+        public bool Read(float lineWidth, out List<GameObject> listOfGISObjects)
         {
             string[] filePaths = Directory.GetFiles(m_FolderPath, "*.shp");
 
@@ -64,12 +63,18 @@ namespace LandscapeDesignTool2.Runtime.LandscapePlanLoader
 
             if (filePaths.Length == 0)
             {
+                Debug.LogError("No shapefiles found in the folder");
+                listOfGISObjects = null;
                 return false;
             }
 
             foreach (string filePath in filePaths)
             {
-                ReadShapes(filePath);
+                if (!ReadShapes(filePath))
+                {
+                    listOfGISObjects = null;
+                    return false;
+                }
                 string dbfFileName = Path.GetFileNameWithoutExtension(filePath);
                 m_CurrentRenderingObject = dbfFileName;
                 if (File.Exists(m_FolderPath + "/" + dbfFileName + ".dbf"))
@@ -95,6 +100,7 @@ namespace LandscapeDesignTool2.Runtime.LandscapePlanLoader
         {
             if (m_GeoRef == null)
             {
+                Debug.LogError("No CesiumGeoreference found in the scene");
                 return false;
             }
 
@@ -103,6 +109,7 @@ namespace LandscapeDesignTool2.Runtime.LandscapePlanLoader
 
             if (m_Counter == null || m_Clockwise == null)
             {
+                Debug.LogError("Failed to load materials");
                 return false;
             }
 
@@ -268,8 +275,7 @@ namespace LandscapeDesignTool2.Runtime.LandscapePlanLoader
                         AttachMetadata(meshObject, record);
                     }
 
-                    //CreateMesh(false, partPointsWorld, meshObject.GetComponent<MeshFilter>(), meshObject.GetComponent<MeshRenderer>());
-                    
+                    // Create a tessellated mesh
                     TessellatedMeshCreator tessellatedMeshCreator = new TessellatedMeshCreator();
                     MeshFilter meshFilter = meshObject.GetComponent<MeshFilter>();
                     MeshRenderer meshRenderer = meshObject.GetComponent<MeshRenderer>();

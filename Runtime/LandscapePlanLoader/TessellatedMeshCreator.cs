@@ -1,17 +1,19 @@
-using UnityEngine;
+using System.Collections.Generic;
 using System;
+using UnityEngine;
+using Unity.Collections;
+using Unity.Mathematics;
 using iShape.Geometry.Container;
 using iShape.Geometry;
-using Unity.Collections;
 using iShape.Mesh2d;
-using Unity.Mathematics;
-
-using System.Collections.Generic;
 using iShape.Triangulation.Shape.Delaunay;
 
-namespace LandscapeDesignTool2.Runtime.LandscapePlanLoader
+namespace Landscape2.Runtime.LandscapePlanLoader
 {
-    public class TessellatedMeshCreator
+    /// <summary>
+    /// Class to create a tessellated mesh from the given points.
+    /// </summary>
+    public sealed class TessellatedMeshCreator
     {
         /// <summary>
         /// Convert the given points to a PlainShape.
@@ -41,6 +43,7 @@ namespace LandscapeDesignTool2.Runtime.LandscapePlanLoader
 
             return pShape;
         }
+
 
         /// <summary>
         /// delete duplicate points

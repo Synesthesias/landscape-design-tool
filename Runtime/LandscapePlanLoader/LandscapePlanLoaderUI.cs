@@ -2,13 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
-using LandscapeDesignTool2.Runtime.LandscapePlanLoader;
+using Landscape2.Runtime.LandscapePlanLoader;
 using Landscape2.Runtime.UiCommon;
 
 namespace Landscape2.Runtime
 {
-    public class LandscapePlanLoaderUI : ISubComponent
+    /// <summary>
+    /// The Presenter class for the LandscapePlanLoaderUI.uxml
+    /// </summary>
+    public sealed class LandscapePlanLoaderUI : ISubComponent
     {
+        // UI Elements
         Button loadButton;
         Button browseButton;
         Label selectedPathLabel;

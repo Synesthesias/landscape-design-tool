@@ -1,28 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
-using PlateauToolkit.Maps;
 
-namespace LandscapeDesignTool2.Runtime.LandscapePlanLoader
+namespace Landscape2.Runtime.LandscapePlanLoader
 {
     /// <summary>
     /// Class to generate walls around the outer edges of a mesh
     /// </summary>
-    public class WallGenerator
+    public sealed class WallGenerator
     {
-        /// <summary>
-        /// Generate a wall downward from the given mesh object with DbfComponent.
-        /// </summary>
-        /// <param name="meshObject"></param>
-        public void GenerateWallFromMeshObj(GameObject meshObject)
-        {
-            Mesh mesh = meshObject.GetComponent<MeshFilter>().sharedMesh;
-            float wallHeight = float.Parse(meshObject.GetComponent<DbfComponent>().Properties[3]);  // 3 is the index of the height property in the DbfComponent
-
-            GameObject wall = GenerateWall(mesh, wallHeight, Vector3.down); // Generate a wall downward from the mesh
-            wall.transform.SetParent(meshObject.transform);
-            wall.transform.localPosition = Vector3.zero;
-        }
-
         /// <summary>
         /// Generate a wall from the given mesh.
         /// </summary>
@@ -30,7 +15,7 @@ namespace LandscapeDesignTool2.Runtime.LandscapePlanLoader
         /// <param name="wallHeight"></param>
         /// <param name="wallDirection"></param>
         /// <returns></returns>
-        GameObject GenerateWall(Mesh originalMesh, float wallHeight, Vector3 wallDirection)
+        public GameObject GenerateWall(Mesh originalMesh, float wallHeight, Vector3 wallDirection)
         {
             Vector3[] vertices = originalMesh.vertices;
             int[] triangles = originalMesh.triangles;
