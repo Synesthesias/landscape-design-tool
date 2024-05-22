@@ -279,7 +279,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     TessellatedMeshCreator tessellatedMeshCreator = new TessellatedMeshCreator();
                     MeshFilter meshFilter = meshObject.GetComponent<MeshFilter>();
                     MeshRenderer meshRenderer = meshObject.GetComponent<MeshRenderer>();
-                    tessellatedMeshCreator.CreateTessellatedMesh(partPointsWorld, ref meshFilter, ref meshRenderer, 30,40);
+                    tessellatedMeshCreator.CreateTessellatedMesh(partPointsWorld, meshFilter, 30,40);
                     meshRenderer.sharedMaterial = m_Clockwise;
 
                     m_ListOfGISObjects.Add(meshObject);

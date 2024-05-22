@@ -73,10 +73,9 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// </summary>
         /// <param name="points">Mesh vertice points</param>
         /// <param name="meshFilter"></param>
-        /// <param name="meshRenderer"></param>
         /// <param name="tessellateMaxEdge"></param>
         /// <param name="tessellateMaxArea"></param>
-        public void CreateTessellatedMesh(List<Vector3> points, ref MeshFilter meshFilter, ref MeshRenderer meshRenderer, float tessellateMaxEdge, float tessellateMaxArea)
+        public void CreateTessellatedMesh(List<Vector3> points, MeshFilter meshFilter, float tessellateMaxEdge, float tessellateMaxArea)
         {
             var iGeom = IntGeom.DefGeom;
             
