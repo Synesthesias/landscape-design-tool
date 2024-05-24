@@ -23,63 +23,7 @@ namespace Landscape2.Runtime.LineOfSight
                 MatCompleteTransparent = Resources.Load<Material>("MaterialCompleteTransparent");
             }
         }
-
-        /// <summary>
-        /// 視線規制の設定GUIを描画します。
-        /// </summary>
-        /// <returns>ユーザーがGUIで何らかの設定変更をしたときにtrueを返します。</returns>
-        public bool DrawEditorConfig(LineOfSight target)
-        {
-            var style = new GUIStyle(EditorStyles.label);
-            style.richText = true;
-            
-            SceneView sceneView = SceneView.lastActiveSceneView;
-            
-            bool isGuiChanged = false;
-            using (var checkChange = new EditorGUI.ChangeCheckScope())
-            {
-                EditorGUILayout.HelpBox("視点場を選択して眺望対象をシーン内で選択してください", MessageType.Info);
-                target.ScreenWidth = EditorGUILayout.FloatField("眺望対象での横サイズ(m)", target.ScreenWidth);
-                target.ScreenHeight = EditorGUILayout.FloatField("眺望対象での縦サイズ(m)", target.ScreenHeight);
-                target.LineColorValid = EditorGUILayout.ColorField("色の設定", target.LineColorValid);
-                target.LineColorInvalid = EditorGUILayout.ColorField("規制色の設定", target.LineColorInvalid);
-                target.LineInterval = EditorGUILayout.FloatField("障害物の判定間隔(m)", target.LineInterval);
-                isGuiChanged |= checkChange.changed;
-            }
-            
-            //
-            // EditorGUILayout.Space();
-            // EditorGUILayout.LabelField("<size=12>視点場</size>", style);
-            //
-            // var vpGroupComponent = Object.FindObjectOfType<LandscapeViewPointGroup>();
-            // if (vpGroupComponent == null || vpGroupComponent.transform.childCount == 0)
-            // {
-            //     EditorGUILayout.HelpBox("視点場を作成してください", MessageType.Error);
-            //     return false;
-            // }
-            // vpgroup = vpGroupComponent.gameObject;
-            //
-            //
-            // string[] options = new string[vpgroup.transform.childCount];
-            // for (int i = 0; i < vpgroup.transform.childCount; i++)
-            // {
-            //     LandscapeViewPoint vp = vpgroup.transform.GetChild(i).GetComponent<LandscapeViewPoint>();
-            //     options[i] = vp.Name;
-            // }
-            // selectIndex = EditorGUILayout.Popup(selectIndex, options);
-            // EditorGUILayout.Space();
-            // EditorGUILayout.LabelField("<size=12>眺望対象</size>", style);
-            // GUI.color = selectingTarget == false
-            //     ? Color.white
-            //     : Color.green;
-            // if (GUILayout.Button("眺望対象の選択"))
-            // {
-            //     sceneView.Focus();
-            //     selectingTarget = true;
-            // }
-            
-            return isGuiChanged;
-        }
+        
 
         // public enum SurfaceType
         // {
@@ -88,6 +32,7 @@ namespace Landscape2.Runtime.LineOfSight
         // }
 
 
+        #if UNITY_EDITOR
         public void OnSceneGUI(LineOfSight target)
         {
             var trans = target.transform;
@@ -159,6 +104,7 @@ namespace Landscape2.Runtime.LineOfSight
             // }
             
         }
+        #endif
 
         /// <summary>
         /// 視線を表示するためのゲームオブジェクトを生成します。
@@ -288,6 +234,7 @@ namespace Landscape2.Runtime.LineOfSight
 
         void DrawLine(Vector3 origin, Vector3 distination, GameObject parent, Color col)
         {
+            #if UNITY_EDITOR
             Vector3[] point = new Vector3[2];
             point[0] = origin;
             point[1] = distination;
@@ -308,6 +255,7 @@ namespace Landscape2.Runtime.LineOfSight
             lineRenderer.endColor = col;
 
             go.transform.parent = parent.transform;
+            #endif
         }
 
         bool RaycastBuildings(LineOfSight target, Vector3 origin, Vector3 destination, out RaycastHit hitInfo)

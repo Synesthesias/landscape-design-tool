@@ -45,7 +45,9 @@ namespace Landscape2.Runtime
             // 視線を生成します。
             LineOfSight.LineOfSight handler = grp.AddComponent<LineOfSight.LineOfSight>();
             handler.UpdateParams(80, 80, new Vector3(100,0,0) );
+            #if UNITY_EDITOR
             EditorUtility.SetDirty(handler);
+            #endif
         }
 
         public void Update(float deltaTime)
