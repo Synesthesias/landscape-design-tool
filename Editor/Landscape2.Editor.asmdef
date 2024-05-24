@@ -1,7 +1,9 @@
 {
     "name": "Landscape2.Editor",
     "rootNamespace": "Landscape2.Editor",
-    "references": [],
+    "references": [
+        "GUID:2c3ad3f557b9daf4d8027aa5843b4558"
+    ],
     "includePlatforms": [
         "Editor"
     ],
@@ -9,7 +11,7 @@
     "allowUnsafeCode": false,
     "overrideReferences": false,
     "precompiledReferences": [],
-    "autoReferenced": true,
+    "autoReferenced": false,
     "defineConstraints": [],
     "versionDefines": [],
     "noEngineReferences": false
