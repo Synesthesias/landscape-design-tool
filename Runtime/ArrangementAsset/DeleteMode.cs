@@ -3,19 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 // 入力処理
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
+using UnityEngine.EventSystems;
 
 namespace Landscape2.Runtime
 {
     public class DeleteMode : ArrangeMode
     {
         private List<GameObject> selectedAssets;
-        public override void OnEnable()
+        private ScrollView selectedAssetsScroll;
+        private bool isMouseOverUI;
+        public override void OnEnable(VisualElement element)
         {
             selectedAssets = new List<GameObject>();
+            selectedAssetsScroll = element.Q<ScrollView>("SelectedAssetScrollView");
         }
         public override void Update()
         {
-
+            if(EventSystem.current.IsPointerOverGameObject())
+            {
+                isMouseOverUI = true;
+            }
+            else
+            {
+                isMouseOverUI = false;
+            }
         }
         public void DeleteAsset()
         {
@@ -23,6 +35,8 @@ namespace Landscape2.Runtime
             {
                 GameObject.Destroy(obj);
             }
+            selectedAssets.Clear();
+            SetScrollContents();
         }
         public override void OnSelect()
         {
@@ -30,6 +44,10 @@ namespace Landscape2.Runtime
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit,Mathf.Infinity))
             {
+                if(isMouseOverUI)
+                {
+                    return;
+                }
                 GameObject createdAssets = GameObject.Find("CreatedAssets");
                 if(selectedAssets.Contains(hit.collider.gameObject))
                 {
@@ -43,6 +61,7 @@ namespace Landscape2.Runtime
                     SetLayerRecursively(hit.collider.gameObject, deleteLayer);
                 }
             }
+            SetScrollContents();
         }
         public override void OnCancel()
         {
@@ -67,6 +86,34 @@ namespace Landscape2.Runtime
 
                 SetLayerRecursively(child.gameObject, newLayer);
             }
+        }
+        void SetScrollContents()
+        {
+            selectedAssetsScroll.Clear(); 
+            VisualElement flexContainer = new VisualElement();
+            foreach(GameObject asset in selectedAssets)
+            {
+                Button newButton = new Button()
+                {
+                    text = asset.name,
+                    name = asset.name // ボタンに名前を付ける
+                };
+                newButton.AddToClassList("AssetButton");
+                newButton.clicked += () => 
+                {
+                    FocusAsset(asset);
+                };
+                flexContainer.Add(newButton);
+            }
+            selectedAssetsScroll.Add(flexContainer);
+        }
+        void FocusAsset(GameObject obj)
+        {
+            Camera cam = Camera.main;
+            Vector3 targetPosition = obj.transform.position;
+            targetPosition.y += 1f;
+            targetPosition.z -= 3f;
+            cam.transform.position = targetPosition;
         }
         public override void OnDisable()
         {

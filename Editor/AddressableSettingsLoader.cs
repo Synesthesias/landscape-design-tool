@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Settings;
+using UnityEditor.AddressableAssets.Settings.GroupSchemas;
 using System.IO;
 
 namespace Landscape2.Editor
@@ -11,18 +12,8 @@ namespace Landscape2.Editor
     {
         public static void LoadAndAddSettings()
         {
-            string propsDirectoryPath = "Assets/Samples/PLATEAU SDK-Toolkits for Unity/1.0.1/HDRP Sample Assets/Props/Prefabs";
-            //  指定されたディレクトリ内のすべてのアセットを取得
-            string[] assetGUIDs = AssetDatabase.FindAssets("", new[] { propsDirectoryPath });
-
-
-
-            string path = "Packages/com.synesthesias.landscape-design-tool-2/Editor/PlateauProps_Assets.asset";
-            var group = AssetDatabase.LoadAssetAtPath<AddressableAssetGroup>(path);
-
-
+            // Addressableの取得
             var currentSettings = AddressableAssetSettingsDefaultObject.Settings;
-
             if (currentSettings == null)
             {
                 string settingsPath = "Assets/AddressableAssetsData/AddressableAssetSettings.asset";
@@ -38,25 +29,67 @@ namespace Landscape2.Editor
                 AddressableAssetSettingsDefaultObject.Settings = initializeSettings;
                 currentSettings = AddressableAssetSettingsDefaultObject.Settings;
             }
+            // ラベルの追加
+            if (!currentSettings.GetLabels().Contains("PlateauProps_Assets"))
+            {
+                currentSettings.AddLabel("PlateauProps_Assets");
+            }
+            if (!currentSettings.GetLabels().Contains("RuntimeTransformHandle_Assets"))
+            {
+                currentSettings.AddLabel("RuntimeTransformHandle_Assets");
+            }
 
-            var guid = AssetDatabase.AssetPathToGUID("Packages/com.synesthesias.landscape-design-tool-2/Runtime/ArrangementAsset/Prefab/RuntimeTransformHandle.prefab");
-            var defaultGroup = currentSettings.DefaultGroup;
-            var entry = currentSettings.CreateOrMoveEntry(guid, defaultGroup);
-            entry.address = "RuntimeTransformHandleScriptObject";
-
-
-            // AddGroupsToSettings(currentSettings, group);
-            AddGroupsToSettings(currentSettings, assetGUIDs);
+            AddGroupsToSettings(currentSettings);
         }
 
-        // private static void AddGroupsToSettings(AddressableAssetSettings currentSettings, AddressableAssetGroup group)
-        private static void AddGroupsToSettings(AddressableAssetSettings currentSettings, string[] assetGUIDs)
+        private static void AddGroupsToSettings(AddressableAssetSettings currentSettings)
         {
+            AddRuntimeHandleGroup(currentSettings);
+            AddPlateauAssetGroup(currentSettings);
+        }
+        private static void AddRuntimeHandleGroup(AddressableAssetSettings currentSettings)
+        {
+            var groupName = "RuntimeHandle";
+            var targetGroup = currentSettings.FindGroup(groupName);
+            if (targetGroup == null)
+            {
+                targetGroup = currentSettings.CreateGroup(groupName, false, false, false, new List<AddressableAssetGroupSchema>(), typeof(ContentUpdateGroupSchema), typeof(BundledAssetGroupSchema));
+                var bundledAssetGroupSchema = targetGroup.GetSchema<BundledAssetGroupSchema>();
+                if (bundledAssetGroupSchema != null)
+                {
+                    // Build & Load PathをLocalに変更
+                    bundledAssetGroupSchema.BuildPath.SetVariableByName(currentSettings, AddressableAssetSettings.kLocalBuildPath);
+                    bundledAssetGroupSchema.LoadPath.SetVariableByName(currentSettings, AddressableAssetSettings.kLocalLoadPath);
+                    EditorUtility.SetDirty(targetGroup);
+                    AssetDatabase.SaveAssets();
+                }
+            }
+            var guid = AssetDatabase.AssetPathToGUID("Packages/com.synesthesias.landscape-design-tool-2/Runtime/ArrangementAsset/Prefab/RuntimeTransformHandle.prefab");
+            string assetPath = AssetDatabase.GUIDToAssetPath(guid);
+            var entry = currentSettings.CreateOrMoveEntry(guid,targetGroup);
+            entry.address = System.IO.Path.GetFileNameWithoutExtension(assetPath);
+            entry.SetLabel("RuntimeTransformHandle_Assets", true);
+        }
+        private static void AddPlateauAssetGroup(AddressableAssetSettings currentSettings)
+        {
+            //  アセットを取得
+            string propsDirectoryPath = "Assets/Samples/PLATEAU SDK-Toolkits for Unity/1.0.1/HDRP Sample Assets/Props/Prefabs";
+            string[] assetGUIDs = AssetDatabase.FindAssets("", new[] { propsDirectoryPath });
+
             var groupName = "PlateauAssets";
             var targetGroup = currentSettings.FindGroup(groupName);
             if (targetGroup == null)
             {
-                targetGroup = currentSettings.CreateGroup(groupName, false, false, false, new List<AddressableAssetGroupSchema>());
+                targetGroup = currentSettings.CreateGroup(groupName, false, false, false, new List<AddressableAssetGroupSchema>(), typeof(ContentUpdateGroupSchema), typeof(BundledAssetGroupSchema));
+                var bundledAssetGroupSchema = targetGroup.GetSchema<BundledAssetGroupSchema>();
+                if (bundledAssetGroupSchema != null)
+                {
+                    // Build & Load PathをLocalに変更
+                    bundledAssetGroupSchema.BuildPath.SetVariableByName(currentSettings, AddressableAssetSettings.kLocalBuildPath);
+                    bundledAssetGroupSchema.LoadPath.SetVariableByName(currentSettings, AddressableAssetSettings.kLocalLoadPath);
+                    EditorUtility.SetDirty(targetGroup);
+                    AssetDatabase.SaveAssets();
+                }
             }
             foreach(var guid in assetGUIDs)
             {
@@ -65,30 +98,9 @@ namespace Landscape2.Editor
                 entry.address = System.IO.Path.GetFileNameWithoutExtension(assetPath);
                 entry.SetLabel("PlateauProps_Assets", true);
             }
-            // var groupName = group.Name;
-            // var assetEntries = new List<AddressableAssetEntry>(group.entries);
-            // var targetGroup = currentSettings.FindGroup(groupName);
-            // if (targetGroup == null)
-            // {
-            //     targetGroup = currentSettings.CreateGroup(groupName, false, false, false, new List<AddressableAssetGroupSchema>(),typeof(ContentUpdateGroupSchema), typeof(BundledAssetGroupSchema));
-            // }
-            // if (groupName != "Built In Data")
-            // {
-            //     foreach (var entry in assetEntries)
-            //     {
-            //         var assetPath = AssetDatabase.GUIDToAssetPath(entry.guid);
-            //         var guid = AssetDatabase.AssetPathToGUID(assetPath);
-            //         var newEntry = currentSettings.CreateOrMoveEntry(guid, targetGroup);
-            //         newEntry.address = entry.address;
-
-            //         if (entry.labels.Contains("PlateauProps_Assets"))
-            //         {
-            //             newEntry.SetLabel("PlateauProps_Assets", true);
-            //         }
-            //     }
-            // }
         }
     }
+    
     
     public class CustomAssetPostprocessor : AssetPostprocessor
     {
