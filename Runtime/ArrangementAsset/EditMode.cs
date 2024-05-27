@@ -12,7 +12,6 @@ namespace Landscape2.Runtime
     public class EditMode : ArrangeMode
     {
         private RuntimeTransformHandle runtimeTransformHandleScript;
-        private GameObject a;
 
         public override void OnEnable(VisualElement element)
         {
@@ -43,64 +42,7 @@ namespace Landscape2.Runtime
         }
         public void CreateRuntimeHandle(GameObject obj)
         {
-            // GameObject runtimeTransformHandleObject = GameObject.Instantiate(obj,Vector3.zero,Quaternion.identity) as GameObject;
-            // runtimeTransformHandleObject.name = "runtimeTransformHandleObject";
-            // GameObject test = GameObject.Find("runtimeTransformHandleObject");
-            // runtimeTransformHandleScript = test.GetComponent<RuntimeTransformHandle>();
-
-            // runtimeTransformHandleScript = RuntimeTransformHandle.Create(null,HandleType.POSITION);
-            a = GameObject.Find("Scripts");
-            runtimeTransformHandleScript = a.GetComponent<RuntimeTransformHandle>();
-            if(a == null)
-                    {
-                        GameObject cubePrefab = GameObject.CreatePrimitive(PrimitiveType.Cube);
-
-                        // プレハブをインスタンス化
-                        GameObject cube = GameObject.Instantiate(cubePrefab);
-
-                        // インスタンス化後のキューブの大きさを100に設定
-                        cube.transform.localScale = new Vector3(100, 100, 100);
-                        cube.transform.position = new Vector3(0, 0,137.6f);
-                        
-                        // キューブの色を赤に設定
-                        Renderer cubeRenderer = cube.GetComponent<Renderer>();
-                        cubeRenderer.material.color = Color.red;
-                    }
-                    else if(runtimeTransformHandleScript == null)
-                    {
-                        GameObject cubePrefab = GameObject.CreatePrimitive(PrimitiveType.Cube);
-
-                        // プレハブをインスタンス化
-                        GameObject cube = GameObject.Instantiate(cubePrefab);
-
-                        // インスタンス化後のキューブの大きさを100に設定
-                        cube.transform.localScale = new Vector3(100, 100, 100);
-                        
-                        // キューブの位置を設定 (任意で変更可能)
-                        cube.transform.position = new Vector3(0, 0,137.6f);
-                        
-                        // キューブの色を赤に設定
-                        Renderer cubeRenderer = cube.GetComponent<Renderer>();
-                        cubeRenderer.material.color = Color.blue;
-                        
-                    }
-                    else
-                    {
-                        GameObject cubePrefab = GameObject.CreatePrimitive(PrimitiveType.Cube);
-
-                        // プレハブをインスタンス化
-                        GameObject cube = GameObject.Instantiate(cubePrefab);
-
-                        // インスタンス化後のキューブの大きさを100に設定
-                        cube.transform.localScale = new Vector3(100, 100, 100);
-                        
-                        // キューブの位置を設定 (任意で変更可能)
-                        cube.transform.position = new Vector3(0, 0,137.6f);
-                        
-                        // キューブの色を赤に設定
-                        Renderer cubeRenderer = cube.GetComponent<Renderer>();
-                        cubeRenderer.material.color = Color.green;
-                    }   
+            runtimeTransformHandleScript = RuntimeTransformHandle.Create(null,HandleType.POSITION);
         }
         public override void OnSelect()
         {

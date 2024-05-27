@@ -36,8 +36,6 @@ namespace Landscape2.Runtime
         private CreateMode createMode;
         private EditMode editMode;
         private DeleteMode deleteMode;
-
-        private GameObject runtimeTransformHandle;
         public ArrangeAsset()
         {
             createMode = new CreateMode();
@@ -77,7 +75,6 @@ namespace Landscape2.Runtime
             {
                 deleteMode.DeleteAsset();
             };
-
         }
 
         public async void OnEnable()
@@ -92,7 +89,8 @@ namespace Landscape2.Runtime
             AsyncOperationHandle<IList<GameObject>> assetHandle = Addressables.LoadAssetsAsync<GameObject>("PlateauProps_Assets", null);
             IList<GameObject> assets = await assetHandle.Task;
             AsyncOperationHandle<GameObject> runtimeHandle = Addressables.LoadAssetAsync<GameObject>("RuntimeTransformHandle_Assets");
-            runtimeTransformHandle = await runtimeHandle.Task;
+            GameObject runtimeTransformHandle = await runtimeHandle.Task;
+            
             SetMode("Create");
             createMode.CreateButton(assets);
             editMode.CreateRuntimeHandle(runtimeTransformHandle);
