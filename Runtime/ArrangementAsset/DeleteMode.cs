@@ -122,6 +122,7 @@ namespace Landscape2.Runtime
                 SetLayerRecursively(obj,0);
             }
             selectedAssets.Clear();
+            selectedAssetsScroll.Clear();
         }
     }
 }

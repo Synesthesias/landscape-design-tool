@@ -90,7 +90,10 @@ namespace Landscape2.Runtime
             IList<GameObject> assets = await assetHandle.Task;
             AsyncOperationHandle<GameObject> runtimeHandle = Addressables.LoadAssetAsync<GameObject>("RuntimeTransformHandle_Assets");
             GameObject runtimeTransformHandle = await runtimeHandle.Task;
-            
+            AsyncOperationHandle<GameObject> customPassHandle = Addressables.LoadAssetAsync<GameObject>("CustomPass");
+            GameObject customPass = await customPassHandle.Task;
+
+            GameObject.Instantiate(customPass);
             SetMode("Create");
             createMode.CreateButton(assets);
             editMode.CreateRuntimeHandle(runtimeTransformHandle);

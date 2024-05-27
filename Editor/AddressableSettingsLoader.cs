@@ -10,10 +10,11 @@ namespace Landscape2.Editor
 {
     public static class AddressableSettingsLoader
     {
+        private static AddressableAssetSettings currentSettings;
         public static void LoadAndAddSettings()
         {
             // Addressableの取得
-            var currentSettings = AddressableAssetSettingsDefaultObject.Settings;
+            currentSettings = AddressableAssetSettingsDefaultObject.Settings;
             if (currentSettings == null)
             {
                 string settingsPath = "Assets/AddressableAssetsData/AddressableAssetSettings.asset";
@@ -38,59 +39,49 @@ namespace Landscape2.Editor
             {
                 currentSettings.AddLabel("RuntimeTransformHandle_Assets");
             }
+            if (!currentSettings.GetLabels().Contains("CustomPass"))
+            {
+                currentSettings.AddLabel("CustomPass");
+            }
 
-            AddGroupsToSettings(currentSettings);
+            AddGroupsToSettings();
         }
 
-        private static void AddGroupsToSettings(AddressableAssetSettings currentSettings)
+        private static void AddGroupsToSettings()
         {
-            AddRuntimeHandleGroup(currentSettings);
-            AddPlateauAssetGroup(currentSettings);
+            AddRuntimeHandleGroup();
+            AddCustomPassGroup();
+            AddPlateauAssetGroup();
         }
-        private static void AddRuntimeHandleGroup(AddressableAssetSettings currentSettings)
+        private static void AddRuntimeHandleGroup()
         {
             var groupName = "RuntimeHandle";
-            var targetGroup = currentSettings.FindGroup(groupName);
-            if (targetGroup == null)
-            {
-                targetGroup = currentSettings.CreateGroup(groupName, false, false, false, new List<AddressableAssetGroupSchema>(), typeof(ContentUpdateGroupSchema), typeof(BundledAssetGroupSchema));
-                var bundledAssetGroupSchema = targetGroup.GetSchema<BundledAssetGroupSchema>();
-                if (bundledAssetGroupSchema != null)
-                {
-                    // Build & Load PathをLocalに変更
-                    bundledAssetGroupSchema.BuildPath.SetVariableByName(currentSettings, AddressableAssetSettings.kLocalBuildPath);
-                    bundledAssetGroupSchema.LoadPath.SetVariableByName(currentSettings, AddressableAssetSettings.kLocalLoadPath);
-                    EditorUtility.SetDirty(targetGroup);
-                    AssetDatabase.SaveAssets();
-                }
-            }
+            var targetGroup = CreateGroup(groupName);
+            
             var guid = AssetDatabase.AssetPathToGUID("Packages/com.synesthesias.landscape-design-tool-2/Runtime/ArrangementAsset/Prefab/RuntimeTransformHandle.prefab");
             string assetPath = AssetDatabase.GUIDToAssetPath(guid);
             var entry = currentSettings.CreateOrMoveEntry(guid,targetGroup);
             entry.address = System.IO.Path.GetFileNameWithoutExtension(assetPath);
             entry.SetLabel("RuntimeTransformHandle_Assets", true);
         }
-        private static void AddPlateauAssetGroup(AddressableAssetSettings currentSettings)
+        private static void AddCustomPassGroup()
         {
-            //  アセットを取得
+            var groupName = "CustomPass";
+            var targetGroup = CreateGroup(groupName);
+
+            var guid = AssetDatabase.AssetPathToGUID("Packages/com.synesthesias.landscape-design-tool-2/Runtime/ArrangementAsset/Prefab/CustomPass.prefab");
+            string assetPath = AssetDatabase.GUIDToAssetPath(guid);
+            var entry = currentSettings.CreateOrMoveEntry(guid,targetGroup);
+            entry.address = System.IO.Path.GetFileNameWithoutExtension(assetPath);
+            entry.SetLabel("CustomPass", true);
+        }
+        private static void AddPlateauAssetGroup()
+        {
+            var groupName = "PlateauAssets";
+            var targetGroup = CreateGroup(groupName);
+
             string propsDirectoryPath = "Assets/Samples/PLATEAU SDK-Toolkits for Unity/1.0.1/HDRP Sample Assets/Props/Prefabs";
             string[] assetGUIDs = AssetDatabase.FindAssets("", new[] { propsDirectoryPath });
-
-            var groupName = "PlateauAssets";
-            var targetGroup = currentSettings.FindGroup(groupName);
-            if (targetGroup == null)
-            {
-                targetGroup = currentSettings.CreateGroup(groupName, false, false, false, new List<AddressableAssetGroupSchema>(), typeof(ContentUpdateGroupSchema), typeof(BundledAssetGroupSchema));
-                var bundledAssetGroupSchema = targetGroup.GetSchema<BundledAssetGroupSchema>();
-                if (bundledAssetGroupSchema != null)
-                {
-                    // Build & Load PathをLocalに変更
-                    bundledAssetGroupSchema.BuildPath.SetVariableByName(currentSettings, AddressableAssetSettings.kLocalBuildPath);
-                    bundledAssetGroupSchema.LoadPath.SetVariableByName(currentSettings, AddressableAssetSettings.kLocalLoadPath);
-                    EditorUtility.SetDirty(targetGroup);
-                    AssetDatabase.SaveAssets();
-                }
-            }
             foreach(var guid in assetGUIDs)
             {
                 string assetPath = AssetDatabase.GUIDToAssetPath(guid);
@@ -98,6 +89,25 @@ namespace Landscape2.Editor
                 entry.address = System.IO.Path.GetFileNameWithoutExtension(assetPath);
                 entry.SetLabel("PlateauProps_Assets", true);
             }
+        }
+        private static AddressableAssetGroup CreateGroup(string groupName)
+        {
+            var targetGroup = currentSettings.FindGroup(groupName);
+            if(targetGroup != null)
+            {
+                return targetGroup;
+            }
+            targetGroup = currentSettings.CreateGroup(groupName, false, false, false, new List<AddressableAssetGroupSchema>(), typeof(ContentUpdateGroupSchema), typeof(BundledAssetGroupSchema));
+            var bundledAssetGroupSchema = targetGroup.GetSchema<BundledAssetGroupSchema>();
+            if (bundledAssetGroupSchema != null)
+            {
+                // Build & Load PathをLocalに変更
+                bundledAssetGroupSchema.BuildPath.SetVariableByName(currentSettings, AddressableAssetSettings.kLocalBuildPath);
+                bundledAssetGroupSchema.LoadPath.SetVariableByName(currentSettings, AddressableAssetSettings.kLocalLoadPath);
+                EditorUtility.SetDirty(targetGroup);
+                AssetDatabase.SaveAssets();
+            }
+            return targetGroup;
         }
     }
     
