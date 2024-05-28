@@ -27,7 +27,15 @@ namespace Landscape2.Runtime
                 new WeatherTimeEditorUI(new WeatherTimeEditor.WeatherTimeEditor()),
             };
         }
-        
+
+        private void Start()
+        {
+            foreach(var c in subComponents)
+            {
+                c.Start();
+            }
+        }
+
         private void OnEnable()
         {
             foreach (var c in subComponents)

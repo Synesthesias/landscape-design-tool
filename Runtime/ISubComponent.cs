@@ -9,5 +9,7 @@
         public void Update(float deltaTime);
         public void OnEnable();
         public void OnDisable();
+
+        public void Start();
     }
 }
