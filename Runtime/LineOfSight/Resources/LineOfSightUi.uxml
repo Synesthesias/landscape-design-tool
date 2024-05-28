@@ -1,0 +1,9 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Packages/com.synesthesias.landscape-design-tool-2/Runtime/UICommon/UIStyleCommon.uss?fileID=7433441132597879392&amp;guid=5003ef441f4ce7e4881f663b95f4df1d&amp;type=3#UIStyleCommon" />
+    <ui:VisualElement name="LineOfSightUiPosition" style="flex-grow: 1; position: absolute; top: 100%; translate: 0 -100%;">
+        <ui:ScrollView name="LineOfSightUiContentRoot" class="gis-background-window menu" style="max-width: 300px;">
+            <ui:Label tabindex="-1" text="視線の可視化" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LineOfSightHeader" class="header" />
+            <ui:Button text="視線の作成" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LineOfSightCreateButton" class="menu-unity-button" />
+        </ui:ScrollView>
+    </ui:VisualElement>
+</ui:UXML>
