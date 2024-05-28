@@ -96,6 +96,54 @@ namespace Landscape2.Runtime
                     ""isPartOfComposite"": true
                 }
             ]
+        },
+        {
+            ""name"": ""ArrangeAsset"",
+            ""id"": ""cc3834d5-c6b2-435a-868e-50ccccf3aea6"",
+            ""actions"": [
+                {
+                    ""name"": ""select"",
+                    ""type"": ""Button"",
+                    ""id"": ""f80f366a-285a-4f4f-932d-8fe4bd837a93"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""cancel"",
+                    ""type"": ""Button"",
+                    ""id"": ""577543e0-8254-4172-b16e-54c783625445"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""f67a630e-2b08-4991-9773-982c41dfd2e2"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""select"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e50e42f2-271c-4a05-81ee-1b9674126a71"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""cancel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -103,6 +151,10 @@ namespace Landscape2.Runtime
             // CameraMove
             m_CameraMove = asset.FindActionMap("CameraMove", throwIfNotFound: true);
             m_CameraMove_HorizontalMoveCameraByKeyboard = m_CameraMove.FindAction("HorizontalMoveCameraByKeyboard", throwIfNotFound: true);
+            // ArrangeAsset
+            m_ArrangeAsset = asset.FindActionMap("ArrangeAsset", throwIfNotFound: true);
+            m_ArrangeAsset_select = m_ArrangeAsset.FindAction("select", throwIfNotFound: true);
+            m_ArrangeAsset_cancel = m_ArrangeAsset.FindAction("cancel", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -206,9 +258,68 @@ namespace Landscape2.Runtime
             }
         }
         public CameraMoveActions @CameraMove => new CameraMoveActions(this);
+
+        // ArrangeAsset
+        private readonly InputActionMap m_ArrangeAsset;
+        private List<IArrangeAssetActions> m_ArrangeAssetActionsCallbackInterfaces = new List<IArrangeAssetActions>();
+        private readonly InputAction m_ArrangeAsset_select;
+        private readonly InputAction m_ArrangeAsset_cancel;
+        public struct ArrangeAssetActions
+        {
+            private @LandscapeInputActions m_Wrapper;
+            public ArrangeAssetActions(@LandscapeInputActions wrapper) { m_Wrapper = wrapper; }
+            public InputAction @select => m_Wrapper.m_ArrangeAsset_select;
+            public InputAction @cancel => m_Wrapper.m_ArrangeAsset_cancel;
+            public InputActionMap Get() { return m_Wrapper.m_ArrangeAsset; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(ArrangeAssetActions set) { return set.Get(); }
+            public void AddCallbacks(IArrangeAssetActions instance)
+            {
+                if (instance == null || m_Wrapper.m_ArrangeAssetActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_ArrangeAssetActionsCallbackInterfaces.Add(instance);
+                @select.started += instance.OnSelect;
+                @select.performed += instance.OnSelect;
+                @select.canceled += instance.OnSelect;
+                @cancel.started += instance.OnCancel;
+                @cancel.performed += instance.OnCancel;
+                @cancel.canceled += instance.OnCancel;
+            }
+
+            private void UnregisterCallbacks(IArrangeAssetActions instance)
+            {
+                @select.started -= instance.OnSelect;
+                @select.performed -= instance.OnSelect;
+                @select.canceled -= instance.OnSelect;
+                @cancel.started -= instance.OnCancel;
+                @cancel.performed -= instance.OnCancel;
+                @cancel.canceled -= instance.OnCancel;
+            }
+
+            public void RemoveCallbacks(IArrangeAssetActions instance)
+            {
+                if (m_Wrapper.m_ArrangeAssetActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            public void SetCallbacks(IArrangeAssetActions instance)
+            {
+                foreach (var item in m_Wrapper.m_ArrangeAssetActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_ArrangeAssetActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        public ArrangeAssetActions @ArrangeAsset => new ArrangeAssetActions(this);
         public interface ICameraMoveActions
         {
             void OnHorizontalMoveCameraByKeyboard(InputAction.CallbackContext context);
+        }
+        public interface IArrangeAssetActions
+        {
+            void OnSelect(InputAction.CallbackContext context);
+            void OnCancel(InputAction.CallbackContext context);
         }
     }
 }
