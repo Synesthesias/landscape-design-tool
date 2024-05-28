@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 // FirstOrDefault()の使用
 using System.Linq;
-
+using UnityEngine.UIElements;
 namespace Landscape2.Runtime
 {
     // ArrangeModeクラスの派生クラス
@@ -18,9 +18,10 @@ namespace Landscape2.Runtime
         public GameObject selectedAsset;
         private GameObject generatedAsset;
         private bool isMouseOverUI;
-        public override void OnEnable()
+        private ScrollView assetListScroll;
+        public override void OnEnable(VisualElement element)
         {
-            
+            assetListScroll = element.Q<ScrollView>("CreateTable");
         }
         public override void Update()
         {
@@ -64,7 +65,28 @@ namespace Landscape2.Runtime
                 SetLayerRecursively(generatedAsset, generateLayer); 
             }
         }
-        public void SetAsset(string assetName,IList<GameObject> assets)
+        public void CreateButton(IList<GameObject> assets)
+        {
+            // Flexコンテナを作成し、ScrollViewに追加
+            VisualElement flexContainer = new VisualElement();
+            // アセットをスクロールバーで表示させる
+            foreach (GameObject asset in assets)
+            {
+                Button newButton = new Button()
+                {
+                    text = asset.name,
+                    name = asset.name // ボタンに名前を付ける
+                };
+                newButton.AddToClassList("AssetButton");
+                newButton.clicked += () => 
+                {
+                    SetAsset(asset.name, assets);
+                };
+                flexContainer.Add(newButton);
+            }
+            assetListScroll.Add(flexContainer);
+        }
+        private void SetAsset(string assetName,IList<GameObject> assets)
         {
             // 選択されたアセットを取得
             selectedAsset = assets.FirstOrDefault(p => p.name == assetName);

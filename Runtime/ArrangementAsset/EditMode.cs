@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 // 入力処理
 using UnityEngine.InputSystem;
 
@@ -11,14 +12,12 @@ namespace Landscape2.Runtime
     public class EditMode : ArrangeMode
     {
         private RuntimeTransformHandle runtimeTransformHandleScript;
-        public override void OnEnable()
+
+        public override void OnEnable(VisualElement element)
         {
-            runtimeTransformHandleScript = GameObject.Find("runtimeTransformHandleObject").GetComponent<RuntimeTransformHandle>();
-            runtimeTransformHandleScript.autoScale = true;
         }
         public override void Update()
         {
-
         }
         public void SetTransformType(string name)
         {
@@ -41,6 +40,10 @@ namespace Landscape2.Runtime
                 }
             }
         }
+        public void CreateRuntimeHandle(GameObject obj)
+        {
+            runtimeTransformHandleScript = RuntimeTransformHandle.Create(null,HandleType.POSITION);
+        }
         public override void OnSelect()
         {
             Camera cam = Camera.main;
@@ -50,7 +53,8 @@ namespace Landscape2.Runtime
                 GameObject createdAssets = GameObject.Find("CreatedAssets");
                 if (hit.transform.parent == createdAssets.transform)
                 {
-                    runtimeTransformHandleScript.target = hit.collider.gameObject.transform;                           
+                    runtimeTransformHandleScript.target = hit.collider.gameObject.transform;    
+                         
                 }
             }
         }

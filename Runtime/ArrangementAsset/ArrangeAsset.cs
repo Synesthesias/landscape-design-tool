@@ -20,7 +20,7 @@ namespace Landscape2.Runtime
     // CreateAsset,EditAsset,DeleteAssetクラスの基底クラス
     public abstract class ArrangeMode
     {
-        public virtual void OnEnable() {}
+        public virtual void OnEnable(VisualElement element) {}
         public virtual void OnDisable() {}
         public abstract void Update();
         public virtual void OnSelect(){}
@@ -28,24 +28,21 @@ namespace Landscape2.Runtime
     }
     public class ArrangeAsset : ISubComponent,LandscapeInputActions.IArrangeAssetActions
     {
-        private ScrollView assetListScroll;
-        private VisualElement editTable;
+        private VisualElement arrangementAssetUI;
         private const string UINameRoot = "AssetArrangeContent";
         private LandscapeInputActions.ArrangeAssetActions input;
-
 
         private ArrangeMode currentMode;
         private CreateMode createMode;
         private EditMode editMode;
         private DeleteMode deleteMode;
-
         public ArrangeAsset()
         {
             createMode = new CreateMode();
             editMode = new EditMode();
             deleteMode = new DeleteMode();
 
-            var arrangementAssetUI = new UIDocumentFactory().CreateWithUxmlName("ArrangementAssetUI");
+            arrangementAssetUI = new UIDocumentFactory().CreateWithUxmlName("ArrangementAssetUI");
             // Create Edit Deleteボタンの機能
             var assetArrangeContent = arrangementAssetUI.Q(UINameRoot);
             var assetTab = new TabUI(assetArrangeContent);
@@ -61,7 +58,7 @@ namespace Landscape2.Runtime
                 }
             }
             // Position Rotation Scaleボタンの機能
-            editTable =  arrangementAssetUI.Q<VisualElement>("EditTable");
+            var editTable =  arrangementAssetUI.Q<VisualElement>("EditTable");
             foreach(var child in editTable.Children())
             {
                 if (child is Button tab)
@@ -72,14 +69,12 @@ namespace Landscape2.Runtime
                     };
                 }
             }
-            assetListScroll= arrangementAssetUI.Q<ScrollView>("CreateTable");
 
             Button deleteButton = arrangementAssetUI.Q<Button>("DeleteButton");
             deleteButton.clicked += () => 
             {
                 deleteMode.DeleteAsset();
             };
-
         }
 
         public async void OnEnable()
@@ -93,39 +88,17 @@ namespace Landscape2.Runtime
             // アセットの取得
             AsyncOperationHandle<IList<GameObject>> assetHandle = Addressables.LoadAssetsAsync<GameObject>("PlateauProps_Assets", null);
             IList<GameObject> assets = await assetHandle.Task;
-            // RuntimeTransformHandle.csの参照
-            AsyncOperationHandle<GameObject> runtimeHandle = Addressables.LoadAssetAsync<GameObject>("RuntimeTransformHandleScriptObject");
+            AsyncOperationHandle<GameObject> runtimeHandle = Addressables.LoadAssetAsync<GameObject>("RuntimeTransformHandle_Assets");
             GameObject runtimeTransformHandle = await runtimeHandle.Task;
-            GameObject runtimeTransformHandleObject = GameObject.Instantiate(runtimeTransformHandle) as GameObject;
-            runtimeTransformHandleObject.name = "runtimeTransformHandleObject";
-            CreateButton(assets);
+            AsyncOperationHandle<GameObject> customPassHandle = Addressables.LoadAssetAsync<GameObject>("CustomPass");
+            GameObject customPass = await customPassHandle.Task;
 
+            GameObject.Instantiate(customPass);
             SetMode("Create");
+            createMode.CreateButton(assets);
+            editMode.CreateRuntimeHandle(runtimeTransformHandle);
+            
         }
-        private void CreateButton(IList<GameObject> assets)
-        {
-            // Flexコンテナを作成し、ScrollViewに追加
-            VisualElement flexContainer = new VisualElement();
-            // アセットをスクロールバーで表示させる
-            foreach (GameObject asset in assets)
-            {
-                Button newButton = new Button()
-                {
-                    text = asset.name,
-                    name = asset.name // ボタンに名前を付ける
-                };
-                newButton.AddToClassList("AssetButton");
-                newButton.name = asset.name;
-                newButton.clicked += () => 
-                {
-                    createMode.SetAsset(asset.name, assets);
-                };
-                flexContainer.Add(newButton);
-            }
-
-            assetListScroll.Add(flexContainer);
-        }
-        
         public void SetMode(string mode)
         {
             if (currentMode != null)
@@ -145,7 +118,7 @@ namespace Landscape2.Runtime
             {
                 currentMode = deleteMode;
             }
-            currentMode.OnEnable();
+            currentMode.OnEnable(arrangementAssetUI);
         }
 
         public void Update(float deltaTime)
