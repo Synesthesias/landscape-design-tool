@@ -3,7 +3,7 @@
     "rootNamespace": "Landscape2.Editor",
     "references": [
         "Unity.Addressables.Editor",
-        "Unity.Addressables"
+        "Unity.Addressables",
         "GUID:2c3ad3f557b9daf4d8027aa5843b4558"
     ],
     "includePlatforms": [
