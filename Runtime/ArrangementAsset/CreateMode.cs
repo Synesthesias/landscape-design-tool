@@ -60,6 +60,7 @@ namespace Landscape2.Runtime
                 }
                 GameObject createdAssets = GameObject.Find("CreatedAssets");
                 generatedAsset = GameObject.Instantiate(obj, hit.point, Quaternion.identity, createdAssets.transform) as GameObject;
+                generatedAsset.name =  obj.name;
 
                 int generateLayer = LayerMask.NameToLayer("Ignore Raycast");
                 SetLayerRecursively(generatedAsset, generateLayer); 

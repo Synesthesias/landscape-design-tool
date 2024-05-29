@@ -10,7 +10,7 @@ namespace Landscape2.Editor
     /// </summary>
     public class LandscapeWindow : EditorWindow
     {
-        private RegulationAreaUI regulationAreaUI;
+        // private RegulationAreaUI regulationAreaUI;
         private LineOfSightUI lineOfSightUI;
         private DateTime lastSceneDrawTime;
         
@@ -23,7 +23,7 @@ namespace Landscape2.Editor
 
         private void OnEnable()
         {
-            regulationAreaUI = RegulationAreaUI.CreateForEditorWindow(rootVisualElement);
+            // regulationAreaUI = RegulationAreaUI.CreateForEditorWindow(rootVisualElement);
             lineOfSightUI = LineOfSightUI.CreateForEditorWindow(rootVisualElement);
             lastSceneDrawTime = DateTime.Now;
             SceneView.duringSceneGui += OnSceneGUI;
@@ -38,7 +38,7 @@ namespace Landscape2.Editor
         {
             var now = DateTime.Now;
             var deltaTime = ((float)(now - lastSceneDrawTime).Milliseconds) / 1000f;
-            regulationAreaUI.Update(deltaTime);
+            // regulationAreaUI.Update(deltaTime);
             lineOfSightUI.Update(deltaTime);
             lastSceneDrawTime = now;
         }

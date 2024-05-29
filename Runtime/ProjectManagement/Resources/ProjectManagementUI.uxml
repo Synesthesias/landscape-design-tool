@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Packages/com.synesthesias.landscape-design-tool-2/Runtime/UICommon/UIStyleCommon.uss?fileID=7433441132597879392&amp;guid=5003ef441f4ce7e4881f663b95f4df1d&amp;type=3#UIStyleCommon" />
+    <ui:VisualElement name="VisualElement" class="gis-background-window" style="flex-grow: 1; width: 20%; height: 22%; left: 30%; position: absolute;">
+        <ui:Button text="Save" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Save" class="unity-button" />
+        <ui:Button text="Load" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Load" />
+        <ui:Label tabindex="-1" text="Path" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Path" class="unity-label" />
+    </ui:VisualElement>
+</ui:UXML>

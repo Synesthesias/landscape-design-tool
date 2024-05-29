@@ -22,9 +22,10 @@ namespace Landscape2.Runtime
                 new CameraMoveByUserInput(mainCam),
                 new CameraPositionMemoryUI(new CameraPositionMemory.CameraPositionMemory(mainCam)),
                 new ArrangeAsset(),
-                RegulationAreaUI.CreateForScene(),
+                // RegulationAreaUI.CreateForScene(),
                 LineOfSightUI.CreateForScene(),
                 new WeatherTimeEditorUI(new WeatherTimeEditor.WeatherTimeEditor()),
+                new SaveSystem()
             };
         }
         
