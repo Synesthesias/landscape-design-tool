@@ -64,7 +64,9 @@ namespace Landscape2.Runtime
         }
         void SaveGame()
         {
-
+            var inputPath = projectManagementUI.Q<TextField>("Path");
+            var inputFileName = projectManagementUI.Q<TextField>("FileName");
+            DataSerializer._savePath = Path.Combine(inputPath.value,inputFileName.value);
             List<TransformData> assetsTransformData = new List<TransformData>();
             GameObject createdAssets = GameObject.Find("CreatedAssets");
             foreach(Transform asset in createdAssets.transform)
@@ -80,6 +82,9 @@ namespace Landscape2.Runtime
 
         void LoadGame()
         {
+            var inputPath = projectManagementUI.Q<TextField>("Path");
+            var inputFileName = projectManagementUI.Q<TextField>("FileName");
+            DataSerializer._savePath = Path.Combine(inputPath.value,inputFileName.value);
             DataSerializer.LoadFile();
             List<TransformData> loadedTransformData = DataSerializer.Load<List<TransformData>>("TRandomCubesTransformData");
             if (loadedTransformData != null)

@@ -3,6 +3,7 @@
     <ui:VisualElement name="VisualElement" class="gis-background-window" style="flex-grow: 1; width: 20%; height: 22%; left: 30%; position: absolute;">
         <ui:Button text="Save" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Save" class="unity-button" />
         <ui:Button text="Load" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Load" />
-        <ui:Label tabindex="-1" text="Path" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Path" class="unity-label" />
+        <ui:TextField picking-mode="Ignore" label="Path" value="XS" name="Path" />
+        <ui:TextField picking-mode="Ignore" label="FileName(.data)" name="FileName" />
     </ui:VisualElement>
 </ui:UXML>
