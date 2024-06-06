@@ -82,6 +82,10 @@ namespace Landscape2.Runtime
                 Debug.LogError("景観エリアの作成モードでないのに、エリア選択完了が通知されました。");
             }
         }
+
+        public void Start()
+        {
+        }
     }
 
     /// <summary>
