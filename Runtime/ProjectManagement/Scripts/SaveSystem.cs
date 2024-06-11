@@ -39,8 +39,8 @@ namespace Landscape2.Runtime
         public SaveSystem()
         {
             projectManagementUI = new UIDocumentFactory().CreateWithUxmlName("ProjectManagementUI");
-            Button saveButton = projectManagementUI.Q<Button>("Save");
-            Button loadButton = projectManagementUI.Q<Button>("Load");
+            Button saveButton = projectManagementUI.Q<Button>("SaveButton");
+            Button loadButton = projectManagementUI.Q<Button>("LoadButton");
             saveButton.clicked += SaveGame;
             loadButton.clicked += LoadGame;
             
@@ -52,15 +52,6 @@ namespace Landscape2.Runtime
         }
         public void Update(float deltaTime)
         {
-            if (Input.GetKeyDown(KeyCode.S)) // Sキーが押されたとき
-            {
-                SaveGame();
-            }
-
-            if (Input.GetKeyDown(KeyCode.L)) // Lキーが押されたとき
-            {
-                LoadGame();
-            }
         }
         void SaveGame()
         {
