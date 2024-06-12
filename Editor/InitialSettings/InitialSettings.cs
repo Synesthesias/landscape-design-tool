@@ -15,15 +15,11 @@ namespace Landscape2.Editor
     {
         private GameObject[] cityModelObjs;
 
-        // SubComponentsを生成する
-        public InitialSettings()
-        {
-        }
-        // 初期設定が未実行かを確認
-        public bool CheckInitialSettings()
+        // SubComponentsが存在する，つまり初期設定が実行されているかを確認
+        public bool CheckSubComponents()
         {
             var landscapeSubComponents = GameObject.FindObjectOfType<LandscapeSubComponents>();
-            if (landscapeSubComponents == null)
+            if (landscapeSubComponents != null)
             {
                 return true;
             }
@@ -71,8 +67,12 @@ namespace Landscape2.Editor
         // SubComponentsを生成する
         public void CreateSubComponents()
         {
-            var subComponentsObj = new GameObject("SubComponents");
-            subComponentsObj.AddComponent<LandscapeSubComponents>();
+            // 初期設定が行われている場合はSubComponentsを生成しない
+            if (CheckSubComponents() == false)
+            {
+                var subComponentsObj = new GameObject("SubComponents");
+                subComponentsObj.AddComponent<LandscapeSubComponents>();
+            }
         }
         // 初期設定を実行
         public async Task ExecuteInitialSettings()

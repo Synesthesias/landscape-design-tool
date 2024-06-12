@@ -1,16 +1,16 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <Style src="project://database/Packages/com.synesthesias.landscape-design-tool-2/Runtime/UICommon/UIStyleCommon.uss?fileID=7433441132597879392&amp;guid=5003ef441f4ce7e4881f663b95f4df1d&amp;type=3#UIStyleCommon" />
-    <ui:Label text="Initial Settings" name="Label" />
-    <ui:Label tabindex="-1" text="Configuration Checking" parse-escape-sequences="true" display-tooltip-when-elided="true" />
-    <ui:GroupBox style="width: 90%; align-items: stretch; align-self: center; -unity-text-outline-color: rgba(95, 95, 95, 0); -unity-text-outline-width: 0;">
-        <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-between;">
+    <ui:Label text="初期設定" name="Label" class="header" />
+    <ui:Label tabindex="-1" text="Configuration Checking" parse-escape-sequences="true" display-tooltip-when-elided="true" style="font-size: 16px; -unity-font-style: bold;" />
+    <ui:GroupBox style="width: 90%; align-items: stretch; align-self: center; -unity-text-outline-color: rgba(95, 95, 95, 0); -unity-text-outline-width: 0; border-left-color: rgb(113, 113, 113); border-right-color: rgb(113, 113, 113); border-top-color: rgb(113, 113, 113); border-bottom-color: rgb(113, 113, 113); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px;">
+        <ui:VisualElement name="ImportCheckColumn" style="flex-grow: 1; flex-direction: row; justify-content: space-between;">
             <ui:Label tabindex="-1" text="都市モデルのインポート" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" />
-            <ui:Label tabindex="-1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ImportCheck" />
         </ui:VisualElement>
-        <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-between;">
+        <ui:VisualElement name="ImportHelpboxColumn" style="flex-grow: 1; flex-direction: row; justify-content: space-between;" />
+        <ui:VisualElement name="CityObjectCheckColumn" style="flex-grow: 1; flex-direction: row; justify-content: space-between;">
             <ui:Label tabindex="-1" text="属性情報を持つ都市オブジェクト" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" />
-            <ui:Label tabindex="-1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="CityObjectCheck" />
         </ui:VisualElement>
+        <ui:VisualElement name="CityObjectHelpboxColumn" style="flex-grow: 1; flex-direction: row; justify-content: space-between;" />
     </ui:GroupBox>
     <ui:Button text="実行" parse-escape-sequences="true" display-tooltip-when-elided="true" name="RunButton" />
 </ui:UXML>
