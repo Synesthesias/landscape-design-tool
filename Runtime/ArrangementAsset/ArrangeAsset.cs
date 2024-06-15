@@ -26,6 +26,7 @@ namespace Landscape2.Runtime
         public virtual void OnSelect(){}
         public virtual void OnCancel(){}
     }
+
     public class ArrangeAsset : ISubComponent,LandscapeInputActions.IArrangeAssetActions
     {
         private VisualElement arrangementAssetUI;
@@ -36,11 +37,14 @@ namespace Landscape2.Runtime
         private CreateMode createMode;
         private EditMode editMode;
         private DeleteMode deleteMode;
+        private SaveSystem_Assets saveSystem_Assets;
+
         public ArrangeAsset()
         {
             createMode = new CreateMode();
             editMode = new EditMode();
             deleteMode = new DeleteMode();
+            saveSystem_Assets = new SaveSystem_Assets();
 
             arrangementAssetUI = new UIDocumentFactory().CreateWithUxmlName("ArrangementAssetUI");
             // Create Edit Deleteボタンの機能
@@ -97,8 +101,12 @@ namespace Landscape2.Runtime
             SetMode("Create");
             createMode.CreateButton(assets);
             editMode.CreateRuntimeHandle(runtimeTransformHandle);
+
+            saveSystem_Assets.OnEnable();
+            saveSystem_Assets.LoadPlateauAssets(assets);
             
         }
+
         public void SetMode(string mode)
         {
             if (currentMode != null)
@@ -128,6 +136,7 @@ namespace Landscape2.Runtime
                 currentMode.Update();
             }
         }
+
         public void OnSelect(InputAction.CallbackContext context)
         {
             if(context.performed && currentMode != null)
@@ -135,6 +144,7 @@ namespace Landscape2.Runtime
                 currentMode.OnSelect();
             }
         }
+
         public void OnCancel(InputAction.CallbackContext context)
         {
             if(context.performed && currentMode != null)
@@ -142,6 +152,7 @@ namespace Landscape2.Runtime
                 currentMode.OnCancel();
             }
         }
+        
         public void OnDisable()
         {
             input.Disable();

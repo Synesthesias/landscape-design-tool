@@ -19,10 +19,12 @@ namespace Landscape2.Runtime
         private GameObject generatedAsset;
         private bool isMouseOverUI;
         private ScrollView assetListScroll;
+
         public override void OnEnable(VisualElement element)
         {
             assetListScroll = element.Q<ScrollView>("CreateTable");
         }
+
         public override void Update()
         {
             // マウスがUI上にあるかどうか
@@ -48,6 +50,7 @@ namespace Landscape2.Runtime
                 }
             }
         }
+
         public void generateAssets(GameObject obj)
         {
             cam = Camera.main;
@@ -66,6 +69,7 @@ namespace Landscape2.Runtime
                 SetLayerRecursively(generatedAsset, generateLayer); 
             }
         }
+
         public void CreateButton(IList<GameObject> assets)
         {
             // Flexコンテナを作成し、ScrollViewに追加
@@ -87,12 +91,14 @@ namespace Landscape2.Runtime
             }
             assetListScroll.Add(flexContainer);
         }
+
         private void SetAsset(string assetName,IList<GameObject> assets)
         {
             // 選択されたアセットを取得
             selectedAsset = assets.FirstOrDefault(p => p.name == assetName);
             generateAssets(selectedAsset);
         }
+
         void SetLayerRecursively(GameObject obj, int newLayer)
         {
             if (obj == null)
@@ -108,6 +114,7 @@ namespace Landscape2.Runtime
                 SetLayerRecursively(child.gameObject, newLayer);
             }
         }
+
         public override void OnSelect()
         {   
             if(selectedAsset != null)
@@ -116,10 +123,12 @@ namespace Landscape2.Runtime
                 generateAssets(selectedAsset);
             }
         }
+
         public override void OnCancel()
         {
             GameObject.Destroy(generatedAsset);   
         }
+        
         public override void OnDisable()
         {
             generatedAsset = null;

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
+using System.Linq;
 
 namespace Landscape2.Editor
 {
@@ -27,6 +28,7 @@ namespace Landscape2.Editor
 
             // Lit Shader ModeをBothに設定
             SerializedObject serializedHDRPAsset = new SerializedObject(hdrpAsset);
+
             SerializedProperty litShaderModeProperty = serializedHDRPAsset.FindProperty("m_RenderPipelineSettings.supportedLitShaderMode");
             litShaderModeProperty.enumValueIndex = 2;
             // litShaderModeProperty.enumValueIndex = (int)RenderPipelineSettings.SupportedLitShaderMode.Both; == 3 -> enum index is out of range
@@ -40,7 +42,32 @@ namespace Landscape2.Editor
             customBufferFormatProperty.enumValueIndex = 2;
             // customBufferFormatProperty.entryValueIndex = (int)RenderPipelineSettings.CustomBufferFormat.R16G16B16A16; == 48 -> enum index is out of range
 
+
+            // int targetIndex = 0;
+            // ApiCompatibilityLevel[] levels = (ApiCompatibilityLevel[])System.Enum.GetValues(typeof(ApiCompatibilityLevel));
+            // if (targetIndex >= 0 && targetIndex < levels.Length)
+            // {
+            //     PlayerSettings.SetApiCompatibilityLevel(BuildTargetGroup.Standalone, levels[targetIndex]);
+            //     Debug.Log($"Standalone API Compatibility Level set to {levels[targetIndex]}");
+            // }
+            // SetApiCompatibilityLevelForTarget(BuildTargetGroup.Android, targetIndex);
+            // SetApiCompatibilityLevelForTarget(BuildTargetGroup.iOS, targetIndex);
+
             serializedHDRPAsset.ApplyModifiedProperties();
+        }
+
+        private static void SetApiCompatibilityLevelForTarget(BuildTargetGroup targetGroup, int targetIndex)
+        {
+            ApiCompatibilityLevel[] levels = (ApiCompatibilityLevel[])System.Enum.GetValues(typeof(ApiCompatibilityLevel));
+            if (targetIndex >= 0 && targetIndex < levels.Length)
+            {
+                PlayerSettings.SetApiCompatibilityLevel(targetGroup, levels[targetIndex]);
+                Debug.Log($"{targetGroup} API Compatibility Level set to {levels[targetIndex]}");
+            }
+            else
+            {
+                Debug.LogError("Invalid index for API Compatibility Level");
+            }
         }
     }
 }
