@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static PlasticPipe.PlasticProtocol.Messages.Serialization.ItemHandlerMessagesSerialization;
 
 namespace Landscape2.Editor
 {
@@ -16,8 +15,8 @@ namespace Landscape2.Editor
         [SerializeField]private Texture errorTexture;
         private InitialSettings initialSettings = new InitialSettings();
         private VisualElement uiRoot;
-        private const string UIRunButton = "RunButton"; // 初期設定実行ボタン名前
 
+        private const string UIRunButton = "RunButton"; // 初期設定実行ボタン名前
         private const string UIImportCheck = "ImportCheckColumn"; // 都市モデルインポート済み判定欄名前
         private const string UIImportHelpbox = "ImportHelpboxColumn"; // 都市モデルインポート済み判定Helpbox欄名前
         private const string UICityObjectCheck = "CityObjectCheckColumn"; // 都市オブジェクトが配置されているかの判定欄名前
@@ -87,6 +86,7 @@ namespace Landscape2.Editor
                 runButton.SetEnabled(false);
             };
         }
+
         // チェックリストのUI処理
         void AddCheckListUI(bool isCheck,string checkUI,string helpBoxUI,HelpBox helpbox)
         {
