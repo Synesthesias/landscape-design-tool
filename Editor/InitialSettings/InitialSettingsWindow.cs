@@ -22,8 +22,8 @@ namespace Landscape2.Editor
         private const string UIImportHelpbox = "ImportHelpboxColumn"; // 都市モデルインポート済み判定Helpbox欄名前
         private const string UICityObjectCheck = "CityObjectCheckColumn"; // 都市オブジェクトが配置されているかの判定欄名前
         private const string UICityObjectHelpbox = "CityObjectHelpboxColumn"; // 都市オブジェクトが配置されているかの判定Helpbox欄名前
-        private const string UISubCompornentsCheck = "SubCompornentsCheckColumn"; // SubCompornentsが生成されたかの判定欄名前
-        private const string UISubCompornentsHelpbox = "SubCompornentsHelpboxColumn"; // SubCompornentsが生成されたかの判定Helpbox欄名前
+        private const string UISubComponentsCheck = "SubComponentsCheckColumn"; // SubCompornentsが生成されたかの判定欄名前
+        private const string UISubComponentsHelpbox = "SubComponentsHelpboxColumn"; // SubCompornentsが生成されたかの判定Helpbox欄名前
 
         private List<bool> checkList = new List<bool>(); // 初期設定実行可能かの判定用リスト
 
@@ -80,7 +80,7 @@ namespace Landscape2.Editor
             {
                 // SubComponentsを生成
                 var isCreate = initialSettings.CreateSubComponents();
-                AddCheckListUI(isCreate, UISubCompornentsCheck, UISubCompornentsHelpbox, subCompornentsCheckHelpBox);
+                AddCheckListUI(isCreate, UISubComponentsCheck, UISubComponentsHelpbox, subCompornentsCheckHelpBox);
 
                 // 初期設定後は再び実行できないようにする
                 uiRoot.Add(initialSettingsHelpBox);
