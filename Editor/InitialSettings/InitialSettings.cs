@@ -13,9 +13,10 @@ namespace Landscape2.Editor
     /// </summary>
     public class InitialSettings
     {
+        // PLATEAUCityObjectGroupを持つGameObjectの配列
         private GameObject[] cityModelObjs;
 
-        // SubComponentsが存在する，つまり初期設定が実行されているかを確認
+        // SubComponentsが存在する，つまり初期設定が既に実行されているかを確認
         public bool CheckSubComponents()
         {
             var landscapeSubComponents = GameObject.FindObjectOfType<LandscapeSubComponents>();
@@ -28,8 +29,9 @@ namespace Landscape2.Editor
                 return false;
             }
         }
+
        　// 都市モデルがインポートされているかを確認
-        public bool CheckInstancedCityModel()
+        public bool CheckImportCityModel()
         {
             var plateauInstancedCityModel = GameObject.FindObjectOfType<PLATEAUInstancedCityModel>();
             if (plateauInstancedCityModel != null)
@@ -41,6 +43,8 @@ namespace Landscape2.Editor
                 return false;   
             }
         }
+
+
         // 都市モデルがSceneに存在するかを確認
         public bool CheckCityObjectGroup()
         {
@@ -64,17 +68,24 @@ namespace Landscape2.Editor
                 return false;
             }
         }
-        // SubComponentsを生成する
-        public void CreateSubComponents()
+
+        // SubComponentsを生成する,成功した場合trueを返す
+        public bool CreateSubComponents()
         {
             // 初期設定が行われている場合はSubComponentsを生成しない
             if (CheckSubComponents() == false)
             {
                 var subComponentsObj = new GameObject("SubComponents");
                 subComponentsObj.AddComponent<LandscapeSubComponents>();
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
-        // 初期設定を実行
+
+        // 初期設定を実行※仕様変更のため今は呼び出さない
         public async Task ExecuteInitialSettings()
         {
             // マテリアル分割の下準備として、都市オブジェクトを最小地物単位に分解
