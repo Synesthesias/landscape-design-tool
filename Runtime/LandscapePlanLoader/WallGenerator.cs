@@ -1,4 +1,6 @@
+using PlateauToolkit.Maps;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace Landscape2.Runtime.LandscapePlanLoader
@@ -15,7 +17,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// <param name="wallHeight"></param>
         /// <param name="wallDirection"></param>
         /// <returns></returns>
-        public GameObject GenerateWall(Mesh originalMesh, float wallHeight, Vector3 wallDirection)
+        public GameObject GenerateWall(Mesh originalMesh, float wallHeight, Vector3 wallDirection, Material wallMaterial)
         {
             Vector3[] vertices = originalMesh.vertices;
             int[] triangles = originalMesh.triangles;
@@ -30,42 +32,88 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 CountEdge(edgeCount, vertices, triangles[i + 2], triangles[i]);
             }
 
-            List<Vector3> newVertices = new List<Vector3>();
-            List<int> newTriangles = new List<int>();
+            List<Vector3> wallVertices = new List<Vector3>();
+            List<int> wallTriangles = new List<int>();
+            List<Edge> outlineEdges = new List<Edge>();
 
-            // Generate wall from outer edges
-            foreach (var kvp in edgeCount)
+            //外周のエッジを取得
+            foreach (var item in edgeCount)
             {
-                if (kvp.Value == 1) // Edges with no duplicates mean outer edge
+                if (item.Value == 1)
                 {
-                    Edge edge = kvp.Key;
-                    Vector3 v1 = vertices[edge.vertexIndex1];
-                    Vector3 v2 = vertices[edge.vertexIndex2];
-
-                    newVertices.Add(v1);
-                    newVertices.Add(v2);
-                    newVertices.Add(v1 + wallDirection.normalized * wallHeight);
-                    newVertices.Add(v2 + wallDirection.normalized * wallHeight);
-
-                    int count = newVertices.Count;
-                    newTriangles.Add(count - 4);
-                    newTriangles.Add(count - 3);
-                    newTriangles.Add(count - 2);
-                    newTriangles.Add(count - 3);
-                    newTriangles.Add(count - 1);
-                    newTriangles.Add(count - 2);
+                    outlineEdges.Add(item.Key);
                 }
             }
 
+            //最初のエッジを基準として取得
+            List<Vector3> SortedOutlineVertices = new List<Vector3>
+            {
+                outlineEdges[0].vertex1,
+                outlineEdges[0].vertex2
+            };
+            outlineEdges.RemoveAt(0);
+
+            //隣り合っているエッジを検索してソートする
+            for(int i = 0; outlineEdges.Count != 0; i++)
+            {
+                Vector3 preEndPoint = SortedOutlineVertices[i * 2 + 1];
+                for(int j = 0; j < outlineEdges.Count; j++)
+                {
+                    if (outlineEdges[j].vertex1 == preEndPoint)
+                    {
+                        SortedOutlineVertices.Add(outlineEdges[j].vertex1);
+                        SortedOutlineVertices.Add(outlineEdges[j].vertex2);
+                        outlineEdges.RemoveAt(j);
+                        break;
+                    }
+                    else if (outlineEdges[j].vertex2 == preEndPoint)
+                    {
+                        SortedOutlineVertices.Add(outlineEdges[j].vertex2);
+                        SortedOutlineVertices.Add(outlineEdges[j].vertex1);
+                        outlineEdges.RemoveAt(j);
+                        break;
+                    }
+                }
+            }
+
+            Vector2[] uv = new Vector2[SortedOutlineVertices.Count * 2];
+            float uvXPitch = 1.0f / SortedOutlineVertices.Count;
+
+            for(int i = 0; i * 2 < SortedOutlineVertices.Count; i++)
+            {
+                Vector3 v1 = SortedOutlineVertices[i * 2];
+                Vector3 v2 = SortedOutlineVertices[i * 2 + 1];
+
+                wallVertices.Add(v1);
+                wallVertices.Add(v2);
+                wallVertices.Add(v1 + wallDirection.normalized * wallHeight);
+                wallVertices.Add(v2 + wallDirection.normalized * wallHeight);
+
+                uv[i * 4] = new Vector2(i * 2 * uvXPitch, 1);
+                uv[i * 4 + 1] = new Vector2((i * 2 + 1) * uvXPitch, 1);
+                uv[i * 4 + 2] = new Vector2(i * 2 * uvXPitch, 0);
+                uv[i * 4 + 3] = new Vector2((i * 2 + 1) * uvXPitch, 0);
+
+                int count = wallVertices.Count;
+                wallTriangles.Add(count - 4);
+                wallTriangles.Add(count - 3);
+                wallTriangles.Add(count - 2);
+                wallTriangles.Add(count - 3);
+                wallTriangles.Add(count - 1);
+                wallTriangles.Add(count - 2);
+            }
+
             Mesh wallMesh = new Mesh();
-            wallMesh.vertices = newVertices.ToArray();
-            wallMesh.triangles = newTriangles.ToArray();
-            wallMesh.RecalculateNormals();
+            wallMesh.vertices = wallVertices.ToArray();
+            wallMesh.triangles = wallTriangles.ToArray();
+            wallMesh.uv = uv;
+            //wallMesh.RecalculateNormals();
 
             GameObject wallObject = new GameObject("Wall");
             MeshFilter meshFilter = wallObject.AddComponent<MeshFilter>();
             MeshRenderer meshRenderer = wallObject.AddComponent<MeshRenderer>();
             meshFilter.mesh = wallMesh;
+            meshRenderer.material = wallMaterial;
 
             return wallObject;
         }
@@ -94,6 +142,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         {
             public int vertexIndex1;
             public int vertexIndex2;
+
             public Vector3 vertex1;
             public Vector3 vertex2;
 

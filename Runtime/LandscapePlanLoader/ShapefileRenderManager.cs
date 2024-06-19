@@ -7,7 +7,6 @@ using CesiumForUnity;
 using Unity.Mathematics;
 using TriangleNet.Geometry;
 using JetBrains.Annotations;
-using PlateauToolkit.Maps.Runtime;
 using PlateauToolkit.Maps;
 
 
@@ -104,8 +103,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 return false;
             }
 
-            m_Clockwise = AssetDatabase.LoadAssetAtPath<Material>(PlateauToolkitMapsConstants.k_ClockwiseMaterialHdrp);
-            m_Counter = AssetDatabase.LoadAssetAtPath<Material>(PlateauToolkitMapsConstants.k_CounterClockwiseMaterialHdrp);
+            m_Clockwise = Resources.Load<Material>(PlateauToolkitMapsConstants.k_ClockwiseMaterialHdrp);
+            m_Counter = Resources.Load<Material>(PlateauToolkitMapsConstants.k_CounterClockwiseMaterialHdrp);
 
             if (m_Counter == null || m_Clockwise == null)
             {
@@ -140,9 +139,9 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 rootShpObject.AddComponent<MeshFilter>();
                 rootShpObject.AddComponent<MeshRenderer>();
 
-                GameObject shpLineRendererObject = AssetDatabase.LoadAssetAtPath<GameObject>(PlateauToolkitMapsConstants.k_ShapeParentHdrpPrefab);
+                GameObject shpLineRendererObject = Resources.Load<GameObject>(PlateauToolkitMapsConstants.k_ShapeParentHdrpPrefab);
 
-                GameObject mesh = AssetDatabase.LoadAssetAtPath<GameObject>(PlateauToolkitMapsConstants.k_MeshObjectPrefab);
+                GameObject mesh = Resources.Load<GameObject>(PlateauToolkitMapsConstants.k_MeshObjectPrefab);
 
                 foreach (IShape shape in m_ListOfShapes)
                 {
@@ -198,14 +197,14 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
         void DrawPoint(IShape shape, GameObject parentObject, bool dbfRead, DbfReader dbfReader, DbfRecord record)
         {
-            GameObject markerObjectDefault = AssetDatabase.LoadAssetAtPath<GameObject>(PlateauToolkitMapsConstants.k_PointMarkerHdrpPrefab);
+            GameObject markerObjectDefault = Resources.Load<GameObject>(PlateauToolkitMapsConstants.k_PointMarkerHdrpPrefab);
 
             foreach (Vector3 point in shape.Points)
             {
                 double3 coordinates = new(point.x, point.z, m_RenderHeight);
                 m_PositionMarkerSphere.GetComponent<CesiumGlobeAnchor>().longitudeLatitudeHeight = coordinates;
                 Vector3 pointPos = m_PositionMarkerSphere.transform.position;
-                GameObject marker = m_PointDataPrefab == null ? (GameObject)PrefabUtility.InstantiatePrefab(markerObjectDefault) : GameObject.Instantiate(m_PointDataPrefab);
+                GameObject marker = m_PointDataPrefab == null ? GameObject.Instantiate(markerObjectDefault) : GameObject.Instantiate(m_PointDataPrefab);
                 marker.name = "point_data";
                 marker.transform.parent = parentObject.transform;
                 marker.AddComponent<CesiumGlobeAnchor>().longitudeLatitudeHeight = coordinates;
@@ -237,7 +236,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
                 if (m_RenderMode == 1)
                 {
-                    GameObject shpParentInstance = (GameObject)PrefabUtility.InstantiatePrefab(shapeParent);
+                    GameObject shpParentInstance = GameObject.Instantiate(shapeParent);
 
                     shpParentInstance.transform.position = Vector3.zero;
                     shpParentInstance.name = "shpParent_" + index;
@@ -266,7 +265,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 }
                 else if (m_RenderMode == 0)
                 {
-                    GameObject meshObject = (GameObject)PrefabUtility.InstantiatePrefab(mesh);
+                    GameObject meshObject = GameObject.Instantiate(mesh);
 
                     meshObject.transform.position = Vector3.zero;
                     meshObject.transform.parent = parentObject.transform;
@@ -278,9 +277,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     // Create a tessellated mesh
                     TessellatedMeshCreator tessellatedMeshCreator = new TessellatedMeshCreator();
                     MeshFilter meshFilter = meshObject.GetComponent<MeshFilter>();
-                    MeshRenderer meshRenderer = meshObject.GetComponent<MeshRenderer>();
                     tessellatedMeshCreator.CreateTessellatedMesh(partPointsWorld, meshFilter, 30,40);
-                    meshRenderer.sharedMaterial = m_Clockwise;
 
                     m_ListOfGISObjects.Add(meshObject);
                 }
