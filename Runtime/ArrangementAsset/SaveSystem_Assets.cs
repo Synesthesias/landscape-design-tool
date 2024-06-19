@@ -5,8 +5,20 @@ using UnityEngine;
 using ToolBox.Serialization;
 using System.Linq;
 
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using System.Threading.Tasks;  // Taskを使用するために必要
+
 namespace Landscape2.Runtime
 {
+    public abstract class SaveMode
+    {
+        public virtual void SetPlateauAssets(Dictionary<GameObject, string> assets) {}
+        public virtual void SaveInfo() {}
+        public virtual void LoadInfo() {}
+
+    }
+
     [Serializable]
     public struct TransformData
     {
@@ -27,56 +39,72 @@ namespace Landscape2.Runtime
 
     public class SaveSystem_Assets : ISubComponent
     {
-        IList<GameObject> plateauAssets;
-
+        private SaveMode currentMode;
+        private SaveSystem _saveSystem;
+        private SaveProps saveProps;
+        private SaveHumans saveHumans;
+        private ArrangeAsset arrangeAsset;
+        public Dictionary<GameObject, string> plateauAssets;
+        public async void InstantiateSaveSystem(SaveSystem saveSystem)
+        {
+            _saveSystem = saveSystem;
+            // アセットの取得
+            AsyncOperationHandle<IList<GameObject>> propsAssetHandle = Addressables.LoadAssetsAsync<GameObject>("PlateauProps_Assets", null);
+            IList<GameObject> propsAssets = await propsAssetHandle.Task;
+            AsyncOperationHandle<IList<GameObject>> humansAssetHandle = Addressables.LoadAssetsAsync<GameObject>("PlateauHumans_Assets", null);
+            IList<GameObject> humansAssets = await humansAssetHandle.Task;
+            plateauAssets = new Dictionary<GameObject, string>();
+            foreach (GameObject prop in propsAssets)
+            {
+                plateauAssets[prop] = "Props";
+            }
+            foreach (GameObject human in humansAssets)
+            {
+                plateauAssets[human] = "Humans";
+            }
+            OnEnable();
+        }
         public void OnEnable()
-        {
-            SaveSystem saveSystem = new SaveSystem();
-            saveSystem.SaveEvent += SaveAssetInfo;
-            saveSystem.LoadEvent += LoadAssetInfo;
-        }
+        {   
+            saveProps = new SaveProps();
+            saveHumans = new SaveHumans();
 
-        public void LoadPlateauAssets(IList<GameObject> assets)
-        {
-            plateauAssets = assets;
-        }
+            saveHumans.SetPlateauAssets(plateauAssets);
+            saveProps.SetPlateauAssets(plateauAssets);
 
-        private void SaveAssetInfo()
+            SetSaveMode();
+            SetLoadMode("All");
+        }
+        public void SetSaveMode()
         {
-            List<TransformData> assetsTransformData = new List<TransformData>();
-            GameObject createdAssets = GameObject.Find("CreatedAssets");
-            foreach(Transform asset in createdAssets.transform)
+            currentMode = saveHumans;
+            _saveSystem.SaveEvent += currentMode.SaveInfo;
+            currentMode = saveProps;
+            _saveSystem.SaveEvent += currentMode.SaveInfo;
+        }
+        public void SetLoadMode(string loadMode) 
+        {
+            if(loadMode == "All")
             {
-                assetsTransformData.Add(new TransformData(asset));
+                currentMode = saveHumans;
+                _saveSystem.LoadEvent += currentMode.LoadInfo;
+                currentMode = saveProps;
+                _saveSystem.LoadEvent += currentMode.LoadInfo;
             }
-            DataSerializer.Save("plateauAssetGameObject", assetsTransformData);
-        }
-
-        private void LoadAssetInfo()
-        {
-            List<TransformData> loadedTransformData = DataSerializer.Load<List<TransformData>>("plateauAssetGameObject");
-            if (loadedTransformData != null)
+            else if(loadMode == "Humans")
             {
-                foreach(TransformData assetData in loadedTransformData)
-                {
-                    GameObject asset = plateauAssets.FirstOrDefault(p => p.name == assetData.name);
-                    Debug.Log(assetData.name);
-                    GameObject createdAssets = GameObject.Find("CreatedAssets");
-                    GameObject generatedAsset = GameObject.Instantiate(asset,assetData.position, assetData.rotation, createdAssets.transform) as GameObject;
-                    generatedAsset.transform.localScale = assetData.scale;
-                    generatedAsset.name = asset.name;
-                }
+                currentMode = saveHumans;
+                _saveSystem.LoadEvent += currentMode.LoadInfo;
             }
-            else
+            else if(loadMode == "Props")
             {
-                Debug.LogError("No saved game data found.");
+                currentMode = saveProps;
+                _saveSystem.LoadEvent += currentMode.LoadInfo;
             }
         }
-
         public void Update(float deltaTime)
         {
-        }
-
+        } 
         public void OnDisable()
         {
         }

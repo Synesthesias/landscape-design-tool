@@ -20,15 +20,23 @@ namespace Landscape2.Runtime
         private VisualElement projectManagementUI;
         public event Action SaveEvent = delegate { };
         public event Action LoadEvent = delegate { };
-        
+        SaveSystem_Assets saveSystem_Assets;
         public SaveSystem()
         {
+            saveSystem_Assets = new SaveSystem_Assets();
+            saveSystem_Assets.InstantiateSaveSystem(this);
             projectManagementUI = new UIDocumentFactory().CreateWithUxmlName("ProjectManagementUI");
             Button saveButton = projectManagementUI.Q<Button>("SaveButton");
             Button loadButton = projectManagementUI.Q<Button>("LoadButton");
             saveButton.clicked += SaveGame;
             loadButton.clicked += LoadGame;
-            
+            DropdownField loadTypeDropdown = projectManagementUI.Q<DropdownField>("LoadType");
+            loadTypeDropdown.choices = new List<string> { "All", "Props", "Humans"};
+            loadTypeDropdown.value = "All";
+            loadTypeDropdown.RegisterValueChangedCallback(evt =>
+            {
+                OnDropdownValueChanged(evt.newValue);
+            });
         }
 
         public async void OnEnable()
@@ -64,6 +72,14 @@ namespace Landscape2.Runtime
 
             Debug.Log("Game loaded.");
         }
+        private void OnDropdownValueChanged(string dropdownValue)
+        {
+            LoadEvent = delegate { };
+            saveSystem_Assets.SetLoadMode(dropdownValue);
+            
+            Debug.Log(dropdownValue);
+        }
+
         
         public void OnDisable()
         {

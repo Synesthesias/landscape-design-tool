@@ -61,8 +61,17 @@ namespace Landscape2.Runtime
                 {
                     GameObject.Destroy(generatedAsset);
                 }
-                GameObject createdAssets = GameObject.Find("CreatedAssets");
-                generatedAsset = GameObject.Instantiate(obj, hit.point, Quaternion.identity, createdAssets.transform) as GameObject;
+
+                GameObject parent;
+                if(obj.name.Contains("Human"))
+                {
+                    parent = GameObject.Find("HumansAssets");
+                }
+                else
+                {
+                    parent = GameObject.Find("PropsAssets");
+                }
+                generatedAsset = GameObject.Instantiate(obj, hit.point, Quaternion.identity, parent.transform) as GameObject;
                 generatedAsset.name =  obj.name;
 
                 int generateLayer = LayerMask.NameToLayer("Ignore Raycast");
@@ -70,32 +79,32 @@ namespace Landscape2.Runtime
             }
         }
 
-        public void CreateButton(IList<GameObject> assets)
+        public void CreateButton(Dictionary<GameObject, string> assets)
         {
             // Flexコンテナを作成し、ScrollViewに追加
             VisualElement flexContainer = new VisualElement();
             // アセットをスクロールバーで表示させる
-            foreach (GameObject asset in assets)
+            foreach (KeyValuePair<GameObject, string> asset in assets)
             {
                 Button newButton = new Button()
                 {
-                    text = asset.name,
-                    name = asset.name // ボタンに名前を付ける
+                    text = asset.Key.name,
+                    name = asset.Key.name // ボタンに名前を付ける
                 };
                 newButton.AddToClassList("AssetButton");
                 newButton.clicked += () => 
                 {
-                    SetAsset(asset.name, assets);
+                    SetAsset(asset.Key.name, assets);
                 };
                 flexContainer.Add(newButton);
             }
             assetListScroll.Add(flexContainer);
         }
 
-        private void SetAsset(string assetName,IList<GameObject> assets)
+        private void SetAsset(string assetName,Dictionary<GameObject, string> assets)
         {
             // 選択されたアセットを取得
-            selectedAsset = assets.FirstOrDefault(p => p.name == assetName);
+            selectedAsset = assets.Keys.FirstOrDefault(p => p.name == assetName);
             generateAssets(selectedAsset);
         }
 
