@@ -1,6 +1,5 @@
 
 using Landscape2.Runtime.UiCommon;
-using Landscape2.Runtime.UiCommon;
 using UnityEngine.UIElements;
 
 namespace Landscape2.Runtime.CameraPositionMemory

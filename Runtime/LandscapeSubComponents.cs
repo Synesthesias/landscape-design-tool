@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Landscape2.Runtime.CameraPositionMemory;
+using Landscape2.Runtime.UiCommon;
 using Landscape2.Runtime.WeatherTimeEditor;
 using UnityEngine;
 
@@ -15,16 +16,28 @@ namespace Landscape2.Runtime
         private void Awake()
         {
             var mainCam = Camera.main;
+            var uiRoot = new UIDocumentFactory().CreateWithUxmlName("GlobalNavi_Main");
 
             // 必要な機能をここに追加します
             subComponents = new List<ISubComponent>
             {
                 new CameraMoveByUserInput(mainCam),
                 new CameraPositionMemoryUI(new CameraPositionMemory.CameraPositionMemory(mainCam)),
-                new WeatherTimeEditorUI(new WeatherTimeEditor.WeatherTimeEditor()),
+                new ArrangeAsset(),
+                RegulationAreaUI.CreateForScene(),
+                LineOfSightUI.CreateForScene(),
+                new WeatherTimeEditorUI(new WeatherTimeEditor.WeatherTimeEditor(),uiRoot),
             };
         }
-        
+
+        private void Start()
+        {
+            foreach(var c in subComponents)
+            {
+                c.Start();
+            }
+        }
+
         private void OnEnable()
         {
             foreach (var c in subComponents)
