@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 namespace Landscape2.Editor
 {
     /// <summary>
-    /// ŒiŠÏƒc[ƒ‹‚ÌInitialSettingsWindow‚ÌƒGƒ“ƒgƒŠ[ƒ|ƒCƒ“ƒg‚Å‚·B
+    /// æ™¯è¦³ãƒ„ãƒ¼ãƒ«ã®InitialSettingsWindowã®ã‚¨ãƒ³ãƒˆãƒªãƒ¼ãƒã‚¤ãƒ³ãƒˆã§ã™ã€‚
     /// </summary>
     public class InitialSettingsWindow : EditorWindow
     {
@@ -16,15 +16,15 @@ namespace Landscape2.Editor
         private InitialSettings initialSettings = new InitialSettings();
         private VisualElement uiRoot;
 
-        private const string UIRunButton = "RunButton"; // ‰Šúİ’èÀsƒ{ƒ^ƒ“–¼‘O
-        private const string UIImportCheck = "ImportCheckColumn"; // “ssƒ‚ƒfƒ‹ƒCƒ“ƒ|[ƒgÏ‚İ”»’è—“–¼‘O
-        private const string UIImportHelpbox = "ImportHelpboxColumn"; // “ssƒ‚ƒfƒ‹ƒCƒ“ƒ|[ƒgÏ‚İ”»’èHelpbox—“–¼‘O
-        private const string UICityObjectCheck = "CityObjectCheckColumn"; // “ssƒIƒuƒWƒFƒNƒg‚ª”z’u‚³‚ê‚Ä‚¢‚é‚©‚Ì”»’è—“–¼‘O
-        private const string UICityObjectHelpbox = "CityObjectHelpboxColumn"; // “ssƒIƒuƒWƒFƒNƒg‚ª”z’u‚³‚ê‚Ä‚¢‚é‚©‚Ì”»’èHelpbox—“–¼‘O
-        private const string UISubComponentsCheck = "SubComponentsCheckColumn"; // SubCompornents‚ª¶¬‚³‚ê‚½‚©‚Ì”»’è—“–¼‘O
-        private const string UISubComponentsHelpbox = "SubComponentsHelpboxColumn"; // SubCompornents‚ª¶¬‚³‚ê‚½‚©‚Ì”»’èHelpbox—“–¼‘O
+        private const string UIRunButton = "RunButton"; // åˆæœŸè¨­å®šå®Ÿè¡Œãƒœã‚¿ãƒ³åå‰
+        private const string UIImportCheck = "ImportCheckColumn"; // éƒ½å¸‚ãƒ¢ãƒ‡ãƒ«ã‚¤ãƒ³ãƒãƒ¼ãƒˆæ¸ˆã¿åˆ¤å®šæ¬„åå‰
+        private const string UIImportHelpbox = "ImportHelpboxColumn"; // éƒ½å¸‚ãƒ¢ãƒ‡ãƒ«ã‚¤ãƒ³ãƒãƒ¼ãƒˆæ¸ˆã¿åˆ¤å®šHelpboxæ¬„åå‰
+        private const string UICityObjectCheck = "CityObjectCheckColumn"; // éƒ½å¸‚ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒé…ç½®ã•ã‚Œã¦ã„ã‚‹ã‹ã®åˆ¤å®šæ¬„åå‰
+        private const string UICityObjectHelpbox = "CityObjectHelpboxColumn"; // éƒ½å¸‚ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒé…ç½®ã•ã‚Œã¦ã„ã‚‹ã‹ã®åˆ¤å®šHelpboxæ¬„åå‰
+        private const string UISubComponentsCheck = "SubComponentsCheckColumn"; // SubCompornentsãŒç”Ÿæˆã•ã‚ŒãŸã‹ã®åˆ¤å®šæ¬„åå‰
+        private const string UISubComponentsHelpbox = "SubComponentsHelpboxColumn"; // SubCompornentsãŒç”Ÿæˆã•ã‚ŒãŸã‹ã®åˆ¤å®šHelpboxæ¬„åå‰
 
-        private List<bool> checkList = new List<bool>(); // ‰Šúİ’èÀs‰Â”\‚©‚Ì”»’è—pƒŠƒXƒg
+        private List<bool> checkList = new List<bool>(); // åˆæœŸè¨­å®šå®Ÿè¡Œå¯èƒ½ã‹ã®åˆ¤å®šç”¨ãƒªã‚¹ãƒˆ
 
         [MenuItem("PLATEAU/InitialSettings")]
         public static void Open()
@@ -35,10 +35,10 @@ namespace Landscape2.Editor
 
         public void CreateGUI()
         {
-            HelpBox initialSettingsHelpBox = new HelpBox("‰Šúİ’è‚ªŠù‚És‚í‚ê‚Ä‚¢‚Ü‚·", HelpBoxMessageType.Info);
-            HelpBox importCheckHelpBox = new HelpBox("“ssƒ‚ƒfƒ‹‚ªƒCƒ“ƒ|[ƒg‚³‚ê‚Ä‚¢‚é‚©Šm”F‚µ‚Ä‚­‚¾‚³‚¢", HelpBoxMessageType.Error);
-            HelpBox cityObjectCheckHelpBox = new HelpBox("“ssƒIƒuƒWƒFƒNƒg‚ª”z’u‚³‚ê‚Ä‚¢‚é‚©Šm”F‚µ‚Ä‚­‚¾‚³‚¢", HelpBoxMessageType.Error);
-            HelpBox subCompornentsCheckHelpBox = new HelpBox("SubCompornents‚Ì¶¬‚É¸”s‚µ‚Ü‚µ‚½", HelpBoxMessageType.Error);
+            HelpBox initialSettingsHelpBox = new HelpBox("åˆæœŸè¨­å®šãŒæ—¢ã«è¡Œã‚ã‚Œã¦ã„ã¾ã™", HelpBoxMessageType.Info);
+            HelpBox importCheckHelpBox = new HelpBox("éƒ½å¸‚ãƒ¢ãƒ‡ãƒ«ãŒã‚¤ãƒ³ãƒãƒ¼ãƒˆã•ã‚Œã¦ã„ã‚‹ã‹ç¢ºèªã—ã¦ãã ã•ã„", HelpBoxMessageType.Error);
+            HelpBox cityObjectCheckHelpBox = new HelpBox("éƒ½å¸‚ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒé…ç½®ã•ã‚Œã¦ã„ã‚‹ã‹ç¢ºèªã—ã¦ãã ã•ã„", HelpBoxMessageType.Error);
+            HelpBox subCompornentsCheckHelpBox = new HelpBox("SubCompornentsã®ç”Ÿæˆã«å¤±æ•—ã—ã¾ã—ãŸ", HelpBoxMessageType.Error);
 
             uiRoot = rootVisualElement;
             VisualElement labelFromUXML = visualTreeAsset.Instantiate();
@@ -46,9 +46,9 @@ namespace Landscape2.Editor
             var runButton = uiRoot.Q<Button>(UIRunButton);
             runButton.SetEnabled(false);
 
-            // ‰Šúİ’è‚ªŠù‚ÉÀs‚³‚ê‚Ä‚¢‚é‚©‚Ì”»’è
-            checkList.Add(!initialSettings.CheckSubComponents());
-            if(initialSettings.CheckSubComponents() == true)
+            // åˆæœŸè¨­å®šãŒæ—¢ã«å®Ÿè¡Œã•ã‚Œã¦ã„ã‚‹ã‹ã®åˆ¤å®š
+            checkList.Add(!initialSettings.IsSubComponentsExists());
+            if(initialSettings.IsSubComponentsExists() == true)
             {
                 uiRoot.Add(initialSettingsHelpBox);
             }
@@ -60,34 +60,34 @@ namespace Landscape2.Editor
                 }
             }
 
-            // “ssƒ‚ƒfƒ‹ƒCƒ“ƒ|[ƒgÏ‚İ‚©‚Ì”»’è
-            var isImport = initialSettings.CheckImportCityModel();
+            // éƒ½å¸‚ãƒ¢ãƒ‡ãƒ«ã‚¤ãƒ³ãƒãƒ¼ãƒˆæ¸ˆã¿ã‹ã®åˆ¤å®š
+            var isImport = initialSettings.IsImportCityModelExists();
             AddCheckListUI(isImport, UIImportCheck, UIImportHelpbox, importCheckHelpBox);
 
-            // “ssƒIƒuƒWƒFƒNƒg‚ª”z’u‚³‚ê‚Ä‚¢‚é‚©‚Ì”»’è
-            var isCityObject = initialSettings.CheckCityObjectGroup();
+            // éƒ½å¸‚ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒé…ç½®ã•ã‚Œã¦ã„ã‚‹ã‹ã®åˆ¤å®š
+            var isCityObject = initialSettings.IsCityObjectGroupExists();
             AddCheckListUI(isCityObject, UICityObjectCheck, UICityObjectHelpbox, cityObjectCheckHelpBox);
 
-            // ƒ`ƒFƒbƒN€–Ú‚ğ‚·‚×‚Ä–‚½‚µ‚Ä‚¢‚éê‡‰Šúİ’è‚ğÀs‚Å‚«‚é‚æ‚¤‚É‚·‚é
+            // ãƒã‚§ãƒƒã‚¯é …ç›®ã‚’ã™ã¹ã¦æº€ãŸã—ã¦ã„ã‚‹å ´åˆåˆæœŸè¨­å®šã‚’å®Ÿè¡Œã§ãã‚‹ã‚ˆã†ã«ã™ã‚‹
             if (checkList.Contains(false) == false)
             {
                 runButton.SetEnabled(true);
             }
 
-            // ‰Šúİ’èÀsƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½‚Æ‚«
+            // åˆæœŸè¨­å®šå®Ÿè¡Œãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚ŒãŸã¨ã
             runButton.clicked += () =>
             {
-                // SubComponents‚ğ¶¬
-                var isCreate = initialSettings.CreateSubComponents();
+                // SubComponentsã‚’ç”Ÿæˆ
+                var isCreate = initialSettings.IsSubComponentsExists();
                 AddCheckListUI(isCreate, UISubComponentsCheck, UISubComponentsHelpbox, subCompornentsCheckHelpBox);
 
-                // ‰Šúİ’èŒã‚ÍÄ‚ÑÀs‚Å‚«‚È‚¢‚æ‚¤‚É‚·‚é
+                // åˆæœŸè¨­å®šå¾Œã¯å†ã³å®Ÿè¡Œã§ããªã„ã‚ˆã†ã«ã™ã‚‹
                 uiRoot.Add(initialSettingsHelpBox);
                 runButton.SetEnabled(false);
             };
         }
 
-        // ƒ`ƒFƒbƒNƒŠƒXƒg‚ÌUIˆ—
+        // ãƒã‚§ãƒƒã‚¯ãƒªã‚¹ãƒˆã®UIå‡¦ç†
         void AddCheckListUI(bool isCheck,string checkUI,string helpBoxUI,HelpBox helpbox)
         {
             var chackImage = new Image();

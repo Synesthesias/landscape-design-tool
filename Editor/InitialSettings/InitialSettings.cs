@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Threading.Tasks;
 using Landscape2.Runtime;
 using PLATEAU.CityInfo;
@@ -8,16 +8,16 @@ using PLATEAU.PolygonMesh;
 namespace Landscape2.Editor
 {
     /// <summary>
-    /// ‰Šúİ’è‹@”\
-    /// UI‚Í<see cref="InitialSettingsWindow"/>‚ª’S“–
+    /// åˆæœŸè¨­å®šæ©Ÿèƒ½
+    /// UIã¯<see cref="InitialSettingsWindow"/>ãŒæ‹…å½“
     /// </summary>
     public class InitialSettings
     {
-        // PLATEAUCityObjectGroup‚ğ‚ÂGameObject‚Ì”z—ñ
+        // PLATEAUCityObjectGroupã‚’æŒã¤GameObjectã®é…åˆ—
         private GameObject[] cityModelObjs;
 
-        // SubComponents‚ª‘¶İ‚·‚éC‚Â‚Ü‚è‰Šúİ’è‚ªŠù‚ÉÀs‚³‚ê‚Ä‚¢‚é‚©‚ğŠm”F
-        public bool CheckSubComponents()
+        // SubComponentsãŒå­˜åœ¨ã™ã‚‹ï¼Œã¤ã¾ã‚ŠåˆæœŸè¨­å®šãŒæ—¢ã«å®Ÿè¡Œã•ã‚Œã¦ã„ã‚‹ã‹ã‚’ç¢ºèª
+        public bool IsSubComponentsExists()
         {
             var landscapeSubComponents = GameObject.FindObjectOfType<LandscapeSubComponents>();
             if (landscapeSubComponents != null)
@@ -30,8 +30,8 @@ namespace Landscape2.Editor
             }
         }
 
-       @// “ssƒ‚ƒfƒ‹‚ªƒCƒ“ƒ|[ƒg‚³‚ê‚Ä‚¢‚é‚©‚ğŠm”F
-        public bool CheckImportCityModel()
+       ã€€// éƒ½å¸‚ãƒ¢ãƒ‡ãƒ«ãŒã‚¤ãƒ³ãƒãƒ¼ãƒˆã•ã‚Œã¦ã„ã‚‹ã‹ã‚’ç¢ºèª
+        public bool IsImportCityModelExists()
         {
             var plateauInstancedCityModel = GameObject.FindObjectOfType<PLATEAUInstancedCityModel>();
             if (plateauInstancedCityModel != null)
@@ -44,8 +44,8 @@ namespace Landscape2.Editor
             }
         }
 
-        // “ssƒ‚ƒfƒ‹‚ªScene‚É‘¶İ‚·‚é‚©‚ğŠm”F
-        public bool CheckCityObjectGroup()
+        // éƒ½å¸‚ãƒ¢ãƒ‡ãƒ«ãŒSceneã«å­˜åœ¨ã™ã‚‹ã‹ã‚’ç¢ºèª
+        public bool IsCityObjectGroupExists()
         {
             var plateauCityObjectGroups = GameObject.FindObjectsOfType<PLATEAUCityObjectGroup>();
             cityModelObjs = new GameObject[plateauCityObjectGroups.Length];
@@ -53,7 +53,7 @@ namespace Landscape2.Editor
 
             if (plateauCityObjectGroups.Length > 0)
             {
-                // PLATEAUCityObjectGroup‚ğ‚ÂGameObject‚ğæ“¾
+                // PLATEAUCityObjectGroupã‚’æŒã¤GameObjectã‚’å–å¾—
                 foreach (var cityModel in plateauCityObjectGroups)
                 {
                     cityModelObjs[id] = cityModel.gameObject;
@@ -68,26 +68,21 @@ namespace Landscape2.Editor
             }
         }
 
-        // SubComponents‚ğ¶¬‚·‚é,¬Œ÷‚µ‚½ê‡true‚ğ•Ô‚·
-        public bool CreateSubComponents()
+        // SubComponentsã‚’ç”Ÿæˆã™ã‚‹,æˆåŠŸã—ãŸå ´åˆtrueã‚’è¿”ã™
+        public void CreateSubComponents()
         {
-            // ‰Šúİ’è‚ªs‚í‚ê‚Ä‚¢‚éê‡‚ÍSubComponents‚ğ¶¬‚µ‚È‚¢
-            if (CheckSubComponents() == false)
+            // åˆæœŸè¨­å®šãŒè¡Œã‚ã‚Œã¦ã„ã‚‹å ´åˆã¯SubComponentsã‚’ç”Ÿæˆã—ãªã„
+            if (IsSubComponentsExists() == false)
             {
                 var subComponentsObj = new GameObject("SubComponents");
                 subComponentsObj.AddComponent<LandscapeSubComponents>();
-                return true;
-            }
-            else
-            {
-                return false;
             }
         }
 
-        // ‰Šúİ’è‚ğÀs¦d—l•ÏX‚Ì‚½‚ß¡‚ÍŒÄ‚Ño‚³‚È‚¢
+        // åˆæœŸè¨­å®šã‚’å®Ÿè¡Œâ€»ä»•æ§˜å¤‰æ›´ã®ãŸã‚ä»Šã¯å‘¼ã³å‡ºã•ãªã„
         public async Task ExecuteInitialSettings()
         {
-            // ƒ}ƒeƒŠƒAƒ‹•ªŠ„‚Ì‰º€”õ‚Æ‚µ‚ÄA“ssƒIƒuƒWƒFƒNƒg‚ğÅ¬’n•¨’PˆÊ‚É•ª‰ğ
+            // ãƒãƒ†ãƒªã‚¢ãƒ«åˆ†å‰²ã®ä¸‹æº–å‚™ã¨ã—ã¦ã€éƒ½å¸‚ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’æœ€å°åœ°ç‰©å˜ä½ã«åˆ†è§£
             var granularityConverter = new CityGranularityConverter();
             var granularityConvertConf = new GranularityConvertOptionUnity(
                 new GranularityConvertOption(MeshGranularity.PerAtomicFeatureObject, 1),
@@ -96,7 +91,7 @@ namespace Landscape2.Editor
             var result = await granularityConverter.ConvertAsync(granularityConvertConf);
             if (!result.IsSucceed)
             {
-                Debug.LogError("ƒQ[ƒ€ƒIƒuƒWƒFƒNƒg‚Ì•ª‰ğ‚É¸”s‚µ‚Ü‚µ‚½B");
+                Debug.LogError("ã‚²ãƒ¼ãƒ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®åˆ†è§£ã«å¤±æ•—ã—ã¾ã—ãŸã€‚");
                 return;
             }
         }
