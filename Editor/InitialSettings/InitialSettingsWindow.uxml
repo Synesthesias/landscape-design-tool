@@ -18,4 +18,5 @@
         </ui:VisualElement>
         <ui:VisualElement name="SubComponentsHelpboxColumn" style="flex-grow: 1; flex-direction: row; justify-content: space-between;" />
     </ui:GroupBox>
+    <ui:Button text="チェックリストを更新" parse-escape-sequences="true" display-tooltip-when-elided="true" name="UpdateButton" />
 </ui:UXML>

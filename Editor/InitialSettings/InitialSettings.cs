@@ -16,17 +16,17 @@ namespace Landscape2.Editor
         // PLATEAUCityObjectGroupを持つGameObjectの配列
         private GameObject[] cityModelObjs;
 
-        // SubComponentsが存在する，つまり初期設定が既に実行されているかを確認
-        public bool IsSubComponentsExists()
+        // SubComponentsが存在しない，つまり初期設定が未実行かを確認
+        public bool IsSubComponentsNotExists()
         {
             var landscapeSubComponents = GameObject.FindObjectOfType<LandscapeSubComponents>();
             if (landscapeSubComponents != null)
             {
-                return true;
+                return false;
             }
             else
             {
-                return false;
+                return true;
             }
         }
 
@@ -68,15 +68,11 @@ namespace Landscape2.Editor
             }
         }
 
-        // SubComponentsを生成する,成功した場合trueを返す
+        // SubComponentsを生成する
         public void CreateSubComponents()
         {
-            // 初期設定が行われている場合はSubComponentsを生成しない
-            if (IsSubComponentsExists() == false)
-            {
-                var subComponentsObj = new GameObject("SubComponents");
-                subComponentsObj.AddComponent<LandscapeSubComponents>();
-            }
+            var subComponentsObj = new GameObject("SubComponents");
+            subComponentsObj.AddComponent<LandscapeSubComponents>();
         }
 
         // 初期設定を実行※仕様変更のため今は呼び出さない

@@ -15,8 +15,11 @@ namespace Landscape2.Editor
         [SerializeField]private Texture errorTexture;
         private InitialSettings initialSettings = new InitialSettings();
         private VisualElement uiRoot;
+        private Button runButton; // 実行ボタン
+        private Button updateButton; // 更新ボタン
 
         private const string UIRunButton = "RunButton"; // 初期設定実行ボタン名前
+        private const string UIUpdateButton = "UpdateButton"; // 更新ボタン名前
         private const string UIImportCheck = "ImportCheckColumn"; // 都市モデルインポート済み判定欄名前
         private const string UIImportHelpbox = "ImportHelpboxColumn"; // 都市モデルインポート済み判定Helpbox欄名前
         private const string UICityObjectCheck = "CityObjectCheckColumn"; // 都市オブジェクトが配置されているかの判定欄名前
@@ -24,7 +27,16 @@ namespace Landscape2.Editor
         private const string UISubComponentsCheck = "SubComponentsCheckColumn"; // SubCompornentsが生成されたかの判定欄名前
         private const string UISubComponentsHelpbox = "SubComponentsHelpboxColumn"; // SubCompornentsが生成されたかの判定Helpbox欄名前
 
-        private List<bool> checkList = new List<bool>(); // 初期設定実行可能かの判定用リスト
+        private HelpBox initialSettingsHelpBox;
+        private HelpBox importCheckHelpBox;
+        private HelpBox cityObjectCheckHelpBox;
+        private HelpBox subCompornentsCheckHelpBox;
+
+        private Image importCheckImage;
+        private Image cityObjectCheckImage;
+        private Image subCompornentsCheckImage;
+
+        private List<bool> checkList; // 初期設定実行可能かの判定用リスト
 
         [MenuItem("PLATEAU/InitialSettings")]
         public static void Open()
@@ -35,70 +47,119 @@ namespace Landscape2.Editor
 
         public void CreateGUI()
         {
-            HelpBox initialSettingsHelpBox = new HelpBox("初期設定が既に行われています", HelpBoxMessageType.Info);
-            HelpBox importCheckHelpBox = new HelpBox("都市モデルがインポートされているか確認してください", HelpBoxMessageType.Error);
-            HelpBox cityObjectCheckHelpBox = new HelpBox("都市オブジェクトが配置されているか確認してください", HelpBoxMessageType.Error);
-            HelpBox subCompornentsCheckHelpBox = new HelpBox("SubCompornentsの生成に失敗しました", HelpBoxMessageType.Error);
-
             uiRoot = rootVisualElement;
             VisualElement labelFromUXML = visualTreeAsset.Instantiate();
             uiRoot.Add(labelFromUXML);
-            var runButton = uiRoot.Q<Button>(UIRunButton);
+            runButton = uiRoot.Q<Button>(UIRunButton);
+            updateButton = uiRoot.Q<Button>(UIUpdateButton);
+            checkList = new List<bool>();
             runButton.SetEnabled(false);
 
-            // 初期設定が既に実行されているかの判定
-            checkList.Add(!initialSettings.IsSubComponentsExists());
-            if(initialSettings.IsSubComponentsExists() == true)
-            {
-                uiRoot.Add(initialSettingsHelpBox);
-            }
-            else
-            {
-                if(uiRoot.Contains(initialSettingsHelpBox))
-                {
-                    uiRoot.Remove(initialSettingsHelpBox);
-                }
-            }
+            initialSettingsHelpBox = new HelpBox("初期設定が完了しています", HelpBoxMessageType.Info);
+            importCheckHelpBox = new HelpBox("都市モデルがインポートされているか確認してください", HelpBoxMessageType.Error);
+            cityObjectCheckHelpBox = new HelpBox("都市オブジェクトが配置されているか確認してください", HelpBoxMessageType.Error);
+            subCompornentsCheckHelpBox = new HelpBox("SubCompornentsの生成に失敗しました", HelpBoxMessageType.Error);
 
-            // 都市モデルインポート済みかの判定
-            var isImport = initialSettings.IsImportCityModelExists();
-            AddCheckListUI(isImport, UIImportCheck, UIImportHelpbox, importCheckHelpBox);
-
-            // 都市オブジェクトが配置されているかの判定
-            var isCityObject = initialSettings.IsCityObjectGroupExists();
-            AddCheckListUI(isCityObject, UICityObjectCheck, UICityObjectHelpbox, cityObjectCheckHelpBox);
+            importCheckImage = new Image();
+            cityObjectCheckImage = new Image();
+            subCompornentsCheckImage = new Image();
 
             // チェック項目をすべて満たしている場合初期設定を実行できるようにする
-            if (checkList.Contains(false) == false)
+            if (IsInitialSettingsPossible() == true)
             {
                 runButton.SetEnabled(true);
-            }
+            }           
 
             // 初期設定実行ボタンが押されたとき
             runButton.clicked += () =>
             {
+                // 実行前チェックリストが満たしていない場合処理を実行しない
+                if (IsInitialSettingsPossible() == false)
+                {
+                    return;
+                }
+
+                // 初期設定を実行
                 // SubComponentsを生成
-                var isCreate = initialSettings.IsSubComponentsExists();
-                AddCheckListUI(isCreate, UISubComponentsCheck, UISubComponentsHelpbox, subCompornentsCheckHelpBox);
+                initialSettings.CreateSubComponents();
+                AddCheckListUI(true, UISubComponentsCheck, UISubComponentsHelpbox, subCompornentsCheckHelpBox,subCompornentsCheckImage);
+                uiRoot.Add(initialSettingsHelpBox);
 
                 // 初期設定後は再び実行できないようにする
-                uiRoot.Add(initialSettingsHelpBox);
                 runButton.SetEnabled(false);
+            };
+
+            // 更新ボタンが押されたとき
+            updateButton.clicked += () =>
+            {
+                // チェック項目をすべて満たしている場合初期設定を実行できるようにする
+                if (IsInitialSettingsPossible() == true)
+                {
+                    runButton.SetEnabled(true);
+                }
+                else
+                { 
+                    runButton.SetEnabled(false); 
+                }
             };
         }
 
-        // チェックリストのUI処理
-        void AddCheckListUI(bool isCheck,string checkUI,string helpBoxUI,HelpBox helpbox)
+        // 初期設定可能かどうか判定する
+        private bool IsInitialSettingsPossible()
         {
-            var chackImage = new Image();
+            // 実行前チェックリストを更新
+            UpdateCheckList();
+            // チェック項目をすべて満たしている場合初期設定を実行できるようにする
+            if (checkList.Contains(false) == false)
+            {
+                checkList.Clear();
+                return true;
+            }
+            checkList.Clear();
+            return false;
+        }
+
+        // 実行前チェックリストの更新処理
+        private void UpdateCheckList()
+        {
+            // 初期設定が未実行かの判定
+            var isSubComponents = initialSettings.IsSubComponentsNotExists();
+            checkList.Add(isSubComponents);
+
+            if (isSubComponents == true)
+            {
+                if (uiRoot.Contains(initialSettingsHelpBox))
+                {
+                    uiRoot.Remove(initialSettingsHelpBox);
+                }
+            }
+            else
+            {
+                uiRoot.Add(initialSettingsHelpBox);
+            }
+
+            // 都市モデルインポート済みかの判定
+            var isImport = initialSettings.IsImportCityModelExists();
+            checkList.Add(isImport);
+            AddCheckListUI(isImport, UIImportCheck, UIImportHelpbox, importCheckHelpBox,importCheckImage);
+
+            // 都市オブジェクトが配置されているかの判定
+            var isCityObject = initialSettings.IsCityObjectGroupExists();
+            checkList.Add(isCityObject);
+            AddCheckListUI(isCityObject, UICityObjectCheck, UICityObjectHelpbox, cityObjectCheckHelpBox,cityObjectCheckImage);
+        }
+
+        // チェックリストのUI処理
+        private void AddCheckListUI(bool isCheck,string checkUI,string helpBoxUI,HelpBox helpbox,Image checkImage)
+        {
             var checkColumn = uiRoot.Q<VisualElement>(checkUI);
             var helpboxColumn = uiRoot.Q<VisualElement>(helpBoxUI);
-            checkColumn.Add(chackImage);
+            checkColumn.Add(checkImage);
             
             checkList.Add(isCheck);
             if (isCheck == true)
             {
-                chackImage.image = checkTexture;
+                checkImage.image = checkTexture;
                 if (helpboxColumn.Contains(helpbox))
                 {
                     helpboxColumn.Remove(helpbox);
@@ -106,7 +167,7 @@ namespace Landscape2.Editor
             }
             else
             {
-                chackImage.image = errorTexture;
+                checkImage.image = errorTexture;
                 helpboxColumn.Add(helpbox);
             }
         }
