@@ -42,17 +42,6 @@ namespace Landscape2.Editor
             customBufferFormatProperty.enumValueIndex = 2;
             // customBufferFormatProperty.entryValueIndex = (int)RenderPipelineSettings.CustomBufferFormat.R16G16B16A16; == 48 -> enum index is out of range
 
-
-            // int targetIndex = 0;
-            // ApiCompatibilityLevel[] levels = (ApiCompatibilityLevel[])System.Enum.GetValues(typeof(ApiCompatibilityLevel));
-            // if (targetIndex >= 0 && targetIndex < levels.Length)
-            // {
-            //     PlayerSettings.SetApiCompatibilityLevel(BuildTargetGroup.Standalone, levels[targetIndex]);
-            //     Debug.Log($"Standalone API Compatibility Level set to {levels[targetIndex]}");
-            // }
-            // SetApiCompatibilityLevelForTarget(BuildTargetGroup.Android, targetIndex);
-            // SetApiCompatibilityLevelForTarget(BuildTargetGroup.iOS, targetIndex);
-
             serializedHDRPAsset.ApplyModifiedProperties();
         }
 
