@@ -16,20 +16,21 @@ namespace Landscape2.Runtime
 {
     public class SaveSystem : ISubComponent
     {
-        private IList<GameObject> plateauAssets;
         private VisualElement projectManagementUI;
+        private ChangeLoadMode changeLoadMode;
         public event Action SaveEvent = delegate { };
         public event Action LoadEvent = delegate { };
-        SaveSystem_Assets saveSystem_Assets;
+
         public SaveSystem()
         {
-            saveSystem_Assets = new SaveSystem_Assets();
-            saveSystem_Assets.InstantiateSaveSystem(this);
+            changeLoadMode = new ChangeLoadMode();
+            changeLoadMode.CreateSaveSystemInstance(this);
+            // UIの設定
             projectManagementUI = new UIDocumentFactory().CreateWithUxmlName("ProjectManagementUI");
             Button saveButton = projectManagementUI.Q<Button>("SaveButton");
             Button loadButton = projectManagementUI.Q<Button>("LoadButton");
-            saveButton.clicked += SaveGame;
-            loadButton.clicked += LoadGame;
+            saveButton.clicked += SaveProject;
+            loadButton.clicked += LoadProject;
             DropdownField loadTypeDropdown = projectManagementUI.Q<DropdownField>("LoadType");
             loadTypeDropdown.choices = new List<string> { "All", "Props", "Humans"};
             loadTypeDropdown.value = "All";
@@ -38,18 +39,8 @@ namespace Landscape2.Runtime
                 OnDropdownValueChanged(evt.newValue);
             });
         }
-
-        public async void OnEnable()
-        {
-            AsyncOperationHandle<IList<GameObject>> assetHandle = Addressables.LoadAssetsAsync<GameObject>("PlateauProps_Assets", null);
-            plateauAssets = await assetHandle.Task;
-        }
-
-        public void Update(float deltaTime)
-        {
-        }
         
-        void SaveGame()
+        void SaveProject()
         {
             var inputPath = projectManagementUI.Q<TextField>("Path");
             var inputFileName = projectManagementUI.Q<TextField>("FileName");
@@ -58,10 +49,10 @@ namespace Landscape2.Runtime
             SaveEvent();
             DataSerializer.SaveFile();
 
-            Debug.Log("Game saved.");
+            Debug.Log("Project saved.");
         }
 
-        void LoadGame()
+        void LoadProject()
         {
             var inputPath = projectManagementUI.Q<TextField>("Path");
             var inputFileName = projectManagementUI.Q<TextField>("FileName");
@@ -70,17 +61,21 @@ namespace Landscape2.Runtime
             DataSerializer.LoadFile();
             LoadEvent();
 
-            Debug.Log("Game loaded.");
+            Debug.Log("Project loaded.");
         }
+
         private void OnDropdownValueChanged(string dropdownValue)
         {
             LoadEvent = delegate { };
-            saveSystem_Assets.SetLoadMode(dropdownValue);
-            
-            Debug.Log(dropdownValue);
+            changeLoadMode.SetLoadMode(dropdownValue);
         }
 
-        
+        public void OnEnable()
+        {
+        }
+        public void Update(float deltaTime)
+        {
+        }
         public void OnDisable()
         {
         }

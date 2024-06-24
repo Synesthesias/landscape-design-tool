@@ -16,7 +16,6 @@ namespace Landscape2.Runtime
         public virtual void SetPlateauAssets(Dictionary<GameObject, string> assets) {}
         public virtual void SaveInfo() {}
         public virtual void LoadInfo() {}
-
     }
 
     [Serializable]
@@ -37,17 +36,16 @@ namespace Landscape2.Runtime
         }
     }
 
-    public class SaveSystem_Assets : ISubComponent
+    public class SaveSystem_Assets
     {
-        private SaveMode currentMode;
+        private SaveMode currentLoadMode;
+        public Dictionary<GameObject, string> plateauAssets;
         private SaveSystem _saveSystem;
         private SaveProps saveProps;
         private SaveHumans saveHumans;
-        private ArrangeAsset arrangeAsset;
-        public Dictionary<GameObject, string> plateauAssets;
+
         public async void InstantiateSaveSystem(SaveSystem saveSystem)
         {
-            _saveSystem = saveSystem;
             // アセットの取得
             AsyncOperationHandle<IList<GameObject>> propsAssetHandle = Addressables.LoadAssetsAsync<GameObject>("PlateauProps_Assets", null);
             IList<GameObject> propsAssets = await propsAssetHandle.Task;
@@ -62,51 +60,40 @@ namespace Landscape2.Runtime
             {
                 plateauAssets[human] = "Humans";
             }
-            OnEnable();
-        }
-        public void OnEnable()
-        {   
+            // SaveModeクラスにアセットを渡す
             saveProps = new SaveProps();
             saveHumans = new SaveHumans();
-
             saveHumans.SetPlateauAssets(plateauAssets);
             saveProps.SetPlateauAssets(plateauAssets);
-
+            // SaveSystem_Assetsの初期化
+            _saveSystem = saveSystem;
             SetSaveMode();
             SetLoadMode("All");
         }
+
         public void SetSaveMode()
         {
-            currentMode = saveHumans;
-            _saveSystem.SaveEvent += currentMode.SaveInfo;
-            currentMode = saveProps;
-            _saveSystem.SaveEvent += currentMode.SaveInfo;
+            _saveSystem.SaveEvent += saveHumans.SaveInfo;
+            _saveSystem.SaveEvent += saveProps.SaveInfo;
         }
+        
         public void SetLoadMode(string loadMode) 
         {
             if(loadMode == "All")
             {
-                currentMode = saveHumans;
-                _saveSystem.LoadEvent += currentMode.LoadInfo;
-                currentMode = saveProps;
-                _saveSystem.LoadEvent += currentMode.LoadInfo;
+                _saveSystem.LoadEvent += saveHumans.LoadInfo;
+                _saveSystem.LoadEvent += saveProps.LoadInfo;
             }
             else if(loadMode == "Humans")
             {
-                currentMode = saveHumans;
-                _saveSystem.LoadEvent += currentMode.LoadInfo;
+                currentLoadMode = saveHumans;
+                _saveSystem.LoadEvent += currentLoadMode.LoadInfo;
             }
             else if(loadMode == "Props")
             {
-                currentMode = saveProps;
-                _saveSystem.LoadEvent += currentMode.LoadInfo;
+                currentLoadMode = saveProps;
+                _saveSystem.LoadEvent += currentLoadMode.LoadInfo;
             }
-        }
-        public void Update(float deltaTime)
-        {
-        } 
-        public void OnDisable()
-        {
         }
     }
 }

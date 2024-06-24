@@ -9,11 +9,11 @@ namespace Landscape2.Runtime
 {
     public class SaveProps : SaveMode
     {
-        Dictionary<GameObject, string> plateauAssets;
+        Dictionary<GameObject, string> plateauPropsAssets;
 
         public override void SetPlateauAssets(Dictionary<GameObject, string> assets)
         {
-            plateauAssets = assets;
+            plateauPropsAssets = assets;
         }
 
         public override void SaveInfo()
@@ -37,7 +37,7 @@ namespace Landscape2.Runtime
                 foreach(TransformData assetData in loadedTransformData)
                 {
                     string assetName = assetData.name;
-                    GameObject asset = plateauAssets.Keys.FirstOrDefault(p => p.name == assetName);
+                    GameObject asset = plateauPropsAssets.Keys.FirstOrDefault(p => p.name == assetName);
                     GameObject createdAssets = GameObject.Find("PropsAssets");
                     GameObject generatedAsset = GameObject.Instantiate(asset,assetData.position, assetData.rotation, createdAssets.transform) as GameObject;
                     generatedAsset.transform.localScale = assetData.scale;
