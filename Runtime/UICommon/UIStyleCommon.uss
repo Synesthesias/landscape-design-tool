@@ -278,7 +278,7 @@ background-color:  rgba(255, 255, 128, 0);
 .unity-radio-button-group__container{
     display: flex;
     flex-direction: row;
-    float: left;
+
     
 }
 
@@ -362,7 +362,7 @@ background-color:  rgba(255, 255, 128, 0);
     flex-direction: row;
     justify-content:center;
     width:100%;
-        gap: 6px;
+    justify-content: space-around;
     margin: 0;
     padding: 0;
 }
@@ -493,7 +493,7 @@ background-color:  rgba(50, 75, 75, 0);
     display: flex;
     width: 150px;
     height:70px;
-    justify-content:start;
+    justify-content:flex-start;
     margin-top:16px;
 }
 /* タイムスライダー */
@@ -529,7 +529,7 @@ background-color:  rgba(50, 75, 75, 0);
 /* スライダーのベース */
 #TimeSlider .unity-min-max-slider__tracker {
           background-color: #B0CCCB;
-        border-width:1;
+        border-width:1px;
         margin-top:0;
         height: 4px  
 }
@@ -547,7 +547,7 @@ background-color:  rgba(50, 75, 75, 0);
 #TimeSlider .unity-base-slider__tracker {
           background-color: #B0CCCB;
           border-color:#889392;
-        border-width:1;
+        border-width: 1px;
         height: 4px;
         border-radius: 2px;  
 }
@@ -565,7 +565,7 @@ background-color:  rgba(50, 75, 75, 0);
 #FunctionContainer {
         display: flex;
     flex-direction: row;
-    justify-content:start;
+    justify-content:flex-start;
     align-items:center; 
 
 }
@@ -642,7 +642,7 @@ background-color: rgba(50,75,75,1);
     position:absolute;
     display: flex;
     flex-direction: column;
-    align-items:right;
+    align-items:end;
     top:60px;
     left:1543px;
 }
@@ -655,7 +655,7 @@ background-color: rgba(50,75,75,1);
     margin:0;
     display: flex;
     flex-direction: row;
-    justify-content: start;
+    justify-content: flex-start;
     background-color:rgba(14,21,20,.75);
     border-width:0px;
 }
