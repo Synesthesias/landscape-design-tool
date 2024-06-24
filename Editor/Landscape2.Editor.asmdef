@@ -4,7 +4,9 @@
     "references": [
         "Unity.Addressables.Editor",
         "Unity.Addressables",
-        "GUID:2c3ad3f557b9daf4d8027aa5843b4558"
+        "Landscape2.Runtime",
+        "PLATEAU.Runtime",
+        "libplateau"
     ],
     "includePlatforms": [
         "Editor"
