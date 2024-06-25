@@ -5,8 +5,8 @@
         "Unity.Addressables.Editor",
         "Unity.Addressables",
         "Landscape2.Runtime",
-        "PLATEAU.Runtime",
-        "libplateau"
+        "libplateau",
+        "PLATEAU.Runtime"
     ],
     "includePlatforms": [
         "Editor"
