@@ -61,5 +61,9 @@ namespace Landscape2.Runtime
         public void OnDisable()
         {
         }
+
+        public void Start()
+        {
+        }
     }
 }

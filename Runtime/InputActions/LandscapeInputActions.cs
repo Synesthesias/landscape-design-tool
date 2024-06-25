@@ -37,6 +37,42 @@ namespace Landscape2.Runtime
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""VerticalMoveCameraByKeyboard"",
+                    ""type"": ""Button"",
+                    ""id"": ""b386ccfb-c2ff-4674-af57-b1cacc4be928"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ParallelMoveCameraByMouse"",
+                    ""type"": ""Button"",
+                    ""id"": ""8bb35d44-2aa2-4344-9408-54d034a5b15a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ZoomMoveCameraByMouse"",
+                    ""type"": ""Value"",
+                    ""id"": ""62ed6956-d70a-441b-9180-5ee51ab8d01e"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""RotateCameraByMouse"",
+                    ""type"": ""Button"",
+                    ""id"": ""6d9b83dc-559e-4240-9ed7-3fd7b79472bb"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -94,6 +130,72 @@ namespace Landscape2.Runtime
                     ""action"": ""HorizontalMoveCameraByKeyboard"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""UpDown-Key"",
+                    ""id"": ""327a58a4-702c-472e-b99e-e6c87d0343fc"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""VerticalMoveCameraByKeyboard"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""b4f0aabe-8336-4165-8d0f-db649b8bccef"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""VerticalMoveCameraByKeyboard"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""0132db88-4dc9-4349-a6d7-04db2d8f74d0"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""VerticalMoveCameraByKeyboard"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""aeefa704-552b-40b4-99ef-8b1c55fa696f"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ParallelMoveCameraByMouse"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ddf7760e-059b-42d7-997d-689535c06c7a"",
+                    ""path"": ""<Mouse>/scroll/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ZoomMoveCameraByMouse"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5c30529f-18f9-4d49-960a-c02052bb00ad"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateCameraByMouse"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -151,6 +253,10 @@ namespace Landscape2.Runtime
             // CameraMove
             m_CameraMove = asset.FindActionMap("CameraMove", throwIfNotFound: true);
             m_CameraMove_HorizontalMoveCameraByKeyboard = m_CameraMove.FindAction("HorizontalMoveCameraByKeyboard", throwIfNotFound: true);
+            m_CameraMove_VerticalMoveCameraByKeyboard = m_CameraMove.FindAction("VerticalMoveCameraByKeyboard", throwIfNotFound: true);
+            m_CameraMove_ParallelMoveCameraByMouse = m_CameraMove.FindAction("ParallelMoveCameraByMouse", throwIfNotFound: true);
+            m_CameraMove_ZoomMoveCameraByMouse = m_CameraMove.FindAction("ZoomMoveCameraByMouse", throwIfNotFound: true);
+            m_CameraMove_RotateCameraByMouse = m_CameraMove.FindAction("RotateCameraByMouse", throwIfNotFound: true);
             // ArrangeAsset
             m_ArrangeAsset = asset.FindActionMap("ArrangeAsset", throwIfNotFound: true);
             m_ArrangeAsset_select = m_ArrangeAsset.FindAction("select", throwIfNotFound: true);
@@ -217,11 +323,19 @@ namespace Landscape2.Runtime
         private readonly InputActionMap m_CameraMove;
         private List<ICameraMoveActions> m_CameraMoveActionsCallbackInterfaces = new List<ICameraMoveActions>();
         private readonly InputAction m_CameraMove_HorizontalMoveCameraByKeyboard;
+        private readonly InputAction m_CameraMove_VerticalMoveCameraByKeyboard;
+        private readonly InputAction m_CameraMove_ParallelMoveCameraByMouse;
+        private readonly InputAction m_CameraMove_ZoomMoveCameraByMouse;
+        private readonly InputAction m_CameraMove_RotateCameraByMouse;
         public struct CameraMoveActions
         {
             private @LandscapeInputActions m_Wrapper;
             public CameraMoveActions(@LandscapeInputActions wrapper) { m_Wrapper = wrapper; }
             public InputAction @HorizontalMoveCameraByKeyboard => m_Wrapper.m_CameraMove_HorizontalMoveCameraByKeyboard;
+            public InputAction @VerticalMoveCameraByKeyboard => m_Wrapper.m_CameraMove_VerticalMoveCameraByKeyboard;
+            public InputAction @ParallelMoveCameraByMouse => m_Wrapper.m_CameraMove_ParallelMoveCameraByMouse;
+            public InputAction @ZoomMoveCameraByMouse => m_Wrapper.m_CameraMove_ZoomMoveCameraByMouse;
+            public InputAction @RotateCameraByMouse => m_Wrapper.m_CameraMove_RotateCameraByMouse;
             public InputActionMap Get() { return m_Wrapper.m_CameraMove; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -234,6 +348,18 @@ namespace Landscape2.Runtime
                 @HorizontalMoveCameraByKeyboard.started += instance.OnHorizontalMoveCameraByKeyboard;
                 @HorizontalMoveCameraByKeyboard.performed += instance.OnHorizontalMoveCameraByKeyboard;
                 @HorizontalMoveCameraByKeyboard.canceled += instance.OnHorizontalMoveCameraByKeyboard;
+                @VerticalMoveCameraByKeyboard.started += instance.OnVerticalMoveCameraByKeyboard;
+                @VerticalMoveCameraByKeyboard.performed += instance.OnVerticalMoveCameraByKeyboard;
+                @VerticalMoveCameraByKeyboard.canceled += instance.OnVerticalMoveCameraByKeyboard;
+                @ParallelMoveCameraByMouse.started += instance.OnParallelMoveCameraByMouse;
+                @ParallelMoveCameraByMouse.performed += instance.OnParallelMoveCameraByMouse;
+                @ParallelMoveCameraByMouse.canceled += instance.OnParallelMoveCameraByMouse;
+                @ZoomMoveCameraByMouse.started += instance.OnZoomMoveCameraByMouse;
+                @ZoomMoveCameraByMouse.performed += instance.OnZoomMoveCameraByMouse;
+                @ZoomMoveCameraByMouse.canceled += instance.OnZoomMoveCameraByMouse;
+                @RotateCameraByMouse.started += instance.OnRotateCameraByMouse;
+                @RotateCameraByMouse.performed += instance.OnRotateCameraByMouse;
+                @RotateCameraByMouse.canceled += instance.OnRotateCameraByMouse;
             }
 
             private void UnregisterCallbacks(ICameraMoveActions instance)
@@ -241,6 +367,18 @@ namespace Landscape2.Runtime
                 @HorizontalMoveCameraByKeyboard.started -= instance.OnHorizontalMoveCameraByKeyboard;
                 @HorizontalMoveCameraByKeyboard.performed -= instance.OnHorizontalMoveCameraByKeyboard;
                 @HorizontalMoveCameraByKeyboard.canceled -= instance.OnHorizontalMoveCameraByKeyboard;
+                @VerticalMoveCameraByKeyboard.started -= instance.OnVerticalMoveCameraByKeyboard;
+                @VerticalMoveCameraByKeyboard.performed -= instance.OnVerticalMoveCameraByKeyboard;
+                @VerticalMoveCameraByKeyboard.canceled -= instance.OnVerticalMoveCameraByKeyboard;
+                @ParallelMoveCameraByMouse.started -= instance.OnParallelMoveCameraByMouse;
+                @ParallelMoveCameraByMouse.performed -= instance.OnParallelMoveCameraByMouse;
+                @ParallelMoveCameraByMouse.canceled -= instance.OnParallelMoveCameraByMouse;
+                @ZoomMoveCameraByMouse.started -= instance.OnZoomMoveCameraByMouse;
+                @ZoomMoveCameraByMouse.performed -= instance.OnZoomMoveCameraByMouse;
+                @ZoomMoveCameraByMouse.canceled -= instance.OnZoomMoveCameraByMouse;
+                @RotateCameraByMouse.started -= instance.OnRotateCameraByMouse;
+                @RotateCameraByMouse.performed -= instance.OnRotateCameraByMouse;
+                @RotateCameraByMouse.canceled -= instance.OnRotateCameraByMouse;
             }
 
             public void RemoveCallbacks(ICameraMoveActions instance)
@@ -315,6 +453,10 @@ namespace Landscape2.Runtime
         public interface ICameraMoveActions
         {
             void OnHorizontalMoveCameraByKeyboard(InputAction.CallbackContext context);
+            void OnVerticalMoveCameraByKeyboard(InputAction.CallbackContext context);
+            void OnParallelMoveCameraByMouse(InputAction.CallbackContext context);
+            void OnZoomMoveCameraByMouse(InputAction.CallbackContext context);
+            void OnRotateCameraByMouse(InputAction.CallbackContext context);
         }
         public interface IArrangeAssetActions
         {

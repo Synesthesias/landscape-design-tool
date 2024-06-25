@@ -166,5 +166,9 @@ namespace Landscape2.Runtime
         {
             input.Disable();
         }
+
+        public void Start()
+        {
+        }
     }
 }

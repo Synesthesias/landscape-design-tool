@@ -9,14 +9,26 @@ namespace Landscape2.Runtime
     public class CameraMoveByUserInput : LandscapeInputActions.ICameraMoveActions, ISubComponent
     {
 	    private readonly Camera camera;
-	    private Vector2 horizontalMoveByKeyboard;
-	    private LandscapeInputActions.CameraMoveActions input;
-	    private const float MoveSpeedByKeyboard = 10f;
+        CameraMoveData cameraMoveSpeedData;
+        private Vector2 horizontalMoveByKeyboard;
+        private float verticalMoveByKeyboard;
+        private Vector2 parallelMoveByMouse;
+        private Vector2 rotateByMouse;
+        private float zoomMoveByMouse;
+        private LandscapeInputActions.CameraMoveActions input;
+        private bool isParallelMoveByMouse;
+        private bool isRotateByMouse;
+        private GameObject cameraParent;
+        private RaycastHit hit;
+        /// <summary>
+        /// キーボードでの移動を有効にするかどうかです
+        /// </summary>
+        public static bool IsKeyboardActive = true;
 
-	    /// <summary>
-	    /// キーボードでの移動を有効にするかどうかです
-	    /// </summary>
-	    public static bool IsKeyboardActive = true;
+        /// <summary>
+        /// マウスでの移動を有効にするかどうか
+        /// </summary>
+        public static bool IsMouseActive = true;
 
 	    public CameraMoveByUserInput(Camera camera)
 	    {
@@ -37,7 +49,7 @@ namespace Landscape2.Runtime
 	    }
 	    
 		/// <summary>
-		/// InputActionsからカメラ移動のキーボード操作を受け取り、カメラを移動します。
+		/// InputActionsからカメラWASD移動のキーボード操作を受け取り、カメラをWASD移動します。
 		/// </summary>
         public void OnHorizontalMoveCameraByKeyboard(InputAction.CallbackContext context)
         {
@@ -52,12 +64,108 @@ namespace Landscape2.Runtime
 			}
 		}
 
+        /// <summary>
+        /// InputActionsからカメラ上下移動のキーボード操作を受け取り、カメラを上下移動します。
+        /// </summary>
+        /// <param name="context"></param>
+        public void OnVerticalMoveCameraByKeyboard(InputAction.CallbackContext context)
+        {
+            if (!IsKeyboardActive) return;
+            if(context.performed)
+            {
+                var delta = context.ReadValue<float>();
+                verticalMoveByKeyboard = delta;
+            }else if (context.canceled)
+            {
+                verticalMoveByKeyboard = 0f;
+            }
+        }
+
+        /// <summary>
+        /// InputActionsからマウスの左クリックドラッグを受け取り、カメラを平行移動します。
+        /// </summary>
+        /// <param name="context"></param>
+        public void OnParallelMoveCameraByMouse(InputAction.CallbackContext context)
+        {
+            if (!IsMouseActive) return;
+            if (context.started)
+            {
+                isParallelMoveByMouse = true;
+            }
+            else if (context.canceled)
+            {
+                isParallelMoveByMouse = false;
+                parallelMoveByMouse = Vector2.zero;
+            }
+        }
+
+        /// <summary>
+        /// InputActionsからのマウスのスクロールを受け取り、カメラを前後移動します。
+        /// </summary>
+        /// <param name="context"></param>
+        public void OnZoomMoveCameraByMouse(InputAction.CallbackContext context)
+        {
+            if (!IsMouseActive) return;
+            if (context.performed)
+            {
+                var delta = context.ReadValue<float>();
+                zoomMoveByMouse = delta;
+            }else if (context.canceled)
+            {
+                zoomMoveByMouse= 0f;
+            }
+        }
+
+        public void OnRotateCameraByMouse(InputAction.CallbackContext context)
+        {
+            if (!IsMouseActive) return;
+            if (context.started)
+            {
+                if(Camera.main == null)
+                {
+                    Debug.LogError("カメラが必要です");
+                    return;
+                }
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                
+                if (Physics.Raycast(ray, out hit))
+                {
+                    //Debug.Log(hit.point);
+                    isRotateByMouse = true;
+                }
+            }
+            else if (context.canceled)
+            {
+                isRotateByMouse = false;
+                rotateByMouse = Vector2.zero;
+            }
+        }
+
+        public void Start()
+        {
+            //カメラ回転用オブジェクト準備
+            cameraParent = new GameObject("CameraParent");
+            camera.transform.parent = cameraParent.transform;
+            camera.transform.position = new Vector3(0, 0, 0);
+            cameraMoveSpeedData = Resources.Load<CameraMoveData>("CameraMoveSpeedData");
+        }
+
 		public void Update(float deltaTime)
 		{
-			var trans = camera.transform;
-			float moveFactor = MoveSpeedByKeyboard * deltaTime;
-			MoveCameraHorizontal(moveFactor * horizontalMoveByKeyboard, trans);
-		}
+            var trans = cameraParent.transform;
+            parallelMoveByMouse = Mouse.current.delta.ReadValue();
+            rotateByMouse = Mouse.current.delta.ReadValue();
+
+            MoveCameraHorizontal(cameraMoveSpeedData.horizontalMoveSpeed * deltaTime * horizontalMoveByKeyboard, trans);
+            MoveCameraVertical(cameraMoveSpeedData.verticalMoveSpeed * deltaTime * verticalMoveByKeyboard, trans);
+            MoveCameraParallel(cameraMoveSpeedData.parallelMoveSpeed * deltaTime * parallelMoveByMouse, trans);
+            MoveCameraZoom(cameraMoveSpeedData.zoomMoveSpeed * deltaTime * zoomMoveByMouse, trans);
+            RotateCamera(cameraMoveSpeedData.rotateSpeed * deltaTime * rotateByMouse, trans);
+            if (cameraParent.transform.position.y < cameraMoveSpeedData.heightLimitY)
+            {
+                cameraParent.transform.position = new Vector3(cameraParent.transform.position.x, cameraMoveSpeedData.heightLimitY, cameraParent.transform.position.z);
+            }
+        }
 		
 		/// <summary>
 		/// カメラ水平移動
@@ -65,9 +173,81 @@ namespace Landscape2.Runtime
 		private void MoveCameraHorizontal(Vector2 moveDelta, Transform cameraTrans)
 		{
 			var dir = new Vector3(moveDelta.x, 0.0f, moveDelta.y);
-			var rotY = cameraTrans.eulerAngles.y;
-			dir = Quaternion.Euler(new Vector3(0.0f, rotY, 0.0f)) * dir;
+            var rot = camera.transform.eulerAngles;
+            dir = Quaternion.Euler(new Vector3(0.0f, rot.y, rot.z)) * dir;
 			cameraTrans.position -= dir;
 		}
+
+		/// <summary>
+		/// カメラ垂直移動
+		/// </summary>
+		private void MoveCameraVertical(float moveDelta, Transform cameraTrans)
+		{
+            var dir = new Vector3(0.0f, moveDelta, 0.0f);
+            cameraTrans.position += dir;
+		}
+
+        /// <summary>
+        /// カメラ平行移動
+        /// </summary>
+        /// <param name="moveDelta"></param>
+        /// <param name="cameraTrans"></param>
+        private void MoveCameraParallel(Vector2 moveDelta, Transform cameraTrans)
+        {
+            if (!isParallelMoveByMouse) return;
+            var dir = new Vector3(-moveDelta.x,  0.0f, - moveDelta.y);
+            var rotY = camera.transform.eulerAngles.y;
+            dir = Quaternion.Euler(new Vector3(0, rotY, 0)) * dir;
+            cameraTrans.position += dir;
+        }
+
+        /// <summary>
+        /// カメラズーム
+        /// </summary>
+        /// <param name="moveDelta"></param>
+        /// <param name="cameraTrans"></param>
+        /// <param name="timeDelta"></param>
+        private void MoveCameraZoom(float moveDelta, Transform cameraTrans)
+        {
+            var dir = new Vector3(0.0f, 0.0f, moveDelta);
+            var rot = camera.transform.eulerAngles;
+            dir = Quaternion.Euler(new Vector3(rot.x, rot.y, rot.z)) * dir;
+            //Debug.Log((cameraTrans.position - camera.transform.position).magnitude);
+            //Debug.Log((cameraTrans.position - camera.transform.position).magnitude > cameraMoveSpeedData.zoomLimit);
+            cameraTrans.position += dir;
+            if(moveDelta < 0.0f || (cameraTrans.position - camera.transform.position).magnitude > cameraMoveSpeedData.zoomLimit)
+            {
+                camera.transform.position += dir;
+                //return;
+            }
+            //if (moveDelta > 0.0f)
+            //    cameraTrans.position += dir;
+        }
+
+
+        /// <summary>
+        /// カメラ回転
+        /// </summary>
+        /// <param name="moveDelta"></param>
+        /// <param name="cameraTrans"></param>
+        private void RotateCamera(Vector2 moveDelta, Transform cameraTrans)
+        {
+            if (!isRotateByMouse) return;
+            
+            //中心を固定した回転
+            //camera.transform.RotateAround(cameraTrans.position, Vector3.up, moveDelta.x);
+            //camera.transform.RotateAround(cameraTrans.position, camera.transform.right, -moveDelta.y);
+
+            cameraTrans.RotateAround(hit.point, Vector3.up, moveDelta.x);
+            //cameraTrans.RotateAround(hit.point, camera.transform.right, -moveDelta.y);
+
+            float pitch = camera.transform.eulerAngles.x;
+            //Debug.Log("OriginPitch: "+ pitch);
+            pitch = (pitch > 180) ? pitch  -360 : pitch;
+            float newPitch = Mathf.Clamp(pitch - moveDelta.y, 0, 85);
+            float pitchDelta = pitch - newPitch;
+            //Debug.Log("NowPitch " + pitch + " NewPitch" + newPitch + "PitchDelta"+pitchDelta);
+            cameraTrans.RotateAround(hit.point, camera.transform.right, -pitchDelta);
+        }
     }
 }

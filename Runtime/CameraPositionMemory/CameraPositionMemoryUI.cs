@@ -13,7 +13,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
         private readonly CameraPositionMemory cameraPositionMemory;
         private readonly ButtonWithClickMessage[] saveButtons; // 添字はスロットID
         private readonly ButtonWithClickMessage[] restoreButtons; // 添字はスロットID
-        private readonly Button saveRestButton;
+        private readonly Button saveResetButton;
         private float timeToResetSaveButton;
         private float timeToResetRestoreButton;
         private readonly RenameCameraSlotUI renameCameraSlotUI;
@@ -43,6 +43,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
                 string saveButtonName = UINameCameraSaveButton + (i+1);
                 int slotIndex = i;
                 var buttonUi = cameraUiRoot.Q<Button>(saveButtonName);
+                buttonUi.focusable = false;
                 saveButtons[i] = new ButtonWithClickMessage(
                     buttonUi,
                     "保存しました！",
@@ -57,6 +58,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
                 string restoreButtonName = UINameCameraRestoreButton + (i+1);
                 int slotIndex = i;
                 var buttonUi = cameraUiRoot.Q<Button>(restoreButtonName);
+                buttonUi.focusable = false;
                 restoreButtons[i] = new ButtonWithClickMessage(
                     buttonUi,
                     "復元しました！",
@@ -72,14 +74,22 @@ namespace Landscape2.Runtime.CameraPositionMemory
                 var buttonUis = cameraUiRoot.Query<Button>(renameButtonName);
                 buttonUis.ForEach(button =>
                 {
+                    button.focusable = false;
                     button.clicked += () => OnClickedRenameButton(slotIndex);
                 });
             }
 
-            saveRestButton = uiRoot.Q<Button>(UINameResetSaveButton);
-            saveRestButton.clicked += OnClickedResetSaveButton; 
+            //セーブデータリセットボタンの機能を構築
+            saveResetButton = uiRoot.Q<Button>(UINameResetSaveButton);
+            saveResetButton.focusable = false;
+            saveResetButton.clicked += OnClickedResetSaveButton; 
             
             UpdateButtonState();
+        }
+
+        public void Start()
+        {
+
         }
 
         public void Update(float deltaTime)
