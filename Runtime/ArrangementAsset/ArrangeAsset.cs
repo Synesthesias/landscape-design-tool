@@ -26,6 +26,7 @@ namespace Landscape2.Runtime
         public virtual void OnSelect(){}
         public virtual void OnCancel(){}
     }
+
     public class ArrangeAsset : ISubComponent,LandscapeInputActions.IArrangeAssetActions
     {
         private VisualElement arrangementAssetUI;
@@ -36,6 +37,7 @@ namespace Landscape2.Runtime
         private CreateMode createMode;
         private EditMode editMode;
         private DeleteMode deleteMode;
+
         public ArrangeAsset()
         {
             createMode = new CreateMode();
@@ -80,14 +82,29 @@ namespace Landscape2.Runtime
         public async void OnEnable()
         {
             // 作成するAssetの親オブジェクトの作成
-            GameObject createdAsset = new GameObject("CreatedAssets");
+            GameObject createdAssets = new GameObject("CreatedAssets");
+            GameObject props = new GameObject("PropsAssets");
+            GameObject humans = new GameObject("HumansAssets");
+            props.transform.parent = createdAssets.transform;
+            humans.transform.parent = createdAssets.transform;
             // ユーザーの操作を受け取る準備
             input = new LandscapeInputActions.ArrangeAssetActions(new LandscapeInputActions());
             input.SetCallbacks(this);
             input.Enable();
             // アセットの取得
-            AsyncOperationHandle<IList<GameObject>> assetHandle = Addressables.LoadAssetsAsync<GameObject>("PlateauProps_Assets", null);
-            IList<GameObject> assets = await assetHandle.Task;
+            AsyncOperationHandle<IList<GameObject>> propsAssetHandle = Addressables.LoadAssetsAsync<GameObject>("PlateauProps_Assets", null);
+            IList<GameObject> propsAssets = await propsAssetHandle.Task;
+            AsyncOperationHandle<IList<GameObject>> humansAssetHandle = Addressables.LoadAssetsAsync<GameObject>("PlateauHumans_Assets", null);
+            IList<GameObject> humansAssets = await humansAssetHandle.Task;
+            Dictionary<GameObject, string> assetsDict = new Dictionary<GameObject, string>();
+            foreach (GameObject prop in propsAssets)
+            {
+                assetsDict[prop] = "Props";
+            }
+            foreach (GameObject human in humansAssets)
+            {
+                assetsDict[human] = "Humans";
+            }
             AsyncOperationHandle<GameObject> runtimeHandle = Addressables.LoadAssetAsync<GameObject>("RuntimeTransformHandle_Assets");
             GameObject runtimeTransformHandle = await runtimeHandle.Task;
             AsyncOperationHandle<GameObject> customPassHandle = Addressables.LoadAssetAsync<GameObject>("CustomPass");
@@ -95,10 +112,10 @@ namespace Landscape2.Runtime
 
             GameObject.Instantiate(customPass);
             SetMode("Create");
-            createMode.CreateButton(assets);
+            createMode.CreateButton(assetsDict);
             editMode.CreateRuntimeHandle(runtimeTransformHandle);
-            
         }
+
         public void SetMode(string mode)
         {
             if (currentMode != null)
@@ -128,6 +145,7 @@ namespace Landscape2.Runtime
                 currentMode.Update();
             }
         }
+
         public void OnSelect(InputAction.CallbackContext context)
         {
             if(context.performed && currentMode != null)
@@ -135,6 +153,7 @@ namespace Landscape2.Runtime
                 currentMode.OnSelect();
             }
         }
+
         public void OnCancel(InputAction.CallbackContext context)
         {
             if(context.performed && currentMode != null)
@@ -142,6 +161,7 @@ namespace Landscape2.Runtime
                 currentMode.OnCancel();
             }
         }
+        
         public void OnDisable()
         {
             input.Disable();

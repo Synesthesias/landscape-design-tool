@@ -51,10 +51,9 @@ namespace Landscape2.Runtime
             if (Physics.Raycast(ray, out RaycastHit hit,Mathf.Infinity))
             {
                 GameObject createdAssets = GameObject.Find("CreatedAssets");
-                if (hit.transform.parent == createdAssets.transform)
+                if (hit.transform.parent.parent == createdAssets.transform)
                 {
-                    runtimeTransformHandleScript.target = hit.collider.gameObject.transform;    
-                         
+                    runtimeTransformHandleScript.target = hit.collider.gameObject.transform;
                 }
             }
         }

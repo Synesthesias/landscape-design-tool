@@ -48,17 +48,16 @@ namespace Landscape2.Runtime
                 {
                     return;
                 }
-                GameObject createdAssets = GameObject.Find("CreatedAssets");
                 if(selectedAssets.Contains(hit.collider.gameObject))
                 {
                     SetLayerRecursively(hit.collider.gameObject,0);
                     selectedAssets.Remove(hit.collider.gameObject);
                 }
-                else if (hit.transform.parent == createdAssets.transform)
+                else if (CheckParentName(hit.transform))
                 {
-                    selectedAssets.Add(hit.collider.gameObject);
+                    selectedAssets.Add(FindAssetComponent(hit.collider.gameObject.transform));
                     int deleteLayer = LayerMask.NameToLayer("UI");
-                    SetLayerRecursively(hit.collider.gameObject, deleteLayer);
+                    SetLayerRecursively(FindAssetComponent(hit.collider.gameObject.transform), deleteLayer);
                 }
             }
             SetScrollContents();
@@ -70,6 +69,32 @@ namespace Landscape2.Runtime
                 SetLayerRecursively(obj,0);
             }
             selectedAssets.Clear();
+        }
+        private GameObject FindAssetComponent(Transform target)
+        {
+            Transform current = target;
+            while (current != null)
+            {
+                if (current.parent.parent.name == "CreatedAssets")
+                {
+                    return current.gameObject;
+                }
+                current = current.parent;
+            }
+            return null;
+        }
+        private bool CheckParentName(Transform hitTransform)
+        {
+            Transform current = hitTransform;
+            while (current != null)
+            {
+                if (current.name == "CreatedAssets")
+                {
+                    return true;
+                }
+                current = current.parent;
+            }
+            return false;
         }
 
         void SetLayerRecursively(GameObject obj, int newLayer)

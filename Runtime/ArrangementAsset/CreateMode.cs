@@ -19,10 +19,12 @@ namespace Landscape2.Runtime
         private GameObject generatedAsset;
         private bool isMouseOverUI;
         private ScrollView assetListScroll;
+
         public override void OnEnable(VisualElement element)
         {
             assetListScroll = element.Q<ScrollView>("CreateTable");
         }
+
         public override void Update()
         {
             // マウスがUI上にあるかどうか
@@ -48,6 +50,7 @@ namespace Landscape2.Runtime
                 }
             }
         }
+
         public void generateAssets(GameObject obj)
         {
             cam = Camera.main;
@@ -58,40 +61,53 @@ namespace Landscape2.Runtime
                 {
                     GameObject.Destroy(generatedAsset);
                 }
-                GameObject createdAssets = GameObject.Find("CreatedAssets");
-                generatedAsset = GameObject.Instantiate(obj, hit.point, Quaternion.identity, createdAssets.transform) as GameObject;
+
+                GameObject parent;
+                if(obj.name.Contains("Human"))
+                {
+                    parent = GameObject.Find("HumansAssets");
+                }
+                else
+                {
+                    parent = GameObject.Find("PropsAssets");
+                }
+                generatedAsset = GameObject.Instantiate(obj, hit.point, Quaternion.identity, parent.transform) as GameObject;
+                generatedAsset.name =  obj.name;
 
                 int generateLayer = LayerMask.NameToLayer("Ignore Raycast");
                 SetLayerRecursively(generatedAsset, generateLayer); 
             }
         }
-        public void CreateButton(IList<GameObject> assets)
+
+        public void CreateButton(Dictionary<GameObject, string> assets)
         {
             // Flexコンテナを作成し、ScrollViewに追加
             VisualElement flexContainer = new VisualElement();
             // アセットをスクロールバーで表示させる
-            foreach (GameObject asset in assets)
+            foreach (KeyValuePair<GameObject, string> asset in assets)
             {
                 Button newButton = new Button()
                 {
-                    text = asset.name,
-                    name = asset.name // ボタンに名前を付ける
+                    text = asset.Key.name,
+                    name = asset.Key.name // ボタンに名前を付ける
                 };
                 newButton.AddToClassList("AssetButton");
                 newButton.clicked += () => 
                 {
-                    SetAsset(asset.name, assets);
+                    SetAsset(asset.Key.name, assets);
                 };
                 flexContainer.Add(newButton);
             }
             assetListScroll.Add(flexContainer);
         }
-        private void SetAsset(string assetName,IList<GameObject> assets)
+
+        private void SetAsset(string assetName,Dictionary<GameObject, string> assets)
         {
             // 選択されたアセットを取得
-            selectedAsset = assets.FirstOrDefault(p => p.name == assetName);
+            selectedAsset = assets.Keys.FirstOrDefault(p => p.name == assetName);
             generateAssets(selectedAsset);
         }
+
         void SetLayerRecursively(GameObject obj, int newLayer)
         {
             if (obj == null)
@@ -107,6 +123,7 @@ namespace Landscape2.Runtime
                 SetLayerRecursively(child.gameObject, newLayer);
             }
         }
+
         public override void OnSelect()
         {   
             if(selectedAsset != null)
@@ -115,10 +132,12 @@ namespace Landscape2.Runtime
                 generateAssets(selectedAsset);
             }
         }
+
         public override void OnCancel()
         {
             GameObject.Destroy(generatedAsset);   
         }
+        
         public override void OnDisable()
         {
             generatedAsset = null;
