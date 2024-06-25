@@ -11,13 +11,12 @@ using System.Threading.Tasks;  // Taskを使用するために必要
 
 namespace Landscape2.Runtime
 {
-    public abstract class SaveMode
-    {
-        public virtual void SetPlateauAssets(Dictionary<GameObject, string> assets) {}
-        public virtual void SaveInfo() {}
-        public virtual void LoadInfo() {}
-    }
-
+    // public abstract class SaveMode
+    // {
+    //     public virtual void SetPlateauAssets(Dictionary<GameObject, string> assets) {}
+    //     public virtual void SaveInfo() {}
+    //     public virtual void LoadInfo() {}
+    // }
     [Serializable]
     public struct TransformData
     {
@@ -36,13 +35,18 @@ namespace Landscape2.Runtime
         }
     }
 
-    public class SaveSystem_Assets
+    public enum AssetsCategory
     {
-        private SaveMode currentLoadMode;
+        Humans,
+        Props
+    }
+
+    public class SubscribeSaveSystem
+    {
         public Dictionary<GameObject, string> plateauAssets;
         private SaveSystem _saveSystem;
-        private SaveProps saveProps;
-        private SaveHumans saveHumans;
+        private SaveLoadHandler saveProps;
+        private SaveLoadHandler saveHumans;
 
         public async void InstantiateSaveSystem(SaveSystem saveSystem)
         {
@@ -61,10 +65,8 @@ namespace Landscape2.Runtime
                 plateauAssets[human] = "Humans";
             }
             // SaveModeクラスにアセットを渡す
-            saveProps = new SaveProps();
-            saveHumans = new SaveHumans();
-            saveHumans.SetPlateauAssets(plateauAssets);
-            saveProps.SetPlateauAssets(plateauAssets);
+            saveHumans = new SaveLoadHandler(AssetsCategory.Humans, plateauAssets);
+            saveProps = new SaveLoadHandler(AssetsCategory.Props, plateauAssets); 
             // SaveSystem_Assetsの初期化
             _saveSystem = saveSystem;
             SetSaveMode();
@@ -81,19 +83,34 @@ namespace Landscape2.Runtime
         {
             if(loadMode == "All")
             {
+                _saveSystem.ResetLoadEvent();
                 _saveSystem.LoadEvent += saveHumans.LoadInfo;
                 _saveSystem.LoadEvent += saveProps.LoadInfo;
             }
             else if(loadMode == "Humans")
             {
-                currentLoadMode = saveHumans;
-                _saveSystem.LoadEvent += currentLoadMode.LoadInfo;
+                _saveSystem.ResetLoadEvent();
+                _saveSystem.LoadEvent += saveHumans.LoadInfo;
             }
             else if(loadMode == "Props")
             {
-                currentLoadMode = saveProps;
-                _saveSystem.LoadEvent += currentLoadMode.LoadInfo;
+                _saveSystem.ResetLoadEvent();
+                _saveSystem.LoadEvent += saveProps.LoadInfo;
             }
+            // -------------------------------------------------------
+            // if(loadMode == "All")
+            // {
+            //     saveHumans.LoadInfo();
+            //     saveProps.LoadInfo();
+            // }
+            // else if(loadMode == "Humans")
+            // {
+            //     saveHumans.LoadInfo();
+            // }
+            // else if(loadMode == "Props")
+            // {
+            //     saveProps.LoadInfo();
+            // }
         }
     }
 }

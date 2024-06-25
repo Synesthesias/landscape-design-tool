@@ -12,23 +12,16 @@ namespace Landscape2.Runtime
     {
         private List<GameObject> selectedAssets;
         private ScrollView selectedAssetsScroll;
-        private bool isMouseOverUI;
         public override void OnEnable(VisualElement element)
         {
             selectedAssets = new List<GameObject>();
             selectedAssetsScroll = element.Q<ScrollView>("SelectedAssetScrollView");
         }
+
         public override void Update()
         {
-            if(EventSystem.current.IsPointerOverGameObject())
-            {
-                isMouseOverUI = true;
-            }
-            else
-            {
-                isMouseOverUI = false;
-            }
         }
+        
         public void DeleteAsset()
         {
             foreach(GameObject obj in selectedAssets)
@@ -44,10 +37,6 @@ namespace Landscape2.Runtime
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit,Mathf.Infinity))
             {
-                if(isMouseOverUI)
-                {
-                    return;
-                }
                 if(selectedAssets.Contains(hit.collider.gameObject))
                 {
                     SetLayerRecursively(hit.collider.gameObject,0);

@@ -7,6 +7,8 @@ using UnityEngine.InputSystem;
 // FirstOrDefault()の使用
 using System.Linq;
 using UnityEngine.UIElements;
+// OnSelectの処理待ちに使用
+using System.Threading.Tasks;
 namespace Landscape2.Runtime
 {
     // ArrangeModeクラスの派生クラス
@@ -17,25 +19,27 @@ namespace Landscape2.Runtime
         
         public GameObject selectedAsset;
         private GameObject generatedAsset;
-        private bool isMouseOverUI;
+        private bool isButtonClicked;
+        // private bool isMouseOverUI;
         private ScrollView assetListScroll;
 
         public override void OnEnable(VisualElement element)
         {
             assetListScroll = element.Q<ScrollView>("CreateTable");
+            isButtonClicked = false;
         }
 
         public override void Update()
         {
             // マウスがUI上にあるかどうか
-            if(EventSystem.current.IsPointerOverGameObject())
-            {
-                isMouseOverUI = true;
-            }
-            else
-            {
-                isMouseOverUI = false;
-            }
+            // if(EventSystem.current.IsPointerOverGameObject())
+            // {
+            //     isMouseOverUI = true;
+            // }
+            // else
+            // {
+            //     isMouseOverUI = false;
+            // }
 
 
             if(generatedAsset != null)
@@ -49,6 +53,10 @@ namespace Landscape2.Runtime
                     generatedAsset.transform.position = hit.point;
                 }
             }
+            else if(selectedAsset != null)
+            {
+                generateAssets(selectedAsset);
+            }
         }
 
         public void generateAssets(GameObject obj)
@@ -57,9 +65,15 @@ namespace Landscape2.Runtime
             ray = cam.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit,Mathf.Infinity))
             {
-                if(isMouseOverUI)
+                // if(isMouseOverUI)
+                // {
+                //     GameObject.Destroy(generatedAsset);
+                // }
+                if(isButtonClicked)
                 {
+                    Debug.Log(generatedAsset);
                     GameObject.Destroy(generatedAsset);
+                    isButtonClicked = false;
                 }
 
                 GameObject parent;
@@ -71,6 +85,7 @@ namespace Landscape2.Runtime
                 {
                     parent = GameObject.Find("PropsAssets");
                 }
+                Debug.Log("Created");
                 generatedAsset = GameObject.Instantiate(obj, hit.point, Quaternion.identity, parent.transform) as GameObject;
                 generatedAsset.name =  obj.name;
 
@@ -94,6 +109,7 @@ namespace Landscape2.Runtime
                 newButton.AddToClassList("AssetButton");
                 newButton.clicked += () => 
                 {
+                    isButtonClicked = true;
                     SetAsset(asset.Key.name, assets);
                 };
                 flexContainer.Add(newButton);
@@ -105,7 +121,6 @@ namespace Landscape2.Runtime
         {
             // 選択されたアセットを取得
             selectedAsset = assets.Keys.FirstOrDefault(p => p.name == assetName);
-            generateAssets(selectedAsset);
         }
 
         void SetLayerRecursively(GameObject obj, int newLayer)
@@ -124,8 +139,10 @@ namespace Landscape2.Runtime
             }
         }
 
-        public override void OnSelect()
+        public override async void OnSelect()
         {   
+            await Task.Delay(100);
+            Debug.Log(isButtonClicked);
             if(selectedAsset != null)
             {
                 SetLayerRecursively(generatedAsset,0);
@@ -135,7 +152,8 @@ namespace Landscape2.Runtime
 
         public override void OnCancel()
         {
-            GameObject.Destroy(generatedAsset);   
+            selectedAsset = null;
+            GameObject.Destroy(generatedAsset);
         }
         
         public override void OnDisable()
