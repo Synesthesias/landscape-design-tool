@@ -73,6 +73,9 @@ namespace Landscape2.Runtime
         public void OnEnable()
         {
         }
+        public void Start()
+        {
+        }
         public void Update(float deltaTime)
         {
         }
