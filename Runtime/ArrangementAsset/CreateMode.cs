@@ -20,7 +20,6 @@ namespace Landscape2.Runtime
         public GameObject selectedAsset;
         private GameObject generatedAsset;
         private bool isButtonClicked;
-        // private bool isMouseOverUI;
         private ScrollView assetListScroll;
 
         public override void OnEnable(VisualElement element)
@@ -31,17 +30,6 @@ namespace Landscape2.Runtime
 
         public override void Update()
         {
-            // マウスがUI上にあるかどうか
-            // if(EventSystem.current.IsPointerOverGameObject())
-            // {
-            //     isMouseOverUI = true;
-            // }
-            // else
-            // {
-            //     isMouseOverUI = false;
-            // }
-
-
             if(generatedAsset != null)
             {
                 cam = Camera.main;
@@ -65,10 +53,6 @@ namespace Landscape2.Runtime
             ray = cam.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit,Mathf.Infinity))
             {
-                // if(isMouseOverUI)
-                // {
-                //     GameObject.Destroy(generatedAsset);
-                // }
                 if(isButtonClicked)
                 {
                     Debug.Log(generatedAsset);
@@ -76,16 +60,7 @@ namespace Landscape2.Runtime
                     isButtonClicked = false;
                 }
 
-                GameObject parent;
-                if(obj.name.Contains("Human"))
-                {
-                    parent = GameObject.Find("HumansAssets");
-                }
-                else
-                {
-                    parent = GameObject.Find("PropsAssets");
-                }
-                Debug.Log("Created");
+                GameObject parent = GameObject.Find("CreatedAssets");
                 generatedAsset = GameObject.Instantiate(obj, hit.point, Quaternion.identity, parent.transform) as GameObject;
                 generatedAsset.name =  obj.name;
 
@@ -94,33 +69,33 @@ namespace Landscape2.Runtime
             }
         }
 
-        public void CreateButton(Dictionary<GameObject, string> assets)
+        public void CreateButton(IList<GameObject> plateauAssets)
         {
             // Flexコンテナを作成し、ScrollViewに追加
             VisualElement flexContainer = new VisualElement();
             // アセットをスクロールバーで表示させる
-            foreach (KeyValuePair<GameObject, string> asset in assets)
+            foreach (GameObject asset in plateauAssets)
             {
                 Button newButton = new Button()
                 {
-                    text = asset.Key.name,
-                    name = asset.Key.name // ボタンに名前を付ける
+                    text = asset.name,
+                    name = asset.name // ボタンに名前を付ける
                 };
                 newButton.AddToClassList("AssetButton");
                 newButton.clicked += () => 
                 {
                     isButtonClicked = true;
-                    SetAsset(asset.Key.name, assets);
+                    SetAsset(asset.name, plateauAssets);
                 };
                 flexContainer.Add(newButton);
             }
             assetListScroll.Add(flexContainer);
         }
 
-        private void SetAsset(string assetName,Dictionary<GameObject, string> assets)
+        private void SetAsset(string assetName,IList<GameObject> plateauAssets)
         {
             // 選択されたアセットを取得
-            selectedAsset = assets.Keys.FirstOrDefault(p => p.name == assetName);
+            selectedAsset = plateauAssets.FirstOrDefault(p => p.name == assetName);
         }
 
         void SetLayerRecursively(GameObject obj, int newLayer)

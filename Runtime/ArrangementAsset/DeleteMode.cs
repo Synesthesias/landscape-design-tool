@@ -64,7 +64,7 @@ namespace Landscape2.Runtime
             Transform current = target;
             while (current != null)
             {
-                if (current.parent.parent.name == "CreatedAssets")
+                if (current.parent.name == "CreatedAssets")
                 {
                     return current.gameObject;
                 }

@@ -31,13 +31,9 @@ namespace Landscape2.Editor
                 currentSettings = AddressableAssetSettingsDefaultObject.Settings;
             }
             // ラベルの追加
-            if (!currentSettings.GetLabels().Contains("PlateauProps_Assets"))
+            if (!currentSettings.GetLabels().Contains("Plateau_Assets"))
             {
-                currentSettings.AddLabel("PlateauProps_Assets");
-            }
-            if(!currentSettings.GetLabels().Contains("PlateauHumans_Assets"))
-            {
-                currentSettings.AddLabel("PlateauHumans_Assets");
+                currentSettings.AddLabel("Plateau_Assets");
             }
             if (!currentSettings.GetLabels().Contains("RuntimeTransformHandle_Assets"))
             {
@@ -91,7 +87,7 @@ namespace Landscape2.Editor
                 string assetPath = AssetDatabase.GUIDToAssetPath(guid);
                 var entry = currentSettings.CreateOrMoveEntry(guid,targetGroup);
                 entry.address = System.IO.Path.GetFileNameWithoutExtension(assetPath);
-                entry.SetLabel("PlateauProps_Assets", true);
+                entry.SetLabel("Plateau_Assets", true);
             }
 
             string humansDirectoryPath = "Assets/Samples/PLATEAU SDK-Toolkits for Unity/1.0.1/HDRP Sample Assets/Humans/Prefabs";
@@ -101,7 +97,7 @@ namespace Landscape2.Editor
                 string assetPath = AssetDatabase.GUIDToAssetPath(guid);
                 var entry = currentSettings.CreateOrMoveEntry(guid,targetGroup);
                 entry.address = System.IO.Path.GetFileNameWithoutExtension(assetPath);
-                entry.SetLabel("PlateauHumans_Assets", true);
+                entry.SetLabel("Plateau_Assets", true);
             }
         }
         private static AddressableAssetGroup CreateGroup(string groupName)

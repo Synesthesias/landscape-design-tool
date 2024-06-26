@@ -9,37 +9,33 @@ namespace Landscape2.Runtime
 {
     public class SaveLoadHandler
     {
-        public Dictionary<GameObject, string> plateauHumansAssets;
-        private string tagName;
-        private string parentName;
-        public SaveLoadHandler(AssetsCategory assetsCategory,Dictionary<GameObject, string> assets)
+        public IList<GameObject> plateauAssets;
+        public SaveLoadHandler(IList<GameObject> assets)
         {
-            tagName = assetsCategory.ToString();
-            parentName = tagName + "Assets";
-            plateauHumansAssets = assets;
+            plateauAssets = assets;
         }
 
         public void SaveInfo()
         {
             List<TransformData> assetsTransformData = new List<TransformData>();
-            GameObject createdAssets = GameObject.Find(parentName);
+            GameObject createdAssets = GameObject.Find("CreatedAssets");
             foreach(Transform asset in createdAssets.transform)
             {
                 assetsTransformData.Add(new TransformData(asset));
             }
-            DataSerializer.Save(tagName, assetsTransformData);
+            DataSerializer.Save("Assets", assetsTransformData);
         }
 
         public void LoadInfo()
         {
-            List<TransformData> loadedTransformData = DataSerializer.Load<List<TransformData>>(tagName);
+            List<TransformData> loadedTransformData = DataSerializer.Load<List<TransformData>>("Assets");
             if (loadedTransformData != null)
             {
                 foreach(TransformData assetData in loadedTransformData)
                 {
                     string assetName = assetData.name;
-                    GameObject asset = plateauHumansAssets.Keys.FirstOrDefault(p => p.name == assetName);
-                    GameObject createdAssets = GameObject.Find(parentName);
+                    GameObject asset = plateauAssets.FirstOrDefault(p => p.name == assetName);
+                    GameObject createdAssets = GameObject.Find("CreatedAssets");
                     // ロードしたアセットの生成
                     GameObject generatedAsset = GameObject.Instantiate(asset,assetData.position, assetData.rotation, createdAssets.transform) as GameObject;
                     generatedAsset.transform.localScale = assetData.scale;
@@ -48,7 +44,7 @@ namespace Landscape2.Runtime
             }
             else
             {
-                Debug.LogError("No saved project humans data found.");
+                Debug.LogError("No saved project data found.");
             }
         }
     }

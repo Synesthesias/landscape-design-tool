@@ -14,18 +14,10 @@ using Landscape2.Runtime.UiCommon;
 
 namespace Landscape2.Runtime
 {
-    public enum LoadTypeCategory
-    {
-        All,
-        Props,
-        Humans
-    }
-
     public class SaveSystem : ISubComponent
     {
         private VisualElement projectManagementUI;
         private ChangeLoadMode changeLoadMode;
-        // private LoadTypeCategory loadType;
         public event Action SaveEvent = delegate { };
         public event Action LoadEvent = delegate { };
 
@@ -33,22 +25,13 @@ namespace Landscape2.Runtime
         {
             changeLoadMode = new ChangeLoadMode();
             changeLoadMode.CreateSaveSystemInstance(this);
-            // UIの設定
+
+                        // UIの設定
             projectManagementUI = new UIDocumentFactory().CreateWithUxmlName("ProjectManagementUI");
             Button saveButton = projectManagementUI.Q<Button>("SaveButton");
             Button loadButton = projectManagementUI.Q<Button>("LoadButton");
             saveButton.clicked += SaveProject;
             loadButton.clicked += LoadProject;
-
-            DropdownField loadTypeDropdown = projectManagementUI.Q<DropdownField>("LoadType");
-            loadTypeDropdown.choices = new List<string> { "All", "Props", "Humans"};
-            loadTypeDropdown.value = "All";
-            loadTypeDropdown.RegisterValueChangedCallback(evt =>
-            {
-                Enum.TryParse(evt.newValue, out LoadTypeCategory loadTypeCategory);
-                changeLoadMode.SetLoadMode(loadTypeCategory);
-                // loadType = loadTypeCategory;
-            });
         }
         
         void SaveProject()
@@ -71,7 +54,6 @@ namespace Landscape2.Runtime
 
             DataSerializer.LoadFile();
             LoadEvent();
-            // changeLoadMode.SetLoadMode(loadTypeCategory);
 
             Debug.Log("Project loaded.");
         }
