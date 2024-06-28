@@ -19,13 +19,16 @@ namespace Landscape2.Runtime
         
         public GameObject selectedAsset;
         private GameObject generatedAsset;
-        private bool isButtonClicked;
+        private VisualElement arrangeAssetsUI;
+        private VisualElement rootVisualElement;
+        private bool isMouseOverUI;
         private ScrollView assetListScroll;
 
         public override void OnEnable(VisualElement element)
         {
-            assetListScroll = element.Q<ScrollView>("CreateTable");
-            isButtonClicked = false;
+            arrangeAssetsUI = element;
+            arrangeAssetsUI.RegisterCallback<MouseEnterEvent>(OnMouseEnter);
+            arrangeAssetsUI.RegisterCallback<MouseLeaveEvent>(OnMouseLeave);
         }
 
         public override void Update()
@@ -41,10 +44,6 @@ namespace Landscape2.Runtime
                     generatedAsset.transform.position = hit.point;
                 }
             }
-            else if(selectedAsset != null)
-            {
-                generateAssets(selectedAsset);
-            }
         }
 
         public void generateAssets(GameObject obj)
@@ -53,11 +52,9 @@ namespace Landscape2.Runtime
             ray = cam.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit,Mathf.Infinity))
             {
-                if(isButtonClicked)
+                if(isMouseOverUI && generatedAsset != null)
                 {
-                    Debug.Log(generatedAsset);
                     GameObject.Destroy(generatedAsset);
-                    isButtonClicked = false;
                 }
 
                 GameObject parent = GameObject.Find("CreatedAssets");
@@ -84,18 +81,18 @@ namespace Landscape2.Runtime
                 newButton.AddToClassList("AssetButton");
                 newButton.clicked += () => 
                 {
-                    isButtonClicked = true;
                     SetAsset(asset.name, plateauAssets);
                 };
                 flexContainer.Add(newButton);
             }
-            assetListScroll.Add(flexContainer);
+            arrangeAssetsUI.Q<ScrollView>("CreateTable").Add(flexContainer);
         }
 
         private void SetAsset(string assetName,IList<GameObject> plateauAssets)
         {
             // 選択されたアセットを取得
             selectedAsset = plateauAssets.FirstOrDefault(p => p.name == assetName);
+            generateAssets(selectedAsset);
         }
 
         void SetLayerRecursively(GameObject obj, int newLayer)
@@ -113,11 +110,17 @@ namespace Landscape2.Runtime
                 SetLayerRecursively(child.gameObject, newLayer);
             }
         }
+        private void OnMouseEnter(MouseEnterEvent evt)
+        {
+            isMouseOverUI = true;
+        }
+        private void OnMouseLeave(MouseLeaveEvent evt)
+        {
+            isMouseOverUI = false;
+        }
 
-        public override async void OnSelect()
+        public override void OnSelect()
         {   
-            await Task.Delay(100);
-            Debug.Log(isButtonClicked);
             if(selectedAsset != null)
             {
                 SetLayerRecursively(generatedAsset,0);
