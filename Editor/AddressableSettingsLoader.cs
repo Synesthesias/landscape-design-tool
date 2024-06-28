@@ -31,9 +31,9 @@ namespace Landscape2.Editor
                 currentSettings = AddressableAssetSettingsDefaultObject.Settings;
             }
             // ラベルの追加
-            if (!currentSettings.GetLabels().Contains("PlateauProps_Assets"))
+            if (!currentSettings.GetLabels().Contains("Plateau_Assets"))
             {
-                currentSettings.AddLabel("PlateauProps_Assets");
+                currentSettings.AddLabel("Plateau_Assets");
             }
             if (!currentSettings.GetLabels().Contains("RuntimeTransformHandle_Assets"))
             {
@@ -81,13 +81,23 @@ namespace Landscape2.Editor
             var targetGroup = CreateGroup(groupName);
 
             string propsDirectoryPath = "Assets/Samples/PLATEAU SDK-Toolkits for Unity/1.0.1/HDRP Sample Assets/Props/Prefabs";
-            string[] assetGUIDs = AssetDatabase.FindAssets("", new[] { propsDirectoryPath });
-            foreach(var guid in assetGUIDs)
+            string[] propsAssetGUIDs = AssetDatabase.FindAssets("", new[] { propsDirectoryPath });
+            foreach(var guid in propsAssetGUIDs)
             {
                 string assetPath = AssetDatabase.GUIDToAssetPath(guid);
                 var entry = currentSettings.CreateOrMoveEntry(guid,targetGroup);
                 entry.address = System.IO.Path.GetFileNameWithoutExtension(assetPath);
-                entry.SetLabel("PlateauProps_Assets", true);
+                entry.SetLabel("Plateau_Assets", true);
+            }
+
+            string humansDirectoryPath = "Assets/Samples/PLATEAU SDK-Toolkits for Unity/1.0.1/HDRP Sample Assets/Humans/Prefabs";
+            string[] humansAssetGUIDs = AssetDatabase.FindAssets("", new[] { humansDirectoryPath });
+            foreach(var guid in humansAssetGUIDs)
+            {
+                string assetPath = AssetDatabase.GUIDToAssetPath(guid);
+                var entry = currentSettings.CreateOrMoveEntry(guid,targetGroup);
+                entry.address = System.IO.Path.GetFileNameWithoutExtension(assetPath);
+                entry.SetLabel("Plateau_Assets", true);
             }
         }
         private static AddressableAssetGroup CreateGroup(string groupName)
