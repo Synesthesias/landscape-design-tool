@@ -12,9 +12,14 @@ namespace Landscape2.Runtime
     public class EditMode : ArrangeMode
     {
         private RuntimeTransformHandle runtimeTransformHandleScript;
+        private VisualElement arrangeAssetsUI;
+        private bool isMouseOverUI;
 
         public override void OnEnable(VisualElement element)
         {
+            arrangeAssetsUI = element;
+            arrangeAssetsUI.RegisterCallback<MouseEnterEvent>(OnMouseEnter);
+            arrangeAssetsUI.RegisterCallback<MouseLeaveEvent>(OnMouseLeave);
         }
 
         public void SetTransformType(string name)
@@ -50,6 +55,10 @@ namespace Landscape2.Runtime
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit,Mathf.Infinity))
             {
+                if(isMouseOverUI)
+                {
+                    return;
+                }
                 if (CheckParentName(hit.transform))
                 {
                     runtimeTransformHandleScript.target = FindAssetComponent(hit.collider.gameObject.transform).transform;
@@ -84,6 +93,17 @@ namespace Landscape2.Runtime
             }
             return false;
         }
+        
+        private void OnMouseEnter(MouseEnterEvent evt)
+        {
+            isMouseOverUI = true;
+        }
+        
+        private void OnMouseLeave(MouseLeaveEvent evt)
+        {
+            isMouseOverUI = false;
+        }
+
         public override void Update()
         {
         }

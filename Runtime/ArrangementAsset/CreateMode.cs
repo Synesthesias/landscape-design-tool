@@ -20,9 +20,7 @@ namespace Landscape2.Runtime
         public GameObject selectedAsset;
         private GameObject generatedAsset;
         private VisualElement arrangeAssetsUI;
-        private VisualElement rootVisualElement;
         private bool isMouseOverUI;
-        private ScrollView assetListScroll;
 
         public override void OnEnable(VisualElement element)
         {
@@ -110,10 +108,12 @@ namespace Landscape2.Runtime
                 SetLayerRecursively(child.gameObject, newLayer);
             }
         }
+
         private void OnMouseEnter(MouseEnterEvent evt)
         {
             isMouseOverUI = true;
         }
+        
         private void OnMouseLeave(MouseLeaveEvent evt)
         {
             isMouseOverUI = false;

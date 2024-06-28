@@ -12,10 +12,16 @@ namespace Landscape2.Runtime
     {
         private List<GameObject> selectedAssets;
         private ScrollView selectedAssetsScroll;
+        private VisualElement arrangeAssetsUI;
+        private bool isMouseOverUI;
+
         public override void OnEnable(VisualElement element)
         {
-            selectedAssets = new List<GameObject>();
+            arrangeAssetsUI = element;
+            arrangeAssetsUI.RegisterCallback<MouseEnterEvent>(OnMouseEnter);
+            arrangeAssetsUI.RegisterCallback<MouseLeaveEvent>(OnMouseLeave);
             selectedAssetsScroll = element.Q<ScrollView>("SelectedAssetScrollView");
+            selectedAssets = new List<GameObject>();
         }
 
         public override void Update()
@@ -31,12 +37,17 @@ namespace Landscape2.Runtime
             selectedAssets.Clear();
             SetScrollContents();
         }
+
         public override void OnSelect()
         {
             Camera cam = Camera.main;
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit,Mathf.Infinity))
             {
+                if(isMouseOverUI)
+                {
+                    return;
+                }
                 if(selectedAssets.Contains(hit.collider.gameObject))
                 {
                     SetLayerRecursively(hit.collider.gameObject,0);
@@ -51,6 +62,7 @@ namespace Landscape2.Runtime
             }
             SetScrollContents();
         }
+
         public override void OnCancel()
         {
             foreach(GameObject obj in selectedAssets)
@@ -59,6 +71,7 @@ namespace Landscape2.Runtime
             }
             selectedAssets.Clear();
         }
+
         private GameObject FindAssetComponent(Transform target)
         {
             Transform current = target;
@@ -72,6 +85,7 @@ namespace Landscape2.Runtime
             }
             return null;
         }
+
         private bool CheckParentName(Transform hitTransform)
         {
             Transform current = hitTransform;
@@ -89,7 +103,9 @@ namespace Landscape2.Runtime
         void SetLayerRecursively(GameObject obj, int newLayer)
         {
             if (obj == null)
+            {
                 return;
+            }
 
             obj.layer = newLayer;
 
@@ -101,6 +117,7 @@ namespace Landscape2.Runtime
                 SetLayerRecursively(child.gameObject, newLayer);
             }
         }
+
         void SetScrollContents()
         {
             selectedAssetsScroll.Clear(); 
@@ -121,6 +138,7 @@ namespace Landscape2.Runtime
             }
             selectedAssetsScroll.Add(flexContainer);
         }
+
         void FocusAsset(GameObject obj)
         {
             Camera cam = Camera.main;
@@ -129,6 +147,17 @@ namespace Landscape2.Runtime
             targetPosition.z -= 3f;
             cam.transform.position = targetPosition;
         }
+
+        private void OnMouseEnter(MouseEnterEvent evt)
+        {
+            isMouseOverUI = true;
+        }
+        
+        private void OnMouseLeave(MouseLeaveEvent evt)
+        {
+            isMouseOverUI = false;
+        }
+
         public override void OnDisable()
         {
             foreach(GameObject obj in selectedAssets)
