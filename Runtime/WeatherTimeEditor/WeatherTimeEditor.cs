@@ -15,8 +15,8 @@ namespace Landscape2.Runtime.WeatherTimeEditor
         public enum Weather
         {
             Sun,
-            Rain,
             Cloud,
+            Rain,
             Snow
         }
 

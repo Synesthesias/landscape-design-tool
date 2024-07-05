@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Packages/com.synesthesias.landscape-design-tool-2/Runtime/UICommon/UIStyleCommon.uss?fileID=7433441132597879392&amp;guid=5003ef441f4ce7e4881f663b95f4df1d&amp;type=3#UIStyleCommon" />
+    <ui:VisualElement class="gis-background-window" style="flex-grow: 1; width: 345px; height: auto; position: relative; left: 1%; top: 1%; transform-origin: center; align-self: auto;">
+        <ui:Label text="BIMデータ" display-tooltip-when-elided="true" name="EditBuildingHeader" class="header" />
+    </ui:VisualElement>
+</ui:UXML>

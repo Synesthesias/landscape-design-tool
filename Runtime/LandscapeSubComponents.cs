@@ -9,9 +9,24 @@ namespace Landscape2.Runtime
     /// <summary>
     /// 実行時の機能である<see cref="ISubComponent"/>をここにまとめて、UpdateやOnEnable等を呼び出します。
     /// </summary>
+    
+    public enum SubMenuUxmlType
+    {
+        EditBuilding,
+        Asset,
+        Bim,
+        Gis,
+        Planning,
+        Analytics,
+        CameraList,
+        CameraEdit,
+    }
+
     public class LandscapeSubComponents : MonoBehaviour
     {
         private List<ISubComponent> subComponents;
+        // 現在開かれているサブメニュー機能
+        private SubMenuUxmlType subMenuUxmlType;
 
         private void Awake()
         {
@@ -26,6 +41,7 @@ namespace Landscape2.Runtime
                 new ArrangeAsset(),
                 // RegulationAreaUI.CreateForScene(),
                 LineOfSightUI.CreateForScene(),
+                new GlobalNaviHeader(uiRoot),
                 new WeatherTimeEditorUI(new WeatherTimeEditor.WeatherTimeEditor(),uiRoot),
                 new SaveSystem()
             };
@@ -61,6 +77,11 @@ namespace Landscape2.Runtime
             {
                 c.OnDisable();
             }
+        }
+
+        public void SetSubMenuUxmlType(SubMenuUxmlType type)
+        {
+            subMenuUxmlType = type;
         }
     }
 }

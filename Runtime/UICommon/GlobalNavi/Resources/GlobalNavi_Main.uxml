@@ -10,34 +10,34 @@
                 <ui:VisualElement name="WeatherController" style="flex-grow: 1; width: 150px; flex-shrink: 0; align-items: auto; flex-basis: 0; flex-direction: column;">
                     <ui:GroupBox name="Weather">
                         <ui:RadioButton label="Radio Button" name="Sun" value="true" />
-                        <ui:RadioButton label="Radio Button" name="Cloud" />
-                        <ui:RadioButton label="Radio Button" name="Rain" />
-                        <ui:RadioButton label="Radio Button" name="Snow" />
+                        <ui:RadioButton label="Radio Button" name="Cloud" tabindex="1" />
+                        <ui:RadioButton label="Radio Button" name="Rain" tabindex="2" />
+                        <ui:RadioButton label="Radio Button" name="Snow" tabindex="3" />
                     </ui:GroupBox>
                     <ui:Slider high-value="100" name="TimeSlider" style="width: 100%;" />
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="GlobalNavi_CenterGroup" tabindex="1" style="flex-grow: 1; height: auto; align-items: center;">
                 <ui:GroupBox name="Menu" focusable="false">
-                    <ui:RadioButton label="Radio Button" name="MenuMain" text="メイン" value="true" style="font-size: 18px;" />
-                    <ui:RadioButton label="Radio Button" name="MenuEdit" text="地図編集" style="font-size: 18px;" />
-                    <ui:RadioButton label="Radio Button" name="MenuData" text="データ解析" style="font-size: 18px;" />
-                    <ui:RadioButton label="Radio Button" name="MenuCamera" text="カメラ" style="font-size: 18px;" />
+                    <ui:RadioButton label="Radio Button" name="MenuMain" text="メイン" value="true" tabindex="-1" style="font-size: 18px;" />
+                    <ui:RadioButton label="Radio Button" name="MenuEdit" text="地図編集" tabindex="0" style="font-size: 18px;" />
+                    <ui:RadioButton label="Radio Button" name="MenuData" text="データ解析" tabindex="1" style="font-size: 18px;" />
+                    <ui:RadioButton label="Radio Button" name="MenuCamera" text="カメラ" tabindex="2" style="font-size: 18px;" />
                 </ui:GroupBox>
                 <ui:VisualElement name="SubMenu" style="flex-grow: 1;">
-                    <ui:GroupBox name="SubMenu_Edit">
+                    <ui:GroupBox name="SubMenu_Edit" tabindex="0">
                         <ui:RadioButton label="Radio Button" text="建物編集" name="SubMenuEdit" class="SubMenuFirst" />
-                        <ui:RadioButton label="Radio Button" text="アセット配置" name="SubMenuAsset" class="SubMenuMiddle" />
-                        <ui:RadioButton label="Radio Button" text="BIMデータ" name="SubMenuBIM" class="SubMenuEnd" />
+                        <ui:RadioButton label="Radio Button" text="アセット配置" name="SubMenuAsset" tabindex="1" class="SubMenuMiddle" />
+                        <ui:RadioButton label="Radio Button" text="BIMデータ" name="SubMenuBIM" tabindex="2" class="SubMenuEnd" />
                     </ui:GroupBox>
-                    <ui:GroupBox name="SubMenu_Data">
-                        <ui:RadioButton label="Radio Button" text="GISデータ一覧" name="SubMenuEdit" class="SubMenuFirst" />
-                        <ui:RadioButton label="Radio Button" text="景観計画区域" name="SubMenuAsset" class="SubMenuMiddle" />
-                        <ui:RadioButton label="Radio Button" text="見通し解析" name="SubMenuBIM" class="SubMenuEnd" />
+                    <ui:GroupBox name="SubMenu_Data" tabindex="1">
+                        <ui:RadioButton label="Radio Button" text="GISデータ一覧" name="SubMenuEdit" tabindex="3" class="SubMenuFirst" />
+                        <ui:RadioButton label="Radio Button" text="景観計画区域" name="SubMenuAsset" tabindex="4" class="SubMenuMiddle" />
+                        <ui:RadioButton label="Radio Button" text="見通し解析" name="SubMenuBIM" tabindex="5" class="SubMenuEnd" />
                     </ui:GroupBox>
-                    <ui:GroupBox name="SubMenu_Camera">
-                        <ui:RadioButton label="Radio Button" text="始点一覧" name="SubMenuCameraList" class="SubMenuFirst" />
-                        <ui:RadioButton label="Radio Button" text="視点編集" name="SubMenuCameraEdit" class="SubMenuEnd" />
+                    <ui:GroupBox name="SubMenu_Camera" tabindex="2">
+                        <ui:RadioButton label="Radio Button" text="始点一覧" name="SubMenuCameraList" tabindex="6" class="SubMenuFirst" />
+                        <ui:RadioButton label="Radio Button" text="視点編集" name="SubMenuCameraEdit" tabindex="7" class="SubMenuEnd" />
                     </ui:GroupBox>
                 </ui:VisualElement>
             </ui:VisualElement>
