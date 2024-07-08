@@ -207,14 +207,26 @@ namespace Landscape2.Runtime.LineOfSight
             float interval = target.LineInterval;
             int divx = (int)(target.ScreenWidth / interval);
             int divy = (int)(target.ScreenHeight / interval);
+            var diff = destination - origin;
 
             for (int i = 0; i < divx + 1; i++)
             {
                 for (int j = 0; j < divy + 1; j++)
                 {
-                    float x = destination.x - (target.ScreenWidth / 2.0f) + interval * i;
-                    float y = destination.y - (target.ScreenHeight / 2.0f) + interval * j;
-                    Vector3 d = new Vector3(x, y, destination.z);
+                    
+                    // EndPosを通り、StartPosからEndPosへのベクトルに垂直な面を想定したものです。視線ターゲットの面です。
+                    // その面の中心から視線へのベクトルを求めます。
+                    var planeDiff = new Vector2(
+                        -target.ScreenWidth / 2.0f + interval * i,
+                        -target.ScreenHeight / 2.0f + interval * j);// EndPosから線投射先へのベクトル
+                    // 始点から終点のベクトルの角度を求めます。
+                    float angle = Vector2.SignedAngle(Vector2.up, new Vector2(diff.x, diff.z));
+                    var rotator = Quaternion.AngleAxis(-angle, Vector3.up);
+                    // まず、始点から終点のベクトルが真北を向いており、始点が(0,0,0)にあるケースを計算します。
+                    var notRotatedLine =
+                        new Vector3(planeDiff.x, planeDiff.y, 0) + new Vector3(0, diff.y, diff.magnitude);
+                    // それを角度で回転し、始点を望みの位置に回転することで線を得ます。
+                    var d = rotator * notRotatedLine + origin;
                     RaycastHit hit;
 
                     if (RaycastBuildings(target, origin, d, out hit))
@@ -267,7 +279,7 @@ namespace Landscape2.Runtime.LineOfSight
             Vector3 direction = (destination - origin).normalized;
 
             RaycastHit[] hits;
-            hits = Physics.RaycastAll(origin, direction, 10000);
+            hits = Physics.RaycastAll(origin, direction, (destination - origin).magnitude);
 
             float minDistance = float.MaxValue;
             if (hits.Length <= 0)
