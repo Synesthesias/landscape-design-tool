@@ -222,7 +222,6 @@ Scroller #unity-drag-container {
     white-space: normal;
 }
 
-
 .unity-button {
 }
 
@@ -247,473 +246,797 @@ Scroller #unity-drag-container {
     color: black;
 }
 
-/* グローバルナビ関連 */
-
-
 .unity-radio-button:hover {
-background-color:  rgba(50, 75, 75, 0.25);
+    background-color: rgba(50, 75, 75, 0.25);
 }
-.unity-radio-button:checked {
-    background-color:  #324B4B;
-    border-color:#889392;
-}
-/* チェックボックス背景 */
-.unity-radio-button__checkmark-background {
-width: 24px;
-border-width: 0px;
-background-color:  rgba(255, 255, 128, 0);
 
+.unity-radio-button:checked {
+    background-color: rgb(50, 75, 75);
+    border-color: rgb(136, 147, 146);
 }
-/* チェックマーク */
- .unity-radio-button__checkmark {
-    background-color:  rgba(255, 255, 128, 0);
-    background-image: resource(SelectedIcon);
+
+.unity-radio-button__checkmark-background {
+    width: 24px;
+    border-width: 0;
+    background-color: rgba(255, 255, 128, 0);
 }
- 
-/* ラジオボタングループ */
-/* ラジオボタン */
+
+.unity-radio-button__checkmark {
+    background-color: rgba(255, 255, 128, 0);
+    background-image: resource('SelectedIcon');
+}
+
 .unity-radio-button {
     display: flex;
     flex-direction: row-reverse;
-    justify-content:center;
-    align-items:center; 
-    width:150px;
-    height:42px;
-    background-color:  rgba(255, 255, 128, 0);
+    justify-content: center;
+    align-items: center;
+    width: 150px;
+    height: 42px;
+    background-color: rgba(255, 255, 128, 0);
     border-radius: 21px;
-    border-width:1px;
-    border-color:#889392;
-
+    border-width: 1px;
+    border-color: rgb(136, 147, 146);
 }
-/* ラジオグループ全体のラベル */
+
 .unity-base-field__label {
-
-    display:none;
+    display: none;
 }
-/* ラジオボタン領域 */
-.unity-base-field__input{
-    color: #ffffff;
-    display: flex;
-    justify-content:center;
-    align-items:center; 
-    
-    }
 
-/* ラジオボタングループのコンテナ */
-.unity-radio-button-group__container{
+.unity-base-field__input {
+    color: rgb(255, 255, 255);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.unity-radio-button-group__container {
     display: flex;
     flex-direction: row;
-
-    
 }
 
-
-/* GNavi メインメニュー */
 #Menu {
-
-   height:64px;
-   width:100%;
-       display: flex;
-       flex-direction: row;
-    justify-content:center;
-    align-items:center; 
+    height: 64px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
+
 #Menu > .unity-radio-button {
     height: 50px;
     border-radius: 25px;
 }
-/* メインボタン */
+
 #MenuMain .unity-radio-button__checkmark-background {
     margin-right: 8px;
-    border-radius:0px;
-    background-image: resource(Icon_Home);
+    border-radius: 0;
+    background-image: resource('Icon_Home');
 }
+
 #MenuMain .unity-radio-button__checkmark {
-    background-image: resource(Icon_blank);
+    background-image: resource('Icon_blank');
 }
-/* 編集ボタン */
+
 #MenuEdit .unity-radio-button__checkmark-background {
     margin-right: 8px;
-    border-radius:0px;
-    background-image: resource(Icon_Edit);
+    border-radius: 0;
+    background-image: resource('Icon_Edit');
 }
+
 #MenuEdit .unity-radio-button__checkmark {
-    background-image: resource(Icon_blank);
+    background-image: resource('Icon_blank');
 }
-/* 解析ボタン */
+
 #MenuData .unity-radio-button__checkmark-background {
     margin-right: 8px;
-    border-radius:0px;
-    background-image: resource(Icon_Data);
+    border-radius: 0;
+    background-image: resource('Icon_Data');
 }
+
 #MenuData .unity-radio-button__checkmark {
-    background-image: resource(Icon_blank);
+    background-image: resource('Icon_blank');
 }
-/* カメラボタン */
+
 #MenuCamera .unity-radio-button__checkmark-background {
     margin-right: 8px;
-    border-radius:0px;
-    background-image: resource(Icon_Camera);
+    border-radius: 0;
+    background-image: resource('Icon_Camera');
 }
+
 #MenuCamera .unity-radio-button__checkmark {
-    background-image: resource(Icon_blank);
+    background-image: resource('Icon_blank');
 }
 
-/* GNavi サブメニュー */
-/* サブメニュー */
-#SubMenu_Edit,#SubMenu_Data,#SubMenu_Camera {
-        display: flex;
+#SubMenu_Edit {
+    display: flex;
     flex-direction: row;
-    justify-content:center;
-}
-.SubMenuFirst {
-    margin: 0px;
-    border-radius: 21px 0 0px 21px;
-}
-.SubMenuMiddle {
-    margin: 0px;
-    border-radius: 0px 0 0px 0px;
-}
-.SubMenuEnd {
-    margin: 0px;
-    border-radius: 0px 21px 21px 0px;
+    justify-content: center;
 }
 
+#SubMenu_Data {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
 
+#SubMenu_Camera {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
 
-/* 天候タブ */
 #Weather {
     display: flex;
     flex-direction: row;
-    justify-content:center;
-    width:100%;
+    justify-content: center;
+    width: 100%;
     justify-content: space-around;
     margin: 0;
     padding: 0;
 }
-#Weather > .unity-radio-button__label {
 
+#Weather > .unity-radio-button__label {
 }
+
 #Weather .unity-radio-button {
     display: flex;
     flex-direction: row-reverse;
-    justify-content:center;
-    align-items:center; 
-    width:24px;
-    height:24px;
-    border-width:0px;
-background-color:  rgba(50, 75, 75, 0);
+    justify-content: center;
+    align-items: center;
+    width: 24px;
+    height: 24px;
+    border-width: 0;
+    background-color: rgba(50, 75, 75, 0);
     padding: 0;
-    border-radius:0px;
+    border-radius: 0;
 }
+
 #Weather .unity-radio-button:hover {
-background-color:  rgba(50, 75, 75, 0);
+    background-color: rgba(50, 75, 75, 0);
 }
-#Weather  .unity-radio-button:checked {
 
-    width:44px;
-    height:44px;
+#Weather .unity-radio-button:checked {
+    width: 44px;
+    height: 44px;
 }
-/* 晴れタブ */
-#Sun  .VisualElement {
+
+#Sun .VisualElement {
     padding: 0;
     margin: 0;
 }
+
 #Sun .unity-checkmark:checked {
-    width:44px;
-    height:44px;
-}
-#Sun .unity-radio-button__checkmark-background {
-    background-image: resource(Icon_WeatherSun_normal);
-}
-#Sun > VisualElement {
-        height:100%;
-        width:100%;
-}
-#Sun > VisualElement > VisualElement {
-        height:100%;
-        width:100%;
-}
-#Sun .unity-radio-button__checkmark {
-    background-image: resource(Icon_blank);
+    width: 44px;
+    height: 44px;
 }
 
-/* 曇りタブ */
-#Cloud  .VisualElement {
+#Sun .unity-radio-button__checkmark-background {
+    background-image: resource('Icon_WeatherSun_normal');
+}
+
+#Sun > VisualElement {
+    height: 100%;
+    width: 100%;
+}
+
+#Sun > VisualElement > VisualElement {
+    height: 100%;
+    width: 100%;
+}
+
+#Sun .unity-radio-button__checkmark {
+    background-image: resource('Icon_blank');
+}
+
+#Cloud .VisualElement {
     padding: 0;
     margin: 0;
 }
+
 #Cloud .unity-checkmark:checked {
-    width:44px;
-    height:44px;
+    width: 44px;
+    height: 44px;
 }
+
 #Cloud .unity-radio-button__checkmark-background {
-    background-image: resource(Icon_WeatherCloud_normal);
-    border-radius:0;
+    background-image: resource('Icon_WeatherCloud_normal');
+    border-radius: 0;
 }
+
 #Cloud > VisualElement {
-        height:100%;
-        width:100%;
+    height: 100%;
+    width: 100%;
 }
+
 #Cloud > VisualElement > VisualElement {
-        height:100%;
-        width:100%;
+    height: 100%;
+    width: 100%;
 }
+
 #Cloud .unity-radio-button__checkmark {
-    background-image: resource(Icon_blank);
+    background-image: resource('Icon_blank');
 }
-/* 雨タブ */
+
 #Rain .VisualElement {
     padding: 0;
     margin: 0;
 }
+
 #Rain .unity-checkmark:checked {
-    width:44px;
-    height:44px;
-}
-#Rain .unity-radio-button__checkmark-background {
-    background-image: resource(Icon_WeatherRain_normal);
-    border-radius:0;
-}
-#Rain > VisualElement {
-        height:100%;
-        width:100%;
-}
-#Rain > VisualElement > VisualElement {
-        height:100%;
-        width:100%;
-}
-#Rain .unity-radio-button__checkmark {
-    background-image: resource(Icon_blank);
+    width: 44px;
+    height: 44px;
 }
 
-/* 雪タブ */
+#Rain .unity-radio-button__checkmark-background {
+    background-image: resource('Icon_WeatherRain_normal');
+    border-radius: 0;
+}
+
+#Rain > VisualElement {
+    height: 100%;
+    width: 100%;
+}
+
+#Rain > VisualElement > VisualElement {
+    height: 100%;
+    width: 100%;
+}
+
+#Rain .unity-radio-button__checkmark {
+    background-image: resource('Icon_blank');
+}
+
 #Snow .VisualElement {
     padding: 0;
     margin: 0;
 }
+
 #Snow .unity-checkmark:checked {
-    width:44px;
-    height:44px;
+    width: 44px;
+    height: 44px;
 }
+
 #Snow .unity-radio-button__checkmark-background {
-    background-image: resource(Icon_WeatherSnow_normal);
-    border-radius:0;
+    background-image: resource('Icon_WeatherSnow_normal');
+    border-radius: 0;
 }
+
 #Snow > VisualElement {
-        height:100%;
-        width:100%;
+    height: 100%;
+    width: 100%;
 }
+
 #Snow > VisualElement > VisualElement {
-        height:100%;
-        width:100%;
+    height: 100%;
+    width: 100%;
 }
+
 #Snow .unity-radio-button__checkmark {
-    background-image: resource(Icon_blank);
+    background-image: resource('Icon_blank');
 }
 
-
-/* コントローラコンテナの設定 */
 #WeatherController {
     display: flex;
     width: 150px;
-    height:70px;
-    justify-content:flex-start;
-    margin-top:16px;
+    height: 70px;
+    justify-content: flex-start;
+    margin-top: 16px;
 }
-/* タイムスライダー */
+
 #TimeSlider {
-    position:absolute;
-    width:100%;
-    top:40px;
+    position: absolute;
+    width: 100%;
+    top: 40px;
 }
+
 #TimeSlider > VisualElement {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width:100%;
-  height:25px
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 25px;
 }
+
 #TimeSlider > VisualElement > .unity-base-slider__drag-container {
     width: 100%;
 }
-/* MinMaxスライダー */
-/* スライダーハンドル */
+
 #TimeSlider .unity-min-max-slider__min-thumb {
     width: 6px;
     height: 12px;
-
 }
+
 #TimeSlider .unity-min-max-slider__max-thumb {
     border-radius: 50%;
+}
 
+#unity-thumb-max {
+    height: 12px;
 }
-#unity-thumb-max{
-    height:12px;
-}
-/* スライダーのベース */
+
 #TimeSlider .unity-min-max-slider__tracker {
-          background-color: #B0CCCB;
-        border-width:1px;
-        margin-top:0;
-        height: 4px  
+    background-color: rgb(176, 204, 203);
+    border-width: 1px;
+    margin-top: 0;
+    height: 4px;
 }
-/* スライダーの濃いエリア */
+
 #TimeSlider .unity-min-max-slider__dragger {
-        background-color: #004F4F;
-        border-width:0;
-        margin-top:0;
-        height: 4px
+    background-color: rgb(0, 79, 79);
+    border-width: 0;
+    margin-top: 0;
+    height: 4px;
 }
 
-
-/* MinMaxスライダー */
-/* 横棒 */
 #TimeSlider .unity-base-slider__tracker {
-          background-color: #B0CCCB;
-          border-color:#889392;
-        border-width: 1px;
-        height: 4px;
-        border-radius: 2px;  
+    background-color: rgb(176, 204, 203);
+    border-color: rgb(136, 147, 146);
+    border-width: 1px;
+    height: 4px;
+    border-radius: 2px;
 }
+
 #TimeSlider .unity-base-slider__dragger {
-    background-color: #004F4F;
-    border-color:#889392;
-        width: 12px;
+    background-color: rgb(0, 79, 79);
+    border-color: rgb(136, 147, 146);
+    width: 12px;
     height: 12px;
     border-radius: 50%;
-    top:17px;
+    top: 17px;
 }
 
-
-/* Functionボタン関連 */
 #FunctionContainer {
-        display: flex;
+    display: flex;
     flex-direction: row;
-    justify-content:flex-start;
-    align-items:center; 
-
+    justify-content: flex-start;
+    align-items: center;
 }
-/* トグルボタン */
+
 #FunctionContainer .unity-toggle {
     width: 50px;
     height: 50px;
     border-radius: 50%;
 }
-/* トグルボタン-hover- */
+
 #FunctionContainer .unity-toggle:hover {
-background-color: rgba(50,75,75,0.25);
-border-radius: 50%;
+    background-color: rgba(50, 75, 75, 0.25);
+    border-radius: 50%;
 }
-/* トグルボタン-checked- */
+
 #FunctionContainer .unity-toggle:checked {
-background-color: rgba(50,75,75,1);
-    border-width:1px;
-    border-color:#889392;
+    background-color: rgb(50, 75, 75);
+    border-width: 1px;
+    border-color: rgb(136, 147, 146);
 }
-#FunctionContainer .unity-toggle__checkmark{
-display:none;
+
+#FunctionContainer .unity-toggle__checkmark {
+    display: none;
 }
-/* キャプチャボタン */
-#FunctionContainer  .unity-button {
+
+#FunctionContainer .unity-button {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background-color: rgba(50,75,75,0);
-    border-width:0px;
-}
-/* キャプチャボタン--hover */
-#FunctionContainer .unity-button:hover {
-background-color: rgba(50,75,75,0.25);
-border-radius: 50%;
-}
-/* キャプチャボタン-checked- */
-#FunctionContainer .unity-button:active {
-background-color: rgba(50,75,75,1);
-    border-width:1px;
-    border-color:#889392;
+    background-color: rgba(50, 75, 75, 0);
+    border-width: 0;
 }
 
-/* 設定ボタン */
-#SettingContainer {
-        width:100%;
-                display: flex;
-    flex-direction: row;
-    justify-content:flex-end;
+#FunctionContainer .unity-button:hover {
+    background-color: rgba(50, 75, 75, 0.25);
+    border-radius: 50%;
 }
+
+#FunctionContainer .unity-button:active {
+    background-color: rgb(50, 75, 75);
+    border-width: 1px;
+    border-color: rgb(136, 147, 146);
+}
+
+#SettingContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
 #SettingContainer .unity-button {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background-color: rgba(50,75,75,0);
-    border-width:0px;
-}
-/* 設定ボタン--hover */
-#SettingContainer .unity-button:hover {
-background-color: rgba(50,75,75,0.25);
-border-radius: 50%;
-}
-/* 設定ボタン-checked- */
-#SettingContainer .unity-button:active {
-background-color: rgba(50,75,75,1);
-    border-width:1px;
-    border-color:#889392;
+    background-color: rgba(50, 75, 75, 0);
+    border-width: 0;
 }
 
-/* 設定パネル */
+#SettingContainer .unity-button:hover {
+    background-color: rgba(50, 75, 75, 0.25);
+    border-radius: 50%;
+}
+
+#SettingContainer .unity-button:active {
+    background-color: rgb(50, 75, 75);
+    border-width: 1px;
+    border-color: rgb(136, 147, 146);
+}
+
 #SettingPanel {
     width: 360px;
-    height:128px;
-    position:absolute;
+    height: 128px;
+    position: absolute;
     display: flex;
     flex-direction: column;
-    align-items:end;
-    top:60px;
-    left:1543px;
+    align-items: end;
+    top: 60px;
+    left: 1543px;
 }
+
 #PanelArrow {
-    margin-right:16px;
-    background-image: resource(Img_PanelArrow);
+    margin-right: 16px;
+    background-image: resource('Img_PanelArrow');
 }
+
 #SettingPanel .unity-button {
     width: 100%;
-    margin:0;
+    margin: 0;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    background-color:rgba(14,21,20,.75);
-    border-width:0px;
-}
-#SettingPanel .unity-button:hover {
-   background-color:rgba(14,21,20,.6); 
+    background-color: rgba(14, 21, 20, 0.75);
+    border-width: 0;
 }
 
-/* アイコン設定 */
-/* 自動回転トグル */
-#Toggle_AutoRotate {
-    background-image: resource(Icon_CameraRotate);
+#SettingPanel .unity-button:hover {
+    background-color: rgba(14, 21, 20, 0.6);
 }
+
+#FpsBackButton {
+    width: 80px;
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(50, 75, 75, 0);
+    border-radius: 6px;
+    padding: 0;
+}
+
+#FPSForwardButton {
+    width: 80px;
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(50, 75, 75, 0);
+    border-radius: 6px;
+    padding: 0;
+}
+
+#FpsLeftButton {
+    width: 80px;
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(50, 75, 75, 0);
+    border-radius: 6px;
+    padding: 0;
+}
+
+#FpsRightButton {
+    width: 80px;
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(50, 75, 75, 0);
+    border-radius: 6px;
+    padding: 0;
+}
+
+#FpsBackButton {
+}
+
+#FPSForwardButton {
+}
+
+#FpsLeftButton {
+}
+
+#FpsRightButton:active {
+}
+/* 決定ボタン */
+#OKButton {
+    height: 40px;
+    border-radius: 20px;
+    border-color: rgb(128, 213, 212);
+    background-color: rgb(128, 213, 212);
+    color: rgb(0, 55, 55);
+    width: 120px;
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#OKButton:hover {
+    background-color: rgb(107, 186, 193);
+}
+
+#OKButton:active {
+    background-color: rgb(85, 163, 173);
+}
+
+#OKButton:disabled {
+    background-color: rgb(221, 228, 227);
+}
+/* キャンセルボタン */
+#CancelButton {
+    height: 40px;
+    border-radius: 20px;
+    border-width: 1px;
+    border-color: #889392;
+    background-color: rgba(136, 147, 146,0);
+    color: #80D5D4;
+}
+#CancelButton:hover {
+    background-color: rgba(136, 147, 146,0.2);
+
+}
+#CancelButton:active {
+    background-color: rgba(136, 147, 146,0.4);
+
+}
+
+
+#DeleteButton {
+    background-color: rgba(255, 255, 255, 0);
+    border-width: 0;
+    border-radius: 4px;
+    padding: 0;
+    margin: 0;
+    z-index: 10;
+}
+
+#DeleteButton:hover {
+    background-color: rgba(50, 75, 75, 0.5);
+}
+
+#DeleteButton:active {
+    background-color: rgba(128, 213, 212, 0.5);
+}
+
+#CloseButton {
+    height: 40px;
+    width:40px;
+    border-width:0px;
+    background-color: rgba(255, 255, 255, 0);
+    margin:0;
+    padding:2px;
+
+}
+/* リスト */
+#List {
+    width: 100%;
+    height: 60px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    border-bottom-width: 1px;
+    border-color: rgb(255, 255, 255);
+    font-size: 21px;
+    padding: 0 10px;
+    background-color: rgba(50, 75, 75, 0);
+}
+
+#List:hover {
+    background-color: rgba(50, 75, 75, 0.3);
+}
+
+#List:active {
+    background-color: rgba(128, 213, 212, 0.4);
+}
+
+#TabMenuGroup {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.SubMenuFirst {
+    margin: 0;
+    border-radius: 21px 0 0 21px;
+}
+
+.SubMenuMiddle {
+    margin: 0;
+    border-radius: 0 0 0 0;
+}
+
+.SubMenuEnd {
+    margin: 0;
+    border-radius: 0 21px 21px 0;
+}
+
+#Panel {
+    width: 460px;
+    background-color: rgba(14, 21, 20, 0.75);
+    border-radius: 24px;
+    padding: 24px;
+    margin-top:16px;
+}
+
+#Panel #unity-low-button {
+    display: none;
+}
+
+#unity-high-button {
+    display: none;
+}
+
+#Panel #unity-slider {
+    margin: 0;
+}
+
+#Panel #unity-tracker {
+    left: 6px;
+}
+
+#Panel #unity-dragger {
+    background-color: rgb(0, 106, 106);
+}
+/* モーダル */
+#Modal {
+    width: 400px;
+    height: 300px;
+    background-color: rgb(37, 43, 43);
+    border-radius: 12px;
+    padding: 12px;
+}
+/* スナックバー */
+#Snackbar {
+    width:600px;
+    height:80px;
+    padding:16px;
+    background-color:#2B3231;
+    border-radius: 6px;
+    flex-direction: row;
+    font-size:16px;
+    align-items:center;
+}
+/* ダイアログ */
+#Dialog {
+    width:800px;
+    height:100px;
+    background-color:rgba(0,0,0,0.5);
+    border-radius: 6px;
+}
+/* パネルタイトル */
+#Title_Left {
+    width: 490px;
+    height: 50px;
+    background-image: resource('Info_Title_Left');
+    font-size:24px;
+    padding-right:24px;
+}
+#Title_Right {
+    width: 490px;
+    height: 50px;
+    background-image: resource('Info_Title_Right');
+    font-size:24px;
+    padding-left:24px;
+}
+/* 画面コンテナ */
+#MainContainer {
+    width:100%;
+    height:100%;
+
+    flex-direction: row;
+}
+#LeftContainer {
+    width:506px;
+    padding-left:16px;
+    padding-top:145px;
+    align-items:flex-end;
+}
+#CenterContainer {
+    width:100%;
+}
+#RightContainer {
+    width:506px;
+    padding-right:16px;
+    padding-top:145px;
+}
+/* アイコン */
+#List #Toggle_AutoRotate {
+    background-image: resource('Icon_CameraRotate');
+}
+
 #Toggle_WalkMode {
-    background-image: resource(Icon_Walk);
+    background-image: resource('Icon_Walk');
 }
+
 #Toggle_HideUI {
-    background-image: resource(Icon_Eye);
+    background-image: resource('Icon_Eye');
 }
+
 #Button_Capture {
-    background-image: resource(Icon_Capture);
+    background-image: resource('Icon_Capture');
 }
+
 #Button_Setting {
-        background-image: resource(Icon_Setting);
+    background-image: resource('Icon_Setting');
 }
+
 #IconSave {
-background-image: resource(Icon_Setting); 
-       max-width: 24px;
+    background-image: resource('Icon_Setting');
+    max-width: 24px;
     height: 24px;
     border-radius: 50%;
 }
+
 #IconReplace {
-background-image: resource(Icon_Replace); 
-       max-width: 24px;
+    background-image: resource('Icon_Replace');
+    max-width: 24px;
     height: 24px;
     border-radius: 50%;
+}
+
+#Circle_Icon_Building {
+    width: 40px;
+    height: 40px;
+    background-image: resource('Circle_Icon_Building');
+}
+
+#Circle_Icon_Camera {
+    width: 40px;
+    height: 40px;
+    background-image: resource('Circle_Icon_Camera');
+}
+
+#Circle_Icon_Walk {
+    width: 40px;
+    height: 40px;
+    background-image: resource('Circle_Icon_Walk');
+}
+
+#IconExit {
+    background-image: resource('Icon_Exit');
+    max-width: 18px;
+    height: 18px;
+}
+
+#Icon_Up {
+    background-image: resource('Icon_arrow-up');
+    max-width: 24px;
+    height: 24px;
+}
+
+#Icon_Down {
+    background-image: resource('Icon_arrow-back');
+    max-width: 24px;
+    height: 24px;
+}
+
+#Icon_Trash {
+    background-image: resource('Icon_Trash');
+}
+#Icon_TrashReverse {
+    background-image: resource('Icon_Trash_Reverse');
+}
+
+#Icon_Error {
+    background-image: resource('Icon_Error');
+}
+#Icon_Success {
+    background-image: resource('Icon_Save');
+}
+
+#Icon_Close {
+    background-image: resource('Icon_Close');
 }
