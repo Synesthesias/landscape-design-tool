@@ -82,7 +82,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     return;
                 }
 
-                float initLimitHeight = float.Parse(dbf.Properties[4]); // Get limit height data from dbf file
+                
+                float initLimitHeight = float.Parse(GetPropertyValueOf("HEIGHT", dbf)); // Get limit height data from dbf file
 
                 // Modify mesh data
                 if (!landscapePlanMeshModifier.TryModifyMeshToTargetHeight(mesh, initLimitHeight, gisObject.transform.position))
@@ -93,9 +94,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
                 // Create and initialize AreaProperty
                 AreaProperty areaProperty = new AreaProperty(
-                    int.Parse(dbf.Properties[0]),
-                    dbf.Properties[3],
-                    dbf.Properties[2],
+                    int.Parse(GetPropertyValueOf("ID", dbf)),
+                    GetPropertyValueOf("AREANAME", dbf),
                     initLimitHeight,
                     10,
                     DbfStringToColor(dbf.Properties[5]),
@@ -159,6 +159,14 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
             Debug.LogError("Invalid color string format.");
             return Color.clear;
+        }
+
+        string GetPropertyValueOf(string propertyName,DbfComponent dbf)
+        {
+            int index = dbf.PropertyNames.IndexOf(propertyName);
+            if (index != -1) return dbf.Properties[index];
+
+            return null;
         }
     }
 }

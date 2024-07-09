@@ -333,8 +333,12 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         public void AttachMetadata(GameObject gisObj, DbfRecord record)
         {
             DbfComponent dbfComponent = gisObj.AddComponent<DbfComponent>();
-            foreach (string attr in record.Fields)
+            foreach(var attr in record.FieldNames)
             {
+                dbfComponent.PropertyNames.Add($"{attr}");
+            }
+            foreach (var attr in record.Fields)
+            { 
                 dbfComponent.Properties.Add($"{attr}");
             }
         }

@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace Landscape2.Runtime
@@ -31,7 +30,6 @@ namespace Landscape2.Runtime
             AreaPropertyOrigin newPropertyOrigin = new AreaPropertyOrigin(
                 newProperty.ID, 
                 newProperty.name, 
-                newProperty.type,
                 newProperty.limitHeight, 
                 newProperty.lineOffset, 
                 newProperty.color, 
@@ -49,7 +47,6 @@ namespace Landscape2.Runtime
 
             properties[index].ID = propertiesOrigin[index].ID;
             properties[index].name = propertiesOrigin[index].name;
-            properties[index].type = propertiesOrigin[index].type;
             properties[index].limitHeight = propertiesOrigin[index].limitHeight;
             properties[index].lineOffset = propertiesOrigin[index].lineOffset;
             properties[index].color = propertiesOrigin[index].color;
@@ -89,7 +86,6 @@ namespace Landscape2.Runtime
     {
         public int ID { get; set;}
         public string name { get; set;}
-        public string type { get; set;}
         public float limitHeight { get; set;}
         public float lineOffset { get; set;}
         public Color color { get; set;}
@@ -100,11 +96,10 @@ namespace Landscape2.Runtime
         public Transform transform { get; private set; }
         public Vector3 referencePosition { get; private set; }
 
-        public AreaProperty(int ID, string name, string type, float limitHeight, float lineOffset, Color areaColor, Material wallMaterial, Material ceilingMaterial, float wallMaxHeight, Vector3 referencePos, Transform areaTransform)
+        public AreaProperty(int ID, string name, float limitHeight, float lineOffset, Color areaColor, Material wallMaterial, Material ceilingMaterial, float wallMaxHeight, Vector3 referencePos, Transform areaTransform)
         {
             this.ID = ID;
             this.name = name;
-            this.type = type;
             this.limitHeight = limitHeight;
             this.lineOffset = lineOffset;
             this.color = areaColor;
@@ -127,18 +122,16 @@ namespace Landscape2.Runtime
     {
         public int ID { get; private set; }
         public string name { get; private set; }
-        public string type { get; private set; }
         public float limitHeight { get; private set; }
         public float lineOffset { get; private set; }
         public Color color { get; private set; }
         public Vector3 position { get; private set; }
         public Vector3 referencePosition { get; private set; }
 
-        public AreaPropertyOrigin(int ID, string name, string type, float limitHeight, float lineOffset, Color areaColor, Vector3 referencePos, Vector3 areaPosition)
+        public AreaPropertyOrigin(int ID, string name,float limitHeight, float lineOffset, Color areaColor, Vector3 referencePos, Vector3 areaPosition)
         {
             this.ID = ID;
             this.name = name;
-            this.type = type;
             this.limitHeight = limitHeight;
             this.lineOffset = lineOffset;
             this.color = new Color(areaColor.r, areaColor.g, areaColor.b, areaColor.a);
