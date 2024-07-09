@@ -44,7 +44,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
             if (listOfGISObjects == null || listOfGISObjects.Count == 0)
             {
-                Debug.LogError("No GIS data loaded");
+                Debug.LogError("No GIS data was included");
                 return;
             }
 
@@ -61,13 +61,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     Debug.LogError("GisObject have no DbfComponent");
                     return;
                 }
-                float dbfID = float.Parse(dbf.Properties[0]);
-                float heightLimit = float.Parse(dbf.Properties[3]);
-                Color AreaColor = DbfStringToColor(dbf.Properties[4]);
                 
-                gisObject.name = $"Area_{dbfID}";
-
-
                 MeshFilter gisObjMeshFilter = gisObject.GetComponent<MeshFilter>();
                 MeshRenderer gisObjMeshRenderer = gisObject.GetComponent<MeshRenderer>();
                 if (gisObjMeshFilter == null)
@@ -81,31 +75,54 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     return;
                 }
 
-                // Set material to the ceiling
-                Material ceilingMatInstance = new Material(ceilingMaterial);
-                ceilingMatInstance.color = AreaColor;
-                gisObjMeshRenderer.material = ceilingMatInstance;
-
-                // Modify mesh data
                 Mesh mesh = gisObjMeshFilter.sharedMesh;
                 if (mesh == null)
                 {
                     Debug.LogError($"Mesh in MeshFilter of {gisObject.name} is null");
                     return;
                 }
-                if (!landscapePlanMeshModifier.TryModifyMeshToTargetHeight(mesh, heightLimit, gisObject.transform.position))
+
+                float initLimitHeight = float.Parse(dbf.Properties[4]); // Get limit height data from dbf file
+
+                // Modify mesh data
+                if (!landscapePlanMeshModifier.TryModifyMeshToTargetHeight(mesh, initLimitHeight, gisObject.transform.position))
                 {
                     Debug.LogError($"{gisObject.name} is out of range of the loaded map");
                     return;
                 }
 
+                // Create and initialize AreaProperty
+                AreaProperty areaProperty = new AreaProperty(
+                    int.Parse(dbf.Properties[0]),
+                    dbf.Properties[3],
+                    dbf.Properties[2],
+                    initLimitHeight,
+                    10,
+                    DbfStringToColor(dbf.Properties[5]),
+                    new Material(wallMaterial),
+                    new Material(ceilingMaterial),
+                    Mathf.Max(300, initLimitHeight + 50),
+                    gisObject.transform.position + mesh.bounds.center,
+                    gisObject.transform
+                    );
+
+
+                // Set material to the ceiling
+                areaProperty.ceilingMaterial.color = areaProperty.color;
+                gisObjMeshRenderer.material = areaProperty.ceilingMaterial;
+
                 // Generate a wall downward from the mesh
-                Material wallMatInstance = new Material(wallMaterial);
-                wallMatInstance.color = AreaColor;
-                GameObject wall = wallGenerator.GenerateWall(mesh, heightLimit, Vector3.down, wallMatInstance); 
+                GameObject wall = wallGenerator.GenerateWall(mesh, areaProperty.wallMaxHeight, Vector3.down, areaProperty.wallMaterial); 
                 wall.transform.SetParent(gisObject.transform);
                 wall.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
-                wall.name = $"AreaWall_{dbfID}";
+                areaProperty.wallMaterial.color = areaProperty.color;
+                areaProperty.wallMaterial.SetFloat("_DisplayRate", areaProperty.limitHeight/areaProperty.wallMaxHeight);
+                areaProperty.wallMaterial.SetFloat("_LineCount", areaProperty.limitHeight/areaProperty.lineOffset);
+                wall.name = $"AreaWall_{areaProperty.ID}";
+                gisObject.name = $"Area_{areaProperty.ID}";
+
+                // Register the AreaProperty to Database
+                AreasDataComponent.AddNewProperty(areaProperty);
             }
             Debug.Log("Mesh modification and wall generation completed");
         }
