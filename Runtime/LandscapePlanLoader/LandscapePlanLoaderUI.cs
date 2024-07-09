@@ -48,6 +48,9 @@ namespace Landscape2.Runtime
             }
         }
 
+        public void Start()
+        {
+        }
         public void Update(float deltaTime)
         {
 

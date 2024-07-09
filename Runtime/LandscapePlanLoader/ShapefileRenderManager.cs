@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using UnityEditor;
 using UnityEngine;
 using CesiumForUnity;
 using Unity.Mathematics;
@@ -16,6 +15,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
     {
         List<IShape> m_ListOfShapes = new List<IShape>();
         List<GameObject> m_ListOfGISObjects = new List<GameObject>();
+        List<List<Vector3>> m_pointDatas = new List<List<Vector3>>();
         public Action m_OnRender;
 
         CesiumGeoreference m_GeoRef;
@@ -51,8 +51,11 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             m_DbfReader = null;
         }
 
-        public bool Read(float lineWidth, out List<GameObject> listOfGISObjects)
+        public bool Read(float lineWidth, out List<GameObject> listOfGISObjects, out List<List<Vector3>> pointDatas)
         {
+            listOfGISObjects = null;
+            pointDatas = null;
+
             string[] filePaths = Directory.GetFiles(m_FolderPath, "*.shp");
 
             if (lineWidth == 0f)
@@ -63,17 +66,13 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             if (filePaths.Length == 0)
             {
                 Debug.LogError("No shapefiles found in the folder");
-                listOfGISObjects = null;
                 return false;
             }
 
             foreach (string filePath in filePaths)
             {
-                if (!ReadShapes(filePath))
-                {
-                    listOfGISObjects = null;
-                    return false;
-                }
+                if (!ReadShapes(filePath))  return false;
+
                 string dbfFileName = Path.GetFileNameWithoutExtension(filePath);
                 m_CurrentRenderingObject = dbfFileName;
                 if (File.Exists(m_FolderPath + "/" + dbfFileName + ".dbf"))
@@ -92,6 +91,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             }
 
             listOfGISObjects = m_ListOfGISObjects;
+            pointDatas = m_pointDatas;
             return true;
         }
 
@@ -279,6 +279,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     MeshFilter meshFilter = meshObject.GetComponent<MeshFilter>();
                     tessellatedMeshCreator.CreateTessellatedMesh(partPointsWorld, meshFilter, 30,40);
 
+                    m_pointDatas.Add(partPointsWorld);
                     m_ListOfGISObjects.Add(meshObject);
                 }
                 else

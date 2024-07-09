@@ -5,13 +5,10 @@
     "description": "景観まちづくり支援ツールは、3D都市モデルを活用することで解像度の高い景観計画策定支援及び景観協議円滑化を可能にします。",
     "unity": "2021.3",
     "dependencies": {
-<<<<<<< HEAD
       "com.ishape.geometry": "https://github.com/iShapeUnity/Geometry.git",
       "com.ishape.mesh2d": "https://github.com/iShapeUnity/Mesh2d.git",
-      "com.ishape.triangulation": "https://github.com/iShapeUnity/Triangulation.git"
-=======
+      "com.ishape.triangulation": "https://github.com/iShapeUnity/Triangulation.git",
         "com.unity.addressables": "1.21.20"
->>>>>>> develop
     },
     "author": {
         "name": "Synesthesias Inc."

@@ -31,8 +31,8 @@ namespace Landscape2.Runtime
 
         public void StartEdit(int targetAreaIndex)
         {
-            editingAreaPropertyOrigin = AreasDataComponent.TryGetOriginProperty(targetAreaIndex);
-            editingAreaProperty = AreasDataComponent.TryGetProperty(targetAreaIndex);
+            editingAreaPropertyOrigin = AreasDataComponent.GetOriginProperty(targetAreaIndex);
+            editingAreaProperty = AreasDataComponent.GetProperty(targetAreaIndex);
         }
 
         public float GetMaxHeight()

@@ -21,6 +21,9 @@ namespace Landscape2.Runtime
         public void OnEnable()
         {
         }
+        public void Start()
+        {
+        }
         public void Update(float deltaTime)
         {
         }
@@ -60,13 +63,13 @@ namespace Landscape2.Runtime
             return true;
         }
 
-        public static AreaProperty TryGetProperty(int index)
+        public static AreaProperty GetProperty(int index)
         {
             if (index < 0 && index >= properties.Count) return null;
             return properties[index];
         }
 
-        public static AreaPropertyOrigin TryGetOriginProperty(int index)
+        public static AreaPropertyOrigin GetOriginProperty(int index)
         {
             if (index < 0 && index >= propertiesOrigin.Count) return null;
             return propertiesOrigin[index];
@@ -79,6 +82,11 @@ namespace Landscape2.Runtime
             properties.RemoveAt(index);
             propertiesOrigin.RemoveAt(index);
             return true;
+        }
+        
+        public static int GetPropertyCount()
+        {
+            return properties.Count;
         }
     }
     
@@ -95,8 +103,9 @@ namespace Landscape2.Runtime
         public float wallMaxHeight { get; private set; }
         public Transform transform { get; private set; }
         public Vector3 referencePosition { get; private set; }
+        public List<Vector3> pointData { get; private set; }
 
-        public AreaProperty(int ID, string name, float limitHeight, float lineOffset, Color areaColor, Material wallMaterial, Material ceilingMaterial, float wallMaxHeight, Vector3 referencePos, Transform areaTransform)
+        public AreaProperty(int ID, string name, float limitHeight, float lineOffset, Color areaColor, Material wallMaterial, Material ceilingMaterial, float wallMaxHeight, Vector3 referencePos, Transform areaTransform, List<Vector3> pointData)
         {
             this.ID = ID;
             this.name = name;
@@ -108,6 +117,7 @@ namespace Landscape2.Runtime
             this.wallMaxHeight = wallMaxHeight;
             this.referencePosition = referencePos;
             this.transform = areaTransform;
+            this.pointData = pointData;
         }
 
         public void SetLocalPosition(Vector3 newPosition)

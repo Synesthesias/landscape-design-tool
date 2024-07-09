@@ -11,6 +11,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
     public sealed class LandscapePlanLoadManager
     {
         List<GameObject> listOfGISObjects;
+        List<List<Vector3>> listOfAreaPointDatas;
         Material wallMaterial;
         Material ceilingMaterial;
 
@@ -31,7 +32,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             // Load GIS data and create Mesh objects
             using (ShapefileRenderManager m_ShapefileRenderManager = new ShapefileRenderManager(gisTargetFolderPath, 0 /*RenderMode:Mesh*/, 0, false, false, SupportedEncoding.ShiftJIS, null))
             {
-                if (m_ShapefileRenderManager.Read(0, out listOfGISObjects))
+                if (m_ShapefileRenderManager.Read(0, out listOfGISObjects, out listOfAreaPointDatas))
                 {
                     Debug.Log("Loading GIS data completed");
                 }
@@ -52,8 +53,11 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             LandscapePlanMeshModifier landscapePlanMeshModifier = new LandscapePlanMeshModifier();
             WallGenerator wallGenerator = new WallGenerator();
 
-            foreach (GameObject gisObject in listOfGISObjects)
+            for(int i = 0; i < listOfGISObjects.Count; i++)
             {
+                GameObject gisObject = listOfGISObjects[i];
+                List<Vector3> areaPointData = listOfAreaPointDatas[i];
+
                 // Get gis property datas from dbf file
                 DbfComponent dbf = gisObject.GetComponent<DbfComponent>();
                 if (dbf == null)
@@ -98,12 +102,13 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     GetPropertyValueOf("AREANAME", dbf),
                     initLimitHeight,
                     10,
-                    DbfStringToColor(dbf.Properties[5]),
+                    DbfStringToColor(GetPropertyValueOf("COLOR", dbf)),
                     new Material(wallMaterial),
                     new Material(ceilingMaterial),
                     Mathf.Max(300, initLimitHeight + 50),
                     gisObject.transform.position + mesh.bounds.center,
-                    gisObject.transform
+                    gisObject.transform,
+                    areaPointData
                     );
 
 
@@ -126,6 +131,108 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             }
             Debug.Log("Mesh modification and wall generation completed");
         }
+
+        //public void LoadFromSaveData(List<PlanAreaSaveData> saveDatas)
+        //{
+        //    foreach(PlanAreaSaveData saveData in saveDatas)
+        //    {
+        //        listOfAreaPointDatas.Add(saveData.pointData);
+        //    }
+
+        //    // Load GIS data and create Mesh objects
+        //    PointDataRenderManager m_PointDataRenderManager = new PointDataRenderManager();
+        //        if (m_PointDataRenderManager.DrawShapes("LoadedPlanArea", listOfAreaPointDatas, out listOfGISObjects))
+        //        {
+        //            Debug.Log("Loading GIS data completed");
+        //        }
+        //        else
+        //        {
+        //            Debug.LogError("Loading GIS data failed.");
+        //            return;
+        //        }
+
+        //    if (listOfGISObjects == null || listOfGISObjects.Count == 0)
+        //    {
+        //        Debug.LogError("No GIS data was saved");
+        //        return;
+        //    }
+
+        //    // Modify the mesh objects to the target height and generate walls
+        //    LandscapePlanMeshModifier landscapePlanMeshModifier = new LandscapePlanMeshModifier();
+        //    WallGenerator wallGenerator = new WallGenerator();
+
+        //    for (int i = 0; i < listOfGISObjects.Count; i++)
+        //    {
+        //        GameObject gisObject = listOfGISObjects[i];
+        //        List<Vector3> areaPointData = listOfAreaPointDatas[i];
+        //        PlanAreaSaveData saveData = saveDatas[i];
+
+        //        MeshFilter gisObjMeshFilter = gisObject.GetComponent<MeshFilter>();
+        //        MeshRenderer gisObjMeshRenderer = gisObject.GetComponent<MeshRenderer>();
+        //        if (gisObjMeshFilter == null)
+        //        {
+        //            Debug.LogError($"{gisObject.name} have no MeshFilter Component");
+        //            return;
+        //        }
+        //        if (gisObjMeshRenderer == null)
+        //        {
+        //            Debug.LogError($"{gisObject.name} have no MeshRenderer Component");
+        //            return;
+        //        }
+
+        //        Mesh mesh = gisObjMeshFilter.sharedMesh;
+        //        if (mesh == null)
+        //        {
+        //            Debug.LogError($"Mesh in MeshFilter of {gisObject.name} is null");
+        //            return;
+        //        }
+
+
+        //        float initLimitHeight = saveData.limitHeight; 
+
+        //        // Modify mesh data
+        //        if (!landscapePlanMeshModifier.TryModifyMeshToTargetHeight(mesh, initLimitHeight, gisObject.transform.position))
+        //        {
+        //            Debug.LogError($"{gisObject.name} is out of range of the loaded map");
+        //            return;
+        //        }
+
+        //        // Create and initialize AreaProperty
+        //        AreaProperty areaProperty = new AreaProperty(
+        //            saveData.ID,
+        //            saveData.name,
+        //            initLimitHeight,
+        //            saveData.lineOffset,
+        //            saveData.color,
+        //            new Material(wallMaterial),
+        //            new Material(ceilingMaterial),
+        //            Mathf.Max(300, initLimitHeight + 50),
+        //            gisObject.transform.position + mesh.bounds.center,
+        //            gisObject.transform,
+        //            areaPointData
+        //            );
+
+
+        //        // Set material to the ceiling
+        //        areaProperty.ceilingMaterial.color = areaProperty.color;
+        //        gisObjMeshRenderer.material = areaProperty.ceilingMaterial;
+
+        //        // Generate a wall downward from the mesh
+        //        GameObject wall = wallGenerator.GenerateWall(mesh, areaProperty.wallMaxHeight, Vector3.down, areaProperty.wallMaterial);
+        //        wall.transform.SetParent(gisObject.transform);
+        //        wall.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+        //        areaProperty.wallMaterial.color = areaProperty.color;
+        //        areaProperty.wallMaterial.SetFloat("_DisplayRate", areaProperty.limitHeight / areaProperty.wallMaxHeight);
+        //        areaProperty.wallMaterial.SetFloat("_LineCount", areaProperty.limitHeight / areaProperty.lineOffset);
+        //        wall.name = $"AreaWall_{areaProperty.ID}";
+        //        gisObject.name = $"Area_{areaProperty.ID}";
+
+        //        // Register the AreaProperty to Database
+        //        AreasDataComponent.AddNewProperty(areaProperty);
+        //    }
+        //    Debug.Log("Mesh modification and wall generation completed");
+        //}
+
 
         /// <summary>
         /// Poopup a dialog to select a folder and get the path
