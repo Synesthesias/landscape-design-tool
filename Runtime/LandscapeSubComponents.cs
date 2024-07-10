@@ -34,16 +34,17 @@ namespace Landscape2.Runtime
             var uiRoot = new UIDocumentFactory().CreateWithUxmlName("GlobalNavi_Main");
 
             // 必要な機能をここに追加します
+            // ※GlobalNaviと各機能の紐づけ作業が完了するまで一部機能はコメントアウトしています
             subComponents = new List<ISubComponent>
             {
-                new CameraMoveByUserInput(mainCam),
-                new CameraPositionMemoryUI(new CameraPositionMemory.CameraPositionMemory(mainCam)),
-                new ArrangeAsset(),
+                //new CameraMoveByUserInput(mainCam),
+                //new CameraPositionMemoryUI(new CameraPositionMemory.CameraPositionMemory(mainCam)),
+                //new ArrangeAsset(),
                 // RegulationAreaUI.CreateForScene(),
-                LineOfSightUI.CreateForScene(),
+                //LineOfSightUI.CreateForScene(),
                 new GlobalNaviHeader(uiRoot),
                 new WeatherTimeEditorUI(new WeatherTimeEditor.WeatherTimeEditor(),uiRoot),
-                new SaveSystem()
+                //new SaveSystem()
             };
         }
 
