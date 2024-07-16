@@ -132,106 +132,109 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             Debug.Log("Mesh modification and wall generation completed");
         }
 
-        //public void LoadFromSaveData(List<PlanAreaSaveData> saveDatas)
-        //{
-        //    foreach(PlanAreaSaveData saveData in saveDatas)
-        //    {
-        //        listOfAreaPointDatas.Add(saveData.pointData);
-        //    }
+        /// <summary>
+        /// Load GIS data from the given save data
+        /// </summary>
+        /// <param name="saveDatas"> Loaded save data </param>
+        public void LoadFromSaveData(List<PlanAreaSaveData> saveDatas)
+        {
+            // Get all point data from save data
+            listOfAreaPointDatas = new List<List<Vector3>>();
+            foreach (PlanAreaSaveData saveData in saveDatas)
+            {
+                listOfAreaPointDatas.Add(saveData.pointData);
+            }
 
-        //    // Load GIS data and create Mesh objects
-        //    PointDataRenderManager m_PointDataRenderManager = new PointDataRenderManager();
-        //        if (m_PointDataRenderManager.DrawShapes("LoadedPlanArea", listOfAreaPointDatas, out listOfGISObjects))
-        //        {
-        //            Debug.Log("Loading GIS data completed");
-        //        }
-        //        else
-        //        {
-        //            Debug.LogError("Loading GIS data failed.");
-        //            return;
-        //        }
+            // Load GIS data and create Mesh objects
+            PointDataRenderManager m_PointDataRenderManager = new PointDataRenderManager();
+            if (m_PointDataRenderManager.DrawShapes("LoadedPlanArea", listOfAreaPointDatas, out listOfGISObjects))
+            {
+                Debug.Log("Loading GIS data completed");
+            }
+            else
+            {
+                Debug.LogError("Loading GIS data failed.");
+                return;
+            }
 
-        //    if (listOfGISObjects == null || listOfGISObjects.Count == 0)
-        //    {
-        //        Debug.LogError("No GIS data was saved");
-        //        return;
-        //    }
+            if (listOfGISObjects == null || listOfGISObjects.Count == 0)
+            {
+                Debug.LogError("No GIS data was saved");
+                return;
+            }
 
-        //    // Modify the mesh objects to the target height and generate walls
-        //    LandscapePlanMeshModifier landscapePlanMeshModifier = new LandscapePlanMeshModifier();
-        //    WallGenerator wallGenerator = new WallGenerator();
+            // Modify the mesh objects to the target height and generate walls
+            LandscapePlanMeshModifier landscapePlanMeshModifier = new LandscapePlanMeshModifier();
+            WallGenerator wallGenerator = new WallGenerator();
 
-        //    for (int i = 0; i < listOfGISObjects.Count; i++)
-        //    {
-        //        GameObject gisObject = listOfGISObjects[i];
-        //        List<Vector3> areaPointData = listOfAreaPointDatas[i];
-        //        PlanAreaSaveData saveData = saveDatas[i];
+            for (int i = 0; i < listOfGISObjects.Count; i++)
+            {
+                GameObject gisObject = listOfGISObjects[i];
+                List<Vector3> areaPointData = listOfAreaPointDatas[i];
+                PlanAreaSaveData saveData = saveDatas[i];
 
-        //        MeshFilter gisObjMeshFilter = gisObject.GetComponent<MeshFilter>();
-        //        MeshRenderer gisObjMeshRenderer = gisObject.GetComponent<MeshRenderer>();
-        //        if (gisObjMeshFilter == null)
-        //        {
-        //            Debug.LogError($"{gisObject.name} have no MeshFilter Component");
-        //            return;
-        //        }
-        //        if (gisObjMeshRenderer == null)
-        //        {
-        //            Debug.LogError($"{gisObject.name} have no MeshRenderer Component");
-        //            return;
-        //        }
+                MeshFilter gisObjMeshFilter = gisObject.GetComponent<MeshFilter>();
+                MeshRenderer gisObjMeshRenderer = gisObject.GetComponent<MeshRenderer>();
+                if (gisObjMeshFilter == null)
+                {
+                    Debug.LogError($"{gisObject.name} have no MeshFilter Component");
+                    return;
+                }
+                if (gisObjMeshRenderer == null)
+                {
+                    Debug.LogError($"{gisObject.name} have no MeshRenderer Component");
+                    return;
+                }
 
-        //        Mesh mesh = gisObjMeshFilter.sharedMesh;
-        //        if (mesh == null)
-        //        {
-        //            Debug.LogError($"Mesh in MeshFilter of {gisObject.name} is null");
-        //            return;
-        //        }
+                Mesh mesh = gisObjMeshFilter.sharedMesh;
+                if (mesh == null)
+                {
+                    Debug.LogError($"Mesh in MeshFilter of {gisObject.name} is null");
+                    return;
+                }
 
+                // Modify mesh data
+                float initLimitHeight = saveData.limitHeight;
+                if (!landscapePlanMeshModifier.TryModifyMeshToTargetHeight(mesh, initLimitHeight, gisObject.transform.position))
+                {
+                    Debug.LogError($"{gisObject.name} is out of range of the loaded map");
+                    return;
+                }
 
-        //        float initLimitHeight = saveData.limitHeight; 
+                // Create and initialize AreaProperty
+                AreaProperty areaProperty = new AreaProperty(
+                    saveData.id,
+                    saveData.name,
+                    initLimitHeight,
+                    saveData.lineOffset,
+                    saveData.color,
+                    new Material(wallMaterial),
+                    new Material(ceilingMaterial),
+                    Mathf.Max(300, initLimitHeight + 50),
+                    gisObject.transform.position + mesh.bounds.center,
+                    gisObject.transform,
+                    areaPointData
+                    );
 
-        //        // Modify mesh data
-        //        if (!landscapePlanMeshModifier.TryModifyMeshToTargetHeight(mesh, initLimitHeight, gisObject.transform.position))
-        //        {
-        //            Debug.LogError($"{gisObject.name} is out of range of the loaded map");
-        //            return;
-        //        }
+                // Set material to the ceiling
+                areaProperty.ceilingMaterial.color = areaProperty.color;
+                gisObjMeshRenderer.material = areaProperty.ceilingMaterial;
 
-        //        // Create and initialize AreaProperty
-        //        AreaProperty areaProperty = new AreaProperty(
-        //            saveData.ID,
-        //            saveData.name,
-        //            initLimitHeight,
-        //            saveData.lineOffset,
-        //            saveData.color,
-        //            new Material(wallMaterial),
-        //            new Material(ceilingMaterial),
-        //            Mathf.Max(300, initLimitHeight + 50),
-        //            gisObject.transform.position + mesh.bounds.center,
-        //            gisObject.transform,
-        //            areaPointData
-        //            );
+                // Generate a wall downward from the mesh
+                GameObject wall = wallGenerator.GenerateWall(mesh, areaProperty.wallMaxHeight, Vector3.down, areaProperty.wallMaterial);
+                wall.transform.SetParent(gisObject.transform);
+                wall.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+                areaProperty.wallMaterial.color = areaProperty.color;
+                areaProperty.wallMaterial.SetFloat("_DisplayRate", areaProperty.limitHeight / areaProperty.wallMaxHeight);
+                areaProperty.wallMaterial.SetFloat("_LineCount", areaProperty.limitHeight / areaProperty.lineOffset);
+                wall.name = $"AreaWall_{areaProperty.ID}";
+                gisObject.name = $"Area_{areaProperty.ID}";
 
-
-        //        // Set material to the ceiling
-        //        areaProperty.ceilingMaterial.color = areaProperty.color;
-        //        gisObjMeshRenderer.material = areaProperty.ceilingMaterial;
-
-        //        // Generate a wall downward from the mesh
-        //        GameObject wall = wallGenerator.GenerateWall(mesh, areaProperty.wallMaxHeight, Vector3.down, areaProperty.wallMaterial);
-        //        wall.transform.SetParent(gisObject.transform);
-        //        wall.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
-        //        areaProperty.wallMaterial.color = areaProperty.color;
-        //        areaProperty.wallMaterial.SetFloat("_DisplayRate", areaProperty.limitHeight / areaProperty.wallMaxHeight);
-        //        areaProperty.wallMaterial.SetFloat("_LineCount", areaProperty.limitHeight / areaProperty.lineOffset);
-        //        wall.name = $"AreaWall_{areaProperty.ID}";
-        //        gisObject.name = $"Area_{areaProperty.ID}";
-
-        //        // Register the AreaProperty to Database
-        //        AreasDataComponent.AddNewProperty(areaProperty);
-        //    }
-        //    Debug.Log("Mesh modification and wall generation completed");
-        //}
+                // Register the AreaProperty to Database
+                AreasDataComponent.AddNewProperty(areaProperty);
+            }
+            Debug.Log("Mesh modification and wall generation completed");
+        }
 
 
         /// <summary>

@@ -1,12 +1,17 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Landscape2.Runtime
+namespace Landscape2.Runtime.LandscapePlanLoader
 {
-    public class AreasDataComponent : ISubComponent
+    /// <summary>
+    /// The class holds all data related to the area and manages editing.
+    /// </summary>
+    public sealed class AreasDataComponent : ISubComponent
     {
+        // The property of the area. This data can be edited.
         private static List<AreaProperty> properties;
+
+        // The origin property of the area. This data changes only when new area is loaded.
         private static List<AreaPropertyOrigin> propertiesOrigin;
 
         public AreasDataComponent()
@@ -15,19 +20,10 @@ namespace Landscape2.Runtime
             propertiesOrigin = new List<AreaPropertyOrigin>();
         }
 
-        public void OnDisable()
-        {
-        }
-        public void OnEnable()
-        {
-        }
-        public void Start()
-        {
-        }
-        public void Update(float deltaTime)
-        {
-        }
-
+        /// <summary>
+        /// Add new area property to database.
+        /// </summary>
+        /// <param name="newProperty"></param>
         public static void AddNewProperty(AreaProperty newProperty)
         {
             AreaPropertyOrigin newPropertyOrigin = new AreaPropertyOrigin(
@@ -44,6 +40,11 @@ namespace Landscape2.Runtime
             propertiesOrigin.Add(newPropertyOrigin);
         }
 
+        /// <summary>
+        /// Reset the property to the origin data.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
         public static bool TryResetProperty(int index)
         {
             if (index < 0 && index >= properties.Count) return false;
@@ -63,18 +64,33 @@ namespace Landscape2.Runtime
             return true;
         }
 
+        /// <summary>
+        /// Get the property
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
         public static AreaProperty GetProperty(int index)
         {
             if (index < 0 && index >= properties.Count) return null;
             return properties[index];
         }
 
+        /// <summary>
+        /// Get origin property
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
         public static AreaPropertyOrigin GetOriginProperty(int index)
         {
             if (index < 0 && index >= propertiesOrigin.Count) return null;
             return propertiesOrigin[index];
         }
 
+        /// <summary>
+        /// Delete the property
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
         public static bool TryRemoveProperty(int index)
         {
             if (index < 0 && index >= properties.Count) return false;
@@ -84,12 +100,33 @@ namespace Landscape2.Runtime
             return true;
         }
         
+        /// <summary>
+        /// Get the count of all properties
+        /// </summary>
+        /// <returns></returns>
         public static int GetPropertyCount()
         {
             return properties.Count;
         }
+
+
+        public void OnDisable()
+        {
+        }
+        public void OnEnable()
+        {
+        }
+        public void Start()
+        {
+        }
+        public void Update(float deltaTime)
+        {
+        }
     }
     
+    /// <summary>
+    /// Template class of editable area data
+    /// </summary>
     public class AreaProperty
     {
         public int ID { get; set;}
@@ -127,7 +164,9 @@ namespace Landscape2.Runtime
         }
     }
 
-
+    /// <summary>
+    /// Template class of origin area data
+    /// </summary>
     public class AreaPropertyOrigin
     {
         public int ID { get; private set; }

@@ -1,28 +1,59 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Landscape2.Runtime.LandscapePlanLoader
 {
+    /// <summary>
+    /// save data template for plan area
+    /// </summary>
+    [Serializable]
     public struct PlanAreaSaveData
     {
-        public int ID { get; set; }
-        //public string name { get; set; }
-        //public float limitHeight { get; set; }
-        //public float lineOffset { get; set; }
-        //public Color color { get; set; }
-        //public float wallMaxHeight { get; set; }
-        //public List<Vector3> pointData { get; set; }
+        [SerializeField] private int _id;
+        [SerializeField] private string _name;
+        [SerializeField] private float _limitHeight;
+        [SerializeField] private float _lineOffset;
+        [SerializeField] private Color _color;
+        [SerializeField] private float _wallMaxHeight;
+        [SerializeField] private List<Vector3> _pointData;
+
+        public int id => _id;
+        public string name => _name;
+        public float limitHeight => _limitHeight;
+        public float lineOffset => _lineOffset;
+        public Color color => _color;
+        public float wallMaxHeight => _wallMaxHeight;
+        public List<Vector3> pointData => _pointData;
+
+        public PlanAreaSaveData(int id, string name, float limitHeight, float lineOffset, Color color, float wallMaxHeight, List<Vector3> pointData)
+        {
+            _id = id;
+            _name = name;
+            _limitHeight = limitHeight;
+            _lineOffset = lineOffset;
+            _color = color;
+            _wallMaxHeight = wallMaxHeight;
+            _pointData = pointData;
+        }
     }
+
+
+    /// <summary>
+    /// Save system class for landscape plan
+    /// </summary>
     public class LandscapePlanSaveSystem
     {
         private SaveSystem _saveSystem;
         private LandscapePlanSaveLoadHandler saveLoadHandler;
 
+        /// <summary>
+        /// Register save and load event to save system
+        /// </summary>
+        /// <param name="saveSystem"></param>
         public void InstantiateSaveSystem(SaveSystem saveSystem)
         {
             saveLoadHandler = new LandscapePlanSaveLoadHandler();
-            // SaveSystem_Assetsの初期化
             _saveSystem = saveSystem;
             SetSaveMode();
             SetLoadMode();

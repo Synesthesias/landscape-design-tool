@@ -1,18 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace Landscape2.Runtime
+namespace Landscape2.Runtime.LandscapePlanLoader
 {
-    public class AreaEditManager
+    /// <summary>
+    /// The class tha manages the editing of the area and holds all data related to the area.
+    /// </summary>
+    public sealed class AreaEditManager
     {
         private AreaProperty editingAreaProperty;
         private AreaPropertyOrigin editingAreaPropertyOrigin;
 
-        public AreaEditManager()
-        {
-        }
-
+        /// <summary>
+        /// Change the limit height data of the area and reflect it to the object.
+        /// </summary>
+        /// <param name="newHeight"></param>
         public void ChangeHeight(float newHeight)
         {
             editingAreaProperty.limitHeight = newHeight;
@@ -29,10 +30,23 @@ namespace Landscape2.Runtime
             editingAreaProperty.wallMaterial.SetFloat("_LineCount", newHeight / editingAreaProperty.lineOffset);
         }
 
+        /// <summary>
+        /// Set target area data to edit
+        /// </summary>
+        /// <param name="targetAreaIndex"></param>
         public void StartEdit(int targetAreaIndex)
         {
             editingAreaPropertyOrigin = AreasDataComponent.GetOriginProperty(targetAreaIndex);
             editingAreaProperty = AreasDataComponent.GetProperty(targetAreaIndex);
+        }
+
+        /// <summary>
+        /// Unset target area data
+        /// </summary>
+        public void StopEdit()
+        {
+            editingAreaProperty = null;
+            editingAreaPropertyOrigin = null;
         }
 
         public float GetMaxHeight()
@@ -43,12 +57,6 @@ namespace Landscape2.Runtime
             return maxHeight;
         }
 
-        public void StopEdit()
-        {
-            editingAreaProperty = null;
-            editingAreaPropertyOrigin = null;
-        }
-
         public float GetLimitHeight()
         {
             if (editingAreaProperty == null) return 0;
@@ -57,6 +65,10 @@ namespace Landscape2.Runtime
             return limitHeight;
         }
 
+        /// <summary>
+        /// Reset the property of the area to the origin property.
+        /// </summary>
+        /// <param name="targetAreaIndex"></param>
         public void ResetProperty(int targetAreaIndex)
         {
             AreasDataComponent.TryResetProperty(targetAreaIndex);

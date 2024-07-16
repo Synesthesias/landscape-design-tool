@@ -11,7 +11,10 @@ using PlateauToolkit.Maps;
 
 namespace Landscape2.Runtime.LandscapePlanLoader
 {
-    public class ShapefileRenderManager : IDisposable
+    /// <summary>
+    /// The class tha handles the rendering of shapefiles
+    /// </summary>
+    public sealed class ShapefileRenderManager : IDisposable
     {
         List<IShape> m_ListOfShapes = new List<IShape>();
         List<GameObject> m_ListOfGISObjects = new List<GameObject>();

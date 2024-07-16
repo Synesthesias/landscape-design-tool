@@ -71,7 +71,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// <summary>
         /// Create a mesh from the given points and tessellate it.
         /// </summary>
-        /// <param name="points">Mesh vertice points</param>
+        /// <param name="points">Mesh vertice points. They must be in counterclockwise order.</param>
         /// <param name="meshFilter"></param>
         /// <param name="tessellateMaxEdge"></param>
         /// <param name="tessellateMaxArea"></param>
@@ -103,7 +103,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             delaunay.Dispose();
 
             // set each triangle as a separate mesh
-
             var subVertices = new NativeArray<float3>(3, Allocator.Temp);
             var subIndices = new NativeArray<int>(new[] { 0, 1, 2 }, Allocator.Temp);
 

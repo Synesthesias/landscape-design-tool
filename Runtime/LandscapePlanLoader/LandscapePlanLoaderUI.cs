@@ -1,11 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.UIElements;
-using Landscape2.Runtime.LandscapePlanLoader;
 using Landscape2.Runtime.UiCommon;
 
-namespace Landscape2.Runtime
+namespace Landscape2.Runtime.LandscapePlanLoader
 {
     /// <summary>
     /// The Presenter class for the LandscapePlanLoaderUI.uxml
