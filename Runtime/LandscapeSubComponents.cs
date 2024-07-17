@@ -32,7 +32,7 @@ namespace Landscape2.Runtime
         private void Awake()
         {
             var mainCam = Camera.main;
-            var uiRoot = new UIDocumentFactory().CreateWithUxmlName("GlobalNavi_Main");
+            //var uiRoot = new UIDocumentFactory().CreateWithUxmlName("GlobalNavi_Main");
 
             // 必要な機能をここに追加します
             subComponents = new List<ISubComponent>
@@ -41,11 +41,12 @@ namespace Landscape2.Runtime
                 new CameraPositionMemoryUI(new CameraPositionMemory.CameraPositionMemory(mainCam)),
                 new AreasDataComponent(),
                 new LandscapePlanLoaderUI(),
-                new ArrangeAsset(),
+                new LandscapePlanEditorUI(),
+                //new ArrangeAsset(),
                 // RegulationAreaUI.CreateForScene(),
-                LineOfSightUI.CreateForScene(),
-                new GlobalNaviHeader(uiRoot),
-                new WeatherTimeEditorUI(new WeatherTimeEditor.WeatherTimeEditor(),uiRoot),
+                //LineOfSightUI.CreateForScene(),
+                //new GlobalNaviHeader(uiRoot),
+                //new WeatherTimeEditorUI(new WeatherTimeEditor.WeatherTimeEditor(),uiRoot),
                 new SaveSystem()
             };
         }
