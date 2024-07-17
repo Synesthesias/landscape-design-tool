@@ -3,6 +3,7 @@ using Landscape2.Runtime.CameraPositionMemory;
 using Landscape2.Runtime.UiCommon;
 using Landscape2.Runtime.WeatherTimeEditor;
 using Landscape2.Runtime.LandscapePlanLoader;
+using UnityEngine.UIElements;
 using UnityEngine;
 
 namespace Landscape2.Runtime
@@ -35,19 +36,20 @@ namespace Landscape2.Runtime
             //var uiRoot = new UIDocumentFactory().CreateWithUxmlName("GlobalNavi_Main");
 
             // 必要な機能をここに追加します
+            // ※GlobalNaviと各機能の紐づけ作業が完了するまで一部機能はコメントアウトしています
             subComponents = new List<ISubComponent>
             {
-                new CameraMoveByUserInput(mainCam),
-                new CameraPositionMemoryUI(new CameraPositionMemory.CameraPositionMemory(mainCam)),
-                new AreasDataComponent(),
-                new LandscapePlanLoaderUI(),
-                new LandscapePlanEditorUI(),
+                //new CameraMoveByUserInput(mainCam),
+                //new CameraPositionMemoryUI(new CameraPositionMemory.CameraPositionMemory(mainCam)),
+                //new AreasDataComponent(),
+                //new LandscapePlanLoaderUI(),
+                //new LandscapePlanEditorUI(),
                 //new ArrangeAsset(),
                 // RegulationAreaUI.CreateForScene(),
                 //LineOfSightUI.CreateForScene(),
-                //new GlobalNaviHeader(uiRoot),
-                //new WeatherTimeEditorUI(new WeatherTimeEditor.WeatherTimeEditor(),uiRoot),
-                new SaveSystem()
+                new GlobalNaviHeader(uiRoot),
+                new WeatherTimeEditorUI(new WeatherTimeEditor.WeatherTimeEditor(),uiRoot),
+                //new SaveSystem()
             };
         }
 

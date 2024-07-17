@@ -66,8 +66,6 @@ namespace Landscape2.Runtime.WeatherTimeEditor
                 // 表示される時刻を更新
                 timeLabel.text = this.weatherTimeEditor.GetTimeString(timeSlider.value);
             });
-         
-            UpdateButtonState();
         }
 
         public void Update(float deltaTime)
@@ -77,9 +75,6 @@ namespace Landscape2.Runtime.WeatherTimeEditor
         {
         }
         public void OnDisable()
-        {
-        }
-        public void UpdateButtonState()
         {
         }
         public void Start()
