@@ -33,7 +33,7 @@ namespace Landscape2.Runtime
         private void Awake()
         {
             var mainCam = Camera.main;
-            //var uiRoot = new UIDocumentFactory().CreateWithUxmlName("GlobalNavi_Main");
+            var uiRoot = new UIDocumentFactory().CreateWithUxmlName("GlobalNavi_Main");
 
             // 必要な機能をここに追加します
             // ※GlobalNaviと各機能の紐づけ作業が完了するまで一部機能はコメントアウトしています
