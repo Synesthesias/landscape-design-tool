@@ -7,7 +7,7 @@ using PlateauToolkit.Maps;
 namespace Landscape2.Runtime.LandscapePlanLoader
 {
     /// <summary>
-    /// The class to create Mesh Objects from the point data
+    /// 頂点座標データからMeshを生成するクラス
     /// </summary>
     public sealed class PointDataRenderManager
     {
@@ -15,12 +15,12 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         CesiumGeoreference m_GeoRef;
 
         /// <summary>
-        /// Create Mesh Objects from the given point data
+        /// 頂点座標データから景観区画メッシュを生成するクラス
         /// </summary>
-        /// <param name="ParentObjectName"> Name of the parent object which has Mesh Objects </param>
-        /// <param name="pointDatas"> List of Mesh vertex world point data </param>
-        /// <param name="listOfGISObjects"> list which will have the created Mesh Objects </param>
-        /// <returns></returns>
+        /// <param name="ParentObjectName"> 景観区画オブジェクトの親とするオブジェクトの名前（任意の名前） </param>
+        /// <param name="pointDatas"> メッシュのworld pointのデータリスト </param>
+        /// <param name="listOfGISObjects"> 生成したメッシュオブジェクトを保持するリスト </param>
+        /// <returns> メッシュの生成が成功した場合はtrue、頂点座標データが空の場合はfalse </returns>
         public bool DrawShapes(string ParentObjectName, List<List<Vector3>> pointDatas, out List<GameObject> listOfGISObjects)
         {
             listOfGISObjects = null;
@@ -65,7 +65,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 meshObject.transform.position = Vector3.zero;
                 meshObject.transform.parent = parentObject.transform;
 
-                // Create a tessellated mesh
+                // テッセレーション処理を行ったメッシュを生成
                 TessellatedMeshCreator tessellatedMeshCreator = new TessellatedMeshCreator();
                 MeshFilter meshFilter = meshObject.GetComponent<MeshFilter>();
                 tessellatedMeshCreator.CreateTessellatedMesh(partPointsWorld, meshFilter, 30, 40);

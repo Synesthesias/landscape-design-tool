@@ -5,35 +5,34 @@ using UnityEngine;
 namespace Landscape2.Runtime.LandscapePlanLoader
 {
     /// <summary>
-    /// The class to modify the area mesh of landscape plan to the target height along the ground.
+    /// 区画のメッシュを地面からの高さ設定値に合わせて変形するクラス
     /// </summary>
     public sealed class LandscapePlanMeshModifier
     {
         /// <summary>
-        /// Transform and modify the area mesh to the target height along the ground.
+        /// 地面からの高さを目標高さ設定値に合わせて変形するメソッド
         /// 
-        /// The object with the cityObjectType set to COT_TINRelief (tag for ground obj) must be placed
-        /// at the above or below of the target mesh as specified by the dbf file.
-        /// 
+        /// cityObjectTypeがCOT_TINRelief（地面を示すタグ）に設定されたオブジェクトが
+        /// 変形させる区画メッシュの上または下に配置されている必要がある。
         /// </summary>
-        /// <param name="mesh">Area mesh</param>
-        /// <param name="targetHeight">Target height from ground</param>
-        /// <param name="globalPos">Global Position of MeshObject</param>
-        /// <returns>Result indicating if the modification was successful</returns>
+        /// <param name="mesh">区画のメッシュ</param>
+        /// <param name="targetHeight">地面からの目標高さ</param>
+        /// <param name="globalPos">メッシュを持つオブジェクトのクローバル座標</param>
+        /// <returns>修正成功時はtrue、メッシュ上下に地面のオブジェクトが無い場合はfalse</returns>
         public bool TryModifyMeshToTargetHeight(Mesh mesh, float targetHeight, Vector3 globalPos)
         {
-            Vector3[] vertices = mesh.vertices; //read all vertices data from mesh
+            Vector3[] vertices = mesh.vertices; //メッシュから頂点データを取得
 
-            //modify the height of each vertice to match the height limit by using raycast
+            // Raycastを用いて、各頂点の高さを目標値に合わせて修正
             for (int verticeIndex = 0; verticeIndex < vertices.Length; verticeIndex++)
             {
                 Physics.queriesHitBackfaces = true;
 
-                //search the ground object for above the vertice
+                // 頂点上方向に地面オブジェクトを探索
                 RaycastHit[] hitsAbove = Physics.RaycastAll(vertices[verticeIndex], Vector3.up, float.PositiveInfinity);
                 RaycastHit? hit = FindGroundObj(hitsAbove);
 
-                //if the ground object is found, go to the next vertice
+                // 地面オブジェクトが見つかった場合、高さを修正して次の頂点の処理へ移行
                 if (hit != null)
                 {
                     vertices[verticeIndex] = new Vector3(
@@ -43,11 +42,11 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     continue;
                 }
 
-                //search the ground object for below the vertice
+                // 頂点下方向に地面オブジェクトを探索
                 RaycastHit[] hitsBelow = Physics.RaycastAll(vertices[verticeIndex], Vector3.down, float.PositiveInfinity);
                 hit = FindGroundObj(hitsBelow);
 
-                //if the ground object is found, go to the next vertice
+                // 地面オブジェクトが見つかった場合、高さを修正して次の頂点の処理へ移行
                 if (hit != null)
                 {
                     vertices[verticeIndex] = new Vector3(
@@ -57,23 +56,19 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     continue;
                 }
 
-                return false;  //failed to modify the vertice due to the lack of ground object on the top or bottom
+                return false;  // 頂点の上下に地面オブジェクトが見つからず、修正に失敗
             }
 
-            mesh.vertices = vertices; //update vertices data to mesh
+            mesh.vertices = vertices; // 修正した頂点データをメッシュに適用
 
-            return true;    //success to modify all vertices
+            return true;    // 全ての頂点の修正に成功
         }
 
 
         /// <summary>
-        /// Find the ground object from the RaycastHit array
-        /// 
-        /// If the ground object with cityObjectType set to COT_TINRelief is found, returns the RaycastHit.
-        /// Otherwise, returns null.
+        /// RaycastHit配列から、cityObjectTypeがCOT_TINReliefのオブジェクトを探索するメソッド
         /// </summary>
-        /// <param name="hits"></param>
-        /// <returns>RaycastHit of Ground obj</returns>
+        /// <returns>オブジェクトが見つかった場合は対象オブジェクトのRaycastHit、見つからない場合はnull</returns>
         RaycastHit? FindGroundObj(RaycastHit[] hits)
         {
             foreach (var hit in hits)

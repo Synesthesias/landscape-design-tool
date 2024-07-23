@@ -5,13 +5,13 @@ using ToolBox.Serialization;
 namespace Landscape2.Runtime.LandscapePlanLoader
 {
     /// <summary>
-    /// The class that handles the saving and loading of the landscape plan.
+    /// 景観区画の保存と読み込み時の処理を管理するクラス
     /// </summary>
     public sealed class LandscapePlanSaveLoadHandler
     {
         public void SaveInfo()
         {
-            // Copy current area data to save data
+            // セーブデータ用クラスに現在の区画データをコピー
             List<PlanAreaSaveData> planAreaSaveDatas = new List<PlanAreaSaveData>();
             int areaDataCount = AreasDataComponent.GetPropertyCount();
             for (int i = 0; i < areaDataCount; i++)
@@ -30,18 +30,18 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 planAreaSaveDatas.Add(saveData);
             }
             
-            // Save data
+            // データを保存
             DataSerializer.Save("PlanAreas", planAreaSaveDatas);
         }
 
         public void LoadInfo()
         {
-            // Load saved data
+            // 景観区画のセーブデータをロード
             List<PlanAreaSaveData> LoadedPlanAreaDatas = DataSerializer.Load<List<PlanAreaSaveData>>("PlanAreas");
 
             if (LoadedPlanAreaDatas != null)
             {
-                // Create object from loaded point data
+                // ロードした頂点座標データからMeshを生成
                 LandscapePlanLoadManager landscapePlanLoadManager = new LandscapePlanLoadManager();
                 landscapePlanLoadManager.LoadFromSaveData(LoadedPlanAreaDatas);
             }

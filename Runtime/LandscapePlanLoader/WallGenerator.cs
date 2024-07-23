@@ -4,17 +4,17 @@ using UnityEngine;
 namespace Landscape2.Runtime.LandscapePlanLoader
 {
     /// <summary>
-    /// Class to generate walls around the outer edges of a mesh
+    /// 区画メッシュの外周に壁を生成するクラス
     /// </summary>
     public sealed class WallGenerator
     {
         /// <summary>
-        /// Generate a wall from the given mesh.
+        /// メッシュ外周に壁を生成するメソッド
         /// </summary>
-        /// <param name="originalMesh"></param>
-        /// <param name="wallHeight"></param>
-        /// <param name="wallDirection"></param>
-        /// <returns></returns>
+        /// <param name="originalMesh">天面となる区画メッシュ</param>
+        /// <param name="wallHeight">生成する壁オブジェクトの高さ</param>
+        /// <param name="wallDirection">生成方向（上下）</param>
+        /// <returns>生成した壁のオブジェクト</returns>
         public GameObject GenerateWall(Mesh originalMesh, float wallHeight, Vector3 wallDirection, Material wallMaterial)
         {
             Vector3[] vertices = originalMesh.vertices;
@@ -22,7 +22,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
             Dictionary<Edge, int> edgeCount = new Dictionary<Edge, int>();
 
-            // Get all edges of triangles and count duplicates
+            // 天面メッシュの全Triangleのエッジの出現回数をカウント
             for (int i = 0; i < triangles.Length; i += 3)
             {
                 CountEdge(edgeCount, vertices, triangles[i], triangles[i + 1]);
@@ -34,16 +34,17 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             List<int> wallTriangles = new List<int>();
             List<Edge> outlineEdges = new List<Edge>();
 
-            //Get outline edges
+            // 外周を形成するエッジを抽出
             foreach (var item in edgeCount)
             {
+                // エッジの出現回数が1のものを外周エッジとして判定
                 if (item.Value == 1)
                 {
                     outlineEdges.Add(item.Key);
                 }
             }
 
-            // Set the first edge as the starting point
+            // 初期エッジをリストに追加
             List<Vector3> SortedOutlineVertices = new List<Vector3>
             {
                 outlineEdges[0].vertex1,
@@ -51,7 +52,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             };
             outlineEdges.RemoveAt(0);
 
-            // Search and sort adjacent edges
+            // 隣接する外周エッジを探索してソート
             for (int i = 0; outlineEdges.Count != 0; i++)
             {
                 Vector3 preEndPoint = SortedOutlineVertices[i * 2 + 1];
@@ -74,7 +75,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 }
             }
 
-            // Set wall vertices, triangles and uv
+            // 壁の頂点とTriangle、UVを生成
             Vector2[] uv = new Vector2[SortedOutlineVertices.Count * 2];
             float uvXPitch = 1.0f / SortedOutlineVertices.Count;
 
@@ -117,12 +118,12 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         }
 
         /// <summary>
-        /// Count edge duplicates
+        /// エッジの重複数をカウントするメソッド
         /// </summary>
-        /// <param name="edgeCount"></param>
-        /// <param name="vertices"></param>
-        /// <param name="v1"></param>
-        /// <param name="v2"></param>
+        /// <param name="edgeCount">重複数を記録するディクショナリ</param>
+        /// <param name="vertices">頂点座標配列</param>
+        /// <param name="v1">対象エッジの両端の頂点のindex</param>
+        /// <param name="v2">対象エッジの両端の頂点のindex</param>
         void CountEdge(Dictionary<Edge, int> edgeCount, Vector3[] vertices, int v1, int v2)
         {
             Edge edge = new Edge(vertices[v1], vertices[v2]);

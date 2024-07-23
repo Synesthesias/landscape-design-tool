@@ -5,7 +5,7 @@
         <ui:Label tabindex="-1" text="編集するエリアのIDを入力" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ExplainLabel" style="white-space: normal; height: 41px; -unity-text-align: middle-center; width: 287px; text-overflow: ellipsis; opacity: 1; scale: 1 1;" />
         <ui:IntegerField label="Integer Field" value="42" name="TargetAreaInput" />
         <ui:Button text="編集開始" parse-escape-sequences="true" display-tooltip-when-elided="true" name="StartEditButton" class="menu-unity-button" />
-        <ui:Slider label="Slider" high-value="100" name="HeightSlider" />
+        <ui:Slider label="Slider" high-value="100" name="HeightSlider" low-value="0" show-input-field="false" />
         <ui:FloatField label="Float Field" value="42.2" name="HeightInput" />
         <ui:Button text="リセット" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ResetButton" class="menu-unity-button" />
         <ui:Button text="編集終了" parse-escape-sequences="true" display-tooltip-when-elided="true" name="EndEditButton" class="menu-unity-button" />

@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Landscape2.Runtime.LandscapePlanLoader
 {
     /// <summary>
-    /// The class tha manages the editing of the area and holds all data related to the area.
+    /// 読み込んだ区画の編集を行うクラス
     /// </summary>
     public sealed class AreaEditManager
     {
@@ -11,9 +11,9 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         private AreaPropertyOrigin editingAreaPropertyOrigin;
 
         /// <summary>
-        /// Change the limit height data of the area and reflect it to the object.
+        /// 区画の制限高さを変更し、オブジェクトに反映するメソッド
         /// </summary>
-        /// <param name="newHeight"></param>
+        /// <param name="newHeight">新規に設定する制限高さ</param>
         public void ChangeHeight(float newHeight)
         {
             editingAreaProperty.limitHeight = newHeight;
@@ -31,9 +31,9 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         }
 
         /// <summary>
-        /// Set target area data to edit
+        /// 編集の対象となる区画データを設定するメソッド
         /// </summary>
-        /// <param name="targetAreaIndex"></param>
+        /// <param name="targetAreaIndex">対象区画のAreaPropertyリストの要素番号</param>
         public void StartEdit(int targetAreaIndex)
         {
             editingAreaPropertyOrigin = AreasDataComponent.GetOriginProperty(targetAreaIndex);
@@ -41,7 +41,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         }
 
         /// <summary>
-        /// Unset target area data
+        /// 編集対象を解除するメソッド
         /// </summary>
         public void StopEdit()
         {
@@ -50,9 +50,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         }
 
         /// <summary>
-        /// Get the max limit height of the area.
+        /// 区画の制限高さの最大値を取得するメソッド
         /// </summary>
-        /// <returns></returns>
         public float GetMaxHeight()
         {
             if (editingAreaProperty == null) return 0;
@@ -62,9 +61,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         }
 
         /// <summary>
-        /// Get the current limit height of the area.
+        /// 現在の制限高さ値を取得するメソッド
         /// </summary>
-        /// <returns></returns>
         public float GetLimitHeight()
         {
             if (editingAreaProperty == null) return 0;
@@ -74,9 +72,9 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         }
 
         /// <summary>
-        /// Reset the property of the area to the origin property.
+        /// 対象区画の全プロパティを読み込み時の値に初期化するメソッド
         /// </summary>
-        /// <param name="targetAreaIndex"></param>
+        /// <param name="targetAreaIndex">対象区画のリスト要素番号</param>
         public void ResetProperty(int targetAreaIndex)
         {
             AreasDataComponent.TryResetProperty(targetAreaIndex);

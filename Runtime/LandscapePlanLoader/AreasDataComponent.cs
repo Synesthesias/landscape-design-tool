@@ -4,14 +4,14 @@ using UnityEngine;
 namespace Landscape2.Runtime.LandscapePlanLoader
 {
     /// <summary>
-    /// The class holds all data related to the area and manages editing.
+    /// 読み込んだ区画データを管理するクラス
     /// </summary>
     public sealed class AreasDataComponent : ISubComponent
     {
-        // The property of the area. This data can be edited.
+        // 区画データリスト（変更可）
         private static List<AreaProperty> properties;
 
-        // The origin property of the area. This data changes only when new area is loaded.
+        // 読み込み時の値を保持する区画データリスト（基本変更しない）
         private static List<AreaPropertyOrigin> propertiesOrigin;
 
         public AreasDataComponent()
@@ -21,9 +21,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         }
 
         /// <summary>
-        /// Add new area property to database.
+        /// 区画データを新規に追加するメソッド
         /// </summary>
-        /// <param name="newProperty"></param>
         public static void AddNewProperty(AreaProperty newProperty)
         {
             AreaPropertyOrigin newPropertyOrigin = new AreaPropertyOrigin(
@@ -41,13 +40,12 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         }
 
         /// <summary>
-        /// Reset the property to the origin data.
+        /// 区画データを読み込み時の値にリセットするメソッド
         /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
+        /// <returns>リセットが成功した場合はtrue、指定したindexがリストの範囲外の場合はfalse</returns>
         public static bool TryResetProperty(int index)
         {
-            if (index < 0 && index >= properties.Count) return false;
+            if (index < 0 || index >= properties.Count) return false;
 
             properties[index].ID = propertiesOrigin[index].ID;
             properties[index].name = propertiesOrigin[index].name;
@@ -65,35 +63,30 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         }
 
         /// <summary>
-        /// Get the property
+        /// 対象の区画データを取得するメソッド
         /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
         public static AreaProperty GetProperty(int index)
         {
-            if (index < 0 && index >= properties.Count) return null;
+            if (index < 0 || index >= properties.Count) return null;
             return properties[index];
         }
 
         /// <summary>
-        /// Get origin property
+        /// 対象区画の読み込み時のデータを取得するメソッド
         /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
         public static AreaPropertyOrigin GetOriginProperty(int index)
         {
-            if (index < 0 && index >= propertiesOrigin.Count) return null;
+            if (index < 0 || index >= propertiesOrigin.Count) return null;
             return propertiesOrigin[index];
         }
 
         /// <summary>
-        /// Delete the property
+        /// 対象の区画データを削除するメソッド
         /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
+        /// <returns>削除が成功した場合はtrue、指定したindexがリスト範囲外の場合はfalse</returns>
         public static bool TryRemoveProperty(int index)
         {
-            if (index < 0 && index >= properties.Count) return false;
+            if (index < 0 || index >= properties.Count) return false;
 
             properties.RemoveAt(index);
             propertiesOrigin.RemoveAt(index);
@@ -101,9 +94,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         }
         
         /// <summary>
-        /// Get the count of all properties
+        /// 区画データリストの長さを取得するメソッド
         /// </summary>
-        /// <returns></returns>
         public static int GetPropertyCount()
         {
             return properties.Count;
@@ -125,7 +117,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
     }
     
     /// <summary>
-    /// Template class of editable area data
+    /// 区画データのプロパティを保持するクラス
     /// </summary>
     public class AreaProperty
     {
@@ -165,7 +157,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
     }
 
     /// <summary>
-    /// Template class of origin area data
+    /// 区画データの読み込み時のプロパティを保持するクラス
     /// </summary>
     public class AreaPropertyOrigin
     {

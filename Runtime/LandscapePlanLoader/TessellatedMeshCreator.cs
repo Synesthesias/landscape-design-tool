@@ -11,18 +11,15 @@ using iShape.Triangulation.Shape.Delaunay;
 namespace Landscape2.Runtime.LandscapePlanLoader
 {
     /// <summary>
-    /// Class to create a tessellated mesh from the given points.
+    /// 頂点座標データからテッセレーションされたMeshを生成するクラス
     /// </summary>
     public sealed class TessellatedMeshCreator
     {
         /// <summary>
-        /// Convert the given points to a PlainShape.
+        /// 頂点データをPlainShapeに変換するメソッド
         /// </summary>
-        /// <param name="iGeom"></param>
-        /// <param name="allocator"></param>
-        /// <param name="hull">Area outline points</param>
-        /// <param name="holes">hole outline points</param>
-        /// <returns></returns>
+        /// <param name="hull">メッシュの外周の頂点座標</param>
+        /// <param name="holes">メッシュの穴部分の頂点座標</param>
         public PlainShape ConvertToPlainShape(IntGeom iGeom, Allocator allocator, Vector2[] hull, Vector2[][] holes)
         {
             var iHull = iGeom.Int(hull);
@@ -46,10 +43,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
 
         /// <summary>
-        /// delete duplicate points
+        /// 重複した頂点を削除するメソッド
         /// </summary>
-        /// <param name="vectors"></param>
-        /// <returns></returns>
         IntVector[] RemoveDuplicates(IntVector[] vectors)
         {
             List<IntVector> uniqueList = new List<IntVector>();
@@ -69,12 +64,12 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
 
         /// <summary>
-        /// Create a mesh from the given points and tessellate it.
+        /// テッセレーションとMesh生成を行うメソッド
         /// </summary>
-        /// <param name="points">Mesh vertice points. They must be in counterclockwise order.</param>
-        /// <param name="meshFilter"></param>
-        /// <param name="tessellateMaxEdge"></param>
-        /// <param name="tessellateMaxArea"></param>
+        /// <param name="points">メッシュの頂点座標。右回りに並んでいる必要がある。</param>
+        /// <param name="meshFilter">生成したメッシュをアタッチするMeshFilter</param>
+        /// <param name="tessellateMaxEdge">エッジの最大長</param>
+        /// <param name="tessellateMaxArea">Triangleの最大面積</param>
         public void CreateTessellatedMesh(List<Vector3> points, MeshFilter meshFilter, float tessellateMaxEdge, float tessellateMaxArea)
         {
             var iGeom = IntGeom.DefGeom;
@@ -102,7 +97,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
             delaunay.Dispose();
 
-            // set each triangle as a separate mesh
             var subVertices = new NativeArray<float3>(3, Allocator.Temp);
             var subIndices = new NativeArray<int>(new[] { 0, 1, 2 }, Allocator.Temp);
 
@@ -124,7 +118,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 colorMesh.AddAndDispose(subMesh, color);
             }
 
-            // Create a new Unity Mesh
+            // メッシュを生成
             Mesh mesh = new Mesh();
 
             subIndices.Dispose();

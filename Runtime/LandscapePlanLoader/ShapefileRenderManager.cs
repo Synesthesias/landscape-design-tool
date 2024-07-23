@@ -12,7 +12,7 @@ using PlateauToolkit.Maps;
 namespace Landscape2.Runtime.LandscapePlanLoader
 {
     /// <summary>
-    /// The class tha handles the rendering of shapefiles
+    /// Shapefileの読み込みと描画を行うクラス
     /// </summary>
     public sealed class ShapefileRenderManager : IDisposable
     {
@@ -225,7 +225,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 int start = shape.Parts[i];
                 int end = shape.Parts[i + 1];
 
-                // get the points
+                // 頂点を取得
                 List<Vector3> partPoints = shape.Points.GetRange(start, end - start);
                 List<Vector3> partPointsWorld = new List<Vector3>();
 
@@ -248,7 +248,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     LineRenderer lineRenderer = shpParentInstance.GetComponent<LineRenderer>();
                     lineRenderer.positionCount = partPointsWorld.Count;
                     lineRenderer.useWorldSpace = false;
-                    lineRenderer.startWidth = lineWidth;  // Set the start width
+                    lineRenderer.startWidth = lineWidth;
                     lineRenderer.endWidth = lineWidth;
                     lineRenderer.SetPositions(partPointsWorld.ToArray());
                     if (m_LoopLineRenderer)
@@ -277,7 +277,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                         AttachMetadata(meshObject, record);
                     }
 
-                    // Create a tessellated mesh
+                    // テッセレーション処理を行ったメッシュを生成
                     TessellatedMeshCreator tessellatedMeshCreator = new TessellatedMeshCreator();
                     MeshFilter meshFilter = meshObject.GetComponent<MeshFilter>();
                     tessellatedMeshCreator.CreateTessellatedMesh(partPointsWorld, meshFilter, 30,40);
@@ -295,7 +295,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         public void CreateMesh(bool isHole, List<Vector3> points, MeshFilter meshFilter, MeshRenderer meshRenderer)
         {
             var vertices = new List<Vertex>();
-            // add your Vector3 points as Vertex to the points list here.
 
             for (int k = 0; k < points.Count; k++)
             {
@@ -317,13 +316,13 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 unityVertices.Add(new Vector3((float)triangle.GetVertex(1).X, 0, (float)triangle.GetVertex(1).Y));
                 unityVertices.Add(new Vector3((float)triangle.GetVertex(2).X, 0, (float)triangle.GetVertex(2).Y));
 
-                // Add the indices of the triangle vertices to the triangles list
+                // triangleの頂点をリストに追加
                 triangles.Add(unityVertices.Count - 1);
                 triangles.Add(unityVertices.Count - 2);
                 triangles.Add(unityVertices.Count - 3);
             }
 
-            // Create a new Unity Mesh
+            // メッシュを生成
             Mesh unityMesh = new Mesh();
             unityMesh.vertices = unityVertices.ToArray();
             unityMesh.triangles = triangles.ToArray();
@@ -352,7 +351,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             if (m_PositionMarkerSphere != null)
             {
                 UnityEngine.Object.DestroyImmediate(m_PositionMarkerSphere);
-                m_PositionMarkerSphere = null; // Prevent a second call to Dispose from trying to destroy it again.
+                m_PositionMarkerSphere = null; // Disposeの重複呼び出しを防ぐ
             }
         }
 

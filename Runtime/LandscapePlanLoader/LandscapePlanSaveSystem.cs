@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Landscape2.Runtime.LandscapePlanLoader
 {
     /// <summary>
-    /// save data template for plan area
+    /// 景観区画のセーブデータ項目
     /// </summary>
     [Serializable]
     public struct PlanAreaSaveData
@@ -40,7 +40,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
 
     /// <summary>
-    /// Save system class for landscape plan
+    /// 景観区画の保存と読み込み時の処理を、save systemに登録するクラス
     /// </summary>
     public class LandscapePlanSaveSystem
     {
@@ -48,9 +48,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         private LandscapePlanSaveLoadHandler saveLoadHandler;
 
         /// <summary>
-        /// Register save and load event to save system
+        /// 保存と読み込み時の処理をSaveSystemに登録するメソッド
         /// </summary>
-        /// <param name="saveSystem"></param>
         public void InstantiateSaveSystem(SaveSystem saveSystem)
         {
             saveLoadHandler = new LandscapePlanSaveLoadHandler();

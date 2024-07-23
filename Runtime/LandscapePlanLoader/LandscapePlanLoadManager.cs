@@ -6,7 +6,7 @@ using PlateauToolkit.Maps;
 namespace Landscape2.Runtime.LandscapePlanLoader
 {
     /// <summary>
-    /// The class to load GIS data and generate walls
+    /// GISデータの読み込みとメッシュの生成を管理するクラス
     /// </summary>
     public sealed class LandscapePlanLoadManager
     {
@@ -24,12 +24,12 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         }
 
         /// <summary>
-        /// Load GIS data from the given folder path
+        /// 指定されたフォルダパスからGISデータを読み込み、メッシュオブジェクトを生成するメソッド
         /// </summary>
-        /// <param name="gisTargetFolderPath"> The path to the folder containing .shp and .dbf files </param>
+        /// <param name="gisTargetFolderPath"> .shp、.dbfファイルを含むフォルダのパス </param>
         public void LoadShapefile(string gisTargetFolderPath)
         {
-            // Load GIS data and create Mesh objects
+            // GISデータの読み込みとメッシュオブジェクトの生成
             using (ShapefileRenderManager m_ShapefileRenderManager = new ShapefileRenderManager(gisTargetFolderPath, 0 /*RenderMode:Mesh*/, 0, false, false, SupportedEncoding.ShiftJIS, null))
             {
                 if (m_ShapefileRenderManager.Read(0, out listOfGISObjects, out listOfAreaPointDatas))
@@ -49,16 +49,16 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 return;
             }
 
-            // Modify the mesh objects to the target height and generate walls
             LandscapePlanMeshModifier landscapePlanMeshModifier = new LandscapePlanMeshModifier();
             WallGenerator wallGenerator = new WallGenerator();
 
-            for(int i = 0; i < listOfGISObjects.Count; i++)
+            // 区画の制限高さに合わせてメッシュデータを変形し、周囲に壁を生成する
+            for (int i = 0; i < listOfGISObjects.Count; i++)
             {
                 GameObject gisObject = listOfGISObjects[i];
                 List<Vector3> areaPointData = listOfAreaPointDatas[i];
 
-                // Get gis property datas from dbf file
+                // GISデータのプロパティを取得
                 DbfComponent dbf = gisObject.GetComponent<DbfComponent>();
                 if (dbf == null)
                 {
@@ -87,16 +87,16 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 }
 
                 
-                float initLimitHeight = float.Parse(GetPropertyValueOf("HEIGHT", dbf)); // Get limit height data from dbf file
+                float initLimitHeight = float.Parse(GetPropertyValueOf("HEIGHT", dbf)); // 区画の制限高さを取得
 
-                // Modify mesh data
+                // メッシュを変形
                 if (!landscapePlanMeshModifier.TryModifyMeshToTargetHeight(mesh, initLimitHeight, gisObject.transform.position))
                 {
                     Debug.LogError($"{gisObject.name} is out of range of the loaded map");
                     return;
                 }
 
-                // Create and initialize AreaProperty
+                // 新規のAreaPropertyを生成し初期化
                 AreaProperty areaProperty = new AreaProperty(
                     int.Parse(GetPropertyValueOf("ID", dbf)),
                     GetPropertyValueOf("AREANAME", dbf),
@@ -112,11 +112,11 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     );
 
 
-                // Set material to the ceiling
+                // 上面Meshのマテリアルを設定
                 areaProperty.ceilingMaterial.color = areaProperty.color;
                 gisObjMeshRenderer.material = areaProperty.ceilingMaterial;
 
-                // Generate a wall downward from the mesh
+                // 区画のメッシュから下向きに壁を生成
                 GameObject wall = wallGenerator.GenerateWall(mesh, areaProperty.wallMaxHeight, Vector3.down, areaProperty.wallMaterial); 
                 wall.transform.SetParent(gisObject.transform);
                 wall.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
@@ -126,26 +126,26 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 wall.name = $"AreaWall_{areaProperty.ID}";
                 gisObject.name = $"Area_{areaProperty.ID}";
 
-                // Register the AreaProperty to Database
+                // 区画データリストにAreaPropertyを追加登録
                 AreasDataComponent.AddNewProperty(areaProperty);
             }
             Debug.Log("Mesh modification and wall generation completed");
         }
 
         /// <summary>
-        /// Load GIS data from the given save data
+        /// セーブデータからGISデータを読み込み、メッシュオブジェクトを生成するメソッド
         /// </summary>
-        /// <param name="saveDatas"> Loaded save data </param>
+        /// <param name="saveDatas"> ロードした区画セーブデータ </param>
         public void LoadFromSaveData(List<PlanAreaSaveData> saveDatas)
         {
-            // Get all point data from save data
+            // 景観区画の頂点データを取得
             listOfAreaPointDatas = new List<List<Vector3>>();
             foreach (PlanAreaSaveData saveData in saveDatas)
             {
                 listOfAreaPointDatas.Add(saveData.pointData);
             }
 
-            // Load GIS data and create Mesh objects
+            // メッシュオブジェクトの生成
             PointDataRenderManager m_PointDataRenderManager = new PointDataRenderManager();
             if (m_PointDataRenderManager.DrawShapes("LoadedPlanArea", listOfAreaPointDatas, out listOfGISObjects))
             {
@@ -163,10 +163,10 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 return;
             }
 
-            // Modify the mesh objects to the target height and generate walls
             LandscapePlanMeshModifier landscapePlanMeshModifier = new LandscapePlanMeshModifier();
             WallGenerator wallGenerator = new WallGenerator();
 
+            // 区画の制限高さに合わせてメッシュデータを変形し、周囲に壁を生成する
             for (int i = 0; i < listOfGISObjects.Count; i++)
             {
                 GameObject gisObject = listOfGISObjects[i];
@@ -193,7 +193,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     return;
                 }
 
-                // Modify mesh data
+                // Meshを変形
                 float initLimitHeight = saveData.limitHeight;
                 if (!landscapePlanMeshModifier.TryModifyMeshToTargetHeight(mesh, initLimitHeight, gisObject.transform.position))
                 {
@@ -201,7 +201,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     return;
                 }
 
-                // Create and initialize AreaProperty
+                // 新規のAreaPropertyを生成し初期化
                 AreaProperty areaProperty = new AreaProperty(
                     saveData.id,
                     saveData.name,
@@ -216,11 +216,11 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     areaPointData
                     );
 
-                // Set material to the ceiling
+                // 上面Meshのマテリアルを設定
                 areaProperty.ceilingMaterial.color = areaProperty.color;
                 gisObjMeshRenderer.material = areaProperty.ceilingMaterial;
 
-                // Generate a wall downward from the mesh
+                // 区画のメッシュから下向きに壁を生成
                 GameObject wall = wallGenerator.GenerateWall(mesh, areaProperty.wallMaxHeight, Vector3.down, areaProperty.wallMaterial);
                 wall.transform.SetParent(gisObject.transform);
                 wall.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
@@ -230,7 +230,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 wall.name = $"AreaWall_{areaProperty.ID}";
                 gisObject.name = $"Area_{areaProperty.ID}";
 
-                // Register the AreaProperty to Database
+                // 区画データリストにAreaPropertyを追加登録
                 AreasDataComponent.AddNewProperty(areaProperty);
             }
             Debug.Log("Mesh modification and wall generation completed");
@@ -238,9 +238,9 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
 
         /// <summary>
-        /// Poopup a dialog to select a folder and get the path
+        /// フォルダ選択用のダイアログを開き、パスを取得するメソッド
         /// </summary>
-        /// <returns></returns>
+        /// <returns>フォルダパス</returns>
         public string BrowseFolder()
         {
             var paths = StandaloneFileBrowser.OpenFolderPanel("Open Folder", "", false);
@@ -250,10 +250,9 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         }
 
         /// <summary>
-        /// Convert the color string from the dbf file to Color
+        /// 色のstirngデータをColorに変換するメソッド
         /// </summary>
-        /// <param name="colorString"> The color string in the format of "r,g,b,a" </param>
-        /// <returns></returns>
+        /// <param name="colorString"> "r,g,b,a"のフォーマットで記述された色のstringデータ </param>
         Color DbfStringToColor(string colorString)
         {
             string[] colorValues = colorString.Split(',');
@@ -272,11 +271,10 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         }
 
         /// <summary>
-        /// Get the property from the dbf
+        /// 区画オブジェクトのDbfComponentから指定された名前の属性値を取得するメソッド
         /// </summary>
-        /// <param name="propertyName"></param>
-        /// <param name="dbf"></param>
-        /// <returns></returns>
+        /// <param name="propertyName">取得したいdbfの属性名</param>
+        /// <param name="dbf">取得対象の区画オブジェクトにアタッチされているDbfComponentクラス</param>
         string GetPropertyValueOf(string propertyName,DbfComponent dbf)
         {
             int index = dbf.PropertyNames.IndexOf(propertyName);

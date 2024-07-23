@@ -4,7 +4,7 @@ using Landscape2.Runtime.UiCommon;
 namespace Landscape2.Runtime.LandscapePlanLoader
 {
     /// <summary>
-    /// The Presenter class for the LandscapePlanLoaderUI.uxml
+    /// LandscapePlanLoaderUI.uxmlのプレゼンタクラス
     /// </summary>
     public sealed class LandscapePlanLoaderUI : ISubComponent
     {
