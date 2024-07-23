@@ -49,6 +49,10 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             editingAreaPropertyOrigin = null;
         }
 
+        /// <summary>
+        /// Get the max limit height of the area.
+        /// </summary>
+        /// <returns></returns>
         public float GetMaxHeight()
         {
             if (editingAreaProperty == null) return 0;
@@ -57,6 +61,10 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             return maxHeight;
         }
 
+        /// <summary>
+        /// Get the current limit height of the area.
+        /// </summary>
+        /// <returns></returns>
         public float GetLimitHeight()
         {
             if (editingAreaProperty == null) return 0;

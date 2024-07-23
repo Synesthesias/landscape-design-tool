@@ -49,7 +49,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         }
         public void Update(float deltaTime)
         {
-
         }
 
         public void OnEnable()
@@ -59,8 +58,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         public void OnDisable()
         {
         }
-
-
     }
 }
 

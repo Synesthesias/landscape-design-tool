@@ -34,6 +34,8 @@ namespace Landscape2.Runtime
         {
             var mainCam = Camera.main;
             var uiRoot = new UIDocumentFactory().CreateWithUxmlName("GlobalNavi_Main");
+            // GlobalNavi_Main.uxmlのSortOrderを設定
+            GameObject.Find("GlobalNavi_Main").GetComponent<UIDocument>().sortingOrder = 1;
 
             // 必要な機能をここに追加します
             // ※GlobalNaviと各機能の紐づけ作業が完了するまで一部機能はコメントアウトしています

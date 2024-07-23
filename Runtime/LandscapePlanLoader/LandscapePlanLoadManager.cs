@@ -271,6 +271,12 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             return Color.clear;
         }
 
+        /// <summary>
+        /// Get the property from the dbf
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <param name="dbf"></param>
+        /// <returns></returns>
         string GetPropertyValueOf(string propertyName,DbfComponent dbf)
         {
             int index = dbf.PropertyNames.IndexOf(propertyName);

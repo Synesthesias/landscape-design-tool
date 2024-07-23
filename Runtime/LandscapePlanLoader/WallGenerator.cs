@@ -1,6 +1,4 @@
-using PlateauToolkit.Maps;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 namespace Landscape2.Runtime.LandscapePlanLoader
@@ -36,7 +34,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             List<int> wallTriangles = new List<int>();
             List<Edge> outlineEdges = new List<Edge>();
 
-            //外周のエッジを取得
+            //Get outline edges
             foreach (var item in edgeCount)
             {
                 if (item.Value == 1)
@@ -45,7 +43,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 }
             }
 
-            //最初のエッジを基準として取得
+            // Set the first edge as the starting point
             List<Vector3> SortedOutlineVertices = new List<Vector3>
             {
                 outlineEdges[0].vertex1,
@@ -53,8 +51,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             };
             outlineEdges.RemoveAt(0);
 
-            //隣り合っているエッジを検索してソートする
-            for(int i = 0; outlineEdges.Count != 0; i++)
+            // Search and sort adjacent edges
+            for (int i = 0; outlineEdges.Count != 0; i++)
             {
                 Vector3 preEndPoint = SortedOutlineVertices[i * 2 + 1];
                 for(int j = 0; j < outlineEdges.Count; j++)
@@ -76,6 +74,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 }
             }
 
+            // Set wall vertices, triangles and uv
             Vector2[] uv = new Vector2[SortedOutlineVertices.Count * 2];
             float uvXPitch = 1.0f / SortedOutlineVertices.Count;
 
@@ -107,7 +106,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             wallMesh.vertices = wallVertices.ToArray();
             wallMesh.triangles = wallTriangles.ToArray();
             wallMesh.uv = uv;
-            //wallMesh.RecalculateNormals();
 
             GameObject wallObject = new GameObject("Wall");
             MeshFilter meshFilter = wallObject.AddComponent<MeshFilter>();
@@ -127,7 +125,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// <param name="v2"></param>
         void CountEdge(Dictionary<Edge, int> edgeCount, Vector3[] vertices, int v1, int v2)
         {
-            Edge edge = new Edge(v1, v2, vertices[v1], vertices[v2]);
+            Edge edge = new Edge(vertices[v1], vertices[v2]);
             if (edgeCount.ContainsKey(edge))
             {
                 edgeCount[edge]++;
@@ -140,16 +138,11 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
         struct Edge
         {
-            public int vertexIndex1;
-            public int vertexIndex2;
-
             public Vector3 vertex1;
             public Vector3 vertex2;
 
-            public Edge(int v1, int v2, Vector3 vertex1, Vector3 vertex2)
+            public Edge(Vector3 vertex1, Vector3 vertex2)
             {
-                vertexIndex1 = Mathf.Min(v1, v2);
-                vertexIndex2 = Mathf.Max(v1, v2);
                 this.vertex1 = vertex1;
                 this.vertex2 = vertex2;
             }

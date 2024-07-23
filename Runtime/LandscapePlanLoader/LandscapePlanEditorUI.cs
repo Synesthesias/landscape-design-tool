@@ -50,9 +50,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         public void OnClickEndEdit()
         {
             areaEditManager.StopEdit();
-            //heightSlider.highValue = 0;
-            //heightSlider.value = 0;
-            //heightInput.value = 0;
         }
 
         public void SliderChangeHeight()
@@ -80,7 +77,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         }
         public void Update(float deltaTime)
         {
-
         }
 
         public void OnEnable()
@@ -90,8 +86,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         public void OnDisable()
         {
         }
-
-
     }
 }
 
