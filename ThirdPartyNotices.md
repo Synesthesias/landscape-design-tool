@@ -55,6 +55,7 @@ SOFTWARE.
 ```
 ## Save System for Unity : DataSerializer
 **Source:** [https://github.com/IntoTheDev/Save-System-for-Unity](https://github.com/IntoTheDev/Save-System-for-Unity)
+### License
 ```
 MIT License
 
@@ -81,7 +82,7 @@ SOFTWARE.
 
 ## Save System for Unity : OdinSerializer
 **Source:** [https://github.com/IntoTheDev/Save-System-for-Unity](https://github.com/IntoTheDev/Save-System-for-Unity)
-
+### License
 ```
                                  Apache License
                            Version 2.0, January 2004
