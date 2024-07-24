@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Landscape2.Runtime.CameraPositionMemory;
 using Landscape2.Runtime.UiCommon;
 using Landscape2.Runtime.WeatherTimeEditor;
+using Landscape2.Runtime.LandscapePlanLoader;
 using UnityEngine.UIElements;
 using UnityEngine;
 
@@ -42,6 +43,9 @@ namespace Landscape2.Runtime
             {
                 //new CameraMoveByUserInput(mainCam),
                 //new CameraPositionMemoryUI(new CameraPositionMemory.CameraPositionMemory(mainCam)),
+                //new AreasDataComponent(),
+                //new LandscapePlanLoaderUI(),
+                //new LandscapePlanEditorUI(),
                 //new ArrangeAsset(),
                 // RegulationAreaUI.CreateForScene(),
                 //LineOfSightUI.CreateForScene(),
