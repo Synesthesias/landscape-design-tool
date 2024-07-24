@@ -267,7 +267,7 @@ SOFTWARE.
 ```
 MIT License
 
-Copyright (c) 2021 Vladislav Kinyashov
+Copyright (c) 2023 iShape
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -294,7 +294,7 @@ SOFTWARE.
 ```
 MIT License
 
-Copyright (c) 2021 Vladislav Kinyashov
+Copyright (c) 2019 iShape
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -321,7 +321,7 @@ SOFTWARE.
 ```
 MIT License
 
-Copyright (c) 2021 Vladislav Kinyashov
+Copyright (c) 2019 iShapeUnity
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -348,7 +348,7 @@ SOFTWARE.
 ```
 MIT License
 
-Copyright (c) 2021 Vladislav Kinyashov
+Copyright (c) 2017 Gökhan Gökçe
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
