@@ -240,6 +240,8 @@ Scroller #unity-drag-container {
 }
 
 .unity-base-field {
+    border-radius:8px;
+    background-color: rgba(0, 0, 0, 0);
 }
 
 #unity-text-input TextElement {
@@ -294,7 +296,10 @@ Scroller #unity-drag-container {
     display: flex;
     flex-direction: row;
 }
+	.unity-base-slider__dragger{
 
+        border-radius:2px;
+    }
 #Menu {
     height: 64px;
     width: 100%;
@@ -762,6 +767,9 @@ Scroller #unity-drag-container {
     flex-direction: row;
     justify-content: center;
 }
+.ActionButton > Label {
+    color:#003737;
+}
 
 .ActionButton:hover {
     background-color: rgb(107, 186, 193);
@@ -876,6 +884,22 @@ Scroller #unity-drag-container {
     background-color: rgba(255, 255, 255, 0);
     margin: 0;
     padding: 2px;
+}
+.PanelIconButton {
+    height: 40px;
+    width: 40px;
+    margin:0;
+    padding:6px;
+    border-width: 0;
+    border-radius: 20px;
+    background-color:#2F3636;
+    transition: 0.1s;
+}
+.PanelIconButton:hover {
+    background-color:#3B4243;
+}
+.PanelIconButton:active {
+    background-color:#414748;
 }
 
 #List {
@@ -1111,6 +1135,9 @@ Scroller #unity-drag-container {
     background-image: resource('Info_Title_Left');
     font-size: 24px;
     padding-right: 24px;
+    text-align: end;
+    -unity-text-align: upper-right;
+
 }
 
 #Title_Right {
@@ -1224,7 +1251,7 @@ Scroller #unity-drag-container {
     height: 40px;
     background-image: resource('Circle_Icon_Walk');
 }
-
+/* アイコン */
 #IconExit {
     background-image: resource('Icon_Exit');
     max-width: 18px;
@@ -1262,7 +1289,17 @@ Scroller #unity-drag-container {
 #Icon_Close {
     background-image: resource('Icon_Close');
 }
+#Icon_Plus {
+    background-image: resource('Icon_Plus');
+}
+#Icon_Save {
+    background-image: resource('Icon_Save');
+}
+#Icon_Import {
+    background-image: resource('Icon_Import');
+}
 
+/* アセットアイコン */
 #AssetCategory_Tree {
     background-image: resource('Icon_Asset_Tree_Off');
 }
@@ -1337,4 +1374,11 @@ Scroller #unity-drag-container {
 
 #Icon_Pin {
     background-image: resource('Icon_Pin');
+}
+
+#Divider {
+    width:100%;
+    height: 1px;
+    background-color:#BEC9C8;
+    margin: 5px 0px;
 }

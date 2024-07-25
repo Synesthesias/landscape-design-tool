@@ -1,6 +1,31 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:Template name="Panel_AreaPlanningInfo" path="Panel_AreaPlanningInfo" />
+    <ui:Template name="Panel_AreaPlanningList" path="Panel_AreaPlanningList" />
+    <ui:Template name="Panel_AreaPlanningMenu" path="Panel_AreaPlanningMenu" />
+    <ui:Template name="Panel_AreaPlanningSubMenu" path="Panel_AreaPlanningSubMenu" />
+    <ui:Template name="Panel_AreaPlanningRegister" path="Panel_AreaPlanningRegister" />
+    <ui:Template name="Panel_AreaPlanningEdit" path="Panel_AreaPlanningEdit" />
     <Style src="project://database/Packages/com.synesthesias.landscape-design-tool-2/Runtime/UICommon/UIStyleCommon.uss?fileID=7433441132597879392&amp;guid=5003ef441f4ce7e4881f663b95f4df1d&amp;type=3#UIStyleCommon" />
-    <ui:VisualElement class="gis-background-window" style="flex-grow: 1; width: 345px; height: auto; position: relative; left: 1%; top: 1%; transform-origin: center; align-self: auto;">
-        <ui:Label text="景観計画区域" display-tooltip-when-elided="true" name="EditBuildingHeader" class="header" />
+    <ui:VisualElement name="MainContainer" picking-mode="Ignore" style="flex-grow: 1;">
+        <ui:VisualElement name="LeftContainer" picking-mode="Ignore" style="flex-grow: 1; flex-shrink: 0;">
+            <ui:VisualElement name="Title_Left" style="flex-grow: 0;">
+                <ui:Label tabindex="-1" text="エリア情報" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+            </ui:VisualElement>
+            <ui:Instance template="Panel_AreaPlanningInfo" />
+            <ui:VisualElement name="Title_Left" style="flex-grow: 0; margin-top: 16px;">
+                <ui:Label tabindex="-1" text="景観計画区域リスト" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+            </ui:VisualElement>
+            <ui:Instance template="Panel_AreaPlanningList" />
+        </ui:VisualElement>
+        <ui:VisualElement name="CenterContainer" picking-mode="Ignore" style="flex-grow: 1;" />
+        <ui:VisualElement name="RightContainer" picking-mode="Ignore" style="flex-grow: 1; flex-shrink: 0;">
+            <ui:VisualElement name="Title_Right" style="flex-grow: 0;">
+                <ui:Label tabindex="-1" text="景観計画データ編集" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+            </ui:VisualElement>
+            <ui:Instance template="Panel_AreaPlanningMenu" />
+            <ui:Instance template="Panel_AreaPlanningSubMenu" />
+            <ui:Instance template="Panel_AreaPlanningRegister" />
+            <ui:Instance template="Panel_AreaPlanningEdit" />
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
