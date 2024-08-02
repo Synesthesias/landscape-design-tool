@@ -5,10 +5,12 @@
         <ui:VisualElement name="LeftContainer" style="flex-grow: 1; flex-shrink: 0;" />
         <ui:VisualElement name="CenterContainer" style="flex-grow: 1;" />
         <ui:VisualElement name="RightContainer" style="flex-grow: 1; flex-shrink: 0;">
-            <ui:VisualElement name="Title_Right" style="flex-grow: 0;">
-                <ui:Label tabindex="-1" text="BIMモデルインポート" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+             <ui:VisualElement name="RightUpper" style="flex-grow: 0; flex-shrink: 0;">
+                <ui:VisualElement name="Title_Right" style="flex-grow: 0;">
+                    <ui:Label tabindex="-1" text="BIMモデルインポート" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+                </ui:VisualElement>
+                <ui:Instance template="Panel_BIMImport"  name="Panel_BIMImport"/>
             </ui:VisualElement>
-            <ui:Instance template="Panel_BIMImport" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

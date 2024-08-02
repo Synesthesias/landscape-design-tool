@@ -1,4 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+ <ui:VisualElement name="Panel_AreaPlanningInfo" style="flex-grow: 1;">   
     <Style src="project://database/Packages/com.synesthesias.landscape-design-tool-2/Runtime/UICommon/UIStyleCommon.uss?fileID=7433441132597879392&amp;guid=5003ef441f4ce7e4881f663b95f4df1d&amp;type=3#UIStyleCommon" />
     <ui:VisualElement name="Panel" style="flex-grow: 0; justify-content: center; height: 240px; min-height: 240px;">
         <ui:VisualElement name="PanelBody" style="flex-grow: 0; flex-direction: column; height: 100%; justify-content: center; flex-shrink: 1;">
@@ -14,4 +15,5 @@
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
+</ui:VisualElement>
 </ui:UXML>
