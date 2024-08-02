@@ -29,17 +29,15 @@ namespace Landscape2.Runtime
         private const string UISettingButton = "Button_Setting";
         // 設定パネル名前
         private const string UISettingElement = "SettingPanel";
+        // 最後に開いたサブメニューuxml
+        private VisualElement lastSubMenuUxml;
 
-        // サブメニューのuxmlを格納する配列
-        VisualElement[] subMenuUxmls;
-        
-        public GlobalNaviHeader(VisualElement uiRoot)
+        public GlobalNaviHeader(VisualElement uiRoot, VisualElement[] subMenuUxmls)
         {
             menuGroup = uiRoot.Q<GroupBox>(UImenuGroup);
             subMenuElement = uiRoot.Q<VisualElement>(UISubMenuElement);
             settingButton = uiRoot.Q<Button>(UISettingButton);
             settingElement = uiRoot.Q<VisualElement>(UISettingElement);
-            subMenuUxmls = new VisualElement[Enum.GetNames(typeof(SubMenuUxmlType)).Length];
 
             // サブメニューを非表示
             foreach (var child in subMenuElement.Children())
@@ -49,13 +47,6 @@ namespace Landscape2.Runtime
 
             // 設定パネルを非表示
             settingElement.style.display = DisplayStyle.None;
-
-            // サブメニューのuxmlを生成して非表示
-            for (int i = 0; i < subMenuUxmls.Length; i++)
-            {
-                subMenuUxmls[i] = new UIDocumentFactory().CreateWithUxmlName(((SubMenuUxmlType)i).ToString());
-                subMenuUxmls[i].style.display = DisplayStyle.None;
-            }
 
             // メニューボタンリスト
             var menuButtons = menuGroup.Children();
@@ -68,7 +59,7 @@ namespace Landscape2.Runtime
                     if (button.value)
                     {
                         // tabIndexに該当するサブメニューを表示
-                        ShowSubMenu(button.tabIndex);
+                        ShowSubMenuPanel(button.tabIndex);
                     }
                 });
             });
@@ -85,7 +76,9 @@ namespace Landscape2.Runtime
                         if (button.value)
                         {
                             // tabIndexに該当するuxmlを表示
-                            ShowSubMenuUxml(button.tabIndex);
+                            subMenuUxmls[button.tabIndex].style.display = DisplayStyle.Flex;
+                            SetSubMenuUxml(button.tabIndex);
+                            lastSubMenuUxml = subMenuUxmls[button.tabIndex];
                         }
                     });
                 });
@@ -95,7 +88,7 @@ namespace Landscape2.Runtime
             settingButton.clicked += () =>
             {
                 // 設定パネルの表示/非表示を切り替え
-                if(settingElement.style.display == DisplayStyle.Flex)
+                if (settingElement.style.display == DisplayStyle.Flex)
                 {
                     settingElement.style.display = DisplayStyle.None;
                 }
@@ -103,12 +96,18 @@ namespace Landscape2.Runtime
                 {
                     settingElement.style.display = DisplayStyle.Flex;
                 }
-            };            
+            };
         }
 
-        // サブメニューを表示する
-        private void ShowSubMenu(int id)
+        // サブメニューを選択するパネルを表示する
+        private void ShowSubMenuPanel(int id)
         {
+            // 最後に開いたサブメニューのuxmlを非表示
+            if (lastSubMenuUxml != null)
+            {
+                lastSubMenuUxml.style.display = DisplayStyle.None;
+            }
+
             foreach (var subMenu in subMenuElement.Children())
             {
                 // 全てのサブメニューを非表示
@@ -122,12 +121,6 @@ namespace Landscape2.Runtime
                 }
             }
 
-            // 全てのサブメニューのuxmlを非表示
-            foreach (var uxml in subMenuUxmls)
-            {
-                uxml.style.display = DisplayStyle.None;
-            }
-
             // 指定のサブメニューを表示
             if (id >= 0) // tabIndexが-1(Menu)の場合は何も表示しない
             {
@@ -136,16 +129,13 @@ namespace Landscape2.Runtime
         }
 
         // サブメニューのuxmlを表示する
-        private void ShowSubMenuUxml(int id)
+        private void SetSubMenuUxml(int id)
         {
-            // 全てのサブメニューのuxmlを非表示
-            foreach (var uxml in subMenuUxmls)
+            // 最後に開いたサブメニューのuxmlを非表示
+            if (lastSubMenuUxml != null)
             {
-                uxml.style.display = DisplayStyle.None;
+                lastSubMenuUxml.style.display = DisplayStyle.None;
             }
-
-            // 指定のuxmlを表示
-            subMenuUxmls[id].style.display = DisplayStyle.Flex;
 
             // 現在開かれているサブメニューのuxmlを設定
             var type = (SubMenuUxmlType)Enum.ToObject(typeof(SubMenuUxmlType), id);
