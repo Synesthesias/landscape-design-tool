@@ -24,7 +24,7 @@ namespace Landscape2.Runtime
 
         public void OnEnable(VisualElement element)
         {
-            arrangeAssetsUI = element.Q<VisualElement>("RightContainer");
+            arrangeAssetsUI = element.Q<VisualElement>("CreatePanel");
             arrangeAssetsUI.RegisterCallback<MouseEnterEvent>(OnMouseEnter);
             arrangeAssetsUI.RegisterCallback<MouseLeaveEvent>(OnMouseLeave);
         }

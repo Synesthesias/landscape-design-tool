@@ -17,7 +17,7 @@
             <ui:VisualElement name="Title_Right" style="flex-grow: 0; height: 5%; width: 100%;">
                 <ui:Label tabindex="-1" text="アセットライブラリー" parse-escape-sequences="true" display-tooltip-when-elided="true" />
             </ui:VisualElement>
-            <ui:VisualElement style="flex-grow: 1; flex-direction: row; height: 60%;">
+            <ui:VisualElement name="CreatePanel" style="flex-grow: 1; flex-direction: row; height: 60%;">
                 <ui:ScrollView name="AssetListScrollView" style="position: absolute; width: 77%; height: 100%; left: auto;" />
                 <ui:GroupBox name="Panel_AssetCategory" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; position: absolute; left: auto; right: 0;">
                     <ui:RadioButton label="Radio Button" name="AssetCategory_Tree" value="true" />
