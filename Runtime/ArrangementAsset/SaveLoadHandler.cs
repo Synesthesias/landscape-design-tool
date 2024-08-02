@@ -31,12 +31,17 @@ namespace Landscape2.Runtime
             List<TransformData> loadedTransformData = DataSerializer.Load<List<TransformData>>("Assets");
             if (loadedTransformData != null)
             {
+                // 既存のアセットの削除
+                GameObject createdAssets = GameObject.Find("CreatedAssets");
+                foreach(Transform child in createdAssets.transform)
+                {
+                    GameObject.Destroy(child.gameObject);
+                }
+                // ロードしたアセットの生成
                 foreach(TransformData assetData in loadedTransformData)
                 {
                     string assetName = assetData.name;
                     GameObject asset = plateauAssets.FirstOrDefault(p => p.name == assetName);
-                    GameObject createdAssets = GameObject.Find("CreatedAssets");
-                    // ロードしたアセットの生成
                     GameObject generatedAsset = GameObject.Instantiate(asset,assetData.position, assetData.rotation, createdAssets.transform) as GameObject;
                     generatedAsset.transform.localScale = assetData.scale;
                     generatedAsset.name = asset.name;

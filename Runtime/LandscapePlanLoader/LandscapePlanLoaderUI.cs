@@ -1,63 +1,63 @@
-using UnityEngine.UIElements;
-using Landscape2.Runtime.UiCommon;
+// using UnityEngine.UIElements;
+// using Landscape2.Runtime.UiCommon;
 
-namespace Landscape2.Runtime.LandscapePlanLoader
-{
-    /// <summary>
-    /// LandscapePlanLoaderUI.uxmlのプレゼンタクラス
-    /// </summary>
-    public sealed class LandscapePlanLoaderUI : ISubComponent
-    {
-        // UI Elements
-        Button loadButton;
-        Button browseButton;
-        Label selectedPathLabel;
+// namespace Landscape2.Runtime.LandscapePlanLoader
+// {
+//     /// <summary>
+//     /// LandscapePlanLoaderUI.uxmlのプレゼンタクラス
+//     /// </summary>
+//     public sealed class LandscapePlanLoaderUI : ISubComponent
+//     {
+//         // UI Elements
+//         Button loadButton;
+//         Button browseButton;
+//         Label selectedPathLabel;
 
-        LandscapePlanLoadManager landscapePlanLoadManager;
+//         LandscapePlanLoadManager landscapePlanLoadManager;
 
-        string selectedPath;
+//         string selectedPath;
 
-        public LandscapePlanLoaderUI()
-        {
-            var uiRoot = new UIDocumentFactory().CreateWithUxmlName("LandscapePlanLoaderUI");
-            landscapePlanLoadManager = new LandscapePlanLoadManager();
+//         public LandscapePlanLoaderUI()
+//         {
+//             var uiRoot = new UIDocumentFactory().CreateWithUxmlName("LandscapePlanLoaderUI");
+//             landscapePlanLoadManager = new LandscapePlanLoadManager();
 
-            loadButton = uiRoot.Q<Button>("LoadButton");
-            browseButton = uiRoot.Q<Button>("FolderBrowseButton");
-            selectedPathLabel = uiRoot.Q<Label>("SelectedPathLabel");
+//             loadButton = uiRoot.Q<Button>("LoadButton");
+//             browseButton = uiRoot.Q<Button>("FolderBrowseButton");
+//             selectedPathLabel = uiRoot.Q<Label>("SelectedPathLabel");
 
-            loadButton.clicked +=  OnClickLoadButton;
-            browseButton.clicked +=  OnClickBrowseButton;
-        }
-        public void OnClickLoadButton()
-        {
-            landscapePlanLoadManager.LoadShapefile(selectedPath);
-        }
+//             loadButton.clicked +=  OnClickLoadButton;
+//             browseButton.clicked +=  OnClickBrowseButton;
+//         }
+//         public void OnClickLoadButton()
+//         {
+//             landscapePlanLoadManager.LoadShapefile(selectedPath);
+//         }
 
-        public void OnClickBrowseButton()
-        {
-            string path = landscapePlanLoadManager.BrowseFolder();
-            if (path != null)
-            {
-                selectedPathLabel.text = path;
-                selectedPath = path;
-            }
-        }
+//         public void OnClickBrowseButton()
+//         {
+//             string path = landscapePlanLoadManager.BrowseFolder();
+//             if (path != null)
+//             {
+//                 selectedPathLabel.text = path;
+//                 selectedPath = path;
+//             }
+//         }
 
-        public void Start()
-        {
-        }
-        public void Update(float deltaTime)
-        {
-        }
+//         public void Start()
+//         {
+//         }
+//         public void Update(float deltaTime)
+//         {
+//         }
 
-        public void OnEnable()
-        {
-        }
+//         public void OnEnable()
+//         {
+//         }
 
-        public void OnDisable()
-        {
-        }
-    }
-}
+//         public void OnDisable()
+//         {
+//         }
+//     }
+// }
 
