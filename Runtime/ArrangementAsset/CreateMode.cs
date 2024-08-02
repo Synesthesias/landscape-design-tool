@@ -48,20 +48,24 @@ namespace Landscape2.Runtime
         {
             cam = Camera.main;
             ray = cam.ScreenPointToRay(Input.mousePosition);
+            if(isMouseOverUI && generatedAsset != null)
+            {
+                GameObject.Destroy(generatedAsset);
+            }
+            
             if (Physics.Raycast(ray, out RaycastHit hit,Mathf.Infinity))
             {
-                if(isMouseOverUI && generatedAsset != null)
-                {
-                    GameObject.Destroy(generatedAsset);
-                }
-
                 GameObject parent = GameObject.Find("CreatedAssets");
-                generatedAsset = GameObject.Instantiate(obj, hit.point, Quaternion.identity, parent.transform) as GameObject;
-                generatedAsset.name =  obj.name;
-
-                int generateLayer = LayerMask.NameToLayer("Ignore Raycast");
-                SetLayerRecursively(generatedAsset, generateLayer); 
+                generatedAsset = GameObject.Instantiate(obj, hit.point, Quaternion.identity, parent.transform) as GameObject;    
             }
+            else
+            {
+                GameObject parent = GameObject.Find("CreatedAssets");
+                generatedAsset = GameObject.Instantiate(obj, Vector3.zero, Quaternion.identity, parent.transform) as GameObject;
+            }
+            generatedAsset.name =  obj.name;
+            int generateLayer = LayerMask.NameToLayer("Ignore Raycast");
+            SetLayerRecursively(generatedAsset, generateLayer); 
         }
 
         public void SetAsset(string assetName,IList<GameObject> plateauAssets)

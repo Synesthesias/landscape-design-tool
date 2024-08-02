@@ -44,12 +44,12 @@ namespace Landscape2.Runtime
         private CreateMode createMode;
         private EditMode editMode;
 
-        public ArrangeAsset()
+        public ArrangeAsset(VisualElement element)
         {
             createMode = new CreateMode();
             editMode = new EditMode();
             // ボタンの登録
-            arrangementAssetUI = new UIDocumentFactory().CreateWithUxmlName("Asset");
+            arrangementAssetUI = element;
             editPanel = arrangementAssetUI.Q<VisualElement>("EditPanel");
             var moveButton = editPanel.Q<RadioButton>("MoveButton");
             moveButton.RegisterCallback<ClickEvent>(evt =>
