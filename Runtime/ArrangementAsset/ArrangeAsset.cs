@@ -50,6 +50,7 @@ namespace Landscape2.Runtime
             editMode = new EditMode();
             // ボタンの登録
             arrangementAssetUI = element;
+            arrangementAssetUI.RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
             editPanel = arrangementAssetUI.Q<VisualElement>("EditPanel");
             var moveButton = editPanel.Q<RadioButton>("MoveButton");
             moveButton.RegisterCallback<ClickEvent>(evt =>
@@ -239,9 +240,16 @@ namespace Landscape2.Runtime
                 SetMode(ArrangeModeName.Normal);
             }
         }
-        
+        private void OnGeometryChanged(GeometryChangedEvent evt)
+        {
+            if (arrangementAssetUI.resolvedStyle.display == DisplayStyle.None)
+            {
+                SetMode(ArrangeModeName.Normal);
+            }
+        }
         public void OnDisable()
         {
+            arrangementAssetUI.UnregisterCallback<GeometryChangedEvent>(OnGeometryChanged);
             input.Disable();
         }
 
