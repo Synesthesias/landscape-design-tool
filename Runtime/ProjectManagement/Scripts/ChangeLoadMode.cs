@@ -1,14 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Landscape2.Runtime.LandscapePlanLoader;
+// using Landscape2.Runtime.LandscapePlanLoader;
 
 namespace Landscape2.Runtime
 {
     public class ChangeLoadMode
     {
         AssetsSubscribeSaveSystem assetsSubscribeSaveSystem;
-        LandscapePlanSaveSystem landscapePlanSaveSystem;
+        // LandscapePlanSaveSystem landscapePlanSaveSystem;
 
         public void CreateSaveSystemInstance(SaveSystem saveSystem)
         {
@@ -16,8 +16,8 @@ namespace Landscape2.Runtime
             assetsSubscribeSaveSystem = new AssetsSubscribeSaveSystem();
             assetsSubscribeSaveSystem.InstantiateSaveSystem(saveSystem);
 
-            landscapePlanSaveSystem = new LandscapePlanSaveSystem();
-            landscapePlanSaveSystem.InstantiateSaveSystem(saveSystem);
+            // landscapePlanSaveSystem = new LandscapePlanSaveSystem();
+            // landscapePlanSaveSystem.InstantiateSaveSystem(saveSystem);
 
         }
     }

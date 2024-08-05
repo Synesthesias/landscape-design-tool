@@ -31,27 +31,45 @@ namespace Landscape2.Editor
                 currentSettings = AddressableAssetSettingsDefaultObject.Settings;
             }
             // ラベルの追加
-            if (!currentSettings.GetLabels().Contains("Plateau_Assets"))
-            {
-                currentSettings.AddLabel("Plateau_Assets");
-            }
-            if (!currentSettings.GetLabels().Contains("RuntimeTransformHandle_Assets"))
-            {
-                currentSettings.AddLabel("RuntimeTransformHandle_Assets");
-            }
-            if (!currentSettings.GetLabels().Contains("CustomPass"))
-            {
-                currentSettings.AddLabel("CustomPass");
-            }
-
+            AddLabels();
             AddGroupsToSettings();
+        }
+        private static void AddLabels()
+        {
+            AddLabel("Plateau_Assets");
+            AddLabel("Tree_Assets");
+            AddLabel("Advertisement_Assets");
+            AddLabel("Humans_Assets");
+            AddLabel("Vehicle_Assets");
+            AddLabel("Information_Assets");
+            AddLabel("StreetLight_Assets");
+            AddLabel("RoadSign_Assets");
+            AddLabel("PublicFacilities_Assets");
+            AddLabel("Other_Assets");
+            AddLabel("RuntimeTransformHandle_Assets");
+            AddLabel("CustomPass");
+        }
+        private static void AddLabel(string labelName)
+        {
+            if(!currentSettings.GetLabels().Contains(labelName))
+            {
+                currentSettings.AddLabel(labelName);
+            }
         }
 
         private static void AddGroupsToSettings()
         {
             AddRuntimeHandleGroup();
             AddCustomPassGroup();
-            AddPlateauAssetGroup();
+            AddPlateauAssetGroup("Tree_Assets","Packages/com.synesthesias.landscape-design-tool-2/HDRP Sample Assets/Props/Prefabs/Tree");
+            AddPlateauAssetGroup("Advertisement_Assets","Packages/com.synesthesias.landscape-design-tool-2/HDRP Sample Assets/Props/Prefabs/Advertisement");
+            AddPlateauAssetGroup("Humans_Assets","Packages/com.synesthesias.landscape-design-tool-2/HDRP Sample Assets/Humans/Prefabs");
+            AddPlateauAssetGroup("Vehicle_Assets","Packages/com.synesthesias.landscape-design-tool-2/HDRP Sample Assets/Vehicles/Prefabs");
+            AddPlateauAssetGroup("Information_Assets","Packages/com.synesthesias.landscape-design-tool-2/HDRP Sample Assets/Props/Prefabs/Information");
+            AddPlateauAssetGroup("StreetLight_Assets","Packages/com.synesthesias.landscape-design-tool-2/HDRP Sample Assets/Props/Prefabs/StreetLight");
+            AddPlateauAssetGroup("RoadSign_Assets","Packages/com.synesthesias.landscape-design-tool-2/HDRP Sample Assets/Props/Prefabs/RoadSign");
+            AddPlateauAssetGroup("PublicFacilities_Assets","Packages/com.synesthesias.landscape-design-tool-2/HDRP Sample Assets/Props/Prefabs/PublicFacilities");
+            AddPlateauAssetGroup("Other_Assets","Packages/com.synesthesias.landscape-design-tool-2/HDRP Sample Assets/Props/Prefabs/Others");
         }
         private static void AddRuntimeHandleGroup()
         {
@@ -75,28 +93,17 @@ namespace Landscape2.Editor
             entry.address = System.IO.Path.GetFileNameWithoutExtension(assetPath);
             entry.SetLabel("CustomPass", true);
         }
-        private static void AddPlateauAssetGroup()
+        private static void AddPlateauAssetGroup(string groupName,string directoryPath)
         {
-            var groupName = "PlateauAssets";
             var targetGroup = CreateGroup(groupName);
+            string[] propsAssetGUIDs = AssetDatabase.FindAssets("", new[] { directoryPath });
 
-            string propsDirectoryPath = "Assets/Samples/PLATEAU SDK-Toolkits for Unity/1.0.1/HDRP Sample Assets/Props/Prefabs";
-            string[] propsAssetGUIDs = AssetDatabase.FindAssets("", new[] { propsDirectoryPath });
             foreach(var guid in propsAssetGUIDs)
             {
                 string assetPath = AssetDatabase.GUIDToAssetPath(guid);
                 var entry = currentSettings.CreateOrMoveEntry(guid,targetGroup);
                 entry.address = System.IO.Path.GetFileNameWithoutExtension(assetPath);
-                entry.SetLabel("Plateau_Assets", true);
-            }
-
-            string humansDirectoryPath = "Assets/Samples/PLATEAU SDK-Toolkits for Unity/1.0.1/HDRP Sample Assets/Humans/Prefabs";
-            string[] humansAssetGUIDs = AssetDatabase.FindAssets("", new[] { humansDirectoryPath });
-            foreach(var guid in humansAssetGUIDs)
-            {
-                string assetPath = AssetDatabase.GUIDToAssetPath(guid);
-                var entry = currentSettings.CreateOrMoveEntry(guid,targetGroup);
-                entry.address = System.IO.Path.GetFileNameWithoutExtension(assetPath);
+                entry.SetLabel(groupName, true);
                 entry.SetLabel("Plateau_Assets", true);
             }
         }
@@ -120,7 +127,6 @@ namespace Landscape2.Editor
             return targetGroup;
         }
     }
-    
     
     public class CustomAssetPostprocessor : AssetPostprocessor
     {

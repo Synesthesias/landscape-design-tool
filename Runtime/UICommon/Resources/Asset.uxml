@@ -1,19 +1,35 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:Template name="Panel_AssetList" path="Panel_AssetList" />
-    <ui:Template name="Tab_Asset" path="Tab_Asset" />
     <Style src="project://database/Packages/com.synesthesias.landscape-design-tool-2/Runtime/UICommon/UIStyleCommon.uss?fileID=7433441132597879392&amp;guid=5003ef441f4ce7e4881f663b95f4df1d&amp;type=3#UIStyleCommon" />
-    <ui:VisualElement name="MainContainer" style="flex-grow: 1;">
+    <ui:VisualElement name="MainContainer" style="flex-grow: 1; height: 100%;">
         <ui:VisualElement name="LeftContainer" style="flex-grow: 1; flex-shrink: 0;" />
         <ui:VisualElement name="CenterContainer" style="flex-grow: 1;" />
         <ui:VisualElement name="RightContainer" style="flex-grow: 1; flex-shrink: 0;">
-            <ui:VisualElement name="RightUpper" picking-mode="Ignore" style="flex-grow: 1; flex-shrink: 0;">
-                <ui:VisualElement name="Title_Right" style="flex-grow: 0;">
-                    <ui:Label tabindex="-1" text="アセットライブラリー" parse-escape-sequences="true" display-tooltip-when-elided="true" />
-                </ui:VisualElement>
-                <ui:VisualElement style="flex-grow: 1; flex-direction: row;">
-                    <ui:Instance template="Panel_AssetList" name="Panel_AssetList" style="flex-grow: 0; margin-right:16px; padding-bottom: 24px;" />
-                    <ui:Instance template="Tab_Asset" name="Tab_Asset"  style="padding-bottom: 24px; margin-top:16px;"/>
-                </ui:VisualElement>
+            <ui:VisualElement name="EditPanel" style="flex-grow: 1; height: 0; display: flex; position: relative; left: 0; top: 0; width: 100%;">
+                <ui:GroupBox name="Context_Edit" style="position: absolute; left: 0; top: 0;">
+                    <ui:RadioButton label="Radio Button" name="MoveButton" value="true" />
+                    <ui:RadioButton label="Radio Button" name="RotateButton" />
+                    <ui:RadioButton label="Radio Button" name="ScaleButton" />
+                </ui:GroupBox>
+                <ui:Button text="&#10;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ContextButton" style="padding-top: 6px; padding-right: 6px; padding-bottom: 6px; padding-left: 6px; position: absolute; right: 0; top: 9%;">
+                    <ui:VisualElement name="IconDelete" style="flex-grow: 1;" />
+                </ui:Button>
+            </ui:VisualElement>
+            <ui:VisualElement name="Title_Right" style="flex-grow: 0; height: 5%; width: 100%;">
+                <ui:Label tabindex="-1" text="アセットライブラリー" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+            </ui:VisualElement>
+            <ui:VisualElement name="CreatePanel" style="flex-grow: 1; flex-direction: row; height: 72%;">
+                <ui:ScrollView name="AssetListScrollView" style="position: absolute; width: 77%; height: 100%; left: auto;" />
+                <ui:GroupBox name="Panel_AssetCategory" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; position: absolute; left: auto; right: 0;">
+                    <ui:RadioButton label="Radio Button" name="AssetCategory_Tree" value="true" />
+                    <ui:RadioButton label="Radio Button" name="AssetCategory_Human" value="false" />
+                    <ui:RadioButton label="Radio Button" name="AssetCategory_Info" />
+                    <ui:RadioButton label="Radio Button" name="AssetCategory_Ad" />
+                    <ui:RadioButton label="Radio Button" name="AssetCategory_Public" />
+                    <ui:RadioButton label="Radio Button" name="AssetCategory_Sign" />
+                    <ui:RadioButton label="Radio Button" name="AssetCategory_Vehicle" />
+                    <ui:RadioButton label="Radio Button" name="AssetCategory_Light" />
+                    <ui:RadioButton label="Radio Button" name="AssetCategory_Other" />
+                </ui:GroupBox>
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
