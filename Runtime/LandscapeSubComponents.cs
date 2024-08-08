@@ -12,7 +12,7 @@ namespace Landscape2.Runtime
     /// <summary>
     /// 実行時の機能である<see cref="ISubComponent"/>をここにまとめて、UpdateやOnEnable等を呼び出します。
     /// </summary>
-    
+
     public enum SubMenuUxmlType
     {
         Menu = -1,
@@ -50,6 +50,8 @@ namespace Landscape2.Runtime
                 subMenuUxmls[i].style.display = DisplayStyle.None;
             }
 
+            var editBuilding = new EditBuilding(subMenuUxmls[(int)SubMenuUxmlType.EditBuilding]);
+
             // 必要な機能をここに追加します
             // ※GlobalNaviと各機能の紐づけ作業が完了するまで一部機能はコメントアウトしています
             subComponents = new List<ISubComponent>
@@ -65,12 +67,14 @@ namespace Landscape2.Runtime
                 //LineOfSightUI.CreateForScene(),
                 // new WeatherTimeEditorUI(new WeatherTimeEditor.WeatherTimeEditor(),uiRoot),
                 //new SaveSystem()
+                editBuilding,
+                new BuildingColorEditor(new BuildingColorEditorUI(subMenuUxmls[(int)SubMenuUxmlType.EditBuilding]),editBuilding)
             };
         }
 
         private void Start()
         {
-            foreach(var c in subComponents)
+            foreach (var c in subComponents)
             {
                 c.Start();
             }

@@ -72,6 +72,24 @@
     width: 18px;
 }
 
+.color-slider #unity-drag-container {
+    height: 100%;
+}
+
+.color-slider #unity-tracker {
+	background-color: rgba(0, 0, 0, 0);
+	border-left-width: 0;
+	border-right-width: 0;
+	border-top-width: 0;
+	border-bottom-width: 0;
+	top: auto;
+	height: 30px;
+}
+
+.color-slider #unity-dragger {
+    height: 30px;
+}
+
 .unity-min-max-slider__dragger {
     -unity-slice-left: 24;
     -unity-slice-right: 24;

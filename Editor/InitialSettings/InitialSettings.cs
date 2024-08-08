@@ -2,8 +2,13 @@
 using System.Threading.Tasks;
 using Landscape2.Runtime;
 using PLATEAU.CityInfo;
-using PLATEAU.GranularityConvert;
-using PLATEAU.PolygonMesh;
+using PLATEAU.CityAdjust.MaterialAdjust.ExecutorV2;
+using PLATEAU.CityAdjust.MaterialAdjust.Executor;
+using System;
+using PLATEAU.Util;
+using PLATEAU.CityAdjust.MaterialAdjust;
+using PLATEAU.Util.Async;
+using UnityEngine.UIElements;
 
 namespace Landscape2.Editor
 {
@@ -13,8 +18,14 @@ namespace Landscape2.Editor
     /// </summary>
     public class InitialSettings
     {
-        // PLATEAUCityObjectGroupを持つGameObjectの配列
-        private GameObject[] cityModelObjs;
+        // PLATEAUCityObjectGroupを持つオブジェクトの配列
+        private Material[] buildingMats;
+
+        private PLATEAUCityObjectGroup[] plateauCityObjectGroups;
+        private PLATEAUInstancedCityModel cityModel;
+        private IMAConfig maConfig;
+        private UniqueParentTransformList targetTransforms;
+        Material[] defaultMaterials = new Material[2];
 
         // SubComponentsが存在しない，つまり初期設定が未実行かを確認
         public bool IsSubComponentsNotExists()
@@ -33,8 +44,8 @@ namespace Landscape2.Editor
        　// 都市モデルがインポートされているかを確認
         public bool IsImportCityModelExists()
         {
-            var plateauInstancedCityModel = GameObject.FindObjectOfType<PLATEAUInstancedCityModel>();
-            if (plateauInstancedCityModel != null)
+            cityModel = GameObject.FindObjectOfType<PLATEAUInstancedCityModel>();
+            if (cityModel != null)
             {
                 return true;
             }
@@ -47,19 +58,11 @@ namespace Landscape2.Editor
         // 都市モデルがSceneに存在するかを確認
         public bool IsCityObjectGroupExists()
         {
-            var plateauCityObjectGroups = GameObject.FindObjectsOfType<PLATEAUCityObjectGroup>();
-            cityModelObjs = new GameObject[plateauCityObjectGroups.Length];
-            int id = 0;
+            plateauCityObjectGroups = GameObject.FindObjectsOfType<PLATEAUCityObjectGroup>();
+            buildingMats = new Material[plateauCityObjectGroups.Length];
 
             if (plateauCityObjectGroups.Length > 0)
             {
-                // PLATEAUCityObjectGroupを持つGameObjectを取得
-                foreach (var cityModel in plateauCityObjectGroups)
-                {
-                    cityModelObjs[id] = cityModel.gameObject;
-                    id++;
-                }
-
                 return true;
             }
             else
@@ -75,21 +78,115 @@ namespace Landscape2.Editor
             subComponentsObj.AddComponent<LandscapeSubComponents>();
         }
 
-        // 初期設定を実行※仕様変更のため今は呼び出さない
-        public async Task ExecuteInitialSettings()
+        // マテリアル分けを実行
+        public async Task ExecMaterialAdjust()
         {
-            // マテリアル分割の下準備として、都市オブジェクトを最小地物単位に分解
-            var granularityConverter = new CityGranularityConverter();
-            var granularityConvertConf = new GranularityConvertOptionUnity(
-                new GranularityConvertOption(MeshGranularity.PerAtomicFeatureObject, 1),
-                cityModelObjs, true
-            );
-            var result = await granularityConverter.ConvertAsync(granularityConvertConf);
-            if (!result.IsSucceed)
+            int id = 0;
+            // PLATEAUCityObjectGroupを持つGameObjectを取得
+            // cityModelの子オブジェクト全てを取得
+            var cityModelObjs = cityModel.GetComponentsInChildren<PLATEAUCityObjectGroup>();
+
+            foreach (var model in cityModelObjs)
             {
-                Debug.LogError("ゲームオブジェクトの分解に失敗しました。");
-                return;
+                // 建築物のオブジェクトのマテリアルを取得
+                if (model.name.Contains("bldg_"))
+                {
+                    // マテリアル分け前の都市モデルのマテリアルの最後の要素を取得
+                    var mats = model.gameObject.GetComponent<MeshRenderer>().sharedMaterials;
+                    buildingMats[id] = mats[mats.Length - 1];
+                    id++;
+                }
             }
+
+            // マテリアル分けの設定
+            MaterialAdjustSettings();
+
+            try
+            {
+                // ここで実行
+                await ExecMaterialAdjustAsync(maConfig, targetTransforms).ContinueWithErrorCatch();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("マテリアル分けに失敗しました。\n" + e);
+            }
+
+            id = 0;
+
+            // マテリアル分け後にはがれたマテリアルを再度設定
+            // マテリアル分け後に都市モデルのオブジェクトの参照が消えるため，再度取得する
+            cityModel = GameObject.FindObjectOfType<PLATEAUInstancedCityModel>();
+            cityModelObjs = cityModel.GetComponentsInChildren<PLATEAUCityObjectGroup>();
+            foreach (var model in cityModelObjs)
+            {              
+                if (model.gameObject.name.Contains("bldg_"))
+                {
+                    var mats = model.gameObject.GetComponent<MeshRenderer>().sharedMaterials;
+                    for (int i = 0; i < mats.Length; i ++)
+                    {
+                        mats[i] = buildingMats[id];
+                    }
+                    model.gameObject.GetComponent<MeshRenderer>().sharedMaterials = mats;
+                    id++;
+                }
+            }
+        }
+
+        // マテリアル分けの設定
+        private void MaterialAdjustSettings()
+        {
+            // Sceneに存在する都市モデルのTransformのリストを取得
+            targetTransforms = new UniqueParentTransformList(cityModel.gameObject.transform);
+
+            // リスト内のマテリアル分け可能な都市モデルを取得
+            var searchArg = new SearchArg(targetTransforms);
+
+            // マテリアル分け可能な種類を検索
+            var searcher = new TypeSearcher(searchArg);
+
+            // 検索結果を階層構造のノードに格納
+            CityObjectTypeHierarchy.Node[] node = searcher.Search();
+            // マテリアル分け設定値を取得
+            maConfig = new MAMaterialConfig<CityObjectTypeHierarchy.Node>(node);
+
+            // 都市モデルの壁面と屋根面のデフォルトマテリアルを取得
+            defaultMaterials[0] = Resources.Load("PlateauDefaultBuilding_Wall") as Material;
+            defaultMaterials[1] = Resources.Load("PlateauDefaultBuilding_Roof") as Material;
+
+            int id = 0;
+            // 壁面と屋根面のマテリアル分けを有効にする
+            for (int i = 0; i < maConfig.Length; i++)
+            {
+                if (maConfig.GetKeyNameAt(i) == "建築物 (Building)/壁面 (WallSurface)" ||
+                    maConfig.GetKeyNameAt(i) == "建築物 (Building)/屋根面 (RoofSurface)")
+                {
+                    maConfig.GetMaterialChangeConfAt(i).ChangeMaterial = true;
+                    // 分割後に割り当てるマテリアルを設定
+                    maConfig.GetMaterialChangeConfAt(i).Material = defaultMaterials[id];
+                    id++;
+                }
+            }
+        }
+
+        private async Task<UniqueParentTransformList> ExecMaterialAdjustAsync(IMAConfig MAConfig, UniqueParentTransformList targetTransforms)
+        {
+            var conf = new MAExecutorConf(MAConfig, targetTransforms, true, true);
+
+            // マテリアル分け
+            return await ExecMaterialAdjustAsyncInner(conf);
+        }
+
+        private async Task<UniqueParentTransformList> ExecMaterialAdjustAsyncInner(MAExecutorConf conf)
+        {
+            await Task.Delay(100);
+            await Task.Yield();
+
+            IMAExecutorV2 maExecutor = new MAExecutorV2ByType();
+
+            var result = await maExecutor.ExecAsync(conf);
+
+            // Sceneに存在する都市モデルのTransformのリストを取得
+            return result;
         }
     }
 }
