@@ -16,8 +16,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             // ボタンへ処理を登録
             VisualElement panel_AreaPlanningMenu = planning.Q<VisualElement>("Panel_AreaPlanningMenu");
             panel_AreaPlanningMenu.Q<Button>("ImportButton").RegisterCallback<ClickEvent>(ev => LoadSHPFile());
-            panel_AreaPlanningMenu.Q<Button>("NewAreaButton")
-                .RegisterCallback<ClickEvent>(ev => planningUI.ChangePlanningPanelDisplay(PlanningUI.PlanningPanelStatus.RegisterAreaMain));
         }
 
         /// <summary>

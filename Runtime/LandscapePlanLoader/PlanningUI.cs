@@ -106,19 +106,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     panel_AreaPlanningEdit.style.display = DisplayStyle.None;
                     break;
 
-                // エリア登録時の状態
-                case PlanningPanelStatus.RegisterAreaMain:
-                    title_AreaPlanningInfo.style.display = DisplayStyle.Flex;
-                    title_AreaPlanningList.style.display = DisplayStyle.Flex;
-                    title_AreaPlanningEditMenu.style.display = DisplayStyle.Flex;
-                    panel_AreaPlanningInfo.style.display = DisplayStyle.Flex;
-                    panel_AreaPlanningList.style.display = DisplayStyle.Flex;
-                    panel_AreaPlanningMenu.style.display = DisplayStyle.None;
-                    panel_AreaPlanningSubMenu.style.display = DisplayStyle.None;
-                    panel_AreaPlanningRegister.style.display = DisplayStyle.Flex;
-                    panel_AreaPlanningEdit.style.display = DisplayStyle.None;
-                    break;
-
                 // エリア編集時の状態
                 case PlanningPanelStatus.EditAreaMain:
                     title_AreaPlanningInfo.style.display = DisplayStyle.Flex;

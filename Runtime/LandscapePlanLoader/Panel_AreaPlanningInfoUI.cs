@@ -19,6 +19,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             heightLimit = panel_areaPlanningInfo.Q<Label>("HeightLimit");
 
             planningUI.OnFocusedAreaChanged += SetAreaInfo; // エリア選択対象が変更されたときに表示情報を更新
+            planningUI.OnChangeConfirmed += () => SetAreaInfo(planningUI.currentFocusedAreaIndex); // エリア編集が確定されたときに表示情報を更新
         }
 
         /// <summary>
