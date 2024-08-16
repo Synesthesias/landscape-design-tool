@@ -145,7 +145,6 @@ namespace Landscape2.Runtime
                 subComponents.SetSubMenuUxmlType(type);
             }
         }
-
         public void Update(float deltaTime)
         {
         }

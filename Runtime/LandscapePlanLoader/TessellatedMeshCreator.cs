@@ -1,136 +1,136 @@
-// using System.Collections.Generic;
-// using System;
-// using UnityEngine;
-// using Unity.Collections;
-// using Unity.Mathematics;
-// using iShape.Geometry.Container;
-// using iShape.Geometry;
-// using iShape.Mesh2d;
-// using iShape.Triangulation.Shape.Delaunay;
+using System.Collections.Generic;
+using System;
+using UnityEngine;
+using Unity.Collections;
+using Unity.Mathematics;
+using iShape.Geometry.Container;
+using iShape.Geometry;
+using iShape.Mesh2d;
+using iShape.Triangulation.Shape.Delaunay;
 
-// namespace Landscape2.Runtime.LandscapePlanLoader
-// {
-//     /// <summary>
-//     /// 頂点座標データからテッセレーションされたMeshを生成するクラス
-//     /// </summary>
-//     public sealed class TessellatedMeshCreator
-//     {
-//         /// <summary>
-//         /// 頂点データをPlainShapeに変換するメソッド
-//         /// </summary>
-//         /// <param name="hull">メッシュの外周の頂点座標</param>
-//         /// <param name="holes">メッシュの穴部分の頂点座標</param>
-//         public PlainShape ConvertToPlainShape(IntGeom iGeom, Allocator allocator, Vector2[] hull, Vector2[][] holes)
-//         {
-//             var iHull = iGeom.Int(hull);
-//             iHull = RemoveDuplicates(iHull);
+namespace Landscape2.Runtime.LandscapePlanLoader
+{
+    /// <summary>
+    /// 頂点座標データからテッセレーションされたMeshを生成するクラス
+    /// </summary>
+    public sealed class TessellatedMeshCreator
+    {
+        /// <summary>
+        /// 頂点データをPlainShapeに変換するメソッド
+        /// </summary>
+        /// <param name="hull">メッシュの外周の頂点座標</param>
+        /// <param name="holes">メッシュの穴部分の頂点座標</param>
+        public PlainShape ConvertToPlainShape(IntGeom iGeom, Allocator allocator, Vector2[] hull, Vector2[][] holes)
+        {
+            var iHull = iGeom.Int(hull);
+            iHull = RemoveDuplicates(iHull);
 
-//             IntShape iShape;
-//             if (holes != null && holes.Length > 0)
-//             {
-//                 var iHoles = iGeom.Int(holes);
-//                 iShape = new IntShape(iHull, iHoles);
-//             }
-//             else
-//             {
-//                 iShape = new IntShape(iHull, Array.Empty<IntVector[]>());
-//             }
+            IntShape iShape;
+            if (holes != null && holes.Length > 0)
+            {
+                var iHoles = iGeom.Int(holes);
+                iShape = new IntShape(iHull, iHoles);
+            }
+            else
+            {
+                iShape = new IntShape(iHull, Array.Empty<IntVector[]>());
+            }
 
-//             var pShape = new PlainShape(iShape, allocator);
+            var pShape = new PlainShape(iShape, allocator);
 
-//             return pShape;
-//         }
-
-
-//         /// <summary>
-//         /// 重複した頂点を削除するメソッド
-//         /// </summary>
-//         IntVector[] RemoveDuplicates(IntVector[] vectors)
-//         {
-//             List<IntVector> uniqueList = new List<IntVector>();
-//             HashSet<IntVector> seen = new HashSet<IntVector>();
-
-//             foreach (IntVector vector in vectors)
-//             {
-//                 if (!seen.Contains(vector))
-//                 {
-//                     seen.Add(vector);
-//                     uniqueList.Add(vector);
-//                 }
-//             }
-
-//             return uniqueList.ToArray();
-//         }
+            return pShape;
+        }
 
 
-//         /// <summary>
-//         /// テッセレーションとMesh生成を行うメソッド
-//         /// </summary>
-//         /// <param name="points">メッシュの頂点座標。右回りに並んでいる必要がある。</param>
-//         /// <param name="meshFilter">生成したメッシュをアタッチするMeshFilter</param>
-//         /// <param name="tessellateMaxEdge">エッジの最大長</param>
-//         /// <param name="tessellateMaxArea">Triangleの最大面積</param>
-//         public void CreateTessellatedMesh(List<Vector3> points, MeshFilter meshFilter, float tessellateMaxEdge, float tessellateMaxArea)
-//         {
-//             var iGeom = IntGeom.DefGeom;
-            
-//             Vector2[] hull = new Vector2[points.Count];
+        /// <summary>
+        /// 重複した頂点を削除するメソッド
+        /// </summary>
+        IntVector[] RemoveDuplicates(IntVector[] vectors)
+        {
+            List<IntVector> uniqueList = new List<IntVector>();
+            HashSet<IntVector> seen = new HashSet<IntVector>();
 
-//             int index = 0;
-//             foreach (var point in points)
-//             {
-//                 hull[index] = new Vector2(point.x, point.z);
-//                 index++;
-//             }
-            
-//             var pShape = ConvertToPlainShape(iGeom, Allocator.Temp, hull, null);
-            
-//             var extraPoints = new NativeArray<IntVector>(0, Allocator.Temp);
-//             var delaunay = pShape.Delaunay(iGeom.Int(tessellateMaxEdge), extraPoints, Allocator.Temp);
+            foreach (IntVector vector in vectors)
+            {
+                if (!seen.Contains(vector))
+                {
+                    seen.Add(vector);
+                    uniqueList.Add(vector);
+                }
+            }
 
-//             delaunay.Tessellate(iGeom, tessellateMaxArea);
+            return uniqueList.ToArray();
+        }
 
-//             extraPoints.Dispose();
 
-//             var triangles = delaunay.Indices(Allocator.Temp);
-//             var vertices = delaunay.Vertices(Allocator.Temp, iGeom, 0);
+        /// <summary>
+        /// テッセレーションとMesh生成を行うメソッド
+        /// </summary>
+        /// <param name="points">メッシュの頂点座標。右回りに並んでいる必要がある。</param>
+        /// <param name="meshFilter">生成したメッシュをアタッチするMeshFilter</param>
+        /// <param name="tessellateMaxEdge">エッジの最大長</param>
+        /// <param name="tessellateMaxArea">Triangleの最大面積</param>
+        public void CreateTessellatedMesh(List<Vector3> points, MeshFilter meshFilter, float tessellateMaxEdge, float tessellateMaxArea)
+        {
+            var iGeom = IntGeom.DefGeom;
 
-//             delaunay.Dispose();
+            Vector2[] hull = new Vector2[points.Count];
 
-//             var subVertices = new NativeArray<float3>(3, Allocator.Temp);
-//             var subIndices = new NativeArray<int>(new[] { 0, 1, 2 }, Allocator.Temp);
+            int index = 0;
+            foreach (var point in points)
+            {
+                hull[index] = new Vector2(point.x, point.z);
+                index++;
+            }
 
-//             var colorMesh = new NativeColorMesh(triangles.Length, Allocator.Temp);
+            var pShape = ConvertToPlainShape(iGeom, Allocator.Temp, hull, null);
 
-            
-//             for (int i = 0; i < triangles.Length; i += 3)
-//             {
+            var extraPoints = new NativeArray<IntVector>(0, Allocator.Temp);
+            var delaunay = pShape.Delaunay(iGeom.Int(tessellateMaxEdge), extraPoints, Allocator.Temp);
 
-//                 for (int j = 0; j < 3; j += 1)
-//                 {
-//                     var v = vertices[triangles[i + j]];
-//                     subVertices[j] = new float3(v.x, v.z, v.y);
-//                 }
+            delaunay.Tessellate(iGeom, tessellateMaxArea);
 
-//                 var subMesh = new StaticPrimitiveMesh(subVertices, subIndices, Allocator.Temp);
-//                 var color = Color.white;
+            extraPoints.Dispose();
 
-//                 colorMesh.AddAndDispose(subMesh, color);
-//             }
+            var triangles = delaunay.Indices(Allocator.Temp);
+            var vertices = delaunay.Vertices(Allocator.Temp, iGeom, 0);
 
-//             // メッシュを生成
-//             Mesh mesh = new Mesh();
+            delaunay.Dispose();
 
-//             subIndices.Dispose();
-//             subVertices.Dispose();
+            var subVertices = new NativeArray<float3>(3, Allocator.Temp);
+            var subIndices = new NativeArray<int>(new[] { 0, 1, 2 }, Allocator.Temp);
 
-//             vertices.Dispose();
-//             triangles.Dispose();
-//             colorMesh.FillAndDispose(mesh);
+            var colorMesh = new NativeColorMesh(triangles.Length, Allocator.Temp);
 
-//             mesh.RecalculateNormals();
-//             meshFilter.mesh = mesh;
-//             pShape.Dispose();
-//         }
-//     }
-// }
+
+            for (int i = 0; i < triangles.Length; i += 3)
+            {
+
+                for (int j = 0; j < 3; j += 1)
+                {
+                    var v = vertices[triangles[i + j]];
+                    subVertices[j] = new float3(v.x, v.z, v.y);
+                }
+
+                var subMesh = new StaticPrimitiveMesh(subVertices, subIndices, Allocator.Temp);
+                var color = Color.white;
+
+                colorMesh.AddAndDispose(subMesh, color);
+            }
+
+            // メッシュを生成
+            Mesh mesh = new Mesh();
+
+            subIndices.Dispose();
+            subVertices.Dispose();
+
+            vertices.Dispose();
+            triangles.Dispose();
+            colorMesh.FillAndDispose(mesh);
+
+            mesh.RecalculateNormals();
+            meshFilter.mesh = mesh;
+            pShape.Dispose();
+        }
+    }
+}
