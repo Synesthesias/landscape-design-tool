@@ -1,77 +1,77 @@
-// using System.Collections.Generic;
-// using UnityEngine;
-// using CesiumForUnity;
-// using Unity.Mathematics;
-// using PlateauToolkit.Maps;
+using System.Collections.Generic;
+using UnityEngine;
+using CesiumForUnity;
+using Unity.Mathematics;
+using PlateauToolkit.Maps;
 
-// namespace Landscape2.Runtime.LandscapePlanLoader
-// {
-//     /// <summary>
-//     /// 頂点座標データからMeshを生成するクラス
-//     /// </summary>
-//     public sealed class PointDataRenderManager
-//     {
-//         List<GameObject> m_ListOfGISObjects = new List<GameObject>();
-//         CesiumGeoreference m_GeoRef;
+namespace Landscape2.Runtime.LandscapePlanLoader
+{
+    /// <summary>
+    /// 頂点座標データからMeshを生成するクラス
+    /// </summary>
+    public sealed class PointDataRenderManager
+    {
+        List<GameObject> m_ListOfGISObjects = new List<GameObject>();
+        CesiumGeoreference m_GeoRef;
 
-//         /// <summary>
-//         /// 頂点座標データから景観区画メッシュを生成するクラス
-//         /// </summary>
-//         /// <param name="ParentObjectName"> 景観区画オブジェクトの親とするオブジェクトの名前（任意の名前） </param>
-//         /// <param name="pointDatas"> メッシュのworld pointのデータリスト </param>
-//         /// <param name="listOfGISObjects"> 生成したメッシュオブジェクトを保持するリスト </param>
-//         /// <returns> メッシュの生成が成功した場合はtrue、頂点座標データが空の場合はfalse </returns>
-//         public bool DrawShapes(string ParentObjectName, List<List<Vector3>> pointDatas, out List<GameObject> listOfGISObjects)
-//         {
-//             listOfGISObjects = null;
-//             if (pointDatas.Count > 0)
-//             {
-//                 GameObject rootObject = new GameObject(ParentObjectName + "_GIS");
-//                 m_GeoRef = GameObject.FindObjectOfType<CesiumGeoreference>();
-//                 rootObject.transform.parent = m_GeoRef.transform;
-//                 CesiumGlobeAnchor anchor = rootObject.AddComponent<CesiumGlobeAnchor>();
-//                 rootObject.AddComponent<MeshFilter>();
-//                 rootObject.AddComponent<MeshRenderer>();
+        /// <summary>
+        /// 頂点座標データから景観区画メッシュを生成するクラス
+        /// </summary>
+        /// <param name="ParentObjectName"> 景観区画オブジェクトの親とするオブジェクトの名前（任意の名前） </param>
+        /// <param name="pointDatas"> メッシュのworld pointのデータリスト </param>
+        /// <param name="listOfGISObjects"> 生成したメッシュオブジェクトを保持するリスト </param>
+        /// <returns> メッシュの生成が成功した場合はtrue、頂点座標データが空の場合はfalse </returns>
+        public bool DrawShapes(string ParentObjectName, List<List<Vector3>> pointDatas, out List<GameObject> listOfGISObjects)
+        {
+            listOfGISObjects = null;
+            if (pointDatas.Count > 0)
+            {
+                GameObject rootObject = new GameObject(ParentObjectName + "_GIS");
+                m_GeoRef = GameObject.FindObjectOfType<CesiumGeoreference>();
+                rootObject.transform.parent = m_GeoRef.transform;
+                CesiumGlobeAnchor anchor = rootObject.AddComponent<CesiumGlobeAnchor>();
+                rootObject.AddComponent<MeshFilter>();
+                rootObject.AddComponent<MeshRenderer>();
 
-//                 GameObject mesh = Resources.Load<GameObject>(PlateauToolkitMapsConstants.k_MeshObjectPrefab);
+                GameObject mesh = Resources.Load<GameObject>(PlateauToolkitMapsConstants.k_MeshObjectPrefab);
 
-//                 DrawPolygonOrPolyline(rootObject, mesh, pointDatas);
+                DrawPolygonOrPolyline(rootObject, mesh, pointDatas);
 
-//                 double3 pos = anchor.longitudeLatitudeHeight;
-//                 pos.z = 0;
-//                 anchor.longitudeLatitudeHeight = pos;
+                double3 pos = anchor.longitudeLatitudeHeight;
+                pos.z = 0;
+                anchor.longitudeLatitudeHeight = pos;
 
-//                 listOfGISObjects = m_ListOfGISObjects;
+                listOfGISObjects = m_ListOfGISObjects;
 
-//                 return true;
-//             }
+                return true;
+            }
 
-//             Debug.LogError("No point data included");
-//             return false;
-//         }
+            Debug.LogError("No point data included");
+            return false;
+        }
 
-//         void DrawPolygonOrPolyline(GameObject parentObject, GameObject originMeshObj, List<List<Vector3>> pointDatas)
-//         {
-//             foreach (List<Vector3> partPointsWorld in pointDatas)
-//             {
-//                 if(partPointsWorld.Count < 3)
-//                 {
-//                     Debug.LogError("Point data is empty");
-//                     continue;
-//                 }
+        void DrawPolygonOrPolyline(GameObject parentObject, GameObject originMeshObj, List<List<Vector3>> pointDatas)
+        {
+            foreach (List<Vector3> partPointsWorld in pointDatas)
+            {
+                if (partPointsWorld.Count < 3)
+                {
+                    Debug.LogError("Point data is empty");
+                    continue;
+                }
 
-//                 GameObject meshObject = GameObject.Instantiate(originMeshObj);
+                GameObject meshObject = GameObject.Instantiate(originMeshObj);
 
-//                 meshObject.transform.position = Vector3.zero;
-//                 meshObject.transform.parent = parentObject.transform;
+                meshObject.transform.position = Vector3.zero;
+                meshObject.transform.parent = parentObject.transform;
 
-//                 // テッセレーション処理を行ったメッシュを生成
-//                 TessellatedMeshCreator tessellatedMeshCreator = new TessellatedMeshCreator();
-//                 MeshFilter meshFilter = meshObject.GetComponent<MeshFilter>();
-//                 tessellatedMeshCreator.CreateTessellatedMesh(partPointsWorld, meshFilter, 30, 40);
+                // テッセレーション処理を行ったメッシュを生成
+                TessellatedMeshCreator tessellatedMeshCreator = new TessellatedMeshCreator();
+                MeshFilter meshFilter = meshObject.GetComponent<MeshFilter>();
+                tessellatedMeshCreator.CreateTessellatedMesh(partPointsWorld, meshFilter, 30, 40);
 
-//                 m_ListOfGISObjects.Add(meshObject);
-//             }
-//         }
-//     }
-// }
+                m_ListOfGISObjects.Add(meshObject);
+            }
+        }
+    }
+}

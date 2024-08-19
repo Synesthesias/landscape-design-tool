@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Landscape2.Runtime.CameraPositionMemory;
 using Landscape2.Runtime.UiCommon;
 using Landscape2.Runtime.WeatherTimeEditor;
-// using Landscape2.Runtime.LandscapePlanLoader;
+using Landscape2.Runtime.LandscapePlanLoader;
 using UnityEngine.UIElements;
 using UnityEngine;
 using System;
@@ -59,9 +59,8 @@ namespace Landscape2.Runtime
                 new GlobalNaviHeader(uiRoot,subMenuUxmls),
                 new CameraMoveByUserInput(mainCam),
                 //new CameraPositionMemoryUI(new CameraPositionMemory.CameraPositionMemory(mainCam)),
-                //new AreasDataComponent(),
-                //new LandscapePlanLoaderUI(),
-                //new LandscapePlanEditorUI(),
+                new AreasDataComponent(),
+                new PlanningUI(subMenuUxmls[(int)SubMenuUxmlType.Planning]),
                 new ArrangeAsset(subMenuUxmls[(int)SubMenuUxmlType.Asset]),
                 // RegulationAreaUI.CreateForScene(),
                 //LineOfSightUI.CreateForScene(),
