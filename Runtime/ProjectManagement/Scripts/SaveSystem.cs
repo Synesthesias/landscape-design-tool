@@ -12,33 +12,29 @@ using System.Linq;
 using UnityEngine.UIElements;
 using Landscape2.Runtime.UiCommon;
 
+using SFB;
+
 namespace Landscape2.Runtime
 {
     public class SaveSystem : ISubComponent
     {
         private VisualElement projectManagementUI;
-        private ChangeLoadMode changeLoadMode;
         public event Action SaveEvent = delegate { };
         public event Action LoadEvent = delegate { };
 
-        public SaveSystem()
+        public SaveSystem(VisualElement globalNavi)
         {
-            changeLoadMode = new ChangeLoadMode();
-            changeLoadMode.CreateSaveSystemInstance(this);
-
-                        // UIの設定
-            projectManagementUI = new UIDocumentFactory().CreateWithUxmlName("ProjectManagementUI");
-            Button saveButton = projectManagementUI.Q<Button>("SaveButton");
-            Button loadButton = projectManagementUI.Q<Button>("LoadButton");
+            // UIの設定
+            Button saveButton = globalNavi.Q<Button>("SaveButton");
+            Button loadButton = globalNavi.Q<Button>("LoadButton");
             saveButton.clicked += SaveProject;
             loadButton.clicked += LoadProject;
         }
         
         void SaveProject()
         {
-            var inputPath = projectManagementUI.Q<TextField>("Path");
-            var inputFileName = projectManagementUI.Q<TextField>("FileName");
-            DataSerializer._savePath = Path.Combine(inputPath.value,inputFileName.value);
+            var path = StandaloneFileBrowser.SaveFilePanel("Create File","","","data");
+            DataSerializer._savePath = path;
 
             SaveEvent();
             DataSerializer.SaveFile();
@@ -48,9 +44,13 @@ namespace Landscape2.Runtime
 
         void LoadProject()
         {
-            var inputPath = projectManagementUI.Q<TextField>("Path");
-            var inputFileName = projectManagementUI.Q<TextField>("FileName");
-            DataSerializer._savePath = Path.Combine(inputPath.value,inputFileName.value);
+            var paths = StandaloneFileBrowser.OpenFilePanel("Open File", "","data", false);
+            string path = "";
+            if(paths.Length > 0)
+            {
+                path =  paths[0];
+            }
+            DataSerializer._savePath = path;
 
             DataSerializer.LoadFile();
             LoadEvent();
