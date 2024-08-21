@@ -97,6 +97,18 @@ namespace Landscape2.Runtime
                     settingElement.style.display = DisplayStyle.Flex;
                 }
             };
+
+            //保存、ロードした時にセッティングパネルを閉じる処理(新見)
+            var saveButton = settingElement.Q<Button>("SaveButton");
+            saveButton.clicked += () =>
+            {
+                settingElement.style.display = DisplayStyle.None;
+            };
+            var loadButton = settingElement.Q<Button>("LoadButton");
+            loadButton.clicked += () =>
+            {
+                settingElement.style.display = DisplayStyle.None;
+            };
         }
 
         // サブメニューを選択するパネルを表示する
