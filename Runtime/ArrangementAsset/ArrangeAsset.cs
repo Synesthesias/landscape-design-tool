@@ -44,8 +44,9 @@ namespace Landscape2.Runtime
         private CreateMode createMode;
         private EditMode editMode;
 
-        public ArrangeAsset(VisualElement element)
+        public ArrangeAsset(VisualElement element,SaveSystem saveSystemInstance)
         {
+            new AssetsSubscribeSaveSystem(saveSystemInstance);
             createMode = new CreateMode();
             editMode = new EditMode();
             // ボタンの登録

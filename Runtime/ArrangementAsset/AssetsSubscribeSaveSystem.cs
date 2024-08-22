@@ -31,29 +31,31 @@ namespace Landscape2.Runtime
 
     public class AssetsSubscribeSaveSystem
     {
-        private SaveSystem _saveSystem;
+        private SaveSystem saveSystem;
         private SaveLoadHandler saveLoadHandler;
 
-        public async void InstantiateSaveSystem(SaveSystem saveSystem)
+        public AssetsSubscribeSaveSystem(SaveSystem saveSystemInstance)
+        {
+            saveSystem = saveSystemInstance;
+            GetPlateauAssetList();       
+        }
+        private async void GetPlateauAssetList()
         {
             AsyncOperationHandle<IList<GameObject>> plateauAssetHandle = Addressables.LoadAssetsAsync<GameObject>("Plateau_Assets", null);
             IList<GameObject> plateauAssetsList = await plateauAssetHandle.Task;
-            // SaveModeクラスにアセットを渡す
             saveLoadHandler = new SaveLoadHandler(plateauAssetsList);
-            // SaveSystem_Assetsの初期化
-            _saveSystem = saveSystem;
             SetSaveMode();
             SetLoadMode();
         }
 
         public void SetSaveMode()
         {
-            _saveSystem.SaveEvent += saveLoadHandler.SaveInfo;
+            saveSystem.SaveEvent += saveLoadHandler.SaveInfo;
         }
         
         public void SetLoadMode() 
         {
-            _saveSystem.LoadEvent += saveLoadHandler.LoadInfo;
+            saveSystem.LoadEvent += saveLoadHandler.LoadInfo;
         }
     }
 }

@@ -56,11 +56,11 @@
     </ui:VisualElement>
     <ui:VisualElement name="SettingPanel" style="flex-grow: 1;">
         <ui:VisualElement name="PanelArrow" style="flex-grow: 1; width: 22px; height: 16px;" />
-        <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="Button" style="align-items: center;">
+        <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="SaveButton" style="align-items: center;">
             <ui:VisualElement name="IconSave" style="flex-grow: 1;" />
             <ui:Label tabindex="-1" text="プロジェクトを保存" parse-escape-sequences="true" display-tooltip-when-elided="true" />
         </ui:Button>
-        <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="Button" style="align-items: center;">
+        <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="LoadButton" style="align-items: center;">
             <ui:VisualElement name="IconReplace" style="flex-grow: 1;" />
             <ui:Label tabindex="-1" text="プロジェクトを切り替え" parse-escape-sequences="true" display-tooltip-when-elided="true" />
         </ui:Button>
