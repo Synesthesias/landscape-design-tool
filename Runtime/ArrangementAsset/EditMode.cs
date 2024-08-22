@@ -18,26 +18,45 @@ namespace Landscape2.Runtime
     public class EditMode : ArrangeMode
     {
         private RuntimeTransformHandle runtimeTransformHandleScript;
+        private GameObject editAsset;
 
         public void CreateRuntimeHandle(GameObject obj,TransformType transformType)
         {
             ClearHandleObject();
             CreateHandleObject(obj,transformType);
             SetTransformType(transformType);
+            editAsset = obj;
+            ChangeEditAssetLayer(editAsset,LayerMask.NameToLayer("UI"));
         } 
         private void ClearHandleObject()
         {
+            ChangeEditAssetLayer(editAsset, LayerMask.NameToLayer("Default"));
             var obj = GameObject.Find("New Game Object");
             if(obj != null)
             {
                 GameObject.Destroy(obj);
             }
         }
+        
+        private void ChangeEditAssetLayer(GameObject parent,int layerIndex)
+        {
+            if(parent == null)
+            {
+                return;
+            }
+            parent.layer = layerIndex;
+            foreach(Transform child in parent.transform)
+            {
+                ChangeEditAssetLayer(child.gameObject,layerIndex);
+            }
+        }
+
         private void CreateHandleObject(GameObject obj,TransformType transformType)
         {
             runtimeTransformHandleScript = RuntimeTransformHandle.Create(null,HandleType.POSITION);
             runtimeTransformHandleScript.target = obj.transform;
         }
+
         private void SetTransformType(TransformType transformType)
         {
             if(runtimeTransformHandleScript != null)
@@ -60,6 +79,7 @@ namespace Landscape2.Runtime
             }
         }
 
+        
         public void DeleteAsset(GameObject obj)
         {
             ClearHandleObject();

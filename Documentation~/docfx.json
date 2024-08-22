@@ -1,0 +1,36 @@
+{
+  "metadata": [],
+  "build": {
+    "globalMetadata": {
+      "_appTitle": "景観街づくりツール",
+      "_enableSearch": true
+    },
+    "content": [
+      {
+        "files": ["toc.yml", "index.md"]
+      },
+      {
+        "src": "manual",
+        "files": ["toc.yml", "*.md"],
+        "dest": "manual"
+      }
+    ],
+    "resource": [
+      {
+        "files": ["resources/**/*"]
+      }
+    ],
+    "sitemap": {
+      "baseUrl": "https://github.com/Synesthesias/Landscape-Design-Tool-2",
+      "changefreq": "weekly",
+      "fileOptions": {
+        "api/*": {
+          "changefreq": "daily"
+        }
+      }
+    },
+    "xref": ["https://normanderwan.github.io/UnityXrefMaps/xrefmap.yml"],
+    "xrefService": ["https://xref.docs.microsoft.com/query?uid={uid}"],
+    "dest": "../.docs/_site"
+  }
+}
