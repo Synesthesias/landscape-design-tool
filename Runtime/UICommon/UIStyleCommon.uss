@@ -77,13 +77,13 @@
 }
 
 .color-slider #unity-tracker {
-	background-color: rgba(0, 0, 0, 0);
-	border-left-width: 0;
-	border-right-width: 0;
-	border-top-width: 0;
-	border-bottom-width: 0;
-	top: auto;
-	height: 30px;
+    background-color: rgba(0, 0, 0, 0);
+    border-left-width: 0;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+    top: auto;
+    height: 30px;
 }
 
 .color-slider #unity-dragger {
@@ -258,7 +258,7 @@ Scroller #unity-drag-container {
 }
 
 .unity-base-field {
-    border-radius:8px;
+    border-radius: 8px;
     background-color: rgba(0, 0, 0, 0);
 }
 
@@ -308,16 +308,18 @@ Scroller #unity-drag-container {
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 }
 
 .unity-radio-button-group__container {
     display: flex;
     flex-direction: row;
 }
-	.unity-base-slider__dragger{
 
-        border-radius:2px;
-    }
+.unity-base-slider__dragger {
+    border-radius: 2px;
+}
+
 #Menu {
     height: 64px;
     width: 100%;
@@ -772,7 +774,7 @@ Scroller #unity-drag-container {
 
 #FpsRightButton:active {
 }
-/* FillButton */
+
 .ActionButton {
     height: 40px;
     border-radius: 20px;
@@ -785,8 +787,9 @@ Scroller #unity-drag-container {
     flex-direction: row;
     justify-content: center;
 }
+
 .ActionButton > Label {
-    color:#003737;
+    color: rgb(0, 55, 55);
 }
 
 .ActionButton:hover {
@@ -800,7 +803,7 @@ Scroller #unity-drag-container {
 .ActionButton:disabled {
     background-color: rgb(221, 228, 227);
 }
-/* OutlineButton */
+
 .OutlineButton {
     height: 40px;
     border-radius: 20px;
@@ -817,7 +820,7 @@ Scroller #unity-drag-container {
 .OutlineButton:active {
     background-color: rgba(136, 147, 146, 0.4);
 }
-/* 決定ボタン */
+
 #OKButton {
     height: 40px;
     border-radius: 20px;
@@ -892,7 +895,6 @@ Scroller #unity-drag-container {
 
 #DeleteButton:active {
     background-color: rgba(128, 213, 212, 0.3);
-
 }
 
 #CloseButton {
@@ -903,21 +905,24 @@ Scroller #unity-drag-container {
     margin: 0;
     padding: 2px;
 }
+
 .PanelIconButton {
     height: 40px;
     width: 40px;
-    margin:0;
-    padding:6px;
+    margin: 0;
+    padding: 6px;
     border-width: 0;
     border-radius: 20px;
-    background-color:#2F3636;
+    background-color: rgb(47, 54, 54);
     transition: 0.1s;
 }
+
 .PanelIconButton:hover {
-    background-color:#3B4243;
+    background-color: rgb(59, 66, 67);
 }
+
 .PanelIconButton:active {
-    background-color:#414748;
+    background-color: rgb(65, 71, 72);
 }
 
 #List {
@@ -1155,7 +1160,6 @@ Scroller #unity-drag-container {
     padding-right: 24px;
     text-align: end;
     -unity-text-align: upper-right;
-
 }
 
 #Title_Right {
@@ -1211,11 +1215,10 @@ Scroller #unity-drag-container {
 
 #Toggle_HideList {
     background-image: resource('Icon_Eye_On');
-
 }
-#Toggle_HideList:checked {
-        background-image: resource('Icon_Eye_Off');
 
+#Toggle_HideList:checked {
+    background-image: resource('Icon_Eye_Off');
 }
 
 #Toggle_HideList .unity-toggle__checkmark {
@@ -1269,7 +1272,7 @@ Scroller #unity-drag-container {
     height: 40px;
     background-image: resource('Circle_Icon_Walk');
 }
-/* アイコン */
+
 #IconExit {
     background-image: resource('Icon_Exit');
     max-width: 18px;
@@ -1307,17 +1310,19 @@ Scroller #unity-drag-container {
 #Icon_Close {
     background-image: resource('Icon_Close');
 }
+
 #Icon_Plus {
     background-image: resource('Icon_Plus');
 }
+
 #Icon_Save {
     background-image: resource('Icon_Save');
 }
+
 #Icon_Import {
     background-image: resource('Icon_Import');
 }
 
-/* アセットアイコン */
 #AssetCategory_Tree {
     background-image: resource('Icon_Asset_Tree_Off');
 }
@@ -1395,8 +1400,8 @@ Scroller #unity-drag-container {
 }
 
 #Divider {
-    width:100%;
+    width: 100%;
     height: 1px;
-    background-color:#BEC9C8;
-    margin: 5px 0px;
+    background-color: rgb(190, 201, 200);
+    margin: 5px 0;
 }
