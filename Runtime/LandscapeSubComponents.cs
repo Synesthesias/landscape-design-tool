@@ -52,6 +52,8 @@ namespace Landscape2.Runtime
 
             var editBuilding = new EditBuilding(subMenuUxmls[(int)SubMenuUxmlType.EditBuilding]);
             var saveSystem = new SaveSystem(uiRoot);
+            LandscapePlanSaveSystem.SetEvent(saveSystem);
+
             // 必要な機能をここに追加します
             // ※GlobalNaviと各機能の紐づけ作業が完了するまで一部機能はコメントアウトしています
             subComponents = new List<ISubComponent>
@@ -59,7 +61,6 @@ namespace Landscape2.Runtime
                 new GlobalNaviHeader(uiRoot,subMenuUxmls),
                 new CameraMoveByUserInput(mainCam),
                 //new CameraPositionMemoryUI(new CameraPositionMemory.CameraPositionMemory(mainCam)),
-                new AreasDataComponent(),
                 new PlanningUI(subMenuUxmls[(int)SubMenuUxmlType.Planning]),
                 new ArrangeAsset(subMenuUxmls[(int)SubMenuUxmlType.Asset],saveSystem),
                 // RegulationAreaUI.CreateForScene(),

@@ -7,22 +7,16 @@ namespace Landscape2.Runtime.LandscapePlanLoader
     /// <summary>
     /// 読み込んだ区画データを管理するクラス
     /// </summary>
-    public sealed class AreasDataComponent : ISubComponent
+    public static class AreasDataComponent
     {
         // 区画データリスト
-        private static List<AreaProperty> properties;
+        private static List<AreaProperty> properties = new List<AreaProperty>();
 
         // 変更適用前の情報を保持する区画データリスト
-        private static List<AreaPropertySnapshot> propertiesSnapshot;
+        private static List<AreaPropertySnapshot> propertiesSnapshot = new List<AreaPropertySnapshot>();
 
         // 区画データ数に変更があった際のイベント
         public static event Action AreaCountChangedEvent = delegate { };
-
-        public AreasDataComponent()
-        {
-            properties = new List<AreaProperty>();
-            propertiesSnapshot = new List<AreaPropertySnapshot>();
-        }
 
         /// <summary>
         /// 区画データを新規に追加するメソッド
@@ -68,6 +62,20 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             return true;
         }
 
+        /// <summary>
+        /// 全ての区画データを削除するメソッド
+        /// </summary>
+        public static void ClearAllProperties()
+        {
+            for (int i = 0; i < properties.Count; i++)
+            {
+                GameObject.Destroy(properties[i].transform.gameObject);
+            }
+            properties.Clear();
+            propertiesSnapshot.Clear();
+
+            AreaCountChangedEvent();
+        }
 
         /// <summary>
         /// 区画の編集前データを更新するメソッド
@@ -129,20 +137,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         public static int GetPropertyCount()
         {
             return properties.Count;
-        }
-
-
-        public void OnDisable()
-        {
-        }
-        public void OnEnable()
-        {
-        }
-        public void Start()
-        {
-        }
-        public void Update(float deltaTime)
-        {
         }
     }
 
