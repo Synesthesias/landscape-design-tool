@@ -147,7 +147,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             foreach (PlanAreaSaveData saveData in saveDatas)
             {
                 listOfAreaPointDatas.Add(saveData.pointData);
-                Debug.Log($"Area {saveData.id} loaded");
             }
 
             // メッシュオブジェクトの生成
