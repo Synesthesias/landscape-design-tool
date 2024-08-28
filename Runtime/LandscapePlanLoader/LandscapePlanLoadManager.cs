@@ -146,7 +146,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             listOfAreaPointDatas = new List<List<Vector3>>();
             foreach (PlanAreaSaveData saveData in saveDatas)
             {
-                listOfAreaPointDatas.Add(saveData.pointData);
+                listOfAreaPointDatas.Add(saveData.PointData);
             }
 
             // メッシュオブジェクトの生成
@@ -205,13 +205,13 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 }
 
                 // 新規のAreaPropertyを生成し初期化
-                float initLimitHeight = saveData.limitHeight;
+                float initLimitHeight = saveData.LimitHeight;
                 AreaProperty areaProperty = new AreaProperty(
-                    saveData.id,
-                    saveData.name,
+                    saveData.Id,
+                    saveData.Name,
                     initLimitHeight,
-                    saveData.lineOffset,
-                    saveData.color,
+                    saveData.LineOffset,
+                    saveData.Color,
                     new Material(wallMaterial),
                     new Material(ceilingMaterial),
                     Mathf.Max(300, initLimitHeight + 50),
