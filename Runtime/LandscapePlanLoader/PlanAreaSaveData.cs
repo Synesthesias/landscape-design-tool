@@ -10,31 +10,31 @@ namespace Landscape2.Runtime.LandscapePlanLoader
     [Serializable]
     public struct PlanAreaSaveData
     {
-        [SerializeField] private int _id;
-        [SerializeField] private string _name;
-        [SerializeField] private float _limitHeight;
-        [SerializeField] private float _lineOffset;
-        [SerializeField] private Color _color;
-        [SerializeField] private float _wallMaxHeight;
-        [SerializeField] private List<Vector3> _pointData;
+        [SerializeField] private int id;
+        [SerializeField] private string name;
+        [SerializeField] private float limitHeight;
+        [SerializeField] private float lineOffset;
+        [SerializeField] private Color color;
+        [SerializeField] private float wallMaxHeight;
+        [SerializeField] private List<Vector3> pointData;
 
-        public int id => _id;
-        public string name => _name;
-        public float limitHeight => _limitHeight;
-        public float lineOffset => _lineOffset;
-        public Color color => _color;
-        public float wallMaxHeight => _wallMaxHeight;
-        public List<Vector3> pointData => _pointData;
+        public int Id { get => id;}
+        public string Name { get => name;}
+        public float LimitHeight { get => limitHeight;}
+        public float LineOffset { get => lineOffset;}
+        public Color Color { get => color;}
+        public float WallMaxHeight { get => wallMaxHeight;}
+        public List<Vector3> PointData { get => pointData;}
 
         public PlanAreaSaveData(int id, string name, float limitHeight, float lineOffset, Color color, float wallMaxHeight, List<Vector3> pointData)
         {
-            _id = id;
-            _name = name;
-            _limitHeight = limitHeight;
-            _lineOffset = lineOffset;
-            _color = color;
-            _wallMaxHeight = wallMaxHeight;
-            _pointData = pointData;
+            this.id = id;
+            this.name = name;
+            this.limitHeight = limitHeight;
+            this.lineOffset = lineOffset;
+            this.color = color;
+            this.wallMaxHeight = wallMaxHeight;
+            this.pointData = pointData;
         }
     }
 }

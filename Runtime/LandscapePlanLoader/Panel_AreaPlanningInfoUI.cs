@@ -6,7 +6,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
     /// <summary>
     /// 景観区画情報表示UIパネルのプレゼンタークラス
     /// </summary>
-    public class Panel_AreaPlanningInfoUI : MonoBehaviour
+    public class Panel_AreaPlanningInfoUI
     {
         private readonly Label areaPlanningName;
         private readonly Label heightLimit;
