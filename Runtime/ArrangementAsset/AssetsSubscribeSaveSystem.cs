@@ -19,6 +19,7 @@ namespace Landscape2.Runtime
         public Quaternion rotation;
         public Vector3 scale;
 
+
         // Transformを引数に取るコンストラクタ
         public TransformData(Transform transform)
         {

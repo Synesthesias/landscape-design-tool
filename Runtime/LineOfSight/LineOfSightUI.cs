@@ -49,7 +49,10 @@ namespace Landscape2.Runtime
             EditorUtility.SetDirty(handler);
             #endif
         }
+        public void Start()
+        {
 
+        }
         public void Update(float deltaTime)
         {
         }
@@ -59,10 +62,6 @@ namespace Landscape2.Runtime
         }
 
         public void OnDisable()
-        {
-        }
-
-        public void Start()
         {
         }
     }

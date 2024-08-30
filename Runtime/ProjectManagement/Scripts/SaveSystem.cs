@@ -11,6 +11,7 @@ using System.Linq;
 
 using UnityEngine.UIElements;
 using Landscape2.Runtime.UiCommon;
+using Landscape2.Runtime.CameraPositionMemory;
 
 using SFB;
 

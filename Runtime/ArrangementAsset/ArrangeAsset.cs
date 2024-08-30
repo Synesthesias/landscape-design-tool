@@ -163,7 +163,6 @@ namespace Landscape2.Runtime
             }
             editPanel.style.display = DisplayStyle.None;
         }
-
         public void Update(float deltaTime)
         {
             if(currentMode != null)

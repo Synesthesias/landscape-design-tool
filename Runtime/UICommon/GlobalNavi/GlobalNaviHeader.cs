@@ -21,6 +21,8 @@ namespace Landscape2.Runtime
         private readonly Button settingButton;
         // 設定パネル
         private readonly VisualElement settingElement;
+        //機能変更トグルボタン
+        private readonly VisualElement functionContainer;
         // メニューボタングループ名前
         private const string UImenuGroup = "Menu";
         // サブメニューパネル名前
@@ -29,6 +31,12 @@ namespace Landscape2.Runtime
         private const string UISettingButton = "Button_Setting";
         // 設定パネル名前
         private const string UISettingElement = "SettingPanel";
+        // 機能変更トグルボタン名前
+        private const string UIFunctionContainer = "FunctionContainer";
+
+        // サブメニューのuxmlを格納する配列
+        public VisualElement[] subMenuUxmls;
+       
         // 最後に開いたサブメニューuxml
         private VisualElement lastSubMenuUxml;
 
@@ -38,6 +46,8 @@ namespace Landscape2.Runtime
             subMenuElement = uiRoot.Q<VisualElement>(UISubMenuElement);
             settingButton = uiRoot.Q<Button>(UISettingButton);
             settingElement = uiRoot.Q<VisualElement>(UISettingElement);
+            functionContainer = uiRoot.Q<VisualElement>(UIFunctionContainer);
+            this.subMenuUxmls = subMenuUxmls;
 
             // サブメニューを非表示
             foreach (var child in subMenuElement.Children())
@@ -75,10 +85,35 @@ namespace Landscape2.Runtime
                     {
                         if (button.value)
                         {
+                            
                             // tabIndexに該当するuxmlを表示
-                            subMenuUxmls[button.tabIndex].style.display = DisplayStyle.Flex;
-                            SetSubMenuUxml(button.tabIndex);
-                            lastSubMenuUxml = subMenuUxmls[button.tabIndex];
+                            if (functionContainer.Q<Toggle>("Toggle_WalkMode").value && button.tabIndex == (int)SubMenuUxmlType.CameraList)
+                            {
+                                SetSubMenuUxml((int)SubMenuUxmlType.WalkMode);
+                                subMenuUxmls[(int)SubMenuUxmlType.WalkMode].style.display = DisplayStyle.Flex;
+                                subMenuUxmls[(int)SubMenuUxmlType.WalkMode].Q<TemplateContainer>("Panel_WalkViewRegister").style.display = DisplayStyle.None;
+                                subMenuUxmls[(int)SubMenuUxmlType.WalkMode].Q<TemplateContainer>("Panel_WalkViewEditor").style.display = DisplayStyle.None;
+                                subMenuUxmls[(int)SubMenuUxmlType.WalkMode].Q<VisualElement>("Title_CameraRegist").style.display = DisplayStyle.None;
+                                subMenuUxmls[(int)SubMenuUxmlType.WalkMode].Q<VisualElement>("Title_WalkController").style.display = DisplayStyle.Flex;
+                                subMenuUxmls[(int)SubMenuUxmlType.WalkMode].Q<TemplateContainer>("Panel_WalkController").style.display = DisplayStyle.Flex;
+                                lastSubMenuUxml = subMenuUxmls[(int)SubMenuUxmlType.WalkMode];
+                            }
+                            else if (functionContainer.Q<Toggle>("Toggle_WalkMode").value && button.tabIndex == (int)SubMenuUxmlType.CameraEdit)
+                            {
+                                SetSubMenuUxml((int)SubMenuUxmlType.WalkMode);
+                                subMenuUxmls[(int)SubMenuUxmlType.WalkMode].style.display = DisplayStyle.Flex;
+                                subMenuUxmls[(int)SubMenuUxmlType.WalkMode].Q<TemplateContainer>("Panel_WalkViewRegister").style.display = DisplayStyle.Flex;
+                                subMenuUxmls[(int)SubMenuUxmlType.WalkMode].Q<TemplateContainer>("Panel_WalkViewEditor").style.display = DisplayStyle.None;
+                                subMenuUxmls[(int)SubMenuUxmlType.WalkMode].Q<VisualElement>("Title_CameraRegist").style.display = DisplayStyle.Flex;
+                                lastSubMenuUxml = subMenuUxmls[(int)SubMenuUxmlType.WalkMode];
+                            }
+                            else
+                            {
+                                SetSubMenuUxml(button.tabIndex);
+                                subMenuUxmls[button.tabIndex].style.display = DisplayStyle.Flex;
+                                lastSubMenuUxml = subMenuUxmls[button.tabIndex];
+                            }
+                            
                         }
                     });
                 });
@@ -97,6 +132,8 @@ namespace Landscape2.Runtime
                     settingElement.style.display = DisplayStyle.Flex;
                 }
             };
+            //歩行者モードトグルボタンが押されたら変更する
+            functionContainer.Q<Toggle>("Toggle_WalkMode").RegisterValueChangedCallback(OnToggleWalkModeValueChanged);
 
             //保存、ロードした時にセッティングパネルを閉じる処理(新見)
             var saveButton = settingElement.Q<Button>("SaveButton");
@@ -157,6 +194,29 @@ namespace Landscape2.Runtime
                 subComponents.SetSubMenuUxmlType(type);
             }
         }
+
+        private void OnToggleWalkModeValueChanged(ChangeEvent<bool> evt)
+        {
+            if (evt.newValue)
+            {
+                ShowSubMenuPanel(2);
+                SetSubMenuUxml((int)SubMenuUxmlType.WalkMode);
+                subMenuUxmls[(int)SubMenuUxmlType.WalkMode].style.display = DisplayStyle.Flex;
+                subMenuUxmls[(int)SubMenuUxmlType.WalkMode].Q<TemplateContainer>("Panel_WalkViewRegister").style.display = DisplayStyle.None;
+                subMenuUxmls[(int)SubMenuUxmlType.WalkMode].Q<TemplateContainer>("Panel_WalkViewEditor").style.display = DisplayStyle.None;
+                subMenuUxmls[(int)SubMenuUxmlType.WalkMode].Q<VisualElement>("Title_CameraRegist").style.display = DisplayStyle.None;
+                subMenuUxmls[(int)SubMenuUxmlType.WalkMode].Q<VisualElement>("Title_WalkController").style.display = DisplayStyle.None;
+                subMenuUxmls[(int)SubMenuUxmlType.WalkMode].Q<TemplateContainer>("Panel_WalkController").style.display = DisplayStyle.None;
+                lastSubMenuUxml = subMenuUxmls[(int)SubMenuUxmlType.WalkMode];
+            }
+            else
+            {
+                subMenuUxmls[(int)SubMenuUxmlType.WalkMode].style.display = DisplayStyle.None;
+                menuGroup.Q<RadioButton>("MenuMain").value = true;
+                ShowSubMenuPanel(-1);
+            }
+        }
+
         public void Update(float deltaTime)
         {
         }

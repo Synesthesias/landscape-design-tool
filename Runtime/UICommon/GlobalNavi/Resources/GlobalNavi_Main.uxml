@@ -36,7 +36,7 @@
                         <ui:RadioButton label="Radio Button" text="見通し解析" name="SubMenuBIM" tabindex="5" class="SubMenuEnd" />
                     </ui:GroupBox>
                     <ui:GroupBox name="SubMenu_Camera" tabindex="2">
-                        <ui:RadioButton label="Radio Button" text="始点一覧" name="SubMenuCameraList" tabindex="6" class="SubMenuFirst" />
+                        <ui:RadioButton label="Radio Button" text="視点一覧" name="SubMenuCameraList" tabindex="6" class="SubMenuFirst" />
                         <ui:RadioButton label="Radio Button" text="視点編集" name="SubMenuCameraEdit" tabindex="7" class="SubMenuEnd" />
                     </ui:GroupBox>
                 </ui:VisualElement>
@@ -44,7 +44,7 @@
             <ui:VisualElement name="GlobalNavi_Right" style="flex-grow: 0; width: 497px; height: 84px; flex-direction: row; align-items: center;">
                 <ui:VisualElement name="FunctionContainer">
                     <ui:Toggle label="Toggle" name="Toggle_AutoRotate" tooltip="カメラ自動回転" usage-hints="-1" />
-                    <ui:Toggle label="Toggle" name="Toggle_WalkMode" tooltip="歩行者視点モード" />
+                    <ui:Toggle label="Toggle" name="Toggle_WalkMode" tooltip="歩行者視点モード" value="false" />
                     <ui:Toggle label="Toggle" name="Toggle_HideUI" tooltip="UIを非表示します" />
                     <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="Button_Capture" class="gnavi_fuction_button" />
                 </ui:VisualElement>

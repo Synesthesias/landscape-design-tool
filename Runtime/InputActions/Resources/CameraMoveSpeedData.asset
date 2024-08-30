@@ -14,8 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   horizontalMoveSpeed: 300
   verticalMoveSpeed: 300
-  parallelMoveSpeed: 100
+  parallelMoveSpeed: 0.15
   zoomMoveSpeed: 10
   rotateSpeed: 30
   zoomLimit: 20
   heightLimitY: 25
+  walkerMoveSpeed: 20
+  walkerOffsetYSpeed: 10

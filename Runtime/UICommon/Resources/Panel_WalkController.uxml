@@ -21,15 +21,15 @@
                     <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: center; width: 100%;">
                         <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="FpsLeftButton">
                             <ui:VisualElement name="FPSIcon" style="flex-grow: 0; width: 24px; height: 24px; background-image: resource(&apos;Icon_arrow-left&apos;); flex-shrink: 0;" />
-                            <ui:Label tabindex="-1" text="Q" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+                            <ui:Label tabindex="-1" text="A" parse-escape-sequences="true" display-tooltip-when-elided="true" />
                         </ui:Button>
                         <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="FpsBackButton">
                             <ui:VisualElement name="FPSIcon" style="flex-grow: 0; width: 24px; height: 24px; background-image: resource(&apos;Icon_arrow-back&apos;); flex-shrink: 0;" />
-                            <ui:Label tabindex="-1" text="W" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+                            <ui:Label tabindex="-1" text="S" parse-escape-sequences="true" display-tooltip-when-elided="true" />
                         </ui:Button>
                         <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="FpsRightButton">
                             <ui:VisualElement name="FPSIcon" style="flex-grow: 0; width: 24px; height: 24px; background-image: resource(&apos;Icon_arrow-right&apos;); flex-shrink: 0;" />
-                            <ui:Label tabindex="-1" text="E" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+                            <ui:Label tabindex="-1" text="D" parse-escape-sequences="true" display-tooltip-when-elided="true" />
                         </ui:Button>
                     </ui:VisualElement>
                 </ui:VisualElement>

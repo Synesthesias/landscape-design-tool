@@ -5,6 +5,9 @@ using Landscape2.Runtime.WeatherTimeEditor;
 using Landscape2.Runtime.LandscapePlanLoader;
 using UnityEngine.UIElements;
 using UnityEngine;
+using Cinemachine;
+using UnityEngine.Rendering.HighDefinition;
+using UnityEngine.InputSystem;
 using System;
 
 namespace Landscape2.Runtime
@@ -24,6 +27,7 @@ namespace Landscape2.Runtime
         Analytics,
         CameraList,
         CameraEdit,
+        WalkMode,
     }
 
     public class LandscapeSubComponents : MonoBehaviour
@@ -36,9 +40,7 @@ namespace Landscape2.Runtime
 
         private void Awake()
         {
-            var mainCam = Camera.main;
             var uiRoot = new UIDocumentFactory().CreateWithUxmlName("GlobalNavi_Main");
-
             // GlobalNavi_Main.uxmlのSortOrderを設定
             GameObject.Find("GlobalNavi_Main").GetComponent<UIDocument>().sortingOrder = 1;
 
@@ -50,6 +52,49 @@ namespace Landscape2.Runtime
                 subMenuUxmls[i].style.display = DisplayStyle.None;
             }
 
+            // MainCameraを取得
+            GameObject mainCamera = Camera.main.gameObject;
+
+            // MainCameraにCinemachineBrainがアタッチされていない場合は追加
+            if (mainCamera.GetComponent<CinemachineBrain>() == null)
+            {
+                mainCamera.AddComponent<CinemachineBrain>();
+            }
+
+            //俯瞰視点用のカメラの生成と設定
+            GameObject mainCam = new GameObject("PointOfViewCamera");
+            CinemachineVirtualCamera mainCamVC = mainCam.AddComponent<CinemachineVirtualCamera>();
+            mainCamVC.m_Lens.FieldOfView = 60;
+            mainCamVC.m_Lens.NearClipPlane = 0.3f;
+            mainCamVC.m_Lens.FarClipPlane = 1000;
+
+            //歩行者視点用のオブジェクトの生成と設定
+            GameObject walker = new GameObject("Walker");
+            CharacterController characterController = walker.AddComponent<CharacterController>();
+            characterController.slopeLimit = 90;
+            characterController.stepOffset = 0.3f;
+            characterController.skinWidth = 0.05f;
+
+            //歩行者視点用のカメラの生成と設定
+            GameObject walkerCam = new GameObject("WalkerCamera");
+            CinemachineVirtualCamera walkerCamVC = walkerCam.AddComponent<CinemachineVirtualCamera>();
+            walkerCamVC.m_Lens.FieldOfView = 60;
+            walkerCamVC.m_Lens.NearClipPlane = 0.3f;
+            walkerCamVC.m_Lens.FarClipPlane= 1000;
+            walkerCamVC.Priority = 9;
+            walkerCamVC.m_StandbyUpdate = CinemachineVirtualCameraBase.StandbyUpdateMode.Never;
+            walkerCamVC.AddCinemachineComponent<CinemachineTransposer>();
+            walkerCamVC.AddCinemachineComponent<CinemachinePOV>();
+            CinemachineInputProvider walkerCamInput = walkerCam.AddComponent<CinemachineInputProvider>();
+            walkerCamInput.XYAxis = InputActionReference.Create(new DefaultInputActions().Player.Look);
+            walkerCam.SetActive(false);
+            walkerCam.SetActive(true);
+            walkerCamVC.Follow = walker.transform; 
+
+            var landscapeCamera = new LandscapeCamera(mainCamVC, walkerCamVC, walker);
+            var walkerMoveByUserInput = new WalkerMoveByUserInput(walkerCamVC, walker);
+            var cameraPositionMemory = new CameraPositionMemory.CameraPositionMemory(mainCamVC, walkerCamVC, landscapeCamera);
+      
             var editBuilding = new EditBuilding(subMenuUxmls[(int)SubMenuUxmlType.EditBuilding]);
             var saveSystem = new SaveSystem(uiRoot);
             LandscapePlanSaveSystem.SetEvent(saveSystem);
@@ -58,14 +103,17 @@ namespace Landscape2.Runtime
             // ※GlobalNaviと各機能の紐づけ作業が完了するまで一部機能はコメントアウトしています
             subComponents = new List<ISubComponent>
             {
-                new GlobalNaviHeader(uiRoot,subMenuUxmls),
-                new CameraMoveByUserInput(mainCam),
-                //new CameraPositionMemoryUI(new CameraPositionMemory.CameraPositionMemory(mainCam)),
+                new GlobalNaviHeader(uiRoot, subMenuUxmls),
+                new CameraMoveByUserInput(mainCamVC),
+                new LandscapeCameraUI(landscapeCamera, uiRoot,subMenuUxmls),
+                walkerMoveByUserInput,
+                new CameraPositionMemoryUI(cameraPositionMemory, subMenuUxmls, walkerMoveByUserInput,saveSystem, uiRoot),
                 new PlanningUI(subMenuUxmls[(int)SubMenuUxmlType.Planning]),
                 new ArrangeAsset(subMenuUxmls[(int)SubMenuUxmlType.Asset],saveSystem),
                 // RegulationAreaUI.CreateForScene(),
                 //LineOfSightUI.CreateForScene(),
-                // new WeatherTimeEditorUI(new WeatherTimeEditor.WeatherTimeEditor(),uiRoot),
+                //new WeatherTimeEditorUI(new WeatherTimeEditor.WeatherTimeEditor(),uiRoot),
+                saveSystem, 
                 editBuilding,
                 new BuildingColorEditor(new BuildingColorEditorUI(subMenuUxmls[(int)SubMenuUxmlType.EditBuilding]),editBuilding)
             };

@@ -67,7 +67,6 @@ namespace Landscape2.Runtime.WeatherTimeEditor
                 timeLabel.text = this.weatherTimeEditor.GetTimeString(timeSlider.value);
             });
         }
-
         public void Update(float deltaTime)
         {
         }

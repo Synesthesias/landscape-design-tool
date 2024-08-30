@@ -52,6 +52,11 @@ namespace Landscape2.Runtime
             SwitchMode(new RANormalMode(this));
             this.ClickedAction = clickedAction;
         }
+
+        public void Start()
+        {
+
+        }
         public void Update(float deltaTime)
         {
             currentMode.Update();
@@ -81,10 +86,6 @@ namespace Landscape2.Runtime
             {
                 Debug.LogError("景観エリアの作成モードでないのに、エリア選択完了が通知されました。");
             }
-        }
-
-        public void Start()
-        {
         }
     }
 

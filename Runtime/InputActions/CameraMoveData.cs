@@ -14,5 +14,7 @@ namespace Landscape2.Runtime
         public float rotateSpeed;
         public float zoomLimit;
         public float heightLimitY;
+        public float walkerMoveSpeed;
+        public float walkerOffsetYSpeed;
     }
 }

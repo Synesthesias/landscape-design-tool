@@ -241,6 +241,8 @@ Scroller #unity-drag-container {
 }
 
 .unity-button {
+    display: flex;
+    visibility: visible;
 }
 
 .unity-label {
@@ -255,6 +257,7 @@ Scroller #unity-drag-container {
     color: rgb(0, 0, 0);
     -unity-background-image-tint-color: rgb(255, 255, 255);
     background-color: rgb(25, 106, 84);
+    display: flex;
 }
 
 .unity-base-field {
@@ -832,6 +835,7 @@ Scroller #unity-drag-container {
     display: flex;
     flex-direction: row;
     justify-content: center;
+    visibility: visible;
 }
 
 #OKButton:hover {

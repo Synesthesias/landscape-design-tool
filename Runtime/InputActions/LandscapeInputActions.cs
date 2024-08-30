@@ -246,6 +246,168 @@ namespace Landscape2.Runtime
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""WalkerMove"",
+            ""id"": ""aebe99bb-85bb-4c0d-9842-f0dbe4571390"",
+            ""actions"": [
+                {
+                    ""name"": ""UpDown"",
+                    ""type"": ""Button"",
+                    ""id"": ""5660c2ba-88fe-4d1b-85a4-177142edf67f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""WASD"",
+                    ""type"": ""Value"",
+                    ""id"": ""b55ffe49-aa33-46f9-8866-db35dec14c50"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""RightClick"",
+                    ""type"": ""Button"",
+                    ""id"": ""aee1907c-3295-42dd-945f-6c4a5f13c4be"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": ""WASD-Key"",
+                    ""id"": ""a227d35c-ab21-4df5-984a-5cf42ecd6401"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": ""InvertVector2"",
+                    ""groups"": """",
+                    ""action"": ""WASD"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""d31b3e47-9280-41a4-b267-8cd91d72496c"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""WASD"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""6439b026-99c6-446a-ad4f-9569a659154e"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""WASD"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""5364505f-7193-44f3-b440-e61e92260c4b"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""WASD"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""798e8d3d-5279-4cae-8c85-7c023f7ae434"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""WASD"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""UpDown-Key"",
+                    ""id"": ""1184da42-7d33-4ba1-a8af-6b548722aced"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""UpDown"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""22de0f1e-87e0-45f8-97e8-5326f193e95c"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""UpDown"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""fe0d3543-3a74-4f66-aece-1c26a4214bd9"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""UpDown"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""da7710d9-5bc6-4c35-a3c1-6515142ff33a"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RightClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""SelectCamPos"",
+            ""id"": ""6a5afb05-d2c5-4d10-85d1-ebea78386263"",
+            ""actions"": [
+                {
+                    ""name"": ""SelectPosByInput"",
+                    ""type"": ""Button"",
+                    ""id"": ""4b7592f0-1a4b-42aa-a42a-9b48d15fcfb9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""f95935f4-8b01-4b9b-aeba-3a202f366903"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SelectPosByInput"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -261,6 +423,14 @@ namespace Landscape2.Runtime
             m_ArrangeAsset = asset.FindActionMap("ArrangeAsset", throwIfNotFound: true);
             m_ArrangeAsset_select = m_ArrangeAsset.FindAction("select", throwIfNotFound: true);
             m_ArrangeAsset_cancel = m_ArrangeAsset.FindAction("cancel", throwIfNotFound: true);
+            // WalkerMove
+            m_WalkerMove = asset.FindActionMap("WalkerMove", throwIfNotFound: true);
+            m_WalkerMove_UpDown = m_WalkerMove.FindAction("UpDown", throwIfNotFound: true);
+            m_WalkerMove_WASD = m_WalkerMove.FindAction("WASD", throwIfNotFound: true);
+            m_WalkerMove_RightClick = m_WalkerMove.FindAction("RightClick", throwIfNotFound: true);
+            // SelectCamPos
+            m_SelectCamPos = asset.FindActionMap("SelectCamPos", throwIfNotFound: true);
+            m_SelectCamPos_SelectPosByInput = m_SelectCamPos.FindAction("SelectPosByInput", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -450,6 +620,114 @@ namespace Landscape2.Runtime
             }
         }
         public ArrangeAssetActions @ArrangeAsset => new ArrangeAssetActions(this);
+
+        // WalkerMove
+        private readonly InputActionMap m_WalkerMove;
+        private List<IWalkerMoveActions> m_WalkerMoveActionsCallbackInterfaces = new List<IWalkerMoveActions>();
+        private readonly InputAction m_WalkerMove_UpDown;
+        private readonly InputAction m_WalkerMove_WASD;
+        private readonly InputAction m_WalkerMove_RightClick;
+        public struct WalkerMoveActions
+        {
+            private @LandscapeInputActions m_Wrapper;
+            public WalkerMoveActions(@LandscapeInputActions wrapper) { m_Wrapper = wrapper; }
+            public InputAction @UpDown => m_Wrapper.m_WalkerMove_UpDown;
+            public InputAction @WASD => m_Wrapper.m_WalkerMove_WASD;
+            public InputAction @RightClick => m_Wrapper.m_WalkerMove_RightClick;
+            public InputActionMap Get() { return m_Wrapper.m_WalkerMove; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(WalkerMoveActions set) { return set.Get(); }
+            public void AddCallbacks(IWalkerMoveActions instance)
+            {
+                if (instance == null || m_Wrapper.m_WalkerMoveActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_WalkerMoveActionsCallbackInterfaces.Add(instance);
+                @UpDown.started += instance.OnUpDown;
+                @UpDown.performed += instance.OnUpDown;
+                @UpDown.canceled += instance.OnUpDown;
+                @WASD.started += instance.OnWASD;
+                @WASD.performed += instance.OnWASD;
+                @WASD.canceled += instance.OnWASD;
+                @RightClick.started += instance.OnRightClick;
+                @RightClick.performed += instance.OnRightClick;
+                @RightClick.canceled += instance.OnRightClick;
+            }
+
+            private void UnregisterCallbacks(IWalkerMoveActions instance)
+            {
+                @UpDown.started -= instance.OnUpDown;
+                @UpDown.performed -= instance.OnUpDown;
+                @UpDown.canceled -= instance.OnUpDown;
+                @WASD.started -= instance.OnWASD;
+                @WASD.performed -= instance.OnWASD;
+                @WASD.canceled -= instance.OnWASD;
+                @RightClick.started -= instance.OnRightClick;
+                @RightClick.performed -= instance.OnRightClick;
+                @RightClick.canceled -= instance.OnRightClick;
+            }
+
+            public void RemoveCallbacks(IWalkerMoveActions instance)
+            {
+                if (m_Wrapper.m_WalkerMoveActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            public void SetCallbacks(IWalkerMoveActions instance)
+            {
+                foreach (var item in m_Wrapper.m_WalkerMoveActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_WalkerMoveActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        public WalkerMoveActions @WalkerMove => new WalkerMoveActions(this);
+
+        // SelectCamPos
+        private readonly InputActionMap m_SelectCamPos;
+        private List<ISelectCamPosActions> m_SelectCamPosActionsCallbackInterfaces = new List<ISelectCamPosActions>();
+        private readonly InputAction m_SelectCamPos_SelectPosByInput;
+        public struct SelectCamPosActions
+        {
+            private @LandscapeInputActions m_Wrapper;
+            public SelectCamPosActions(@LandscapeInputActions wrapper) { m_Wrapper = wrapper; }
+            public InputAction @SelectPosByInput => m_Wrapper.m_SelectCamPos_SelectPosByInput;
+            public InputActionMap Get() { return m_Wrapper.m_SelectCamPos; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(SelectCamPosActions set) { return set.Get(); }
+            public void AddCallbacks(ISelectCamPosActions instance)
+            {
+                if (instance == null || m_Wrapper.m_SelectCamPosActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_SelectCamPosActionsCallbackInterfaces.Add(instance);
+                @SelectPosByInput.started += instance.OnSelectPosByInput;
+                @SelectPosByInput.performed += instance.OnSelectPosByInput;
+                @SelectPosByInput.canceled += instance.OnSelectPosByInput;
+            }
+
+            private void UnregisterCallbacks(ISelectCamPosActions instance)
+            {
+                @SelectPosByInput.started -= instance.OnSelectPosByInput;
+                @SelectPosByInput.performed -= instance.OnSelectPosByInput;
+                @SelectPosByInput.canceled -= instance.OnSelectPosByInput;
+            }
+
+            public void RemoveCallbacks(ISelectCamPosActions instance)
+            {
+                if (m_Wrapper.m_SelectCamPosActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            public void SetCallbacks(ISelectCamPosActions instance)
+            {
+                foreach (var item in m_Wrapper.m_SelectCamPosActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_SelectCamPosActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        public SelectCamPosActions @SelectCamPos => new SelectCamPosActions(this);
         public interface ICameraMoveActions
         {
             void OnHorizontalMoveCameraByKeyboard(InputAction.CallbackContext context);
@@ -462,6 +740,16 @@ namespace Landscape2.Runtime
         {
             void OnSelect(InputAction.CallbackContext context);
             void OnCancel(InputAction.CallbackContext context);
+        }
+        public interface IWalkerMoveActions
+        {
+            void OnUpDown(InputAction.CallbackContext context);
+            void OnWASD(InputAction.CallbackContext context);
+            void OnRightClick(InputAction.CallbackContext context);
+        }
+        public interface ISelectCamPosActions
+        {
+            void OnSelectPosByInput(InputAction.CallbackContext context);
         }
     }
 }

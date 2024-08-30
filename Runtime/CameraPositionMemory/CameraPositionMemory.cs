@@ -1,162 +1,224 @@
 using UnityEngine;
+using Cinemachine;
+using System.Collections.Generic;
 
 namespace Landscape2.Runtime.CameraPositionMemory
 {
     /// <summary>
-    /// カメラの位置を覚えておいて復元します。
+    /// カメラの位置を記憶、復元するクラス。
     /// UIは<see cref="CameraPositionMemoryUI"/>が担当します。
     /// </summary>
     public class CameraPositionMemory
     {
-        private Camera camera;
-        public const int SlotCount = 3;
-        private SlotData[] data;
+        private CinemachineVirtualCamera vcam1;
+        private CinemachineVirtualCamera vcam2;
+        private int slotsCount = 0;
+        private List<SlotData> slots;
+        private LandscapeCamera landscapeCamera;
         
-        
-        public CameraPositionMemory(Camera camera)
+        public CameraPositionMemory(CinemachineVirtualCamera vcam1, CinemachineVirtualCamera vcam2,LandscapeCamera landscapeCamera)
         {
-            this.camera = camera;
-            this.data = new SlotData[SlotCount];
-            LoadPersistenceDataOrDefault();
+            this.vcam1 = vcam1;
+            this.vcam2 = vcam2;
+            this.slots = new List<SlotData>();
+            this.landscapeCamera = landscapeCamera;
         }
 
-        
-        /// カメラスロットに関して、永続化データがあればそれを利用、なければデフォルト値にする
-        public void LoadPersistenceDataOrDefault()
+        /// <summary>
+        /// カメラの保存データを格納したリストを取得する
+        /// </summary>
+        /// <returns></returns>
+        public List<SlotData> GetSlotDatas()
         {
-            for (int i = 0; i < SlotCount; i++)
+            return slots;
+        }
+
+
+        /// <summary>
+        /// カメラの保存データ数を取得する
+        /// </summary>
+        /// <returns></returns>
+        public int GetSlotCount()
+        {
+            return slotsCount;
+        }
+
+        /// <summary>
+        /// カメラの保存データの数を増やす
+        /// </summary>
+        private void AddSlotCount()
+        {
+            slotsCount++;
+        }
+
+        /// <summary>
+        /// カメラの保存データの数を減らす
+        /// </summary>
+        private void SubtractSlotCout()
+        {
+            slotsCount--;
+        }
+        
+        /// <summary>
+        /// 現在のカメラ位置を保存する関数
+        /// </summary>
+        /// <param name="slotId"></param>
+        /// <param name="name"></param>
+        public void Save(int slotId, string name)
+        {
+            var trans = Camera.main.transform;
+            var cameraState = landscapeCamera.GetCameraState();
+
+            if(cameraState == LandscapeCameraState.SelectWalkPoint)
             {
-                if (!SlotData.TryLoadPersistenceData(i, out var slotData))
-                {
-                    slotData =  new SlotData(false, DefaultSlotName(i));
-                }
-                else
-                {
-                    Debug.Log("save loaded");
-                }
-                data[i] = slotData;
+                cameraState = LandscapeCameraState.PointOfView; 
             }
-        }
-
-        public static string DefaultSlotName(int slotId) => "スロット" + (slotId + 1);
-        
-        public void Save(int slotId)
-        {
-            var trans = camera.transform;
-            var slotData = new SlotData(trans.position, trans.rotation, true, GetName(slotId));
-            this.data[slotId] = slotData;
-            slotData.Persist(slotId);
+            var slotData = new SlotData(trans.position, trans.rotation, true, name, cameraState,vcam2.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset.y);
+            slots.Add(slotData);
+            AddSlotCount();
+            Debug.Log(GetSlotCount());
+            //slotData.Persist(slotId);
+            Debug.Log($"pos:{trans.position} rot:{trans.rotation.eulerAngles}");
+            Debug.Log($"SlotData pos:{slotData.position} rot:{slotData.rotation.eulerAngles}");
         }
         
+        /// <summary>
+        /// 保存したカメラ位置を復元する関数
+        /// </summary>
+        /// <param name="slotId"></param>
         public void Restore(int slotId)
         {
-            var slotData = data[slotId];
-            camera.transform.SetPositionAndRotation(slotData.Position, slotData.Rotation);
+            var slotData = slots[slotId];
+            landscapeCamera.SetCameraState(slotData.cameraState);
+            if(slotData.cameraState == LandscapeCameraState.PointOfView)
+            {
+                vcam1.transform.SetPositionAndRotation(slotData.position, slotData.rotation);
+            }
+            else if(slotData.cameraState == LandscapeCameraState.Walker)
+            {
+                landscapeCamera.SetWalkerPos(slotData.position);
+                vcam2.transform.position = slotData.position;
+                var pov = vcam2.GetCinemachineComponent<CinemachinePOV>();
+                var vcam1Euler = slotData.rotation.eulerAngles;
+                pov.m_VerticalAxis.Value = vcam1Euler.x > 270 ? vcam1Euler.x - 360 : vcam1Euler.x;
+                pov.m_HorizontalAxis.Value = vcam1Euler.y;
+                CinemachineTransposer trans = vcam2.GetCinemachineComponent<CinemachineTransposer>();
+                Vector3 currentOffset = new Vector3(0.0f, slotData.offSetY, 0.0f);
+                if(currentOffset.y < 0.5f)
+                {
+                    currentOffset.y = 0.5f;
+                }
+                trans.m_FollowOffset = currentOffset;
+            }
+            Debug.Log($"RestoreSlotData pos:{slotData.position} rot:{slotData.rotation.eulerAngles}");
+
         }
 
-        public bool IsSaved(int slotId)
+        /// <summary>
+        /// 保存したカメラ位置を削除する関数
+        /// </summary>
+        /// <param name="slotId"></param>
+        public void Delete(int slotId)
         {
-            return data[slotId].IsSaved;
+            slots.Remove(slots[slotId]);
+            SubtractSlotCout();
         }
 
+        /// <summary>
+        /// 保存したカメラ位置の名前を取得する関数
+        /// </summary>
+        /// <param name="slotId"></param>
+        /// <returns></returns>
         public string GetName(int slotId)
         {
-            return data[slotId].Name;
+            return slots[slotId].name;
         }
 
+        /// <summary>
+        /// 保存したカメラデータを更新する関数
+        /// </summary>
+        /// <param name="slotId"></param>
+        /// <param name="slotData"></param>
         public void SetSlotData(int slotId, SlotData slotData)
         {
-            data[slotId] = slotData;
-            slotData.Persist(slotId);
+            slots[slotId] = slotData;
         }
 
+        /// <summary>
+        /// 保存したカメラデータを取得する関数
+        /// </summary>
+        /// <param name="slotId"></param>
+        /// <returns></returns>
         public SlotData GetSlotData(int slotId)
         {
-            return data[slotId];
+            return slots[slotId];
+        }
+
+        /// <summary>
+        /// 歩行者視点カメラの高さを設定する関数
+        /// </summary>
+        /// <param name="y"></param>
+        public void SetOffsetY(float y)
+        {
+            vcam2.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset = new Vector3(0, y, 0);
+        }
+
+        /// <summary>
+        /// 歩行者視点カメラの高さを戻す関数
+        /// </summary>
+        /// <returns></returns>
+        public float GetOffsetY()
+        {
+            return vcam2.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset.y;
         }
     }
 
+    /// <summary>
+    /// 内部で使われるカメラの位置を保存する構造体
+    /// </summary>
     public struct SlotData
     {
-        public Vector3 Position;
-        public Quaternion Rotation;
-        public bool IsSaved;
-        public string Name;
-
-        public SlotData(Vector3 position, Quaternion rotation, bool isSaved, string name)
+        public Vector3 position;
+        public Quaternion rotation;
+        public bool isSaved;
+        public string name;
+        public LandscapeCameraState cameraState;
+        public float offSetY;
+        public SlotData(Vector3 position, Quaternion rotation, bool isSaved, string name, LandscapeCameraState cameraState, float offSetY)
         {
-            Position = position;
-            Rotation = rotation;
-            IsSaved = isSaved;
-            Name = name;
+            this.position = position;
+            this.rotation = rotation;
+            this.isSaved = isSaved;
+            this.name = name;
+            this.cameraState = cameraState;
+            this.offSetY = offSetY;
         }
 
         public SlotData(bool isSaved, string name)
-            : this(Vector3.zero, Quaternion.identity, isSaved, name)
+            : this(Vector3.zero, Quaternion.identity, isSaved, name, LandscapeCameraState.PointOfView, 0.0f)
         {
 
         }
 
-        /// <summary> スロットデータを永続的に保存します。 </summary>
-        public void Persist(int slotId)
+        /// <summary>
+        /// Stringからカメラの状態を管理する列挙型に変換する関数
+        /// </summary>
+        /// <param name="camState"></param>
+        /// <returns></returns>
+        public static LandscapeCameraState CameraStateStringToEnum(string camState)
         {
-            PlayerPrefs.SetFloat(PersistenceKey.PositionX(slotId), Position.x);
-            PlayerPrefs.SetFloat(PersistenceKey.PositionY(slotId), Position.y);
-            PlayerPrefs.SetFloat(PersistenceKey.PositionZ(slotId), Position.z);
-            PlayerPrefs.SetFloat(PersistenceKey.RotationX(slotId), Rotation.x);
-            PlayerPrefs.SetFloat(PersistenceKey.RotationY(slotId), Rotation.y);
-            PlayerPrefs.SetFloat(PersistenceKey.RotationZ(slotId), Rotation.z);
-            PlayerPrefs.SetFloat(PersistenceKey.RotationW(slotId), Rotation.w);
-            PlayerPrefs.SetInt(PersistenceKey.IsSaved(slotId), IsSaved ? 1 : 0);
-            PlayerPrefs.SetString(PersistenceKey.Name(slotId), Name);
-            PlayerPrefs.Save();
-            Debug.Log("saved");
-        }
-        
-        /// <summary> 永続化したスロットデータをロードします </summary>
-        public static bool TryLoadPersistenceData(int slotId, out SlotData outSlotData)
-        {
-            if (!PlayerPrefs.HasKey(PersistenceKey.IsSaved(slotId)))
+            if(camState == "PointOfView")
             {
-                outSlotData = new SlotData(false, CameraPositionMemory.DefaultSlotName(slotId));
-                Debug.Log($"slot{slotId} : no data");
-                return false;
+                return LandscapeCameraState.PointOfView; 
+            }else if (camState == "Walker")
+            {
+                return LandscapeCameraState.Walker;
             }
-            var posX = PlayerPrefs.GetFloat(PersistenceKey.PositionX(slotId));
-            var posY = PlayerPrefs.GetFloat(PersistenceKey.PositionY(slotId));
-            var posZ = PlayerPrefs.GetFloat(PersistenceKey.PositionZ(slotId));
-            var rotX = PlayerPrefs.GetFloat(PersistenceKey.RotationX(slotId));
-            var rotY = PlayerPrefs.GetFloat(PersistenceKey.RotationY(slotId));
-            var rotZ = PlayerPrefs.GetFloat(PersistenceKey.RotationZ(slotId));
-            var rotW = PlayerPrefs.GetFloat(PersistenceKey.RotationW(slotId));
-            bool isSaved = PlayerPrefs.GetInt(PersistenceKey.IsSaved(slotId)) != 0;
-            string name = PlayerPrefs.GetString(PersistenceKey.Name(slotId));
-            outSlotData = new SlotData(
-                new Vector3(posX, posY, posZ),
-                new Quaternion(rotX, rotY, rotZ, rotW),
-                isSaved, name);
-            Debug.Log($"slot{slotId} : persistence data found.");
-            return true;
-        }
-
-        /// <summary> スロットデータを永続化するときのキーです </summary>
-        private class PersistenceKey
-        {
-            private const string KeyBase = "CameraSlot_";
-            private static readonly string keyPosition = KeyBase + "Position_";
-            private static readonly string keyRotation = KeyBase + "Rotation_";
-            private static readonly string keyIsSaved = KeyBase + "IsSaved_";
-            private static readonly string keyName = KeyBase + "Name_";
-
-            public static string PositionX(int slotId) => keyPosition + "X" + slotId;
-            public static string PositionY(int slotId) => keyPosition + "Y" + slotId;
-            public static string PositionZ(int slotId) => keyPosition + "Z" + slotId;
-            public static string RotationX(int slotId) => keyRotation + "X" + slotId;
-            public static string RotationY(int slotId) => keyRotation + "Y" + slotId;
-            public static string RotationZ(int slotId) => keyRotation + "Z" + slotId;
-            public static string RotationW(int slotId) => keyRotation + "W" + slotId;
-            public static string IsSaved(int slotId) => keyIsSaved + slotId;
-            public static string Name(int slotId) => keyName + slotId;
+            else
+            {
+                Debug.LogError("予期しない引数が渡されました");
+                return 0;
+            }
         }
     }
 }
