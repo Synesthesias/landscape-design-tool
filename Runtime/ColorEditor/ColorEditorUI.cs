@@ -15,6 +15,8 @@ namespace Landscape2.Runtime
     {
         // 色が変更されたときのイベント関数
         public event Action<Color> OnColorEdited = color => { };
+        // 閉じるボタンが押されたときのイベント関数
+        public event Action OnCloseButtonClicked = () => { };
 
         // 色相変更スライダー
         private readonly SliderInt hueSlider;
@@ -29,7 +31,7 @@ namespace Landscape2.Runtime
         // リセットボタン
         private readonly Button resetButton;
         // 閉じるボタン
-        //private readonly Button closeButton;
+        private readonly Button closeButton;
         // マンセル表パネル
         private readonly VisualElement munsellPanel;
 
@@ -45,29 +47,35 @@ namespace Landscape2.Runtime
         private const string UIColorPanel = "ColorPanel";
         // リセットボタン名前
         private const string UIResetButton = "ResetButton";
+        // 閉じるボタン名前
+        private const string UICloseButton = "CloseButton";
         // マンセル表パネル名前
         private const string UIMunsellPanel = "MunsellPanel";
 
         // マンセル表の色セット
         private List<List<string>> codemap = new List<List<string>>();
         MunsellData munsellData = new MunsellData();
-
         // ボタンフォーカス時のボーダー色
         private Color focusColor = new Color(1f, 1f, 0f, 1f);
-
         // 最後にフォーカスされたボタン
         private Button lastFocusButton;
         // 現在選択されているマンセル表の色
         private Color munselColor;
+        // 初期化時の色
+        private Color initialColor;
 
-        public ColorEditorUI(VisualElement uiRoot)
+        public ColorEditorUI(VisualElement uiRoot, Color initialColor = default)
         {
+            this.initialColor = initialColor;
+
+            // 色彩変更UIの各要素を取得
             hueSlider = uiRoot.Q<SliderInt>(UIHueSlider);
             rSlider = uiRoot.Q<SliderInt>(UIRSlider);
             gSlider = uiRoot.Q<SliderInt>(UIGSlider);
             bSlider = uiRoot.Q<SliderInt>(UIBSlider);
             colorPanel = uiRoot.Q<VisualElement>(UIColorPanel);
             resetButton = uiRoot.Q<Button>(UIResetButton);
+            closeButton = uiRoot.Q<Button>(UICloseButton);
             munsellPanel = uiRoot.Q<VisualElement>(UIMunsellPanel);
 
             // 色相の初期値の設定
@@ -76,9 +84,7 @@ namespace Landscape2.Runtime
             hueSlider.value = 0;
 
             // RGBの初期値の設定
-            rSlider.value = 255;
-            gSlider.value = 255;
-            bSlider.value = 255;
+            SetColorSlider(initialColor);
 
             // 色相を初期化
             EditHue(hueSlider.value);
@@ -96,7 +102,7 @@ namespace Landscape2.Runtime
                 Color newColor = new Color(evt.newValue / 255f, gSlider.value / 255f, bSlider.value / 255f);
                 // 色見本を更新
                 colorPanel.style.backgroundColor = new StyleColor(newColor);
-                // 建築物の色を更新
+                // 色を更新
                 OnColorEdited(newColor);
             });
 
@@ -105,7 +111,7 @@ namespace Landscape2.Runtime
                 Color newColor = new Color(rSlider.value / 255f, evt.newValue / 255f, bSlider.value / 255f);
                 // 色見本を更新
                 colorPanel.style.backgroundColor = new StyleColor(newColor);
-                // 建築物の色を更新
+                // 色を更新
                 OnColorEdited(newColor);
             });
 
@@ -114,7 +120,7 @@ namespace Landscape2.Runtime
                 Color newColor = new Color(rSlider.value / 255f, gSlider.value / 255f, evt.newValue / 255f);
                 // 色見本を更新
                 colorPanel.style.backgroundColor = new StyleColor(newColor);
-                // 建築物の色を更新
+                // 色を更新
                 OnColorEdited(newColor);
             });
 
@@ -141,9 +147,10 @@ namespace Landscape2.Runtime
                         colorPanel.style.backgroundColor = new StyleColor(munselColor);
                         // 最後にフォーカスされたボタンを更新
                         lastFocusButton = button;
-
-                        // 建築物の色を更新
-                        OnColorEdited(munselColor);
+                        //// 色を更新
+                        //OnColorEdited(munselColor);
+                        //　色彩スライダーの値を更新
+                        SetColorSlider(munselColor);
                     };
                 });
             });
@@ -152,22 +159,21 @@ namespace Landscape2.Runtime
             resetButton.clicked += () =>
             {
                 // RGBをリセット
-                rSlider.value = 255;
-                gSlider.value = 255;
-                bSlider.value = 255;
+                SetColorSlider(initialColor);
 
                 // 色見本をリセット
-                colorPanel.style.backgroundColor = new StyleColor(new Color(1f, 1f, 1f));
+                colorPanel.style.backgroundColor = new StyleColor(initialColor);
 
-                // 建築物の色を更新
-                OnColorEdited(Color.white);
-                //this.colorEditor.EditBuildingColor(Color.white);
-
+                // 色を更新
+                OnColorEdited(initialColor);
             };
-        }
 
-        public void Start()
-        {
+            // 閉じるボタンが押されたとき
+            closeButton.clicked += () =>
+            {
+                // 閉じるボタンが押されたときのイベントを発火
+                OnCloseButtonClicked();
+            };
         }
 
         // 色相を変更する
@@ -188,7 +194,6 @@ namespace Landscape2.Runtime
                     Color newColor = Color.white;
                     if (j < codemap[i].Count)
                     {
-
                         if (ColorUtility.TryParseHtmlString("#" + codemap[i][j], out newColor))
                         {
                             button.style.backgroundColor = newColor;
@@ -308,6 +313,32 @@ namespace Landscape2.Runtime
             }
         }
 
+        // ボタンのボーダーの色を指定した色に変更する：引数はColor
+        private void EditBorderColor(Button button, Color color)
+        {
+            button.style.borderBottomColor = new StyleColor(color);
+            button.style.borderTopColor = new StyleColor(color);
+            button.style.borderLeftColor = new StyleColor(color);
+            button.style.borderRightColor = new StyleColor(color);
+        }
+
+        // 色彩スライダーの値を設定する
+        public void SetColorSlider(Color color)
+        {
+            rSlider.value = (int)(color.r * 255f);
+            gSlider.value = (int)(color.g * 255f);
+            bSlider.value = (int)(color.b * 255f);
+        }
+
+        // 初期化時の色をセットする
+        public void SetInitialColor(Color color)
+        {
+            initialColor = color;
+        }
+
+        public void Start()
+        {
+        }
         public void Update(float deltaTime)
         {
         }
@@ -318,14 +349,6 @@ namespace Landscape2.Runtime
         {
         }
 
-        // ボタンのボーダーの色を指定した色に変更する：引数はColor
-        private void EditBorderColor(Button button, Color color)
-        {
-            button.style.borderBottomColor = new StyleColor(color);
-            button.style.borderTopColor = new StyleColor(color);
-            button.style.borderLeftColor = new StyleColor(color);
-            button.style.borderRightColor = new StyleColor(color);
-        }
     }
 
     // 建物編集UI用のサブクラス
@@ -338,9 +361,9 @@ namespace Landscape2.Runtime
         // 地物型選択リスト名前
         private const string UIBuildingField = "BuildingField";
         // 地物型選択リストの文字列を管理する配列
-        private  string[] uiBuildingFields = { "要素全体", "壁" , "屋根/屋上" };
+        private string[] uiBuildingFields = { "要素全体", "壁", "屋根/屋上" };
 
-        public BuildingColorEditorUI(VisualElement uiRoot) : base(uiRoot)
+        public BuildingColorEditorUI(VisualElement uiRoot, Color initialColor) : base(uiRoot, initialColor)
         {
             buildingField = uiRoot.Q<DropdownField>(UIBuildingField);
             // 地物型選択リストの初期値の設定
@@ -357,13 +380,12 @@ namespace Landscape2.Runtime
         {
             buildingField.choices.Clear();
             // ドロップダウンリストの要素数を更新
-            for (int i = 0;i < count;i ++)
+            for (int i = 0; i < count; i++)
             {
                 buildingField.choices.Add(uiBuildingFields[i]);
             }
             // ドロップダウンリストの初期値を設定
             buildingField.value = uiBuildingFields[0];
         }
-    }   
-    
+    }
 }
