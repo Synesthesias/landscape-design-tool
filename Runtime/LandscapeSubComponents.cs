@@ -110,12 +110,11 @@ namespace Landscape2.Runtime
                 new CameraPositionMemoryUI(cameraPositionMemory, subMenuUxmls, walkerMoveByUserInput,saveSystem, uiRoot),
                 new PlanningUI(subMenuUxmls[(int)SubMenuUxmlType.Planning]),
                 new ArrangeAsset(subMenuUxmls[(int)SubMenuUxmlType.Asset],saveSystem),
-                // RegulationAreaUI.CreateForScene(),
-                //LineOfSightUI.CreateForScene(),
-                //new WeatherTimeEditorUI(new WeatherTimeEditor.WeatherTimeEditor(),uiRoot),
+                //RegulationAreaUI.CreateForScene(),
+                new WeatherTimeEditorUI(new WeatherTimeEditor.WeatherTimeEditor(),uiRoot),
                 saveSystem, 
                 editBuilding,
-                new BuildingColorEditor(new BuildingColorEditorUI(subMenuUxmls[(int)SubMenuUxmlType.EditBuilding]),editBuilding)
+                new BuildingColorEditor(new BuildingColorEditorUI(subMenuUxmls[(int)SubMenuUxmlType.EditBuilding],Color.white),editBuilding)
             };
         }
 
