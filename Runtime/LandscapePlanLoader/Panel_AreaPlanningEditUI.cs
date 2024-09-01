@@ -133,13 +133,18 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 // 色彩変更パネルを画面中央に表示
                 colorEditorClone = colorEditor.CloneTree();
                 planning.Q<VisualElement>("CenterUpper").Add(colorEditorClone);
-                
+
                 // 色彩の変更を反映
-                ColorEditorUI colorEditorUI = new ColorEditorUI(colorEditorClone);
+                ColorEditorUI colorEditorUI = new ColorEditorUI(colorEditorClone, areaEditManager.GetColor()) ;
                 colorEditorUI.OnColorEdited += (newColor) =>
                 {
                     areaPlanningColor.style.backgroundColor = newColor;
                     areaEditManager.ChangeColor(newColor);
+                };
+                colorEditorUI.OnCloseButtonClicked += () =>
+                {
+                    isColorEditing = false;
+                    EditColor();
                 };
             }
             else
