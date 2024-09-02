@@ -11,24 +11,24 @@ namespace Landscape2.Runtime.LandscapePlanLoader
     /// </summary>
     public sealed class PointDataRenderManager
     {
-        List<GameObject> m_ListOfGISObjects = new List<GameObject>();
-        CesiumGeoreference m_GeoRef;
+        private readonly List<GameObject> listOfGISObjects = new List<GameObject>();
+        private CesiumGeoreference geoRef;
 
         /// <summary>
         /// 頂点座標データから景観区画メッシュを生成するクラス
         /// </summary>
-        /// <param name="ParentObjectName"> 景観区画オブジェクトの親とするオブジェクトの名前（任意の名前） </param>
+        /// <param name="parentObjectName"> 景観区画オブジェクトの親とするオブジェクトの名前（任意の名前） </param>
         /// <param name="pointDatas"> メッシュのworld pointのデータリスト </param>
         /// <param name="listOfGISObjects"> 生成したメッシュオブジェクトを保持するリスト </param>
         /// <returns> メッシュの生成が成功した場合はtrue、頂点座標データが空の場合はfalse </returns>
-        public bool DrawShapes(string ParentObjectName, List<List<Vector3>> pointDatas, out List<GameObject> listOfGISObjects)
+        public bool DrawShapes(string parentObjectName, List<List<List<Vector3>>> pointDatas, out List<GameObject> listOfGISObjects)
         {
             listOfGISObjects = null;
             if (pointDatas.Count > 0)
             {
-                GameObject rootObject = new GameObject(ParentObjectName + "_GIS");
-                m_GeoRef = GameObject.FindObjectOfType<CesiumGeoreference>();
-                rootObject.transform.parent = m_GeoRef.transform;
+                GameObject rootObject = new GameObject(parentObjectName + "_GIS");
+                geoRef = GameObject.FindObjectOfType<CesiumGeoreference>();
+                rootObject.transform.parent = geoRef.transform;
                 CesiumGlobeAnchor anchor = rootObject.AddComponent<CesiumGlobeAnchor>();
                 rootObject.AddComponent<MeshFilter>();
                 rootObject.AddComponent<MeshRenderer>();
@@ -41,7 +41,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 pos.z = 0;
                 anchor.longitudeLatitudeHeight = pos;
 
-                listOfGISObjects = m_ListOfGISObjects;
+                listOfGISObjects = this.listOfGISObjects;
 
                 return true;
             }
@@ -50,11 +50,11 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             return false;
         }
 
-        void DrawPolygonOrPolyline(GameObject parentObject, GameObject originMeshObj, List<List<Vector3>> pointDatas)
+        void DrawPolygonOrPolyline(GameObject parentObject, GameObject originMeshObj, List<List<List<Vector3>>> pointDatas)
         {
-            foreach (List<Vector3> partPointsWorld in pointDatas)
+            foreach (List<List<Vector3>> partPointsWorld in pointDatas)
             {
-                if (partPointsWorld.Count < 3)
+                if (partPointsWorld[0].Count < 3)
                 {
                     Debug.LogError("Point data is empty");
                     continue;
@@ -70,7 +70,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 MeshFilter meshFilter = meshObject.GetComponent<MeshFilter>();
                 tessellatedMeshCreator.CreateTessellatedMesh(partPointsWorld, meshFilter, 30, 40);
 
-                m_ListOfGISObjects.Add(meshObject);
+                listOfGISObjects.Add(meshObject);
             }
         }
     }

@@ -18,7 +18,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
     {
         List<IShape> m_ListOfShapes = new List<IShape>();
         List<GameObject> m_ListOfGISObjects = new List<GameObject>();
-        List<List<Vector3>> m_pointDatas = new List<List<Vector3>>();
+        List<List<List<Vector3>>> m_pointDataLists = new List<List<List<Vector3>>>();
         public Action m_OnRender;
 
         CesiumGeoreference m_GeoRef;
@@ -32,7 +32,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         GameObject m_PositionMarkerSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
 
         Material m_Clockwise;
-        Material m_Counter;
 
         string m_CurrentRenderingObject;
         float m_RenderHeight;
@@ -54,10 +53,10 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             m_DbfReader = null;
         }
 
-        public bool Read(float lineWidth, out List<GameObject> listOfGISObjects, out List<List<Vector3>> pointDatas)
+        public bool Read(float lineWidth, out List<GameObject> listOfGISObjects, out List<List<List<Vector3>>> pointDataLists)
         {
             listOfGISObjects = null;
-            pointDatas = null;
+            pointDataLists = null;
 
             string[] filePaths = Directory.GetFiles(m_FolderPath, "*.shp");
 
@@ -94,7 +93,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             }
 
             listOfGISObjects = m_ListOfGISObjects;
-            pointDatas = m_pointDatas;
+            pointDataLists = m_pointDataLists;
             return true;
         }
 
@@ -107,9 +106,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             }
 
             m_Clockwise = Resources.Load<Material>(PlateauToolkitMapsConstants.k_ClockwiseMaterialHdrp);
-            m_Counter = Resources.Load<Material>(PlateauToolkitMapsConstants.k_CounterClockwiseMaterialHdrp);
 
-            if (m_Counter == null || m_Clockwise == null)
+            if (m_Clockwise == null)
             {
                 Debug.LogError("Failed to load materials");
                 return false;
@@ -220,6 +218,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
         void DrawPolygonOrPolyline(IShape shape, int index, float lineWidth, GameObject shapeParent, GameObject parentObject, bool dbfRead, DbfReader dbfReader, DbfRecord record, GameObject mesh)
         {
+            List<List<Vector3>> partPointsWorldList = new List<List<Vector3>>();
+
             for (int i = 0; i < shape.Parts.Count - 1; i++)
             {
                 int start = shape.Parts[i];
@@ -268,27 +268,32 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 }
                 else if (m_RenderMode == 0)
                 {
-                    GameObject meshObject = GameObject.Instantiate(mesh);
-
-                    meshObject.transform.position = Vector3.zero;
-                    meshObject.transform.parent = parentObject.transform;
-                    if (!string.IsNullOrEmpty(m_DbfFilePath) && dbfRead && dbfReader.GetRecordLength() == m_ListOfShapes.Count)
-                    {
-                        AttachMetadata(meshObject, record);
-                    }
-
-                    // テッセレーション処理を行ったメッシュを生成
-                    TessellatedMeshCreator tessellatedMeshCreator = new TessellatedMeshCreator();
-                    MeshFilter meshFilter = meshObject.GetComponent<MeshFilter>();
-                    tessellatedMeshCreator.CreateTessellatedMesh(partPointsWorld, meshFilter, 30, 40);
-
-                    m_pointDatas.Add(partPointsWorld);
-                    m_ListOfGISObjects.Add(meshObject);
+                    partPointsWorldList.Add(partPointsWorld);
                 }
                 else
                 {
                     Debug.LogError("Failed to instantiate shpLineRendererObject");
                 }
+            }
+
+            if (m_RenderMode == 0)
+            {
+                GameObject meshObject = GameObject.Instantiate(mesh);
+
+                meshObject.transform.position = Vector3.zero;
+                meshObject.transform.parent = parentObject.transform;
+                if (!string.IsNullOrEmpty(m_DbfFilePath) && dbfRead && dbfReader.GetRecordLength() == m_ListOfShapes.Count)
+                {
+                    AttachMetadata(meshObject, record);
+                }
+
+                // テッセレーション処理を行ったメッシュを生成
+                TessellatedMeshCreator tessellatedMeshCreator = new TessellatedMeshCreator();
+                MeshFilter meshFilter = meshObject.GetComponent<MeshFilter>();
+                tessellatedMeshCreator.CreateTessellatedMesh(partPointsWorldList, meshFilter, 30, 40);
+
+                m_pointDataLists.Add(partPointsWorldList);
+                m_ListOfGISObjects.Add(meshObject);
             }
         }
 
@@ -330,7 +335,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             unityMesh.RecalculateNormals();
             meshFilter.sharedMesh = unityMesh;
 
-            meshRenderer.sharedMaterial = isHole ? m_Counter : m_Clockwise;
+            meshRenderer.sharedMaterial = m_Clockwise;
         }
 
         public void AttachMetadata(GameObject gisObj, DbfRecord record)
@@ -354,7 +359,5 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 m_PositionMarkerSphere = null; // Disposeの重複呼び出しを防ぐ
             }
         }
-
-
     }
 }

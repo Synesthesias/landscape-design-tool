@@ -15,7 +15,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// <param name="wallHeight">生成する壁オブジェクトの高さ</param>
         /// <param name="wallDirection">生成方向（上下）</param>
         /// <returns>生成した壁のオブジェクト</returns>
-        public GameObject GenerateWall(Mesh originalMesh, float wallHeight, Vector3 wallDirection, Material wallMaterial)
+        public GameObject[] GenerateWall(Mesh originalMesh, float wallHeight, Vector3 wallDirection, Material wallMaterial)
         {
             Vector3[] vertices = originalMesh.vertices;
             int[] triangles = originalMesh.triangles;
@@ -30,8 +30,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 CountEdge(edgeCount, vertices, triangles[i + 2], triangles[i]);
             }
 
-            List<Vector3> wallVertices = new List<Vector3>();
-            List<int> wallTriangles = new List<int>();
+            
             List<Edge> outlineEdges = new List<Edge>();
 
             // 外周を形成するエッジを抽出
@@ -44,77 +43,101 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 }
             }
 
-            // 初期エッジをリストに追加
-            List<Vector3> SortedOutlineVertices = new List<Vector3>
-             {
-                 outlineEdges[0].vertex1,
-                 outlineEdges[0].vertex2
-             };
-            outlineEdges.RemoveAt(0);
-
             // 隣接する外周エッジを探索してソート
-            for (int i = 0; outlineEdges.Count != 0; i++)
+            List<List<Vector3>> sortedOutlineVerticesList = new List<List<Vector3>>();
+            while(outlineEdges.Count != 0)
             {
-                Vector3 preEndPoint = SortedOutlineVertices[i * 2 + 1];
-                for (int j = 0; j < outlineEdges.Count; j++)
+                // 初期エッジをリストに追加
+                List<Vector3> sortedOutlineVertices = new List<Vector3>
                 {
-                    if (outlineEdges[j].vertex1 == preEndPoint)
+                    outlineEdges[0].vertex1,
+                    outlineEdges[0].vertex2
+                };
+                outlineEdges.RemoveAt(0);
+
+
+                // 隣接エッジの探索
+                for (int i = 0; outlineEdges.Count != 0; i++)
+                {
+                    Vector3 preEndPoint = sortedOutlineVertices[i * 2 + 1];
+                    bool isFound = false;
+
+                    for (int j = 0; j < outlineEdges.Count; j++)
                     {
-                        SortedOutlineVertices.Add(outlineEdges[j].vertex1);
-                        SortedOutlineVertices.Add(outlineEdges[j].vertex2);
-                        outlineEdges.RemoveAt(j);
-                        break;
+                        if (outlineEdges[j].vertex1 == preEndPoint)
+                        {
+                            sortedOutlineVertices.Add(outlineEdges[j].vertex1);
+                            sortedOutlineVertices.Add(outlineEdges[j].vertex2);
+                            outlineEdges.RemoveAt(j);
+                            isFound = true;
+                            break;
+                        }
+                        else if (outlineEdges[j].vertex2 == preEndPoint)
+                        {
+                            sortedOutlineVertices.Add(outlineEdges[j].vertex2);
+                            sortedOutlineVertices.Add(outlineEdges[j].vertex1);
+                            outlineEdges.RemoveAt(j);
+                            isFound = true;
+                            break;
+                        }
+                        isFound = false;
                     }
-                    else if (outlineEdges[j].vertex2 == preEndPoint)
-                    {
-                        SortedOutlineVertices.Add(outlineEdges[j].vertex2);
-                        SortedOutlineVertices.Add(outlineEdges[j].vertex1);
-                        outlineEdges.RemoveAt(j);
-                        break;
-                    }
+
+                    if (!isFound)   break;
                 }
+                sortedOutlineVerticesList.Add(sortedOutlineVertices);
             }
 
-            // 壁の頂点とTriangle、UVを生成
-            Vector2[] uv = new Vector2[SortedOutlineVertices.Count * 2];
-            float uvXPitch = 1.0f / SortedOutlineVertices.Count;
 
-            for (int i = 0; i * 2 < SortedOutlineVertices.Count; i++)
+            GameObject[] wallObjects = new GameObject[sortedOutlineVerticesList.Count];
+            for(int k = 0; k < sortedOutlineVerticesList.Count; k++)
             {
-                Vector3 v1 = SortedOutlineVertices[i * 2];
-                Vector3 v2 = SortedOutlineVertices[i * 2 + 1];
+                List<Vector3> wallVertices = new List<Vector3>();
+                List<int> wallTriangles = new List<int>();
 
-                wallVertices.Add(v1);
-                wallVertices.Add(v2);
-                wallVertices.Add(v1 + wallDirection.normalized * wallHeight);
-                wallVertices.Add(v2 + wallDirection.normalized * wallHeight);
+                // 壁の頂点とTriangle、UVを生成
+                Vector2[] uv = new Vector2[sortedOutlineVerticesList[k].Count * 2];
+                float uvXPitch = 1.0f / sortedOutlineVerticesList[k].Count;
 
-                uv[i * 4] = new Vector2(i * 2 * uvXPitch, 1);
-                uv[i * 4 + 1] = new Vector2((i * 2 + 1) * uvXPitch, 1);
-                uv[i * 4 + 2] = new Vector2(i * 2 * uvXPitch, 0);
-                uv[i * 4 + 3] = new Vector2((i * 2 + 1) * uvXPitch, 0);
+                for (int i = 0; i * 2 < sortedOutlineVerticesList[k].Count; i++)
+                {
+                    Vector3 v1 = sortedOutlineVerticesList[k][i * 2];
+                    Vector3 v2 = sortedOutlineVerticesList[k][i * 2 + 1];
 
-                int count = wallVertices.Count;
-                wallTriangles.Add(count - 4);
-                wallTriangles.Add(count - 3);
-                wallTriangles.Add(count - 2);
-                wallTriangles.Add(count - 3);
-                wallTriangles.Add(count - 1);
-                wallTriangles.Add(count - 2);
+                    wallVertices.Add(v1);
+                    wallVertices.Add(v2);
+                    wallVertices.Add(v1 + wallDirection.normalized * wallHeight);
+                    wallVertices.Add(v2 + wallDirection.normalized * wallHeight);
+
+                    uv[i * 4] = new Vector2(i * 2 * uvXPitch, 1);
+                    uv[i * 4 + 1] = new Vector2((i * 2 + 1) * uvXPitch, 1);
+                    uv[i * 4 + 2] = new Vector2(i * 2 * uvXPitch, 0);
+                    uv[i * 4 + 3] = new Vector2((i * 2 + 1) * uvXPitch, 0);
+
+                    int count = wallVertices.Count;
+                    wallTriangles.Add(count - 4);
+                    wallTriangles.Add(count - 3);
+                    wallTriangles.Add(count - 2);
+                    wallTriangles.Add(count - 3);
+                    wallTriangles.Add(count - 1);
+                    wallTriangles.Add(count - 2);
+                }
+
+                Mesh wallMesh = new Mesh();
+                wallMesh.vertices = wallVertices.ToArray();
+                wallMesh.triangles = wallTriangles.ToArray();
+                wallMesh.uv = uv;
+
+                GameObject wallObject = new GameObject("Wall");
+                MeshFilter meshFilter = wallObject.AddComponent<MeshFilter>();
+                MeshRenderer meshRenderer = wallObject.AddComponent<MeshRenderer>();
+                meshFilter.mesh = wallMesh;
+                meshRenderer.material = wallMaterial;
+
+                wallObjects[k] = wallObject;
             }
 
-            Mesh wallMesh = new Mesh();
-            wallMesh.vertices = wallVertices.ToArray();
-            wallMesh.triangles = wallTriangles.ToArray();
-            wallMesh.uv = uv;
-
-            GameObject wallObject = new GameObject("Wall");
-            MeshFilter meshFilter = wallObject.AddComponent<MeshFilter>();
-            MeshRenderer meshRenderer = wallObject.AddComponent<MeshRenderer>();
-            meshFilter.mesh = wallMesh;
-            meshRenderer.material = wallMaterial;
-
-            return wallObject;
+            return wallObjects;
         }
 
         /// <summary>

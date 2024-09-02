@@ -29,6 +29,12 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             if (holes != null && holes.Length > 0)
             {
                 var iHoles = iGeom.Int(holes);
+                
+                for (int i = 0; i < iHoles.Length; i++)
+                {
+                    iHoles[i] = RemoveDuplicates(iHoles[i]);
+                }
+
                 iShape = new IntShape(iHull, iHoles);
             }
             else
@@ -70,20 +76,45 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// <param name="meshFilter">生成したメッシュをアタッチするMeshFilter</param>
         /// <param name="tessellateMaxEdge">エッジの最大長</param>
         /// <param name="tessellateMaxArea">Triangleの最大面積</param>
-        public void CreateTessellatedMesh(List<Vector3> points, MeshFilter meshFilter, float tessellateMaxEdge, float tessellateMaxArea)
+        public void CreateTessellatedMesh(List<List<Vector3>> points, MeshFilter meshFilter, float tessellateMaxEdge, float tessellateMaxArea)
         {
             var iGeom = IntGeom.DefGeom;
+            PlainShape pShape;
 
-            Vector2[] hull = new Vector2[points.Count];
-
-            int index = 0;
-            foreach (var point in points)
+            // メッシュに穴がある場合
+            if(points.Count > 1)
             {
-                hull[index] = new Vector2(point.x, point.z);
-                index++;
-            }
+                int hullVertexCount = points[0].Count;
+                Vector2[] hull = new Vector2[hullVertexCount];
+                for (int i = 0; i < hullVertexCount; i++)
+                {
+                    hull[i] = new Vector2(points[0][i].x, points[0][i].z);
+                }
 
-            var pShape = ConvertToPlainShape(iGeom, Allocator.Temp, hull, null);
+                Vector2[][] hole = new Vector2[points.Count - 1][];
+                for (int i = 1; i < points.Count; i++)
+                {
+                    int holeVertexCount = points[i].Count;
+                    hole[i - 1] = new Vector2[holeVertexCount];
+                    for (int index = 0; index < holeVertexCount; index++)
+                    {
+                        hole[i - 1][index] = new Vector2(points[i][index].x, points[i][index].z);
+                    }
+                }
+
+                pShape = ConvertToPlainShape(iGeom, Allocator.Temp, hull, hole);
+            }
+            else
+            {
+                int hullVertexCount = points[0].Count;
+                Vector2[] hull = new Vector2[hullVertexCount];
+                for (int i = 0; i < hullVertexCount; i++)
+                {
+                    hull[i] = new Vector2(points[0][i].x, points[0][i].z);
+                }
+
+                pShape = ConvertToPlainShape(iGeom, Allocator.Temp, hull, null);
+            }
 
             var extraPoints = new NativeArray<IntVector>(0, Allocator.Temp);
             var delaunay = pShape.Delaunay(iGeom.Int(tessellateMaxEdge), extraPoints, Allocator.Temp);

@@ -10,10 +10,10 @@ namespace Landscape2.Runtime.LandscapePlanLoader
     public static class AreasDataComponent
     {
         // 区画データリスト
-        private static List<AreaProperty> properties = new List<AreaProperty>();
+        private static readonly List<AreaProperty> properties = new List<AreaProperty>();
 
         // 変更適用前の情報を保持する区画データリスト
-        private static List<AreaPropertySnapshot> propertiesSnapshot = new List<AreaPropertySnapshot>();
+        private static readonly List<AreaPropertySnapshot> propertiesSnapshot = new List<AreaPropertySnapshot>();
 
         // 区画データ数に変更があった際のイベント
         public static event Action AreaCountChangedEvent = delegate { };
@@ -25,12 +25,12 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         {
             AreaPropertySnapshot newPropertyOrigin = new AreaPropertySnapshot(
                 newProperty.ID,
-                newProperty.name,
-                newProperty.limitHeight,
-                newProperty.lineOffset,
-                newProperty.color,
-                newProperty.referencePosition,
-                newProperty.transform.localPosition
+                newProperty.Name,
+                newProperty.LimitHeight,
+                newProperty.LineOffset,
+                newProperty.Color,
+                newProperty.ReferencePosition,
+                newProperty.Transform.localPosition
                 );
 
             properties.Add(newProperty);
@@ -48,16 +48,16 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             if (index < 0 || index >= properties.Count) return false;
 
             properties[index].ID = propertiesSnapshot[index].ID;
-            properties[index].name = propertiesSnapshot[index].name;
-            properties[index].limitHeight = propertiesSnapshot[index].limitHeight;
-            properties[index].lineOffset = propertiesSnapshot[index].lineOffset;
-            properties[index].color = propertiesSnapshot[index].color;
-            properties[index].SetLocalPosition(propertiesSnapshot[index].position);
+            properties[index].Name = propertiesSnapshot[index].Name;
+            properties[index].LimitHeight = propertiesSnapshot[index].LimitHeight;
+            properties[index].LineOffset = propertiesSnapshot[index].LineOffset;
+            properties[index].Color = propertiesSnapshot[index].Color;
+            properties[index].SetLocalPosition(propertiesSnapshot[index].Position);
 
-            properties[index].ceilingMaterial.color = properties[index].color;
-            properties[index].wallMaterial.color = properties[index].color;
-            properties[index].wallMaterial.SetFloat("_DisplayRate", properties[index].limitHeight / properties[index].wallMaxHeight);
-            properties[index].wallMaterial.SetFloat("_LineCount", properties[index].limitHeight / properties[index].lineOffset);
+            properties[index].CeilingMaterial.color = properties[index].Color;
+            properties[index].WallMaterial.color = properties[index].Color;
+            properties[index].WallMaterial.SetFloat("_DisplayRate", properties[index].LimitHeight / properties[index].WallMaxHeight);
+            properties[index].WallMaterial.SetFloat("_LineCount", properties[index].LimitHeight / properties[index].LineOffset);
 
             return true;
         }
@@ -69,7 +69,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         {
             for (int i = 0; i < properties.Count; i++)
             {
-                GameObject.Destroy(properties[i].transform.gameObject);
+                GameObject.Destroy(properties[i].Transform.gameObject);
             }
             properties.Clear();
             propertiesSnapshot.Clear();
@@ -87,12 +87,12 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
             propertiesSnapshot[index].SetValues(
                 properties[index].ID,
-                properties[index].name,
-                properties[index].limitHeight,
-                properties[index].lineOffset,
-                properties[index].color,
-                properties[index].referencePosition,
-                properties[index].transform.localPosition
+                properties[index].Name,
+                properties[index].LimitHeight,
+                properties[index].LineOffset,
+                properties[index].Color,
+                properties[index].ReferencePosition,
+                properties[index].Transform.localPosition
                 );
             return true;
         }
@@ -123,7 +123,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         {
             if (index < 0 || index >= properties.Count) return false;
 
-            GameObject.Destroy(properties[index].transform.gameObject);
+            GameObject.Destroy(properties[index].Transform.gameObject);
             properties.RemoveAt(index);
             propertiesSnapshot.RemoveAt(index);
 
@@ -146,37 +146,37 @@ namespace Landscape2.Runtime.LandscapePlanLoader
     public class AreaProperty
     {
         public int ID { get; set; }
-        public string name { get; set; }
-        public float limitHeight { get; set; }
-        public float lineOffset { get; set; }
-        public Color color { get; set; }
-        public Material wallMaterial { get; private set; }
-        public Material ceilingMaterial { get; private set; }
+        public string Name { get; set; }
+        public float LimitHeight { get; set; }
+        public float LineOffset { get; set; }
+        public Color Color { get; set; }
+        public Material WallMaterial { get; private set; }
+        public Material CeilingMaterial { get; private set; }
 
-        public float wallMaxHeight { get; private set; }
-        public Transform transform { get; private set; }
-        public Vector3 referencePosition { get; private set; }
-        public List<Vector3> pointData { get; private set; }
+        public float WallMaxHeight { get; private set; }
+        public Transform Transform { get; private set; }
+        public Vector3 ReferencePosition { get; private set; }
+        public List<List<Vector3>> PointData { get; private set; }
 
-        public AreaProperty(int ID, string name, float limitHeight, float lineOffset, Color areaColor, Material wallMaterial, Material ceilingMaterial, float wallMaxHeight, Vector3 referencePos, Transform areaTransform, List<Vector3> pointData)
+        public AreaProperty(int id, string name, float limitHeight, float lineOffset, Color areaColor, Material wallMaterial, Material ceilingMaterial, float wallMaxHeight, Vector3 referencePos, Transform areaTransform, List<List<Vector3>> pointData)
         {
-            this.ID = ID;
-            this.name = name;
-            this.limitHeight = limitHeight;
-            this.lineOffset = lineOffset;
-            this.color = areaColor;
-            this.wallMaterial = wallMaterial;
-            this.ceilingMaterial = ceilingMaterial;
-            this.wallMaxHeight = wallMaxHeight;
-            this.referencePosition = referencePos;
-            this.transform = areaTransform;
-            this.pointData = pointData;
+            ID = id;
+            Name = name;
+            LimitHeight = limitHeight;
+            LineOffset = lineOffset;
+            Color = areaColor;
+            WallMaterial = wallMaterial;
+            CeilingMaterial = ceilingMaterial;
+            WallMaxHeight = wallMaxHeight;
+            ReferencePosition = referencePos;
+            Transform = areaTransform;
+            PointData = pointData;
         }
 
         public void SetLocalPosition(Vector3 newPosition)
         {
-            referencePosition += newPosition - transform.position;
-            transform.localPosition = newPosition;
+            ReferencePosition += newPosition - Transform.position;
+            Transform.localPosition = newPosition;
         }
     }
 
@@ -186,34 +186,34 @@ namespace Landscape2.Runtime.LandscapePlanLoader
     public class AreaPropertySnapshot
     {
         public int ID { get; private set; }
-        public string name { get; private set; }
-        public float limitHeight { get; private set; }
-        public float lineOffset { get; private set; }
-        public Color color { get; private set; }
-        public Vector3 position { get; private set; }
-        public Vector3 referencePosition { get; private set; }
+        public string Name { get; private set; }
+        public float LimitHeight { get; private set; }
+        public float LineOffset { get; private set; }
+        public Color Color { get; private set; }
+        public Vector3 Position { get; private set; }
+        public Vector3 ReferencePosition { get; private set; }
 
 
-        public AreaPropertySnapshot(int ID, string name, float limitHeight, float lineOffset, Color areaColor, Vector3 referencePos, Vector3 areaPosition)
+        public AreaPropertySnapshot(int id, string name, float limitHeight, float lineOffset, Color areaColor, Vector3 referencePos, Vector3 areaPosition)
         {
-            this.ID = ID;
-            this.name = name;
-            this.limitHeight = limitHeight;
-            this.lineOffset = lineOffset;
-            this.color = new Color(areaColor.r, areaColor.g, areaColor.b, areaColor.a);
-            this.referencePosition = referencePos;
-            this.position = areaPosition;
+            ID = id;
+            Name = name;
+            LimitHeight = limitHeight;
+            LineOffset = lineOffset;
+            Color = new Color(areaColor.r, areaColor.g, areaColor.b, areaColor.a);
+            ReferencePosition = referencePos;
+            Position = areaPosition;
         }
 
-        public void SetValues(int ID, string name, float limitHeight, float lineOffset, Color areaColor, Vector3 referencePos, Vector3 areaPosition)
+        public void SetValues(int id, string name, float limitHeight, float lineOffset, Color areaColor, Vector3 referencePos, Vector3 areaPosition)
         {
-            this.ID = ID;
-            this.name = name;
-            this.limitHeight = limitHeight;
-            this.lineOffset = lineOffset;
-            this.color = new Color(areaColor.r, areaColor.g, areaColor.b, areaColor.a);
-            this.referencePosition = referencePos;
-            this.position = areaPosition;
+            ID = id;
+            Name = name;
+            LimitHeight = limitHeight;
+            LineOffset = lineOffset;
+            Color = new Color(areaColor.r, areaColor.g, areaColor.b, areaColor.a);
+            ReferencePosition = referencePos;
+            Position = areaPosition;
         }
     }
 }

@@ -29,12 +29,12 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 AreaProperty areaProperty = AreasDataComponent.GetProperty(i);
                 PlanAreaSaveData saveData = new PlanAreaSaveData(
                     areaProperty.ID,
-                    areaProperty.name,
-                    areaProperty.limitHeight,
-                    areaProperty.lineOffset,
-                    areaProperty.color,
-                    areaProperty.wallMaxHeight,
-                    areaProperty.pointData
+                    areaProperty.Name,
+                    areaProperty.LimitHeight,
+                    areaProperty.LineOffset,
+                    areaProperty.Color,
+                    areaProperty.WallMaxHeight,
+                    areaProperty.PointData
                     );
 
                 planAreaSaveDatas.Add(saveData);
@@ -52,13 +52,13 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             AreasDataComponent.ClearAllProperties();
 
             // 景観区画のセーブデータをロード
-            List<PlanAreaSaveData> LoadedPlanAreaDatas = DataSerializer.Load<List<PlanAreaSaveData>>("PlanAreas");
+            List<PlanAreaSaveData> loadedPlanAreaDatas = DataSerializer.Load<List<PlanAreaSaveData>>("PlanAreas");
 
-            if (LoadedPlanAreaDatas != null)
+            if (loadedPlanAreaDatas != null)
             {
                 // ロードした頂点座標データからMeshを生成
                 LandscapePlanLoadManager landscapePlanLoadManager = new LandscapePlanLoadManager();
-                landscapePlanLoadManager.LoadFromSaveData(LoadedPlanAreaDatas);
+                landscapePlanLoadManager.LoadFromSaveData(loadedPlanAreaDatas);
             }
             else
             {

@@ -66,8 +66,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
                 // インスタンスにエリアの各属性情報を反映
                 AreaProperty areaProperty = AreasDataComponent.GetProperty(index);
-                newAreaListInstance.Q<VisualElement>("ColorSample").style.backgroundColor = areaProperty.color;
-                newAreaListInstance.Q<Label>("AreaPlanningName").text = areaProperty.name;
+                newAreaListInstance.Q<VisualElement>("ColorSample").style.backgroundColor = areaProperty.Color;
+                newAreaListInstance.Q<Label>("AreaPlanningName").text = areaProperty.Name;
 
                 int currentIndex = index;
                 newAreaListInstance.Q<VisualElement>("DeleteButton").AddManipulator(new Clickable(() => OnClickAreaDataDelete(currentIndex)));

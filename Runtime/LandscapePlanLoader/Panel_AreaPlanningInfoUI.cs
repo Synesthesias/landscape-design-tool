@@ -1,4 +1,3 @@
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Landscape2.Runtime.LandscapePlanLoader
@@ -38,8 +37,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
             // エリアデータの取得し，UIに反映
             AreaProperty areaProperty = AreasDataComponent.GetProperty(index);
-            areaPlanningName.text = areaProperty.name;
-            heightLimit.text = areaProperty.limitHeight.ToString();
+            areaPlanningName.text = areaProperty.Name;
+            heightLimit.text = areaProperty.LimitHeight.ToString();
         }
     }
 }

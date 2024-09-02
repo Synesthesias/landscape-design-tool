@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using SFB;
 using PlateauToolkit.Maps;
+using UnityEngine.Rendering.HighDefinition;
 
 namespace Landscape2.Runtime.LandscapePlanLoader
 {
@@ -10,10 +11,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
     /// </summary>
     public sealed class LandscapePlanLoadManager
     {
-        List<GameObject> listOfGISObjects;
-        List<List<Vector3>> listOfAreaPointDatas;
-        Material wallMaterial;
-        Material ceilingMaterial;
+        private readonly Material wallMaterial;
+        private readonly Material ceilingMaterial;
 
         public LandscapePlanLoadManager()
         {
@@ -29,10 +28,13 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// <param name="gisTargetFolderPath"> .shp、.dbfファイルを含むフォルダのパス </param>
         public void LoadShapefile(string gisTargetFolderPath)
         {
+            List<GameObject> listOfGISObjects;
+            List<List<List<Vector3>>> listOfAreaPointDatas;
+
             // GISデータの読み込みとメッシュオブジェクトの生成
-            using (ShapefileRenderManager m_ShapefileRenderManager = new ShapefileRenderManager(gisTargetFolderPath, 0 /*RenderMode:Mesh*/, 0, false, false, SupportedEncoding.ShiftJIS, null))
+            using (ShapefileRenderManager shapefileRenderManager = new ShapefileRenderManager(gisTargetFolderPath, 0 /*RenderMode:Mesh*/, 0, false, false, SupportedEncoding.ShiftJIS, null))
             {
-                if (m_ShapefileRenderManager.Read(0, out listOfGISObjects, out listOfAreaPointDatas))
+                if (shapefileRenderManager.Read(0, out listOfGISObjects, out listOfAreaPointDatas))
                 {
                     Debug.Log("Loading GIS data completed");
                 }
@@ -56,10 +58,10 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             for (int i = 0; i < listOfGISObjects.Count; i++)
             {
                 GameObject gisObject = listOfGISObjects[i];
-                List<Vector3> areaPointData = listOfAreaPointDatas[i];
+                List<List<Vector3>> areaPointData = listOfAreaPointDatas[i];
 
-                // GISデータのプロパティを取得
-                DbfComponent dbf = gisObject.GetComponent<DbfComponent>();
+                //GISデータのプロパティを取得
+               DbfComponent dbf = gisObject.GetComponent<DbfComponent>();
                 if (dbf == null)
                 {
                     Debug.LogError("GisObject have no DbfComponent");
@@ -87,17 +89,18 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 }
 
 
-                // メッシュを変形
+                //メッシュを変形
                 if (!landscapePlanMeshModifier.TryModifyMeshToTargetHeight(mesh, 0, gisObject.transform.position))
                 {
                     Debug.LogError($"{gisObject.name} is out of range of the loaded map");
                     return;
                 }
 
-                // 新規のAreaPropertyを生成し初期化
-                float initLimitHeight = float.Parse(GetPropertyValueOf("HEIGHT", dbf)); // 区画の制限高さを取得
+                //新規のAreaPropertyを生成し初期化
+                float initLimitHeight = float.TryParse(GetPropertyValueOf("HEIGHT", dbf), out float heightValue) ? heightValue : 0; // 区画の制限高さを取得
+                int id = int.TryParse(GetPropertyValueOf("ID", dbf), out int idValue) ? idValue : 0;
                 AreaProperty areaProperty = new AreaProperty(
-                    int.Parse(GetPropertyValueOf("ID", dbf)),
+                    id,
                     GetPropertyValueOf("AREANAME", dbf),
                     initLimitHeight,
                     10,
@@ -111,26 +114,29 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     );
 
 
-                // 上面Meshのマテリアルを設定
-                areaProperty.ceilingMaterial.color = areaProperty.color;
-                gisObjMeshRenderer.material = areaProperty.ceilingMaterial;
+                //上面Meshのマテリアルを設定
+                areaProperty.CeilingMaterial.color = areaProperty.Color;
+                gisObjMeshRenderer.material = areaProperty.CeilingMaterial;
 
-                // 区画のメッシュから下向きに壁を生成
-                GameObject wall = wallGenerator.GenerateWall(mesh, areaProperty.wallMaxHeight, Vector3.down, areaProperty.wallMaterial);
-                wall.transform.SetParent(gisObject.transform);
-                wall.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
-                areaProperty.wallMaterial.color = areaProperty.color;
-                areaProperty.wallMaterial.SetFloat("_DisplayRate", areaProperty.limitHeight / areaProperty.wallMaxHeight);
-                areaProperty.wallMaterial.SetFloat("_LineCount", areaProperty.limitHeight / areaProperty.lineOffset);
+                //区画のメッシュから下向きに壁を生成
+               GameObject[] walls = wallGenerator.GenerateWall(mesh, areaProperty.WallMaxHeight, Vector3.down, areaProperty.WallMaterial);
+                for(int j = 0; j < walls.Length; j++)
+                {
+                    walls[j].transform.SetParent(gisObject.transform);
+                    walls[j].transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+                    walls[j].name = $"AreaWall_{areaProperty.ID}_{j}";
+                }
+                areaProperty.WallMaterial.color = areaProperty.Color;
+                areaProperty.WallMaterial.SetFloat("_DisplayRate", areaProperty.LimitHeight / areaProperty.WallMaxHeight);
+                areaProperty.WallMaterial.SetFloat("_LineCount", areaProperty.LimitHeight / areaProperty.LineOffset);
                 areaProperty.SetLocalPosition(new Vector3(
-                    areaProperty.transform.localPosition.x,
-                    areaProperty.limitHeight,
-                    areaProperty.transform.localPosition.z
+                    areaProperty.Transform.localPosition.x,
+                    areaProperty.LimitHeight,
+                    areaProperty.Transform.localPosition.z
                     ));
-                wall.name = $"AreaWall_{areaProperty.ID}";
                 gisObject.name = $"Area_{areaProperty.ID}";
 
-                // 区画データリストにAreaPropertyを追加登録
+                //区画データリストにAreaPropertyを追加登録
                 AreasDataComponent.AddNewProperty(areaProperty);
             }
             Debug.Log("Mesh modification and wall generation completed");
@@ -142,8 +148,11 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// <param name="saveDatas"> ロードした区画セーブデータ </param>
         public void LoadFromSaveData(List<PlanAreaSaveData> saveDatas)
         {
+            List<GameObject> listOfGISObjects;
+            List<List<List<Vector3>>> listOfAreaPointDatas;
+
             // 景観区画の頂点データを取得
-            listOfAreaPointDatas = new List<List<Vector3>>();
+            listOfAreaPointDatas = new List<List<List<Vector3>>>();
             foreach (PlanAreaSaveData saveData in saveDatas)
             {
                 listOfAreaPointDatas.Add(saveData.PointData);
@@ -174,7 +183,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             for (int i = 0; i < listOfGISObjects.Count; i++)
             {
                 GameObject gisObject = listOfGISObjects[i];
-                List<Vector3> areaPointData = listOfAreaPointDatas[i];
+                List<List<Vector3>> areaPointData = listOfAreaPointDatas[i];
                 PlanAreaSaveData saveData = saveDatas[i];
 
                 MeshFilter gisObjMeshFilter = gisObject.GetComponent<MeshFilter>();
@@ -203,7 +212,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     Debug.LogError($"{gisObject.name} is out of range of the loaded map");
                     return;
                 }
-
                 // 新規のAreaPropertyを生成し初期化
                 float initLimitHeight = saveData.LimitHeight;
                 AreaProperty areaProperty = new AreaProperty(
@@ -221,27 +229,30 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     );
 
                 // 上面Meshのマテリアルを設定
-                areaProperty.ceilingMaterial.color = areaProperty.color;
-                gisObjMeshRenderer.material = areaProperty.ceilingMaterial;
+                areaProperty.CeilingMaterial.color = areaProperty.Color;
+                gisObjMeshRenderer.material = areaProperty.CeilingMaterial;
 
                 // 区画のメッシュから下向きに壁を生成
-                GameObject wall = wallGenerator.GenerateWall(mesh, areaProperty.wallMaxHeight, Vector3.down, areaProperty.wallMaterial);
-                wall.transform.SetParent(gisObject.transform);
-                wall.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
-                areaProperty.wallMaterial.color = areaProperty.color;
-                areaProperty.wallMaterial.SetFloat("_DisplayRate", areaProperty.limitHeight / areaProperty.wallMaxHeight);
-                areaProperty.wallMaterial.SetFloat("_LineCount", areaProperty.limitHeight / areaProperty.lineOffset);
-                wall.name = $"AreaWall_{areaProperty.ID}";
-                gisObject.name = $"Area_{areaProperty.ID}";
+                GameObject[] walls = wallGenerator.GenerateWall(mesh, areaProperty.WallMaxHeight, Vector3.down, areaProperty.WallMaterial);
+                for (int j = 0; j < walls.Length; j++)
+                {
+                    walls[j].transform.SetParent(gisObject.transform);
+                    walls[j].transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+                    walls[j].name = $"AreaWall_{areaProperty.ID}_{j}";
+                }
+                areaProperty.WallMaterial.color = areaProperty.Color;
+                areaProperty.WallMaterial.SetFloat("_DisplayRate", areaProperty.LimitHeight / areaProperty.WallMaxHeight);
+                areaProperty.WallMaterial.SetFloat("_LineCount", areaProperty.LimitHeight / areaProperty.LineOffset);
                 areaProperty.SetLocalPosition(new Vector3(
-                    areaProperty.transform.localPosition.x,
-                    areaProperty.limitHeight,
-                    areaProperty.transform.localPosition.z
+                    areaProperty.Transform.localPosition.x,
+                    areaProperty.LimitHeight,
+                    areaProperty.Transform.localPosition.z
                     ));
+                gisObject.name = $"Area_{areaProperty.ID}";
 
                 // 区画データリストにAreaPropertyを追加登録
                 AreasDataComponent.AddNewProperty(areaProperty);
-                
+
             }
             Debug.Log("Mesh modification and wall generation completed");
         }
@@ -262,22 +273,21 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// <summary>
         /// 色のstirngデータをColorに変換するメソッド
         /// </summary>
-        /// <param name="colorString"> "r,g,b,a"のフォーマットで記述された色のstringデータ </param>
+        /// <param name="colorString"> "r,g,b"のフォーマットで記述された色のstringデータ </param>
         Color DbfStringToColor(string colorString)
         {
             string[] colorValues = colorString.Split(',');
 
-            if (colorValues.Length == 4 &&
+            if (colorValues.Length >= 3 &&
                 float.TryParse(colorValues[0], out float r) &&
                 float.TryParse(colorValues[1], out float g) &&
-                float.TryParse(colorValues[2], out float b) &&
-                float.TryParse(colorValues[3], out float a))
+                float.TryParse(colorValues[2], out float b))
             {
-                return new Color(r, g, b, a);
+                return new Color(r, g, b, 1);
             }
 
-            Debug.LogError("Invalid color string format.");
-            return Color.clear;
+            Debug.LogError("Invalid color string format. Color data must be in the form 'R,G,B' with values ranging from 0 to 1. For example, '0.2,0.2,0.2'.");
+            return Color.white;
         }
 
         /// <summary>
@@ -290,7 +300,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             int index = dbf.PropertyNames.IndexOf(propertyName);
             if (index != -1) return dbf.Properties[index];
 
-            return null;
+            Debug.LogError($"Attribute name '{propertyName}' was not found.");
+            return "";
         }
     }
 }

@@ -8,7 +8,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
     public sealed class AreaEditManager
     {
         private AreaProperty editingAreaProperty;
-        private AreaPropertySnapshot editingAreaPropertyOrigin;
         private int editingAreaIndex = -1;
 
         /// <summary>
@@ -19,18 +18,18 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         {
             if (editingAreaProperty == null) return;
 
-            newHeight = Mathf.Clamp(newHeight, 0, editingAreaProperty.wallMaxHeight);
-            editingAreaProperty.limitHeight = newHeight;
+            newHeight = Mathf.Clamp(newHeight, 0, editingAreaProperty.WallMaxHeight);
+            editingAreaProperty.LimitHeight = newHeight;
 
              editingAreaProperty.SetLocalPosition(
                  new Vector3(
-                 editingAreaProperty.transform.localPosition.x,
+                 editingAreaProperty.Transform.localPosition.x,
                  newHeight,
-                 editingAreaProperty.transform.localPosition.z
+                 editingAreaProperty.Transform.localPosition.z
                  ));
 
-            editingAreaProperty.wallMaterial.SetFloat("_DisplayRate", newHeight / editingAreaProperty.wallMaxHeight);
-            editingAreaProperty.wallMaterial.SetFloat("_LineCount", newHeight / editingAreaProperty.lineOffset);
+            editingAreaProperty.WallMaterial.SetFloat("_DisplayRate", newHeight / editingAreaProperty.WallMaxHeight);
+            editingAreaProperty.WallMaterial.SetFloat("_LineCount", newHeight / editingAreaProperty.LineOffset);
         }
 
         /// <summary>
@@ -42,11 +41,9 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             if(targetAreaIndex == -1)
             {
                 editingAreaProperty = null;
-                editingAreaPropertyOrigin = null;
             }
             else
             {
-                editingAreaPropertyOrigin = AreasDataComponent.GetSnapshotProperty(targetAreaIndex);
                 editingAreaProperty = AreasDataComponent.GetProperty(targetAreaIndex);
             }
 
@@ -60,7 +57,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         public float? GetMaxHeight()
         {
             if (editingAreaProperty == null) return null;
-            return editingAreaProperty.wallMaxHeight;
+            return editingAreaProperty.WallMaxHeight;
         }
 
         /// <summary>
@@ -70,7 +67,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         public float? GetLimitHeight()
         {
             if (editingAreaProperty == null) return null;
-            return editingAreaProperty.limitHeight;
+            return editingAreaProperty.LimitHeight;
         }
 
         /// <summary>
@@ -80,7 +77,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         public string GetAreaName()
         {
             if (editingAreaProperty == null) return null;
-            return editingAreaProperty.name;
+            return editingAreaProperty.Name;
         }
 
         /// <summary>
@@ -90,7 +87,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         public void ChangeAreaName(string newName)
         {
             if (editingAreaProperty == null) return;
-            editingAreaProperty.name = newName;
+            editingAreaProperty.Name = newName;
         }
 
         /// <summary>
@@ -99,7 +96,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         public Color GetColor()
         {
             if (editingAreaProperty == null) return Color.white;
-            return editingAreaProperty.color;
+            return editingAreaProperty.Color;
         }
 
         /// <summary>
@@ -109,9 +106,9 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         public void ChangeColor(Color newColor)
         {
             if (editingAreaProperty == null) return;
-            editingAreaProperty.color = newColor;
-            editingAreaProperty.ceilingMaterial.SetColor("_Color", newColor);
-            editingAreaProperty.wallMaterial.SetColor("_Color", newColor);
+            editingAreaProperty.Color = newColor;
+            editingAreaProperty.CeilingMaterial.SetColor("_Color", newColor);
+            editingAreaProperty.WallMaterial.SetColor("_Color", newColor);
         }
 
         /// <summary>
