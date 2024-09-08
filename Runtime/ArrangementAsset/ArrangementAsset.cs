@@ -31,20 +31,20 @@ namespace Landscape2.Runtime
         Edit
     }
 
-    public class ArrangeAsset : ISubComponent,LandscapeInputActions.IArrangeAssetActions
+    public class ArrangementAsset : ISubComponent,LandscapeInputActions.IArrangeAssetActions
     {
         private Camera cam;
         private Ray ray;
         private VisualElement arrangementAssetUI;
+        private ArrangementAssetUI arrangementAssetUIClass;
         private VisualElement editPanel;
         private LandscapeInputActions.ArrangeAssetActions input;
         private GameObject editTarget;
-
         private ArrangeMode currentMode;
         private CreateMode createMode;
         private EditMode editMode;
 
-        public ArrangeAsset(VisualElement element,SaveSystem saveSystemInstance)
+        public ArrangementAsset(VisualElement element,SaveSystem saveSystemInstance)
         {
             new AssetsSubscribeSaveSystem(saveSystemInstance);
             createMode = new CreateMode();
@@ -52,28 +52,7 @@ namespace Landscape2.Runtime
             // ボタンの登録
             arrangementAssetUI = element;
             arrangementAssetUI.RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
-            editPanel = arrangementAssetUI.Q<VisualElement>("EditPanel");
-            var moveButton = editPanel.Q<RadioButton>("MoveButton");
-            moveButton.RegisterCallback<ClickEvent>(evt =>
-            {    
-                editMode.CreateRuntimeHandle(editTarget,TransformType.Position);
-            });
-            var rotateButton = editPanel.Q<RadioButton>("RotateButton");
-            rotateButton.RegisterCallback<ClickEvent>(evt =>
-            {    
-                editMode.CreateRuntimeHandle(editTarget,TransformType.Rotation);
-            });
-            var scaleButton = editPanel.Q<RadioButton>("ScaleButton");
-            scaleButton.RegisterCallback<ClickEvent>(evt =>
-            {    
-                editMode.CreateRuntimeHandle(editTarget,TransformType.Scale);
-            });
-            var deleteButton = editPanel.Q<Button>("ContextButton");
-            deleteButton.clicked += () =>
-            {
-                editMode.DeleteAsset(editTarget);
-                editPanel.style.display = DisplayStyle.None;
-            };
+            arrangementAssetUIClass = new ArrangementAssetUI(arrangementAssetUI,this,createMode,editMode);
         }
 
         public async void OnEnable()
@@ -94,49 +73,26 @@ namespace Landscape2.Runtime
             SetPlateauAssets("Vehicle_Assets","AssetCategory_Vehicle");
             SetPlateauAssets("StreetLight_Assets","AssetCategory_Light");
             SetPlateauAssets("Other_Assets","AssetCategory_Other");
-
             AsyncOperationHandle<GameObject> runtimeHandle = Addressables.LoadAssetAsync<GameObject>("RuntimeTransformHandle_Assets");
             GameObject runtimeTransformHandle = await runtimeHandle.Task;
             AsyncOperationHandle<GameObject> customPassHandle = Addressables.LoadAssetAsync<GameObject>("CustomPass");
             GameObject customPass = await customPassHandle.Task;
             GameObject.Instantiate(customPass);
+            // 初期画面
             AsyncOperationHandle<IList<GameObject>> plateauAssetHandle = Addressables.LoadAssetsAsync<GameObject>("Tree_Assets", null);
             IList<GameObject> treeAssetsList = await plateauAssetHandle.Task;
-            CreateButton(treeAssetsList);
+            AsyncOperationHandle<IList<Texture2D>> assetsPictureHandle = Addressables.LoadAssetsAsync<Texture2D>("AssetsPicture", null);
+            IList<Texture2D> assetsPicture = await assetsPictureHandle.Task;
+            arrangementAssetUIClass.CreateButton(treeAssetsList,assetsPicture);
         }
 
         private async void SetPlateauAssets(string keyName,string buttonName)
         {
             AsyncOperationHandle<IList<GameObject>> plateauAssetHandle = Addressables.LoadAssetsAsync<GameObject>(keyName, null);
             IList<GameObject> assetsList = await plateauAssetHandle.Task;
-            var assetCategory = arrangementAssetUI.Q<RadioButton>(buttonName);
-            assetCategory.RegisterCallback<ClickEvent>(evt =>
-            {    
-                CreateButton(assetsList);
-            });
-        }
-
-        private void CreateButton(IList<GameObject> assetList)
-        {
-            var assetListScrollView = arrangementAssetUI.Q<ScrollView>("AssetListScrollView");
-            assetListScrollView.Clear();
-            VisualElement flexContainer = new VisualElement();
-            foreach(GameObject asset in assetList)
-            {
-                Button newButton = new Button()
-                {
-                    text = asset.name,
-                    name = asset.name // ボタンに名前を付ける
-                };
-                newButton.AddToClassList("AssetButton");
-                newButton.clicked += () => 
-                {
-                    SetMode(ArrangeModeName.Create);
-                    createMode.SetAsset(asset.name, assetList);
-                };
-                flexContainer.Add(newButton);
-            }
-            assetListScrollView.Add(flexContainer);
+            AsyncOperationHandle<IList<Texture2D>> assetsPictureHandle = Addressables.LoadAssetsAsync<Texture2D>("AssetsPicture", null);
+            IList<Texture2D> assetsPicture = await assetsPictureHandle.Task;
+            arrangementAssetUIClass.RegisterCategoryPanelAction(buttonName,assetsList,assetsPicture);
         }
 
         public void SetMode(ArrangeModeName mode)
@@ -154,14 +110,14 @@ namespace Landscape2.Runtime
             else if(mode == ArrangeModeName.Edit)
             {
                 currentMode = editMode;
-                editPanel.style.display = DisplayStyle.Flex;
+                arrangementAssetUIClass.DisplayEditPanel(true);
                 return;
             }
             else if(mode == ArrangeModeName.Normal)
             {
                 currentMode = null;
             }
-            editPanel.style.display = DisplayStyle.None;
+            arrangementAssetUIClass.DisplayEditPanel(false);
         }
         public void Update(float deltaTime)
         {
@@ -173,7 +129,7 @@ namespace Landscape2.Runtime
 
         public void OnSelect(InputAction.CallbackContext context)
         {
-            if(context.performed)
+            if(context.performed && arrangementAssetUI.style.display == DisplayStyle.Flex)
             {
                 if(currentMode == createMode)
                 {
@@ -196,6 +152,7 @@ namespace Landscape2.Runtime
                 {
                     SetMode(ArrangeModeName.Edit);
                     editTarget = FindAssetComponent(hit.transform);
+                    arrangementAssetUIClass.SetEditTarget(editTarget);
                     editMode.CreateRuntimeHandle(editTarget,TransformType.Position);
                 }
             }
@@ -228,13 +185,17 @@ namespace Landscape2.Runtime
             }
             return null;
         }
-        // 右クリック
+
         public void OnCancel(InputAction.CallbackContext context)
         {
             if(context.performed)
             {
                 if(currentMode != null)
                 {
+                    if(currentMode == editMode)
+                    {
+                        arrangementAssetUIClass.ResetEditButton();
+                    }
                     currentMode.OnCancel();
                 }
                 SetMode(ArrangeModeName.Normal);
@@ -249,6 +210,7 @@ namespace Landscape2.Runtime
         }
         public void OnDisable()
         {
+            SetMode(ArrangeModeName.Normal);
             arrangementAssetUI.UnregisterCallback<GeometryChangedEvent>(OnGeometryChanged);
             input.Disable();
         }

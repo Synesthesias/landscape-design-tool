@@ -48,6 +48,7 @@ namespace Landscape2.Editor
             AddLabel("Other_Assets");
             AddLabel("RuntimeTransformHandle_Assets");
             AddLabel("CustomPass");
+            AddLabel("AssetsPicture");
         }
         private static void AddLabel(string labelName)
         {
@@ -59,8 +60,10 @@ namespace Landscape2.Editor
 
         private static void AddGroupsToSettings()
         {
-            AddRuntimeHandleGroup();
-            AddCustomPassGroup();
+            // 第一引数 : グループ名、第二引数 : パス 
+            AddAssetGroup("RuntimeTransformHandle_Assets","Packages/com.synesthesias.landscape-design-tool-2/Runtime/ArrangementAsset/Prefab/RuntimeTransformHandle.prefab");
+            AddAssetGroup("CustomPass","Packages/com.synesthesias.landscape-design-tool-2/Runtime/ArrangementAsset/Prefab/CustomPass.prefab");
+            AddAssetsPictureGroup("AssetsPicture","Packages/com.synesthesias.landscape-design-tool-2/HDRP Sample Assets/Picture");
             AddPlateauAssetGroup("Tree_Assets","Packages/com.synesthesias.landscape-design-tool-2/HDRP Sample Assets/Props/Prefabs/Tree");
             AddPlateauAssetGroup("Advertisement_Assets","Packages/com.synesthesias.landscape-design-tool-2/HDRP Sample Assets/Props/Prefabs/Advertisement");
             AddPlateauAssetGroup("Humans_Assets","Packages/com.synesthesias.landscape-design-tool-2/HDRP Sample Assets/Humans/Prefabs");
@@ -71,27 +74,29 @@ namespace Landscape2.Editor
             AddPlateauAssetGroup("PublicFacilities_Assets","Packages/com.synesthesias.landscape-design-tool-2/HDRP Sample Assets/Props/Prefabs/PublicFacilities");
             AddPlateauAssetGroup("Other_Assets","Packages/com.synesthesias.landscape-design-tool-2/HDRP Sample Assets/Props/Prefabs/Others");
         }
-        private static void AddRuntimeHandleGroup()
-        {
-            var groupName = "RuntimeHandle";
-            var targetGroup = CreateGroup(groupName);
-            
-            var guid = AssetDatabase.AssetPathToGUID("Packages/com.synesthesias.landscape-design-tool-2/Runtime/ArrangementAsset/Prefab/RuntimeTransformHandle.prefab");
-            string assetPath = AssetDatabase.GUIDToAssetPath(guid);
-            var entry = currentSettings.CreateOrMoveEntry(guid,targetGroup);
-            entry.address = System.IO.Path.GetFileNameWithoutExtension(assetPath);
-            entry.SetLabel("RuntimeTransformHandle_Assets", true);
-        }
-        private static void AddCustomPassGroup()
-        {
-            var groupName = "CustomPass";
-            var targetGroup = CreateGroup(groupName);
 
-            var guid = AssetDatabase.AssetPathToGUID("Packages/com.synesthesias.landscape-design-tool-2/Runtime/ArrangementAsset/Prefab/CustomPass.prefab");
+        private static void AddAssetGroup(string groupName,string path)
+        {
+            var targetGroup = CreateGroup(groupName);
+            var guid =  AssetDatabase.AssetPathToGUID(path);
             string assetPath = AssetDatabase.GUIDToAssetPath(guid);
             var entry = currentSettings.CreateOrMoveEntry(guid,targetGroup);
             entry.address = System.IO.Path.GetFileNameWithoutExtension(assetPath);
-            entry.SetLabel("CustomPass", true);
+            entry.SetLabel(groupName, true);
+        }
+
+        private static void AddAssetsPictureGroup(string groupName,string directoryPath)
+        {
+            var targetGroup = CreateGroup(groupName);
+            string[] picturesGUIDs = AssetDatabase.FindAssets("t:Texture2D", new[] { directoryPath });
+
+            foreach(var guid in picturesGUIDs)
+            {
+                string assetPath = AssetDatabase.GUIDToAssetPath(guid);
+                var entry = currentSettings.CreateOrMoveEntry(guid,targetGroup);
+                entry.address = System.IO.Path.GetFileNameWithoutExtension(assetPath);
+                entry.SetLabel(groupName, true);
+            }
         }
         private static void AddPlateauAssetGroup(string groupName,string directoryPath)
         {

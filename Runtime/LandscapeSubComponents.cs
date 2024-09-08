@@ -109,7 +109,7 @@ namespace Landscape2.Runtime
                 walkerMoveByUserInput,
                 new CameraPositionMemoryUI(cameraPositionMemory, subMenuUxmls, walkerMoveByUserInput,saveSystem, uiRoot),
                 new PlanningUI(subMenuUxmls[(int)SubMenuUxmlType.Planning]),
-                new ArrangeAsset(subMenuUxmls[(int)SubMenuUxmlType.Asset],saveSystem),
+                new ArrangementAsset(subMenuUxmls[(int)SubMenuUxmlType.Asset],saveSystem),
                 //RegulationAreaUI.CreateForScene(),
                 new WeatherTimeEditorUI(new WeatherTimeEditor.WeatherTimeEditor(),uiRoot),
                 saveSystem, 

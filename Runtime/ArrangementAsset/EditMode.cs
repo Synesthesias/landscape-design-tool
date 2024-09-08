@@ -31,7 +31,7 @@ namespace Landscape2.Runtime
         private void ClearHandleObject()
         {
             ChangeEditAssetLayer(editAsset, LayerMask.NameToLayer("Default"));
-            var obj = GameObject.Find("New Game Object");
+            var obj = GameObject.Find("RuntimeTransformHandle");
             if(obj != null)
             {
                 GameObject.Destroy(obj);

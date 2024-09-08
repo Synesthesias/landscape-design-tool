@@ -34,6 +34,7 @@ namespace RuntimeHandle
         private ScaleHandle _scaleHandle;
 
         public Transform target;
+        public bool isDragging;
 
         void Start()
         {
@@ -96,6 +97,7 @@ namespace RuntimeHandle
             if (Input.GetMouseButton(0) && _draggingHandle != null)
             {
                 _draggingHandle.Interact(_previousMousePosition);
+                isDragging = true;
             }
 
             if (Input.GetMouseButtonDown(0) && handle != null)
@@ -108,6 +110,7 @@ namespace RuntimeHandle
             {
                 _draggingHandle.EndInteraction();
                 _draggingHandle = null;
+                isDragging = false;
             }
 
             _previousMousePosition = Input.mousePosition;
@@ -162,6 +165,7 @@ namespace RuntimeHandle
             RuntimeTransformHandle runtimeTransformHandle = new GameObject().AddComponent<RuntimeTransformHandle>();
             runtimeTransformHandle.target = p_target;
             runtimeTransformHandle.type = p_handleType;
+            runtimeTransformHandle.name = "RuntimeTransformHandle";
 
             return runtimeTransformHandle;
         }

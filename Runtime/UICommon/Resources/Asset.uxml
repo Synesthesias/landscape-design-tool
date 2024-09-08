@@ -4,7 +4,7 @@
         <ui:VisualElement name="LeftContainer" style="flex-grow: 1; flex-shrink: 0;" />
         <ui:VisualElement name="CenterContainer" style="flex-grow: 1;" />
         <ui:VisualElement name="RightContainer" style="flex-grow: 1; flex-shrink: 0;">
-            <ui:VisualElement name="EditPanel" style="flex-grow: 1; height: 0; display: flex; position: relative; left: 0; top: 0; width: 100%;">
+            <ui:VisualElement name="EditPanel" style="flex-grow: 1; height: 0; display: none; position: relative; left: 0; top: 0; width: 100%;">
                 <ui:GroupBox name="Context_Edit" style="position: absolute; left: 0; top: 0;">
                     <ui:RadioButton label="Radio Button" name="MoveButton" value="true" />
                     <ui:RadioButton label="Radio Button" name="RotateButton" />

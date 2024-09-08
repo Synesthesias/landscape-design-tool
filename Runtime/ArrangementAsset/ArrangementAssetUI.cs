@@ -1,0 +1,160 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEditor;
+using UnityEngine.UIElements;
+using Landscape2.Runtime.UiCommon;
+
+namespace Landscape2.Runtime
+{
+    public class ArrangementAssetUI
+    {
+        private VisualElement UIElement;
+        private ArrangementAsset arrangementAsset;
+        private CreateMode createMode;
+        private EditMode editMode;
+        private GameObject editTarget;
+        private VisualElement editPanel;
+        public ArrangementAssetUI(VisualElement element,ArrangementAsset arrangementAssetInstance,CreateMode createModeInstance,EditMode  editModeInstance)
+        {
+            UIElement = element;
+            arrangementAsset = arrangementAssetInstance;
+            createMode = createModeInstance;
+            editMode = editModeInstance;
+            editPanel = UIElement.Q<VisualElement>("EditPanel");
+            RegisterEditButtonAction();
+        }
+
+        /// <summary>
+        /// 編集ボタンの各機能を登録する
+        /// </summary>
+        private void RegisterEditButtonAction()
+        {
+            var moveButton = editPanel.Q<RadioButton>("MoveButton");
+            moveButton.RegisterCallback<ClickEvent>(evt =>
+            {    
+                editMode.CreateRuntimeHandle(editTarget,TransformType.Position);
+            });
+            var rotateButton = editPanel.Q<RadioButton>("RotateButton");
+            rotateButton.RegisterCallback<ClickEvent>(evt =>
+            {    
+                editMode.CreateRuntimeHandle(editTarget,TransformType.Rotation);
+            });
+            var scaleButton = editPanel.Q<RadioButton>("ScaleButton");
+            scaleButton.RegisterCallback<ClickEvent>(evt =>
+            {    
+                editMode.CreateRuntimeHandle(editTarget,TransformType.Scale);
+            });
+            var deleteButton = editPanel.Q<Button>("ContextButton");
+            deleteButton.clicked += () =>
+            {
+                editMode.DeleteAsset(editTarget);
+                editPanel.style.display = DisplayStyle.None;
+                ResetEditButton();
+            };
+        }
+
+        /// <summary>
+        /// 編集モードから離れた時に移動モードに戻す
+        /// </summary>
+        public void ResetEditButton()
+        {
+            var context_Edit = UIElement.Q<GroupBox>("Context_Edit");
+            var radioButtons = context_Edit.Query<RadioButton>().ToList();
+            foreach (var radioButton in radioButtons)
+            {
+                radioButton.value = false;
+            }
+            var moveButton = editPanel.Q<RadioButton>("MoveButton");
+            moveButton.value  = true;
+        }
+
+        
+        /// <summary>
+        /// アセットのカテゴリーの切り替えの登録
+        /// </summary>
+        public void RegisterCategoryPanelAction(string buttonName,IList<GameObject> assetsList,IList<Texture2D> assetsPicture)
+        {
+            var assetCategory = UIElement.Q<RadioButton>(buttonName);
+            assetCategory.RegisterCallback<ClickEvent>(evt =>
+            {    
+                CreateButton(assetsList,assetsPicture);
+            });
+        }
+
+        /// <summary>
+        /// アセットのボタンの作製
+        /// </summary>
+        public void CreateButton(IList<GameObject> assetList,IList<Texture2D> assetPictureList)
+        {
+            var assetListScrollView = UIElement.Q<ScrollView>("AssetListScrollView");
+            assetListScrollView.Clear();
+
+            VisualElement flexContainer = new VisualElement();
+            // ussに移行すべき
+            flexContainer.style.flexDirection = FlexDirection.Row;
+            flexContainer.style.flexWrap = Wrap.Wrap;
+            flexContainer.style.justifyContent = Justify.SpaceBetween;
+            flexContainer.style.justifyContent = Justify.FlexStart;
+            
+        
+            foreach(GameObject asset in assetList)
+            {
+                var assetPicture = assetPictureList[0];
+                // 写真を見つける
+                foreach(var picture in assetPictureList)
+                {
+                    Debug.Log(picture.name);
+                    if(picture.name == asset.name)
+                    {
+                        assetPicture = picture;
+                        break;
+                    }
+                }
+                // ボタンの生成
+                Button newButton = new Button()
+                {
+                    name = asset.name
+                };
+                // ussに移行すべき
+                newButton.style.width = Length.Percent(30f);
+                newButton.style.height = new Length(100, LengthUnit.Pixel);
+                newButton.style.marginRight = 5;
+                newButton.style.marginBottom = 5;
+
+                newButton.style.backgroundImage = new StyleBackground(assetPicture);
+                newButton.style.backgroundSize = new BackgroundSize(Length.Percent(100), Length.Percent(100));
+                newButton.style.backgroundColor = Color.clear;
+
+                newButton.AddToClassList("AssetButton");
+                newButton.clicked += () => 
+                {
+                    arrangementAsset.SetMode(ArrangeModeName.Create);
+                    createMode.SetAsset(asset.name, assetList);
+                };
+                flexContainer.Add(newButton);
+            }
+            assetListScrollView.Add(flexContainer);
+        }
+
+        /// <summary>
+        /// 編集パネルの表示・非表示を管理
+        /// </summary>
+        public void DisplayEditPanel(bool isDisplay)
+        {
+            if(isDisplay)
+            {
+                editPanel.style.display = DisplayStyle.Flex;
+            }
+            else
+            {
+                editPanel.style.display = DisplayStyle.None;
+            }
+        }
+
+        public void SetEditTarget(GameObject target)
+        {
+            editTarget = target;
+        }
+    }
+}
