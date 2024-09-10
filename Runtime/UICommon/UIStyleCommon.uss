@@ -1,6 +1,6 @@
 .unity-text-element {
     color: rgb(255, 255, 255);
-    -unity-font-definition: url("project://database/Packages/com.synesthesias.landscape-design-tool-2/Runtime/UICommon/Fonts/MPLUSRounded1c-Regular%20SDF.asset?fileID=11400000&guid=16ebc954c776e604e8d8693a34969fdb&type=2#MPLUSRounded1c-Regular SDF");
+    -unity-font-definition: url("project://database/Packages/com.synesthesias.landscape-design-tool-2/Runtime/UICommon/Fonts/MPLUSRounded1c-RegularSDF.asset?fileID=11400000&guid=16ebc954c776e604e8d8693a34969fdb&type=2#MPLUSRounded1c-RegularSDF");
 }
 
 .header {
@@ -1333,6 +1333,14 @@ Scroller #unity-drag-container {
 
 #AssetCategory_Tree:checked {
     background-image: resource('Icon_Asset_Tree_On');
+}
+
+#AssetCategory_Building {
+    background-image: resource('Icon_Asset_Building_Off');
+}
+
+#AssetCategory_Building:checked {
+    background-image: resource('Icon_Asset_Building_On');
 }
 
 #AssetCategory_Human {
