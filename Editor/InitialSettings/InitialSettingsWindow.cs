@@ -29,6 +29,8 @@ namespace Landscape2.Editor
         private const string UICityObjectHelpbox = "CityObjectHelpboxColumn"; // 都市オブジェクトが配置されているかの判定Helpbox欄名前
         private const string UISubComponentsCheck = "SubComponentsCheckColumn"; // SubCompornentsが生成されたかの判定欄名前
         private const string UISubComponentsHelpbox = "SubComponentsHelpboxColumn"; // SubCompornentsが生成されたかの判定Helpbox欄名前
+        private const string UIMainCameraCheck = "MainCameraCheckColumn"; // MainCameraが生成されたかの判定欄名前
+        private const string UIMainCameraHelpbox = "MainCameraHelpboxColumn"; // MainCameraが生成されたかの判定Helpbox欄名前
         private const string UIMaterialAdjustCheck = "MaterialAdjustCheckColumn"; // マテリアル分けが実行されたかの判定欄名前
         private const string UIMaterialAdjustHelpbox = "MaterialAdjustHelpboxColumn"; // マテリアル分けが実行されたかの判定Helpbox欄名前
 
@@ -36,11 +38,13 @@ namespace Landscape2.Editor
         private HelpBox importCheckHelpBox;
         private HelpBox cityObjectCheckHelpBox;
         private HelpBox subCompornentsCheckHelpBox;
+        private HelpBox mainCameraCheckHelpBox;
         private HelpBox materialAdjustCheckHelpBox;
 
         private Image importCheckImage;
         private Image cityObjectCheckImage;
         private Image subCompornentsCheckImage;
+        private Image mainCameraCheckImage;
         private Image materialAdjustCheckImage;
 
         private List<bool> checkList; // 初期設定実行可能かの判定用リスト
@@ -66,11 +70,13 @@ namespace Landscape2.Editor
             importCheckHelpBox = new HelpBox("都市モデルがインポートされているか確認してください", HelpBoxMessageType.Error);
             cityObjectCheckHelpBox = new HelpBox("都市オブジェクトが配置されているか確認してください", HelpBoxMessageType.Error);
             subCompornentsCheckHelpBox = new HelpBox("SubCompornentsの生成が失敗しました", HelpBoxMessageType.Error);
+            mainCameraCheckHelpBox = new HelpBox("MainCameraの生成が失敗しました", HelpBoxMessageType.Error);
             materialAdjustCheckHelpBox = new HelpBox("マテリアル分けの実行が失敗しました", HelpBoxMessageType.Error);
 
             importCheckImage = new Image();
             cityObjectCheckImage = new Image();
             subCompornentsCheckImage = new Image();
+            mainCameraCheckImage = new Image();
             materialAdjustCheckImage = new Image();
 
             // チェック項目をすべて満たしている場合初期設定を実行できるようにする
@@ -182,6 +188,10 @@ namespace Landscape2.Editor
             // SubComponentsを生成
             initialSettings.CreateSubComponents();
             AddCheckListUI(true, UISubComponentsCheck, UISubComponentsHelpbox, subCompornentsCheckHelpBox, subCompornentsCheckImage);
+
+            // MainCameraが存在しない場合生成
+            initialSettings.CreateMainCamera();
+            AddCheckListUI(true, UIMainCameraCheck, UIMainCameraHelpbox, mainCameraCheckHelpBox, mainCameraCheckImage);
 
             // マテリアル分け
             try

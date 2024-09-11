@@ -34,9 +34,9 @@ namespace Landscape2.Runtime.WeatherTimeEditor
             timeLabel = uiRoot.Q<Label>(UITimeLabel);
 
             // 時間帯の初期値の設定
-            timeSlider.lowValue = 0.375f;
-            timeSlider.highValue = 0.875f;
-            timeSlider.value = 0.5f;
+            timeSlider.lowValue = 0.292f; //7:00
+            timeSlider.highValue = 0.792f; //19:00
+            timeSlider.value = 0.5f; //12:00
             timeLabel.text = this.weatherTimeEditor.GetTimeString(timeSlider.value);
 
             // 天候変更ボタンリスト

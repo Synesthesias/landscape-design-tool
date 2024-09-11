@@ -8,7 +8,6 @@ using System;
 using PLATEAU.Util;
 using PLATEAU.CityAdjust.MaterialAdjust;
 using PLATEAU.Util.Async;
-using UnityEngine.UIElements;
 
 namespace Landscape2.Editor
 {
@@ -76,6 +75,21 @@ namespace Landscape2.Editor
         {
             var subComponentsObj = new GameObject("SubComponents");
             subComponentsObj.AddComponent<LandscapeSubComponents>();
+        }
+
+        // MainCameraを生成する
+        public void CreateMainCamera()
+        {
+            var mainCamera = Camera.main;
+            // SceneにMainCameraが存在しない場合生成
+            if (mainCamera == null)
+            {
+                var mainCameraObj = new GameObject("MainCamera");
+                mainCameraObj.tag = "MainCamera";
+                mainCamera = mainCameraObj.AddComponent<Camera>();
+            }
+            // カメラの設定
+            mainCamera.farClipPlane = 3000f;
         }
 
         // マテリアル分けを実行

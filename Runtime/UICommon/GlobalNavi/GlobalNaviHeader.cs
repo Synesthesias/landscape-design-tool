@@ -42,6 +42,7 @@ namespace Landscape2.Runtime
 
         public GlobalNaviHeader(VisualElement uiRoot, VisualElement[] subMenuUxmls)
         {
+            this.subMenuUxmls = subMenuUxmls;
             menuGroup = uiRoot.Q<GroupBox>(UImenuGroup);
             subMenuElement = uiRoot.Q<VisualElement>(UISubMenuElement);
             settingButton = uiRoot.Q<Button>(UISettingButton);
@@ -60,6 +61,7 @@ namespace Landscape2.Runtime
 
             // メニューボタンリスト
             var menuButtons = menuGroup.Children();
+            
             // メニューボタンの値が変更されたとき
             menuButtons.ToList().ForEach(r =>
             {
@@ -68,8 +70,16 @@ namespace Landscape2.Runtime
                 {
                     if (button.value)
                     {
-                        // tabIndexに該当するサブメニューを表示
+                        // tabIndexに対応するサブメニューを表示
                         ShowSubMenuPanel(button.tabIndex);
+
+                        // メニュー切り替え時はサブメニューの最初の要素であるuxmlを表示
+                        if(button.tabIndex >= 0) // tabIndexが-1(Menu)の場合は何も表示しない)
+                        {
+                            var subMenu = subMenuElement.Children().ElementAt(button.tabIndex);
+                            var subMenuButton = subMenu.Children().ElementAt(0) as RadioButton;
+                            subMenuButton.value = true;
+                        }
                     }
                 });
             });
@@ -84,8 +94,7 @@ namespace Landscape2.Runtime
                     button.RegisterValueChangedCallback(evt =>
                     {
                         if (button.value)
-                        {
-                            
+                        {                           
                             // tabIndexに該当するuxmlを表示
                             if (functionContainer.Q<Toggle>("Toggle_WalkMode").value && button.tabIndex == (int)SubMenuUxmlType.CameraList)
                             {
@@ -113,7 +122,6 @@ namespace Landscape2.Runtime
                                 subMenuUxmls[button.tabIndex].style.display = DisplayStyle.Flex;
                                 lastSubMenuUxml = subMenuUxmls[button.tabIndex];
                             }
-                            
                         }
                     });
                 });
@@ -132,6 +140,7 @@ namespace Landscape2.Runtime
                     settingElement.style.display = DisplayStyle.Flex;
                 }
             };
+
             //歩行者モードトグルボタンが押されたら変更する
             functionContainer.Q<Toggle>("Toggle_WalkMode").RegisterValueChangedCallback(OnToggleWalkModeValueChanged);
 
@@ -155,14 +164,14 @@ namespace Landscape2.Runtime
             if (lastSubMenuUxml != null)
             {
                 lastSubMenuUxml.style.display = DisplayStyle.None;
+                lastSubMenuUxml = null;
             }
-
             foreach (var subMenu in subMenuElement.Children())
             {
                 // 全てのサブメニューを非表示
                 subMenu.style.display = DisplayStyle.None;
 
-                // サブメニューのラジオボタンを全てfalseにする
+                // サブメニューのラジオボタンを最初の要素以外falseにする
                 foreach (var subMenuButton in subMenu.Children())
                 {
                     var button = subMenuButton as RadioButton;
@@ -180,10 +189,13 @@ namespace Landscape2.Runtime
         // サブメニューのuxmlを表示する
         private void SetSubMenuUxml(int id)
         {
+            subMenuUxmls[id].style.display = DisplayStyle.Flex;
+
             // 最後に開いたサブメニューのuxmlを非表示
             if (lastSubMenuUxml != null)
             {
                 lastSubMenuUxml.style.display = DisplayStyle.None;
+                lastSubMenuUxml = null;
             }
 
             // 現在開かれているサブメニューのuxmlを設定
@@ -193,6 +205,7 @@ namespace Landscape2.Runtime
             {
                 subComponents.SetSubMenuUxmlType(type);
             }
+            lastSubMenuUxml = subMenuUxmls[id];
         }
 
         private void OnToggleWalkModeValueChanged(ChangeEvent<bool> evt)

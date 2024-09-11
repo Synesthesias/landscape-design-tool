@@ -100,7 +100,6 @@ namespace Landscape2.Runtime
             LandscapePlanSaveSystem.SetEvent(saveSystem);
 
             // 必要な機能をここに追加します
-            // ※GlobalNaviと各機能の紐づけ作業が完了するまで一部機能はコメントアウトしています
             subComponents = new List<ISubComponent>
             {
                 new GlobalNaviHeader(uiRoot, subMenuUxmls),
