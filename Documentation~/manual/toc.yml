@@ -2,6 +2,8 @@
   href: ../index.md
 - name: 利用を開始する
   items:
+    - name: セットアップ
+      href: Setup.md
     - name: 基本操作
       href: BasicOperation.md
     - name: メインメニュー
