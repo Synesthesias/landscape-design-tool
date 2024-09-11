@@ -19,9 +19,14 @@ namespace Landscape2.Runtime
         GameObject highlightBox = null;
         VisualElement uiRoot;
 
+        private readonly VisualElement materialPanel;
+        private const string UIMaterialPanel = "Panel_MaterialEditor";
+
         public EditBuilding(VisualElement uiRoot)
         {
             this.uiRoot = uiRoot;
+            materialPanel = uiRoot.Q<VisualElement>(UIMaterialPanel);
+
             // 建物編集画面が閉じられたとき
             uiRoot.RegisterCallback<GeometryChangedEvent>(evt =>
             {
@@ -38,7 +43,10 @@ namespace Landscape2.Runtime
             {
                 if (Input.GetMouseButtonDown(0))
                 {
-                    if (EventSystem.current.IsPointerOverGameObject())
+                    // マウスの座標がパネルの範囲内ある場合は反応しない
+                    var panelBound = materialPanel.worldBound;
+                    panelBound.position = new Vector2(panelBound.position.x, Screen.height - panelBound.position.y - panelBound.size.y);
+                    if (panelBound.Contains(Input.mousePosition))
                     {
                         return;
                     }
