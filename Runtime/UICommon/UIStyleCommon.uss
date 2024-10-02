@@ -263,7 +263,7 @@ Scroller #unity-drag-container {
 .unity-base-field {
     border-radius: 8px;
     background-color: rgba(0, 0, 0, 0);
-}
+} 
 
 #unity-text-input TextElement {
     color: black;
@@ -1216,6 +1216,9 @@ Scroller #unity-drag-container {
 #Toggle_HideUI {
     background-image: resource('Icon_Eye');
 }
+#Toggle_HeightDisplay {
+    background-image: resource('Icon_HeightDisplay');
+}
 
 #Toggle_HideList {
     background-image: resource('Icon_Eye_On');
@@ -1416,4 +1419,7 @@ Scroller #unity-drag-container {
     height: 1px;
     background-color: rgb(190, 201, 200);
     margin: 5px 0;
+}
+#unity-text-field > .unity-base-field__input{
+    background-color: rgb(128,128,128);
 }

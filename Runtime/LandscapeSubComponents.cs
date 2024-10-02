@@ -113,7 +113,8 @@ namespace Landscape2.Runtime
                 new WeatherTimeEditorUI(new WeatherTimeEditor.WeatherTimeEditor(),uiRoot),
                 saveSystem, 
                 editBuilding,
-                new BuildingColorEditorUI(new BuildingColorEditor(),editBuilding,subMenuUxmls[(int)SubMenuUxmlType.EditBuilding])
+                new BuildingColorEditorUI(new BuildingColorEditor(),editBuilding,subMenuUxmls[(int)SubMenuUxmlType.EditBuilding]),
+                new VisualizeHeightUI(new VisualizeHeight(),uiRoot)
             };
         }
 

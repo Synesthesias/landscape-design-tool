@@ -130,6 +130,7 @@ namespace Landscape2.Runtime
         // 選択された要素のSmoothnessを取得
         public float GetMaterialSmoothness()
         {
+
             if (editingMaterials.Count == 2) // 要素全体
             {
                 if (editingMaterials[0].GetFloat("_Smoothness") == editingMaterials[1].GetFloat("_Smoothness"))
