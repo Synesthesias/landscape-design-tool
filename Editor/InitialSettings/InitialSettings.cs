@@ -8,6 +8,7 @@ using System;
 using PLATEAU.Util;
 using PLATEAU.CityAdjust.MaterialAdjust;
 using PLATEAU.Util.Async;
+using PlateauToolkit.Rendering;
 
 namespace Landscape2.Editor
 {
@@ -24,6 +25,7 @@ namespace Landscape2.Editor
         private PLATEAUInstancedCityModel cityModel;
         private IMAConfig maConfig;
         private UniqueParentTransformList targetTransforms;
+        private GameObject environment;
         Material[] defaultMaterials = new Material[2];
 
         // SubComponentsが存在しない，つまり初期設定が未実行かを確認
@@ -75,6 +77,35 @@ namespace Landscape2.Editor
         {
             var subComponentsObj = new GameObject("SubComponents");
             subComponentsObj.AddComponent<LandscapeSubComponents>();
+        }
+
+        // Environmentの生成が可能かを確認
+        public bool IsCreateEnvironmentPossible()
+        {
+            // ResourcesからEnvironmentプレハブを読み込み生成する
+            environment = Resources.Load("Environments") as GameObject;
+            return environment != null;
+        }
+        // Environmentを生成する
+        public void CreateEnvironment()
+        {
+            GameObject environmentObj; // Environmentプレハブを格納するGameObject
+            var environmentController = GameObject.FindObjectOfType<EnvironmentController>();
+
+            // EnvironmentControllerがSceneに存在する場合は
+            if (environmentController != null)
+            {
+                GameObject.DestroyImmediate(environmentController.gameObject);
+            }
+            if (environment != null)
+            { 
+                environmentObj = GameObject.Instantiate(environment);
+                if (environmentObj == null)
+                {
+                    Debug.LogError("Environmentの生成に失敗しました。");
+                }
+                environmentObj.name = environment.name;
+            }
         }
 
         // MainCameraを生成する

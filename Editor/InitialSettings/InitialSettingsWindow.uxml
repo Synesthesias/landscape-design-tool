@@ -21,6 +21,10 @@
             <ui:Label tabindex="-1" text="MainCameraの生成" parse-escape-sequences="false" display-tooltip-when-elided="true" name="Label" />
         </ui:VisualElement>
         <ui:VisualElement name="MainCameraHelpboxColumn" style="flex-grow: 1; flex-direction: row; justify-content: space-between;" />
+        <ui:VisualElement name="EnvironmentCheckColumn" style="flex-grow: 1; flex-direction: row; justify-content: space-between;">
+            <ui:Label tabindex="-1" text="Environmentの生成" parse-escape-sequences="false" display-tooltip-when-elided="true" name="Label" focusable="true" />
+        </ui:VisualElement>
+        <ui:VisualElement name="EnvironmentHelpboxColumn" style="flex-grow: 1; flex-direction: row; justify-content: space-between;" />
         <ui:VisualElement name="MaterialAdjustCheckColumn" style="flex-grow: 1; flex-direction: row; justify-content: space-between;">
             <ui:Label tabindex="-1" text="マテリアル分け" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" />
         </ui:VisualElement>

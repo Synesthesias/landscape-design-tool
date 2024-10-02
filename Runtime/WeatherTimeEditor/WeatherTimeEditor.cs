@@ -30,17 +30,10 @@ namespace Landscape2.Runtime.WeatherTimeEditor
         public WeatherTimeEditor()
         {
             environmentController = GameObject.FindObjectOfType<EnvironmentController>();
-            // EnvironmentControllerがSceneに存在しない場合はResourcesからEnvironmentプレハブを読み込み生成する
+            // EnvironmentControllerを取得
             if (environmentController == null)
             {
-                var environment = Resources.Load("Environment") as GameObject;
-                if (environment == null)
-                {
-                    Debug.LogError("Failed to load Environment Prefab.");
-                }
-                environmentObj = GameObject.Instantiate(environment);
-                environmentObj.name = environment.name;
-                environmentController = environmentObj.GetComponent<EnvironmentController>();   
+                Debug.LogError("Failed to load Environment Prefab.");
             }
             else 
             { 
