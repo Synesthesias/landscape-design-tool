@@ -21,13 +21,12 @@
                 <ui:ScrollView name="AssetListScrollView" style="position: absolute; width: 77%; height: 100%; left: auto;" />
                 <ui:GroupBox name="Panel_AssetCategory" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; position: absolute; left: auto; right: 0;">
                     <ui:RadioButton label="Radio Button" name="AssetCategory_Tree" value="true" />
-                    <ui:RadioButton label="Radio Button" name="AssetCategory_Human" value="false" />
-                    <ui:RadioButton label="Radio Button" name="AssetCategory_Info" />
-                    <ui:RadioButton label="Radio Button" name="AssetCategory_Ad" />
-                    <ui:RadioButton label="Radio Button" name="AssetCategory_Public" />
-                    <ui:RadioButton label="Radio Button" name="AssetCategory_Sign" />
+                    <ui:RadioButton label="Radio Button" name="AssetCategory_Ad" value="false" />
+                    <ui:RadioButton label="Radio Button" name="AssetCategory_Human" />
                     <ui:RadioButton label="Radio Button" name="AssetCategory_Vehicle" />
+                    <ui:RadioButton label="Radio Button" name="AssetCategory_Building" />
                     <ui:RadioButton label="Radio Button" name="AssetCategory_Light" />
+                    <ui:RadioButton label="Radio Button" name="AssetCategory_Sign" />
                     <ui:RadioButton label="Radio Button" name="AssetCategory_Other" />
                 </ui:GroupBox>
             </ui:VisualElement>

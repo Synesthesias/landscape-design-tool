@@ -37,15 +37,16 @@ namespace Landscape2.Editor
         private static void AddLabels()
         {
             AddLabel("Plateau_Assets");
-            AddLabel("Tree_Assets");
-            AddLabel("Advertisement_Assets");
+            
+            AddLabel("Advertisements_Assets");
+            AddLabel("Buildings_Assets");
             AddLabel("Humans_Assets");
-            AddLabel("Vehicle_Assets");
-            AddLabel("Information_Assets");
-            AddLabel("StreetLight_Assets");
-            AddLabel("RoadSign_Assets");
-            AddLabel("PublicFacilities_Assets");
-            AddLabel("Other_Assets");
+            AddLabel("Miscellaneous_Assets");
+            AddLabel("Plants_Assets");
+            AddLabel("Signs_Assets");
+            AddLabel("StreetFurnitures_Assets");
+            AddLabel("Vehicles_Assets");
+            
             AddLabel("RuntimeTransformHandle_Assets");
             AddLabel("CustomPass");
             AddLabel("AssetsPicture");
@@ -64,15 +65,15 @@ namespace Landscape2.Editor
             AddAssetGroup("RuntimeTransformHandle_Assets","Packages/com.synesthesias.landscape-design-tool-2/Runtime/ArrangementAsset/Prefab/RuntimeTransformHandle.prefab");
             AddAssetGroup("CustomPass","Packages/com.synesthesias.landscape-design-tool-2/Runtime/ArrangementAsset/Prefab/CustomPass.prefab");
             AddAssetsPictureGroup("AssetsPicture","Packages/com.synesthesias.landscape-design-tool-2/HDRP Sample Assets/Picture");
-            AddPlateauAssetGroup("Tree_Assets","Packages/com.synesthesias.landscape-design-tool-2/HDRP Sample Assets/Props/Prefabs/Tree");
-            AddPlateauAssetGroup("Advertisement_Assets","Packages/com.synesthesias.landscape-design-tool-2/HDRP Sample Assets/Props/Prefabs/Advertisement");
+            
+            AddPlateauAssetGroup("Advertisements_Assets","Packages/com.synesthesias.landscape-design-tool-2/HDRP Sample Assets/Advertisements/Prefabs");
+            AddPlateauAssetGroup("Buildings_Assets","Packages/com.synesthesias.landscape-design-tool-2/HDRP Sample Assets/Buildings/Prefabs");
             AddPlateauAssetGroup("Humans_Assets","Packages/com.synesthesias.landscape-design-tool-2/HDRP Sample Assets/Humans/Prefabs");
+            AddPlateauAssetGroup("Miscellaneous_Assets","Packages/com.synesthesias.landscape-design-tool-2/HDRP Sample Assets/Miscellaneous/Prefabs");
+            AddPlateauAssetGroup("Plants_Assets","Packages/com.synesthesias.landscape-design-tool-2/HDRP Sample Assets/Plants/Prefabs");
+            AddPlateauAssetGroup("Signs_Assets","Packages/com.synesthesias.landscape-design-tool-2/HDRP Sample Assets/Signs/Prefabs");
+            AddPlateauAssetGroup("StreetFurnitures_Assets","Packages/com.synesthesias.landscape-design-tool-2/HDRP Sample Assets/StreetFurnitures/Prefabs");
             AddPlateauAssetGroup("Vehicle_Assets","Packages/com.synesthesias.landscape-design-tool-2/HDRP Sample Assets/Vehicles/Prefabs");
-            AddPlateauAssetGroup("Information_Assets","Packages/com.synesthesias.landscape-design-tool-2/HDRP Sample Assets/Props/Prefabs/Information");
-            AddPlateauAssetGroup("StreetLight_Assets","Packages/com.synesthesias.landscape-design-tool-2/HDRP Sample Assets/Props/Prefabs/StreetLight");
-            AddPlateauAssetGroup("RoadSign_Assets","Packages/com.synesthesias.landscape-design-tool-2/HDRP Sample Assets/Props/Prefabs/RoadSign");
-            AddPlateauAssetGroup("PublicFacilities_Assets","Packages/com.synesthesias.landscape-design-tool-2/HDRP Sample Assets/Props/Prefabs/PublicFacilities");
-            AddPlateauAssetGroup("Other_Assets","Packages/com.synesthesias.landscape-design-tool-2/HDRP Sample Assets/Props/Prefabs/Others");
         }
 
         private static void AddAssetGroup(string groupName,string path)

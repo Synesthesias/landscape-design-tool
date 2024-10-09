@@ -64,22 +64,21 @@ namespace Landscape2.Runtime
             input.SetCallbacks(this);
             input.Enable();
             // アセットのロード
-            SetPlateauAssets("Tree_Assets","AssetCategory_Tree");
+            SetPlateauAssets("Plants_Assets","AssetCategory_Tree");
             SetPlateauAssets("Humans_Assets","AssetCategory_Human");
-            SetPlateauAssets("Information_Assets","AssetCategory_Info");
-            SetPlateauAssets("Advertisement_Assets","AssetCategory_Ad");
-            SetPlateauAssets("PublicFacilities_Assets","AssetCategory_Public");
-            SetPlateauAssets("RoadSign_Assets","AssetCategory_Sign");
+            SetPlateauAssets("Buildings_Assets","AssetCategory_Building");
+            SetPlateauAssets("Advertisements_Assets","AssetCategory_Ad");
+            SetPlateauAssets("Signs_Assets","AssetCategory_Sign");
             SetPlateauAssets("Vehicle_Assets","AssetCategory_Vehicle");
-            SetPlateauAssets("StreetLight_Assets","AssetCategory_Light");
-            SetPlateauAssets("Other_Assets","AssetCategory_Other");
+            SetPlateauAssets("StreetFurnitures_Assets","AssetCategory_Light");
+            SetPlateauAssets("Miscellaneous_Assets","AssetCategory_Other");
             AsyncOperationHandle<GameObject> runtimeHandle = Addressables.LoadAssetAsync<GameObject>("RuntimeTransformHandle_Assets");
             GameObject runtimeTransformHandle = await runtimeHandle.Task;
             AsyncOperationHandle<GameObject> customPassHandle = Addressables.LoadAssetAsync<GameObject>("CustomPass");
             GameObject customPass = await customPassHandle.Task;
             GameObject.Instantiate(customPass);
             // 初期画面
-            AsyncOperationHandle<IList<GameObject>> plateauAssetHandle = Addressables.LoadAssetsAsync<GameObject>("Tree_Assets", null);
+            AsyncOperationHandle<IList<GameObject>> plateauAssetHandle = Addressables.LoadAssetsAsync<GameObject>("Plants_Assets", null);
             IList<GameObject> treeAssetsList = await plateauAssetHandle.Task;
             AsyncOperationHandle<IList<Texture2D>> assetsPictureHandle = Addressables.LoadAssetsAsync<Texture2D>("AssetsPicture", null);
             IList<Texture2D> assetsPicture = await assetsPictureHandle.Task;
