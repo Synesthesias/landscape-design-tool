@@ -1082,7 +1082,7 @@ Scroller #unity-drag-container {
     flex-direction: row;
 }
 
-#Context_Edit .unity-radio-button {
+#Context_Edit .unity-radio-button, #Context_Edit .unity-button {
     display: flex;
     flex-direction: row-reverse;
     justify-content: center;
@@ -1098,7 +1098,7 @@ Scroller #unity-drag-container {
     transition: 0.2s;
 }
 
-#Context_Edit .unity-radio-button:hover {
+#Context_Edit .unity-radio-button:hover, #Context_Edit .unity-button:hover {
     background-color: rgb(88, 111, 111);
 }
 
@@ -1128,6 +1128,15 @@ Scroller #unity-drag-container {
 
 #ScaleButton {
     background-image: resource('Icon_Scale');
+}
+
+#FileButton {
+    background-image: resource('Icon_File');
+    -unity-slice-left: 7;
+    -unity-slice-right: 7;
+    -unity-slice-top: 7;
+    -unity-slice-bottom: 7;
+    -unity-slice-scale: 1;
 }
 
 #Modal {

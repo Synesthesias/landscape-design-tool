@@ -52,7 +52,11 @@ namespace Landscape2.Runtime
             // ボタンの登録
             arrangementAssetUI = element;
             arrangementAssetUI.RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
-            arrangementAssetUIClass = new ArrangementAssetUI(arrangementAssetUI,this,createMode,editMode);
+            arrangementAssetUIClass = new ArrangementAssetUI(
+                arrangementAssetUI,
+                this,createMode,
+                editMode,
+                new AdvertisementRenderer());
         }
 
         public async void OnEnable()
@@ -149,9 +153,9 @@ namespace Landscape2.Runtime
             {
                 if (CheckParentName(hit.transform,"CreatedAssets"))
                 {
-                    SetMode(ArrangeModeName.Edit);
                     editTarget = FindAssetComponent(hit.transform);
                     arrangementAssetUIClass.SetEditTarget(editTarget);
+                    SetMode(ArrangeModeName.Edit);
                     editMode.CreateRuntimeHandle(editTarget,TransformType.Position);
                 }
             }

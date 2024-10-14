@@ -9,6 +9,7 @@
                     <ui:RadioButton label="Radio Button" name="MoveButton" value="true" />
                     <ui:RadioButton label="Radio Button" name="RotateButton" />
                     <ui:RadioButton label="Radio Button" name="ScaleButton" />
+                    <ui:Button label="Button" name="FileButton" />
                 </ui:GroupBox>
                 <ui:Button text="&#10;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ContextButton" style="padding-top: 6px; padding-right: 6px; padding-bottom: 6px; padding-left: 6px; position: absolute; right: 0; top: 9%;">
                     <ui:VisualElement name="IconDelete" style="flex-grow: 1;" />

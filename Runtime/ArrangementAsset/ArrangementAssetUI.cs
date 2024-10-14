@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.UIElements;
 using Landscape2.Runtime.UiCommon;
+using PlateauToolkit.Sandbox.Runtime;
 
 namespace Landscape2.Runtime
 {
@@ -15,12 +16,19 @@ namespace Landscape2.Runtime
         private EditMode editMode;
         private GameObject editTarget;
         private VisualElement editPanel;
-        public ArrangementAssetUI(VisualElement element,ArrangementAsset arrangementAssetInstance,CreateMode createModeInstance,EditMode  editModeInstance)
+        private AdvertisementRenderer advertisementRenderer;
+        public ArrangementAssetUI(
+            VisualElement element,
+            ArrangementAsset arrangementAssetInstance,
+            CreateMode createModeInstance,
+            EditMode  editModeInstance,
+            AdvertisementRenderer advertisementRendererInstance)
         {
             UIElement = element;
             arrangementAsset = arrangementAssetInstance;
             createMode = createModeInstance;
             editMode = editModeInstance;
+            advertisementRenderer = advertisementRendererInstance;
             editPanel = UIElement.Q<VisualElement>("EditPanel");
             RegisterEditButtonAction();
         }
@@ -45,6 +53,17 @@ namespace Landscape2.Runtime
             {    
                 editMode.CreateRuntimeHandle(editTarget,TransformType.Scale);
             });
+            var fileButton = editPanel.Q<Button>("FileButton");
+            fileButton.clicked += () =>
+            {
+                var filePath = advertisementRenderer.SelectFile();
+                if (!string.IsNullOrEmpty(filePath))
+                {
+                    advertisementRenderer.Render(editTarget, filePath);
+                }
+            };
+            fileButton.visible = false; // デフォルトでは非表示
+            
             var deleteButton = editPanel.Q<Button>("ContextButton");
             deleteButton.clicked += () =>
             {
@@ -69,7 +88,6 @@ namespace Landscape2.Runtime
             moveButton.value  = true;
         }
 
-        
         /// <summary>
         /// アセットのカテゴリーの切り替えの登録
         /// </summary>
@@ -145,6 +163,7 @@ namespace Landscape2.Runtime
             if(isDisplay)
             {
                 editPanel.style.display = DisplayStyle.Flex;
+                TryDisplayFileButton();
             }
             else
             {
@@ -155,6 +174,24 @@ namespace Landscape2.Runtime
         public void SetEditTarget(GameObject target)
         {
             editTarget = target;
+        }
+        
+        /// <summary>
+        /// ファイルボタンの表示・非表示を管理
+        /// </summary>
+        private void TryDisplayFileButton()
+        {
+            var fileButton = editPanel.Q<Button>("FileButton");
+            
+            // 広告のみファイルボタンを表示
+            if (editTarget != null && editTarget.GetComponent<PlateauSandboxAdvertisement>() != null)
+            {
+                fileButton.visible = true;
+            }
+            else
+            {
+                fileButton.visible = false;
+            }
         }
     }
 }
