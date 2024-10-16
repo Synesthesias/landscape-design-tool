@@ -17,6 +17,8 @@ namespace Landscape2.Runtime
         private GameObject editTarget;
         private VisualElement editPanel;
         private AdvertisementRenderer advertisementRenderer;
+        private ArrangementBuildingEditorUI arrangementBuildingEditorUI;
+        
         public ArrangementAssetUI(
             VisualElement element,
             ArrangementAsset arrangementAssetInstance,
@@ -31,6 +33,8 @@ namespace Landscape2.Runtime
             advertisementRenderer = advertisementRendererInstance;
             editPanel = UIElement.Q<VisualElement>("EditPanel");
             RegisterEditButtonAction();
+
+            arrangementBuildingEditorUI = new ArrangementBuildingEditorUI(element);
         }
 
         /// <summary>
@@ -88,6 +92,7 @@ namespace Landscape2.Runtime
             moveButton.value  = true;
         }
 
+        
         /// <summary>
         /// アセットのカテゴリーの切り替えの登録
         /// </summary>
@@ -163,11 +168,13 @@ namespace Landscape2.Runtime
             if(isDisplay)
             {
                 editPanel.style.display = DisplayStyle.Flex;
+                arrangementBuildingEditorUI.TryShowPanel(editTarget);
                 TryDisplayFileButton();
             }
             else
             {
                 editPanel.style.display = DisplayStyle.None;
+                arrangementBuildingEditorUI.ShowPanel(false);
             }
         }
 

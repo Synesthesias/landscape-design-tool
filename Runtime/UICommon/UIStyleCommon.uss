@@ -263,7 +263,7 @@ Scroller #unity-drag-container {
 .unity-base-field {
     border-radius: 8px;
     background-color: rgba(0, 0, 0, 0);
-} 
+}
 
 #unity-text-input TextElement {
     color: black;
@@ -789,6 +789,7 @@ Scroller #unity-drag-container {
     display: flex;
     flex-direction: row;
     justify-content: center;
+    font-size: 10px;
 }
 
 .ActionButton > Label {
@@ -814,6 +815,12 @@ Scroller #unity-drag-container {
     border-color: rgb(136, 147, 146);
     background-color: rgba(136, 147, 146, 0);
     color: rgb(128, 213, 212);
+    font-size: 10px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+    border-bottom-left-radius: 12px;
+    width: 100%;
 }
 
 .OutlineButton:hover {
@@ -1225,6 +1232,7 @@ Scroller #unity-drag-container {
 #Toggle_HideUI {
     background-image: resource('Icon_Eye');
 }
+
 #Toggle_HeightDisplay {
     background-image: resource('Icon_HeightDisplay');
 }
@@ -1419,6 +1427,14 @@ Scroller #unity-drag-container {
     background-image: resource('Icon_Asset_Light_On');
 }
 
+#AssetCategory_Import {
+    background-image: resource('Icon_Asset_Import_Off');
+}
+
+#AssetCategory_Import:checked {
+    background-image: resource('Icon_Asset_Import_On');
+}
+
 #Icon_Pin {
     background-image: resource('Icon_Pin');
 }
@@ -1429,6 +1445,7 @@ Scroller #unity-drag-container {
     background-color: rgb(190, 201, 200);
     margin: 5px 0;
 }
-#unity-text-field > .unity-base-field__input{
-    background-color: rgb(128,128,128);
+
+#unity-text-field > .unity-base-field__input {
+    background-color: rgb(128, 128, 128);
 }
