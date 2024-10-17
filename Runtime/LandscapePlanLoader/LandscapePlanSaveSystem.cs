@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using ToolBox.Serialization;
 using System.Configuration;
+using SFB;
 
 namespace Landscape2.Runtime.LandscapePlanLoader
 {
@@ -64,6 +65,19 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             {
                 Debug.LogError("No saved project data found.");
             }
+        }
+
+        /// <summary>
+        /// フォルダ保存用のダイアログを開き、パスを取得するメソッド
+        /// </summary>
+        /// extension: 拡張子
+        /// <returns>フォルダパス</returns>
+        static public string OpenSaveDialog(string extension)
+        {
+            var path = StandaloneFileBrowser.SaveFilePanel("Create File", "", "", extension);
+
+            if (path != null) return path;
+            return null;
         }
     }
 }

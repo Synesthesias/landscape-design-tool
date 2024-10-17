@@ -54,7 +54,7 @@ namespace Landscape2.Runtime
         {
             this.visualizeHeight = visualizeHeight;
 
-            // 高さ可視化用のPanelを生成
+            // 高さ可視化用のUXMLを生成
             visualizeHeightUXML = Resources.Load<VisualTreeAsset>("HeightHUD");
             
             visualizeHeightPanel = new UIDocumentFactory().CreateWithUxmlName("HeightHUD");

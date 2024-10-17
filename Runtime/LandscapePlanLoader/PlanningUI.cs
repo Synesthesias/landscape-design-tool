@@ -34,6 +34,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             Default,
             ListForcused,
             RegisterAreaMain,
+            RegisterAreaColor,
             EditAreaMain,
             EditAreaColor
         }
@@ -47,6 +48,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             new Panel_AreaPlanningMenuUI(planning,this);
             new Panel_AreaPlanningSubMenuUI(planning, this);
             new Panel_AreaPlanningInfoUI(planning, this);
+            new Panel_AreaPlanningRegisterUI(planning, this);
             new Panel_AreaPlanningEditUI(planning, this);
 
             // 各UIパネルのルートを取得
@@ -106,6 +108,31 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     panel_AreaPlanningEdit.style.display = DisplayStyle.None;
                     break;
 
+                // エリア作成時の状態
+                case PlanningPanelStatus.RegisterAreaMain:
+                    title_AreaPlanningInfo.style.display = DisplayStyle.Flex;
+                    title_AreaPlanningList.style.display = DisplayStyle.Flex;
+                    title_AreaPlanningEditMenu.style.display = DisplayStyle.Flex;
+                    panel_AreaPlanningInfo.style.display = DisplayStyle.Flex;
+                    panel_AreaPlanningList.style.display = DisplayStyle.Flex;
+                    panel_AreaPlanningMenu.style.display = DisplayStyle.None;
+                    panel_AreaPlanningSubMenu.style.display = DisplayStyle.None;
+                    panel_AreaPlanningRegister.style.display = DisplayStyle.Flex;
+                    panel_AreaPlanningEdit.style.display = DisplayStyle.None;
+                    break;
+
+                // エリア作成時の色彩変更時の状態
+                case PlanningPanelStatus.RegisterAreaColor:
+                    title_AreaPlanningInfo.style.display = DisplayStyle.None;
+                    title_AreaPlanningList.style.display = DisplayStyle.None;
+                    title_AreaPlanningEditMenu.style.display = DisplayStyle.Flex;
+                    panel_AreaPlanningInfo.style.display = DisplayStyle.None;
+                    panel_AreaPlanningList.style.display = DisplayStyle.None;
+                    panel_AreaPlanningMenu.style.display = DisplayStyle.None;
+                    panel_AreaPlanningSubMenu.style.display = DisplayStyle.None;
+                    panel_AreaPlanningRegister.style.display = DisplayStyle.Flex;
+                    panel_AreaPlanningEdit.style.display = DisplayStyle.None;
+                    break;
                 // エリア編集時の状態
                 case PlanningPanelStatus.EditAreaMain:
                     title_AreaPlanningInfo.style.display = DisplayStyle.Flex;
