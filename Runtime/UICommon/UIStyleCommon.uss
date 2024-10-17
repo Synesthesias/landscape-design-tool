@@ -1449,3 +1449,8 @@ Scroller #unity-drag-container {
 #unity-text-field > .unity-base-field__input {
     background-color: rgb(128, 128, 128);
 }
+
+/* ドロップダウン */
+.unity-base-dropdown .unity-text-element {
+    color: rgb(0, 0, 0);
+}

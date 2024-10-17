@@ -133,13 +133,13 @@ namespace Landscape2.Runtime
             var choices = bulkArrangementAsset.GetFieldLabels();
             
             assetTypeDropDownInfo.SetChoices(choices);
-            assetTypeDropDownInfo.SetValue((int)PlateauSandboxBulkPlaceCategory.k_AssetType);
+            assetTypeDropDownInfo.SetValue(bulkArrangementAsset.GetFieldIndex(PlateauSandboxBulkPlaceCategory.k_AssetType));
             latitudeDropDownInfo.SetChoices(choices);
-            latitudeDropDownInfo.SetValue((int)PlateauSandboxBulkPlaceCategory.k_Latitude);
+            latitudeDropDownInfo.SetValue(bulkArrangementAsset.GetFieldIndex(PlateauSandboxBulkPlaceCategory.k_Latitude));
             longitudeDropDownInfo.SetChoices(choices);
-            longitudeDropDownInfo.SetValue((int)PlateauSandboxBulkPlaceCategory.k_Longitude);
+            longitudeDropDownInfo.SetValue(bulkArrangementAsset.GetFieldIndex(PlateauSandboxBulkPlaceCategory.k_Longitude));
             heightFieldDropDownInfo.SetChoices(choices);
-            heightFieldDropDownInfo.SetValue((int)PlateauSandboxBulkPlaceCategory.k_Height);
+            heightFieldDropDownInfo.SetValue(bulkArrangementAsset.GetFieldIndex(PlateauSandboxBulkPlaceCategory.k_Height));
             
             // データをロード
             bulkArrangementAsset.LoadAssetTypes();

@@ -37,6 +37,11 @@ namespace Landscape2.Runtime
             return dataContext.GetFieldLabels();
         }
         
+        public int GetFieldIndex(PlateauSandboxBulkPlaceCategory category)
+        {
+            return dataContext.GetFieldIndex(category);
+        }
+        
         public void ReplaceField(int oldIndex, int newIndex)
         {
             dataContext.ReplaceField(oldIndex, newIndex);
