@@ -20,8 +20,8 @@
             <ui:VisualElement name="SettingContainer" style="flex-grow: 0; flex-direction: column; height: auto; justify-content: flex-start; padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; border-left-color: rgb(136, 147, 146); border-right-color: rgb(136, 147, 146); border-top-color: rgb(136, 147, 146); border-bottom-color: rgb(136, 147, 146); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px;">
                 <ui:Label tabindex="-1" text="パース対象設定" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Title" style="font-size: 14px; -unity-text-align: upper-center; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 8px; padding-left: 0;" />
                 <ui:VisualElement name="IgnoreContainer" style="flex-grow: 0; margin-bottom: 0; flex-direction: row; align-items: center; padding-bottom: 8px;">
-                    <ui:Label tabindex="-1" text="ファイルの高さ情報を無視" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" style="width: auto; font-size: 16px;" />
-                    <ui:Toggle label="Toggle" />
+                    <ui:Label tabindex="-1" text="アセットの配置高さ" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" style="width: 45%; font-size: 16px;" />
+                    <ui:DropdownField label="Dropdown" name="IgnoreList" style="height: 30px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; flex-shrink: 1; width: 100%;" />
                 </ui:VisualElement>
                 <ui:VisualElement name="LatitudeContainer" style="flex-grow: 0; margin-bottom: 0; flex-direction: row; align-items: center; padding-bottom: 0;">
                     <ui:Label tabindex="-1" text="緯度" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" style="width: 45%; font-size: 16px;" />
@@ -37,7 +37,7 @@
                 </ui:VisualElement>
                 <ui:VisualElement name="AssetTypeContainer" style="flex-grow: 0; margin-bottom: 0; flex-direction: row; align-items: center;">
                     <ui:Label tabindex="-1" text="アセット種別" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" style="width: 45%; font-size: 16px;" />
-                    <ui:DropdownField label="Dropdown" name="AssettypetList" style="height: 30px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; flex-shrink: 1; width: 100%;" />
+                    <ui:DropdownField label="Dropdown" name="AssetTypeList" style="height: 30px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; flex-shrink: 1; width: 100%;" />
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="AssetContainer" style="flex-grow: 0; flex-direction: column; height: auto; justify-content: flex-start; padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; border-left-color: rgb(136, 147, 146); border-right-color: rgb(136, 147, 146); border-top-color: rgb(136, 147, 146); border-bottom-color: rgb(136, 147, 146); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; margin-top: 16px; min-height: 120px;">
@@ -54,7 +54,7 @@
                     </ui:VisualElement>
                     <ui:VisualElement style="flex-grow: 1; width: auto; flex-shrink: 1;" />
                 </ui:VisualElement>
-                <ui:ScrollView>
+                <ui:ScrollView name="ImportAssetScrollView">
                     <ui:Instance template="List_ImportAssetList" name="List_ImportAssetList" />
                 </ui:ScrollView>
             </ui:VisualElement>

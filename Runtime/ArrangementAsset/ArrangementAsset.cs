@@ -68,25 +68,29 @@ namespace Landscape2.Runtime
             input.SetCallbacks(this);
             input.Enable();
             // アセットのロード
-            SetPlateauAssets("Plants_Assets","AssetCategory_Tree");
-            SetPlateauAssets("Humans_Assets","AssetCategory_Human");
-            SetPlateauAssets("Buildings_Assets","AssetCategory_Building");
-            SetPlateauAssets("Advertisements_Assets","AssetCategory_Ad");
-            SetPlateauAssets("Signs_Assets","AssetCategory_Sign");
-            SetPlateauAssets("Vehicle_Assets","AssetCategory_Vehicle");
-            SetPlateauAssets("StreetFurnitures_Assets","AssetCategory_Light");
-            SetPlateauAssets("Miscellaneous_Assets","AssetCategory_Other");
+            SetPlateauAssets(ArrangementAssetType.Plant.GetKeyName(),ArrangementAssetType.Plant.GetButtonName());
+            SetPlateauAssets(ArrangementAssetType.Human.GetKeyName(),ArrangementAssetType.Human.GetButtonName());
+            SetPlateauAssets(ArrangementAssetType.Building.GetKeyName(), ArrangementAssetType.Building.GetButtonName());
+            SetPlateauAssets(ArrangementAssetType.Advertisement.GetKeyName(), ArrangementAssetType.Advertisement.GetButtonName());
+            SetPlateauAssets(ArrangementAssetType.Sign.GetKeyName(), ArrangementAssetType.Sign.GetButtonName());
+            SetPlateauAssets(ArrangementAssetType.Vehicle.GetKeyName(), ArrangementAssetType.Vehicle.GetButtonName());
+            SetPlateauAssets(ArrangementAssetType.StreetFurniture.GetKeyName(), ArrangementAssetType.StreetFurniture.GetButtonName());
+            SetPlateauAssets(ArrangementAssetType.Miscellaneous.GetKeyName(), ArrangementAssetType.Miscellaneous.GetButtonName());
+                    
             AsyncOperationHandle<GameObject> runtimeHandle = Addressables.LoadAssetAsync<GameObject>("RuntimeTransformHandle_Assets");
             GameObject runtimeTransformHandle = await runtimeHandle.Task;
             AsyncOperationHandle<GameObject> customPassHandle = Addressables.LoadAssetAsync<GameObject>("CustomPass");
             GameObject customPass = await customPassHandle.Task;
             GameObject.Instantiate(customPass);
             // 初期画面
-            AsyncOperationHandle<IList<GameObject>> plateauAssetHandle = Addressables.LoadAssetsAsync<GameObject>("Plants_Assets", null);
+            AsyncOperationHandle<IList<GameObject>> plateauAssetHandle = Addressables.LoadAssetsAsync<GameObject>(ArrangementAssetType.Plant.GetKeyName(), null);
             IList<GameObject> treeAssetsList = await plateauAssetHandle.Task;
             AsyncOperationHandle<IList<Texture2D>> assetsPictureHandle = Addressables.LoadAssetsAsync<Texture2D>("AssetsPicture", null);
             IList<Texture2D> assetsPicture = await assetsPictureHandle.Task;
             arrangementAssetUIClass.CreateButton(treeAssetsList,assetsPicture);
+
+            // インポートボタンの登録
+            arrangementAssetUIClass.RegisterImportButtonAction();
         }
 
         private async void SetPlateauAssets(string keyName,string buttonName)

@@ -16,6 +16,8 @@ namespace Landscape2.Runtime
         private EditMode editMode;
         private GameObject editTarget;
         private VisualElement editPanel;
+        private BulkArrangementAssetUI bulkArrangementAssetUI;
+        private VisualElement assetListScrollView;
         private AdvertisementRenderer advertisementRenderer;
         private ArrangementBuildingEditorUI arrangementBuildingEditorUI;
         
@@ -32,6 +34,9 @@ namespace Landscape2.Runtime
             editMode = editModeInstance;
             advertisementRenderer = advertisementRendererInstance;
             editPanel = UIElement.Q<VisualElement>("EditPanel");
+            bulkArrangementAssetUI = new BulkArrangementAssetUI(UIElement);
+            assetListScrollView = UIElement.Q<ScrollView>("AssetListScrollView");
+            
             RegisterEditButtonAction();
 
             arrangementBuildingEditorUI = new ArrangementBuildingEditorUI(element);
@@ -110,7 +115,7 @@ namespace Landscape2.Runtime
         /// </summary>
         public void CreateButton(IList<GameObject> assetList,IList<Texture2D> assetPictureList)
         {
-            var assetListScrollView = UIElement.Q<ScrollView>("AssetListScrollView");
+            assetListScrollView.style.display = DisplayStyle.Flex;
             assetListScrollView.Clear();
 
             VisualElement flexContainer = new VisualElement();
@@ -158,6 +163,24 @@ namespace Landscape2.Runtime
                 flexContainer.Add(newButton);
             }
             assetListScrollView.Add(flexContainer);
+            
+            bulkArrangementAssetUI.Show(false);
+        }
+
+        /// <summary>
+        /// インポートボタンアクションの登録
+        /// </summary>
+        public void RegisterImportButtonAction()
+        {
+            var importButton = UIElement.Q<RadioButton>("AssetCategory_Import");
+            importButton.RegisterCallback<ClickEvent>((evt) =>
+            {
+                // アセットリストは非表示
+                assetListScrollView.style.display = DisplayStyle.None;
+                
+                // 一括配置用のUIを表示
+                bulkArrangementAssetUI.Show(true);
+            });
         }
 
         /// <summary>

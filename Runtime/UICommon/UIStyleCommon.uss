@@ -954,7 +954,7 @@ Scroller #unity-drag-container {
     background-color: rgba(50, 75, 75, 0.3);
 }
 
-#List:active {
+#List:active, #List.active {
     background-color: rgba(128, 213, 212, 0.4);
 }
 
