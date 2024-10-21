@@ -1,6 +1,7 @@
 using Landscape2.Runtime.Common;
 using PlateauToolkit.Sandbox.Runtime;
 using SFB;
+using System;
 using System.IO;
 using System.Linq;
 using UnityEngine;
@@ -46,7 +47,7 @@ namespace Landscape2.Runtime
             {
                 return;
             }
-            
+
             // Videoを止める
             if (target.VideoPlayer != null)
             {
@@ -57,7 +58,7 @@ namespace Landscape2.Runtime
             string fileExtension = Path.GetExtension(filePath).ToLower();
             if (imageExtensions.Contains(fileExtension))
             {
-                var texture = FileLoaderUtil.LoadTexture(filePath);
+                var texture = FileUtil.LoadTexture(filePath);
                 RenderTexture(texture);
             }
             else if (videoExtensions.Contains(fileExtension))
@@ -68,6 +69,9 @@ namespace Landscape2.Runtime
             {
                 Debug.LogWarning("サポートされている拡張子ではありません");
             }
+            
+            // プロジェクト保存用にPersistentDataにコピー
+            FileUtil.CopyToPersistentData(filePath, target.name);
         }
 
         private void RenderTexture(Texture texture)

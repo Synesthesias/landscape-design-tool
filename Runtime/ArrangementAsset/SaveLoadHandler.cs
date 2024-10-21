@@ -17,18 +17,20 @@ namespace Landscape2.Runtime
 
         public void SaveInfo()
         {
-            List<TransformData> assetsTransformData = new List<TransformData>();
+            List<ArrangementSaveData> saveAssets = new List<ArrangementSaveData>();
             GameObject createdAssets = GameObject.Find("CreatedAssets");
             foreach(Transform asset in createdAssets.transform)
             {
-                assetsTransformData.Add(new TransformData(asset));
+                var saveData = new ArrangementSaveData();
+                saveData.Save(asset);
+                saveAssets.Add(saveData);
             }
-            DataSerializer.Save("Assets", assetsTransformData);
+            DataSerializer.Save("Assets", saveAssets);
         }
 
         public void LoadInfo()
         {
-            List<TransformData> loadedTransformData = DataSerializer.Load<List<TransformData>>("Assets");
+            List<ArrangementSaveData> loadedTransformData = DataSerializer.Load<List<ArrangementSaveData>>("Assets");
             if (loadedTransformData != null)
             {
                 // 既存のアセットの削除
@@ -38,13 +40,15 @@ namespace Landscape2.Runtime
                     GameObject.Destroy(child.gameObject);
                 }
                 // ロードしたアセットの生成
-                foreach(TransformData assetData in loadedTransformData)
+                foreach(ArrangementSaveData savedData in loadedTransformData)
                 {
-                    string assetName = assetData.name;
+                    var transformData = savedData.transformData;
+                    string assetName = transformData.name;
                     GameObject asset = plateauAssets.FirstOrDefault(p => p.name == assetName);
-                    GameObject generatedAsset = GameObject.Instantiate(asset,assetData.position, assetData.rotation, createdAssets.transform) as GameObject;
-                    generatedAsset.transform.localScale = assetData.scale;
-                    generatedAsset.name = asset.name;
+                    GameObject generatedAsset = GameObject.Instantiate(asset, transformData.position, transformData.rotation, createdAssets.transform) as GameObject;
+                    
+                    // 生成したオブジェクトにデータを反映
+                    savedData.Apply(generatedAsset);
                 }
             }
             else

@@ -11,25 +11,6 @@ using System.Threading.Tasks;  // Taskを使用するために必要
 
 namespace Landscape2.Runtime
 {
-    [Serializable]
-    public struct TransformData
-    {
-        public string name;
-        public Vector3 position;
-        public Quaternion rotation;
-        public Vector3 scale;
-
-
-        // Transformを引数に取るコンストラクタ
-        public TransformData(Transform transform)
-        {
-            name = transform.name;
-            position = transform.position;
-            rotation = transform.rotation;
-            scale = transform.localScale;
-        }
-    }
-
     public class AssetsSubscribeSaveSystem
     {
         private SaveSystem saveSystem;
