@@ -25,7 +25,6 @@ namespace Landscape2.Runtime
         public void SetWidth(float width)
         {
             target.buildingWidth = width;
-            ApplyBuildingMesh();
         }
         
         public float GetHeight()
@@ -36,7 +35,6 @@ namespace Landscape2.Runtime
         public void SetHeight(float height)
         {
             target.buildingHeight = height;
-            ApplyBuildingMesh();
         }
         
         public float GetDepth()
@@ -47,10 +45,9 @@ namespace Landscape2.Runtime
         public void SetDepth(float depth)
         {
             target.buildingDepth = depth;
-            ApplyBuildingMesh();
         }
         
-        private void ApplyBuildingMesh()
+        public void ApplyBuildingMesh()
         {
             // Supported LOD: LOD0
             foreach (int lodNum in new List<int> {0})

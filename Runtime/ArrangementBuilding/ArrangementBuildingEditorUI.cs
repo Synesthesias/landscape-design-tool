@@ -1,5 +1,6 @@
 ﻿using PlateauToolkit.Sandbox.Runtime.PlateauSandboxBuildings.Runtime;
 using PlateauToolkit.Sandbox.Runtime.PlateauSandboxBuildingsLib.Buildings;
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
@@ -12,12 +13,19 @@ namespace Landscape2.Runtime
     public class ArrangementBuildingEditorUI
     {
         private VisualElement editPanel;
-        private ArrangementBuildingEditor arrangementBuildingEditor = new();
+        private readonly ArrangementBuildingEditor arrangementBuildingEditor = new();
         
+        // 共通パラメータ
         private VisualElement heightContainer;
         private SliderInt heightSlider;
         private SliderInt widthSlider;
         private SliderInt depthSlider;
+        
+        // 個別パラメータ
+        private readonly ArrangementBuildingApartmentUI apartmentUI;
+        private readonly ArrangementBuildingConvenienceStoreUI convenienceStoreUI;
+        private readonly ArrangementBuildingHouseUI houseUI;
+        private readonly ArrangementBuildingOfficeBuildingUI officeBuildingUI;
         
         public ArrangementBuildingEditorUI(VisualElement element)
         {
@@ -25,10 +33,17 @@ namespace Landscape2.Runtime
             RegisterEditButtonAction();
             
             // 個別パラメータ
-            var apartment = new ArrangementBuildingEditorSettingUI(editPanel, BuildingType.k_Apartment);
-            var officeBuilding = new ArrangementBuildingEditorSettingUI(editPanel, BuildingType.k_OfficeBuilding);
-            var house = new ArrangementBuildingEditorSettingUI(editPanel, BuildingType.k_House);
-            var convenienceStore = new ArrangementBuildingEditorSettingUI(editPanel, BuildingType.k_ConvenienceStore);
+            apartmentUI = new ArrangementBuildingApartmentUI(editPanel);
+            apartmentUI.OnUpdated.AddListener(() => arrangementBuildingEditor.ApplyBuildingMesh());
+            
+            convenienceStoreUI = new ArrangementBuildingConvenienceStoreUI(editPanel);
+            convenienceStoreUI.OnUpdated.AddListener(() => arrangementBuildingEditor.ApplyBuildingMesh());
+            
+            houseUI = new ArrangementBuildingHouseUI(editPanel);
+            houseUI.OnUpdated.AddListener(() => arrangementBuildingEditor.ApplyBuildingMesh());
+            
+            officeBuildingUI = new ArrangementBuildingOfficeBuildingUI(editPanel);
+            officeBuildingUI.OnUpdated.AddListener(() => arrangementBuildingEditor.ApplyBuildingMesh());
 
             // デフォルト非表示
             ShowPanel(false);
@@ -55,25 +70,67 @@ namespace Landscape2.Runtime
         private void OnHeightSliderChanged(float value)
         {
             arrangementBuildingEditor.SetHeight(value);
+            UpdateBuildingMesh();
         }
         
         private void OnWidthSliderChanged(float value)
         {
             arrangementBuildingEditor.SetWidth(value);
+            UpdateBuildingMesh();
         }
         
         private void OnDepthSliderChanged(float value)
         {
             arrangementBuildingEditor.SetDepth(value);
+            UpdateBuildingMesh();
+        }
+        
+        private void UpdateBuildingMesh()
+        {
+            arrangementBuildingEditor.ApplyBuildingMesh();
         }
 
         public void TryShowPanel(GameObject selectObject)
         {
             if (selectObject.TryGetComponent<PlateauSandboxBuilding>(out var building))
             {
+                // 共通パラメータの表示
                 arrangementBuildingEditor.SetTarget(building);
                 InitializeSliders();
                 ShowPanel(true);
+                
+                // 個別パラメータを非表示
+                apartmentUI.Show(false);
+                officeBuildingUI.Show(false);
+                houseUI.Show(false);
+                convenienceStoreUI.Show(false);
+                
+                // 個別パラメータの表示
+                switch (building.buildingType)
+                {
+                    case BuildingType.k_Apartment:
+                        apartmentUI.SetTarget(building);
+                        apartmentUI.Show(true);
+                        break;
+                    case BuildingType.k_OfficeBuilding:
+                        officeBuildingUI.SetTarget(building);
+                        officeBuildingUI.Show(true);        
+                        break;
+                    case BuildingType.k_House:
+                        houseUI.SetTarget(building);
+                        houseUI.Show(true);
+                        break;
+                    case BuildingType.k_ConvenienceStore:
+                        convenienceStoreUI.SetTarget(building);
+                        convenienceStoreUI.Show(true);
+                        break;
+                    case BuildingType.k_CommercialBuilding:
+                    case BuildingType.k_Hotel:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+                
                 return;
             }
             ShowPanel(false);

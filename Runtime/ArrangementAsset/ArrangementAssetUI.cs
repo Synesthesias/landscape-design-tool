@@ -79,6 +79,9 @@ namespace Landscape2.Runtime
                 editMode.DeleteAsset(editTarget);
                 editPanel.style.display = DisplayStyle.None;
                 ResetEditButton();
+                
+                // 建物UIを非表示
+                arrangementBuildingEditorUI.ShowPanel(false);
             };
         }
 

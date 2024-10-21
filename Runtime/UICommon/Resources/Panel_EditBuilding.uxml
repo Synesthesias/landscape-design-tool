@@ -54,9 +54,9 @@
                             <ui:Label tabindex="-1" text="側面を壁に設定" parse-escape-sequences="true" display-tooltip-when-elided="true" style="width: 70%;" />
                             <ui:Toggle label="Toggle" name="IsSideWall" />
                         </ui:VisualElement>
-                        <ui:VisualElement style="flex-grow: 1; flex-direction: row;">
-                            <ui:Label tabindex="-1" text="屋根の厚さ" parse-escape-sequences="true" display-tooltip-when-elided="true" style="width: 70%; flex-shrink: 0; -unity-text-align: middle-left; font-size: 14px;" />
-                            <ui:TextField picking-mode="Ignore" label="Text Field" value="0.2" name="SideWallThickness" style="width: 70%; flex-shrink: 1;" />
+                        <ui:VisualElement style="flex-grow: 0; flex-direction: row; justify-content: center; align-items: center; flex-shrink: 1; width: 100%; margin-bottom: 0;">
+                            <ui:Label tabindex="-1" text="屋根の厚さ" parse-escape-sequences="true" display-tooltip-when-elided="true" style="width: 80px; font-size: 16px; -unity-text-align: middle-left; flex-shrink: 0; margin-top: 0; margin-right: 8px; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+                            <ui:Slider label="SliderInt" high-value="100" show-input-field="true" name="SideWallThickness" style="flex-shrink: 1;" />
                         </ui:VisualElement>
                     </ui:VisualElement>
                 </ui:VisualElement>
@@ -75,22 +75,22 @@
                             <ui:Label tabindex="-1" text="屋根タイプ" parse-escape-sequences="true" display-tooltip-when-elided="true" style="width: 40%; flex-shrink: 0; -unity-text-align: middle-left; font-size: 14px;" />
                             <ui:DropdownField label="Dropdown" name="RoofType" style="flex-shrink: 1; width: 70%;" />
                         </ui:VisualElement>
-                        <ui:VisualElement style="flex-grow: 1; flex-direction: row;">
-                            <ui:Label tabindex="-1" text="屋根の厚さ" parse-escape-sequences="true" display-tooltip-when-elided="true" style="width: 70%; flex-shrink: 0; -unity-text-align: middle-left; font-size: 14px;" />
-                            <ui:TextField picking-mode="Ignore" label="Text Field" value="0.2" name="RoofThickness" style="width: 70%; flex-shrink: 1;" />
+                        <ui:VisualElement style="flex-grow: 0; flex-direction: row; justify-content: center; align-items: center; flex-shrink: 1; width: 100%; margin-bottom: 0;">
+                            <ui:Label tabindex="-1" text="屋根の厚さ" parse-escape-sequences="true" display-tooltip-when-elided="true" style="width: 80px; font-size: 16px; -unity-text-align: middle-left; flex-shrink: 0; margin-top: 0; margin-right: 8px; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+                            <ui:Slider label="SliderInt" high-value="100" show-input-field="true" name="RoofThickness" style="flex-shrink: 1;" />
                         </ui:VisualElement>
                     </ui:VisualElement>
                 </ui:VisualElement>
                 <ui:VisualElement name="Setting_Office" style="flex-grow: 1;">
                     <ui:Label tabindex="-1" text="オフィスビル設定" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" style="margin-top: 0; margin-right: 0; margin-bottom: 8px; margin-left: 0; align-items: center; -unity-text-align: upper-center; font-size: 16px;" />
                     <ui:VisualElement name="SettingContainer" style="flex-grow: 1; padding-top: 12px; padding-right: 12px; padding-bottom: 12px; padding-left: 12px; border-left-color: rgb(136, 147, 146); border-right-color: rgb(136, 147, 146); border-top-color: rgb(136, 147, 146); border-bottom-color: rgb(136, 147, 146); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; margin-bottom: 8px; flex-direction: column;">
-                        <ui:VisualElement style="flex-grow: 0; flex-direction: row; justify-content: center; align-items: center; flex-shrink: 1; width: 100%; margin-bottom: 0;">
-                            <ui:Label tabindex="-1" text="階数" parse-escape-sequences="true" display-tooltip-when-elided="true" style="width: 60px; font-size: 16px; -unity-text-align: middle-left; flex-shrink: 0; margin-top: 0; margin-right: 8px; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
-                            <ui:SliderInt label="SliderInt" high-value="100" show-input-field="true" name="PanelHeightSlider" style="flex-shrink: 1;" />
-                        </ui:VisualElement>
                         <ui:VisualElement style="flex-grow: 1; flex-direction: row;">
                             <ui:Label tabindex="-1" text="1階を窓に変更" parse-escape-sequences="true" display-tooltip-when-elided="true" style="width: 70%;" />
                             <ui:Toggle label="Toggle" name="IsChangeWindow" />
+                        </ui:VisualElement>
+                        <ui:VisualElement style="flex-grow: 0; flex-direction: row; justify-content: center; align-items: center; flex-shrink: 1; width: 100%; margin-bottom: 0;">
+                            <ui:Label tabindex="-1" text="壁パネルの高さ" parse-escape-sequences="true" display-tooltip-when-elided="true" style="width:110px; font-size: 16px; -unity-text-align: middle-left; flex-shrink: 0; margin-top: 0; margin-right: 8px; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+                            <ui:Slider label="SliderInt" high-value="100" show-input-field="true" name="PanelHeightSlider" style="flex-shrink: 1;" />
                         </ui:VisualElement>
                     </ui:VisualElement>
                 </ui:VisualElement>
