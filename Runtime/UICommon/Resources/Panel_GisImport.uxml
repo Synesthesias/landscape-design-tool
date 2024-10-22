@@ -20,7 +20,7 @@
             </ui:VisualElement>
             <ui:VisualElement name="ActionContainer" style="flex-grow: 0; flex-direction: row; align-items: center;">
                 <ui:VisualElement style="flex-grow: 1; align-items: center; flex-direction: row; justify-content: space-between;">
-                    <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="AllDeleteButton" class="OutlineButton" style="flex-direction: row; align-self: center; padding-top: 0; padding-bottom: 0; align-items: center;">
+                    <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="AllDeleteButton" style="flex-direction: row; align-self: center; padding-top: 0; padding-bottom: 0; align-items: center;">
                         <ui:VisualElement name="Icon_Trash" style="flex-grow: 1; width: 24px; height: 24px; -unity-background-image-tint-color: rgb(128, 213, 212);" />
                         <ui:Label tabindex="-1" text="一括削除" parse-escape-sequences="true" display-tooltip-when-elided="true" style="color: rgb(128, 213, 212);" />
                     </ui:Button>
