@@ -48,8 +48,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             new Panel_AreaPlanningMenuUI(planning,this);
             new Panel_AreaPlanningSubMenuUI(planning, this);
             new Panel_AreaPlanningInfoUI(planning, this);
-            new Panel_AreaPlanningRegisterUI(planning, this);
-            new Panel_AreaPlanningEditUI(planning, this);
+            new Panel_AreaPlanningRegister(planning, this);
+            new Panel_AreaPlanningEdit(planning, this);
 
             // 各UIパネルのルートを取得
             title_AreaPlanningInfo = planning.Q<VisualElement>("LeftUpper").Q<VisualElement>("Title_Left");

@@ -64,6 +64,33 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             return true;    // 全ての頂点の修正に成功
         }
 
+        /// <summary>
+        /// 頂点上下方向の地面オブジェクトの座標を探索するメソッド
+        /// </summary>
+        public Vector3 SearchGroundPoint(Vector3 vector)
+        {
+            // 頂点上方向に地面オブジェクトを探索
+            RaycastHit[] hitsAbove = Physics.RaycastAll(vector, Vector3.up, float.PositiveInfinity);
+            RaycastHit? hit = FindGroundObj(hitsAbove);
+
+            // 地面オブジェクトが見つかった場合
+            if (hit != null)
+            {
+                return hit.Value.point;
+            }
+
+            // 頂点下方向に地面オブジェクトを探索
+            RaycastHit[] hitsBelow = Physics.RaycastAll(vector, Vector3.down, float.PositiveInfinity);
+            hit = FindGroundObj(hitsBelow);
+
+            // 地面オブジェクトが見つかった場合
+            if (hit != null)
+            {
+                return hit.Value.point;
+            }
+
+            return vector;  // ちょうど地面上に頂点がある場合
+        }
 
         /// <summary>
         /// RaycastHit配列から、cityObjectTypeがCOT_TINReliefのオブジェクトを探索するメソッド

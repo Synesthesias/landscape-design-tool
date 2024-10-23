@@ -156,7 +156,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         public float WallMaxHeight { get; private set; }
         public Transform Transform { get; private set; }
         public Vector3 ReferencePosition { get; private set; }
-        public List<List<Vector3>> PointData { get; private set; }
+        public List<List<Vector3>> PointData { get ; set; }
 
         public AreaProperty(int id, string name, float limitHeight, float lineOffset, Color areaColor, Material wallMaterial, Material ceilingMaterial, float wallMaxHeight, Vector3 referencePos, Transform areaTransform, List<List<Vector3>> pointData)
         {

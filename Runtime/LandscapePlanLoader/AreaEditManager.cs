@@ -1,4 +1,6 @@
+using iShape.Geometry.Polygon;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace Landscape2.Runtime.LandscapePlanLoader
 {
@@ -9,6 +11,44 @@ namespace Landscape2.Runtime.LandscapePlanLoader
     {
         private AreaProperty editingAreaProperty;
         private int editingAreaIndex = -1;
+
+        /// <summary>
+        /// 区画IDを取得するメソッド
+        /// </summary>
+        public int GetAreaID()
+        {
+            if (editingAreaProperty == null) return -1;
+            return editingAreaProperty.ID;
+        }
+
+        /// <summary>
+        /// 区画の頂点の座標を取得するメソッド
+        /// </summary>
+        public Vector3 GetPointData(int pointIndex)
+        {
+            if (editingAreaProperty == null) return Vector3.zero;
+            // PointDataの要素を返す
+            return editingAreaProperty.PointData[0][pointIndex];
+        }
+
+        /// <summary>
+        /// 区画の頂点の数を取得するメソッド
+        /// </summary>
+        public int GetPointCount()
+        {
+            if (editingAreaProperty == null) return 0;
+            return editingAreaProperty.PointData[0].Count;
+        }
+
+        /// <summary>
+        /// 区画の頂点の座標を変更し、オブジェクトに反映するメソッド
+        /// </summary>
+        /// <param name="newPoint">新規に設定する頂点の座標</param>
+        public void EditPointData(List<Vector3> newPointData)
+        { 
+            if (editingAreaProperty == null) return;
+            editingAreaProperty.PointData[0] = newPointData;
+        }
 
         /// <summary>
         /// 区画の制限高さを変更し、オブジェクトに反映するメソッド
@@ -68,6 +108,15 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         {
             if (editingAreaProperty == null) return null;
             return editingAreaProperty.LimitHeight;
+        }
+
+        /// <summary>
+        /// 区画の壁マテリアルを取得するメソッド
+        /// </summary>
+        public Material GetWallMaterial()
+        {
+            if (editingAreaProperty == null) return null;
+            return editingAreaProperty.WallMaterial;
         }
 
         /// <summary>

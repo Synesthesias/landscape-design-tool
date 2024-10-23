@@ -50,7 +50,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             return false;
         }
 
-        void DrawPolygonOrPolyline(GameObject parentObject, GameObject originMeshObj, List<List<List<Vector3>>> pointDatas)
+        public void DrawPolygonOrPolyline(GameObject parentObject, GameObject originMeshObj, List<List<List<Vector3>>> pointDatas)
         {
             foreach (List<List<Vector3>> partPointsWorld in pointDatas)
             {
