@@ -9,6 +9,7 @@ using Cinemachine;
 using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.InputSystem;
 using System;
+using UnityEngine.InputSystem.Processors;
 
 namespace Landscape2.Runtime
 {
@@ -32,6 +33,9 @@ namespace Landscape2.Runtime
 
     public class LandscapeSubComponents : MonoBehaviour
     {
+
+        const int CAMERA_FARCLIP_VALUE = 2000;
+
         private List<ISubComponent> subComponents;
         // 現在開かれているサブメニュー機能
         private SubMenuUxmlType subMenuUxmlType = SubMenuUxmlType.Menu;
@@ -66,7 +70,7 @@ namespace Landscape2.Runtime
             CinemachineVirtualCamera mainCamVC = mainCam.AddComponent<CinemachineVirtualCamera>();
             mainCamVC.m_Lens.FieldOfView = 60;
             mainCamVC.m_Lens.NearClipPlane = 0.3f;
-            mainCamVC.m_Lens.FarClipPlane = 1000;
+            mainCamVC.m_Lens.FarClipPlane = CAMERA_FARCLIP_VALUE;
 
             //歩行者視点用のオブジェクトの生成と設定
             GameObject walker = new GameObject("Walker");
@@ -80,21 +84,37 @@ namespace Landscape2.Runtime
             CinemachineVirtualCamera walkerCamVC = walkerCam.AddComponent<CinemachineVirtualCamera>();
             walkerCamVC.m_Lens.FieldOfView = 60;
             walkerCamVC.m_Lens.NearClipPlane = 0.3f;
-            walkerCamVC.m_Lens.FarClipPlane= 1000;
+            walkerCamVC.m_Lens.FarClipPlane = CAMERA_FARCLIP_VALUE;
             walkerCamVC.Priority = 9;
             walkerCamVC.m_StandbyUpdate = CinemachineVirtualCameraBase.StandbyUpdateMode.Never;
             walkerCamVC.AddCinemachineComponent<CinemachineTransposer>();
             walkerCamVC.AddCinemachineComponent<CinemachinePOV>();
             CinemachineInputProvider walkerCamInput = walkerCam.AddComponent<CinemachineInputProvider>();
-            walkerCamInput.XYAxis = InputActionReference.Create(new DefaultInputActions().Player.Look);
+
+            // 歩行者視点時カメラ回転の移動量補正
+            var ia = new DefaultInputActions();
+            {
+                var cameraMoveSpeedData = Resources.Load<CameraMoveData>("CameraMoveSpeedData");
+
+                float val = cameraMoveSpeedData.walkerCameraRotateSpeed;
+                string overrideProcessor = $"ClampVector2Processor(minX={-val}, minY={-val}, maxX={val}, maxY={val})";
+
+                ia.Player.Look.ApplyBindingOverride(
+                    new InputBinding
+                    {
+                        overrideProcessors = overrideProcessor
+                    });
+            }
+            walkerCamInput.XYAxis = InputActionReference.Create(ia.Player.Look);
+
             walkerCam.SetActive(false);
             walkerCam.SetActive(true);
-            walkerCamVC.Follow = walker.transform; 
+            walkerCamVC.Follow = walker.transform;
 
             var landscapeCamera = new LandscapeCamera(mainCamVC, walkerCamVC, walker);
             var walkerMoveByUserInput = new WalkerMoveByUserInput(walkerCamVC, walker);
             var cameraPositionMemory = new CameraPositionMemory.CameraPositionMemory(mainCamVC, walkerCamVC, landscapeCamera);
-      
+
             var editBuilding = new EditBuilding(subMenuUxmls[(int)SubMenuUxmlType.EditBuilding]);
             var saveSystem = new SaveSystem(uiRoot);
             LandscapePlanSaveSystem.SetEvent(saveSystem);
@@ -111,7 +131,7 @@ namespace Landscape2.Runtime
                 new ArrangementAsset(subMenuUxmls[(int)SubMenuUxmlType.Asset],saveSystem),
                 //RegulationAreaUI.CreateForScene(),
                 new WeatherTimeEditorUI(new WeatherTimeEditor.WeatherTimeEditor(),uiRoot),
-                saveSystem, 
+                saveSystem,
                 editBuilding,
                 new BuildingColorEditorUI(new BuildingColorEditor(),editBuilding,subMenuUxmls[(int)SubMenuUxmlType.EditBuilding]),
                 new VisualizeHeightUI(new VisualizeHeight(),uiRoot)

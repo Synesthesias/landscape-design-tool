@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bf7a13bab7c36b4b9f4d9024d8ad35a, type: 3}
   m_Name: CameraMoveSpeedData
   m_EditorClassIdentifier: 
-  horizontalMoveSpeed: 300
-  verticalMoveSpeed: 300
+  horizontalMoveSpeed: 200
+  verticalMoveSpeed: 200
   parallelMoveSpeed: 0.15
   zoomMoveSpeed: 10
-  rotateSpeed: 30
+  rotateSpeed: 20
   zoomLimit: 20
   heightLimitY: 25
   walkerMoveSpeed: 20
   walkerOffsetYSpeed: 10
+  walkerCameraRotateSpeed: 0.4
