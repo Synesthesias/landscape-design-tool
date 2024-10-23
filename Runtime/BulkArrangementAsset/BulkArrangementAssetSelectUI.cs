@@ -42,6 +42,7 @@ namespace Landscape2.Runtime
         
         private void DrawScrollView()
         {
+            ResetSelect();
             scrollView.Clear();
             
             foreach (var item in bulkArrangementAsset.AssetTypes)
@@ -145,6 +146,12 @@ namespace Landscape2.Runtime
                 var selectButton = child.Q<Button>("List");
                 selectButton.RemoveFromClassList("active");
             }
+        }
+        
+        public void ResetSelect()
+        {
+            DeactivateAllButtons();
+            bulkArrangementAsset.SetSelectedID(-1);
         }
     }
 }

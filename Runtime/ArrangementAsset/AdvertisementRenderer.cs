@@ -19,16 +19,16 @@ namespace Landscape2.Runtime
         
         private PlateauSandboxAdvertisement target;
 
-        public string SelectFile()
+        public string SelectFile(bool isImage)
         {
             // 拡張子で指定してファイル選択
-            var extensions = new[] {
-                new ExtensionFilter("Image Files", 
-                    imageExtensions.Select(ext => ext.Split('.')[1]).ToArray()),
-                new ExtensionFilter("Video Files", 
-                    videoExtensions.Select(ext => ext.Split('.')[1]).ToArray())
-            };
-            string[] paths = StandaloneFileBrowser.OpenFilePanel("Select File", "", extensions, false);
+            var fileExtensions = isImage
+                 ? new ExtensionFilter("Image Files",
+                     imageExtensions.Select(ext => ext.Split('.')[1]).ToArray())
+                 : new ExtensionFilter("Video Files",
+                     videoExtensions.Select(ext => ext.Split('.')[1]).ToArray());
+            
+            string[] paths = StandaloneFileBrowser.OpenFilePanel("Select File", "", new []{ fileExtensions }, false);
             if (paths.Length == 0)
             {
                 return string.Empty;

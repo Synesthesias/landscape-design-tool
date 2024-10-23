@@ -58,7 +58,7 @@ namespace Landscape2.Runtime
             }
             else
             {
-                ModalUI.ShowModal(title, "一部のアセットの配置に失敗しました。", false, true);
+                ModalUI.ShowModal(title, "一部のアセットの配置に失敗しました。", true, false);
             }
         }
     }

@@ -30,10 +30,6 @@ namespace Landscape2.Runtime
 
         private void RegisterButtons()
         {
-            // // CSVテンプレート作成ボタン
-            // var csvButton = UIElement.Q<Button>("CSVButton");
-            // csvButton.clicked += CreateCsvTemplate;
-            
             // CSVファイル読み込みボタン
             var csvLoadButton = UIElement.Q<Button>("CSVImportButton");
             csvLoadButton.clicked += () =>
@@ -65,6 +61,9 @@ namespace Landscape2.Runtime
             {
                 // 非表示時はアセットリストを非表示
                 selectUI.TryShowAssetList(false);
+                
+                // アセット選択状態をリセット
+                selectUI.ResetSelect();
             }
         }
 

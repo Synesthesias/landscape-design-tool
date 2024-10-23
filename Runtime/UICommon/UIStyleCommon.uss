@@ -324,8 +324,14 @@ Scroller #unity-drag-container {
 
 .unity-popup-field > .unity-base-field__input {
     background-color: rgb(255, 255, 255);
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+
+.unity-popup-field .unity-base-popup-field__text {
     color: rgb(0, 0, 0);
 }
+
 .unity-popup-field{
     color: rgb(0, 0, 0);
 }

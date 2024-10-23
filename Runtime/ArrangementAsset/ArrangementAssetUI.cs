@@ -40,6 +40,9 @@ namespace Landscape2.Runtime
             RegisterEditButtonAction();
 
             arrangementBuildingEditorUI = new ArrangementBuildingEditorUI(element);
+            
+            // デフォルトでは非表示
+            editPanel.style.display = DisplayStyle.None;
         }
 
         /// <summary>
@@ -62,16 +65,32 @@ namespace Landscape2.Runtime
             {    
                 editMode.CreateRuntimeHandle(editTarget,TransformType.Scale);
             });
+            
+            // 画像読み込み
             var fileButton = editPanel.Q<Button>("FileButton");
             fileButton.clicked += () =>
             {
-                var filePath = advertisementRenderer.SelectFile();
+                var filePath = advertisementRenderer.SelectFile(true);
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     advertisementRenderer.Render(editTarget, filePath);
                 }
             };
-            fileButton.visible = false; // デフォルトでは非表示
+            var fileContainer = editPanel.Q<VisualElement>("FileContainer");
+            fileContainer.style.display = DisplayStyle.None; // デフォルトでは非表示
+            
+            // 動画読み込み
+            var movieButton = editPanel.Q<Button>("MovieButton");
+            movieButton.clicked += () =>
+            {
+                var filePath = advertisementRenderer.SelectFile(false);
+                if (!string.IsNullOrEmpty(filePath))
+                {
+                    advertisementRenderer.Render(editTarget, filePath);
+                }
+            };
+            var movieContainer = editPanel.Q<VisualElement>("MovieContainer");
+            movieContainer.style.display = DisplayStyle.None; // デフォルトでは非表示
             
             var deleteButton = editPanel.Q<Button>("ContextButton");
             deleteButton.clicked += () =>
@@ -214,17 +233,13 @@ namespace Landscape2.Runtime
         /// </summary>
         private void TryDisplayFileButton()
         {
-            var fileButton = editPanel.Q<Button>("FileButton");
+            var fileContainer = editPanel.Q<VisualElement>("FileContainer");
+            var movieContainer = editPanel.Q<VisualElement>("MovieContainer");
             
-            // 広告のみファイルボタンを表示
-            if (editTarget != null && editTarget.GetComponent<PlateauSandboxAdvertisement>() != null)
-            {
-                fileButton.visible = true;
-            }
-            else
-            {
-                fileButton.visible = false;
-            }
+            // 広告のアセットのみファイルボタンを表示
+            var isShow = editTarget != null && editTarget.GetComponent<PlateauSandboxAdvertisement>() != null;
+            fileContainer.style.display = isShow ? DisplayStyle.Flex : DisplayStyle.None;
+            movieContainer.style.display = isShow ? DisplayStyle.Flex : DisplayStyle.None;
         }
     }
 }
