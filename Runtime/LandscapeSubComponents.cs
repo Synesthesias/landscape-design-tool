@@ -84,6 +84,7 @@ namespace Landscape2.Runtime
             CinemachineVirtualCamera walkerCamVC = walkerCam.AddComponent<CinemachineVirtualCamera>();
             walkerCamVC.m_Lens.FieldOfView = 60;
             walkerCamVC.m_Lens.NearClipPlane = 0.3f;
+
             walkerCamVC.m_Lens.FarClipPlane = CAMERA_FARCLIP_VALUE;
             walkerCamVC.Priority = 9;
             walkerCamVC.m_StandbyUpdate = CinemachineVirtualCameraBase.StandbyUpdateMode.Never;
@@ -134,6 +135,7 @@ namespace Landscape2.Runtime
                 saveSystem,
                 editBuilding,
                 new BuildingColorEditorUI(new BuildingColorEditor(),editBuilding,subMenuUxmls[(int)SubMenuUxmlType.EditBuilding]),
+                new BuildingTRSEditor(editBuilding,subMenuUxmls[(int)SubMenuUxmlType.EditBuilding]),
                 new VisualizeHeightUI(new VisualizeHeight(),uiRoot)
             };
         }

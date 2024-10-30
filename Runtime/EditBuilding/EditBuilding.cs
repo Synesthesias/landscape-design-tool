@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
 
 namespace Landscape2.Runtime
@@ -19,18 +18,26 @@ namespace Landscape2.Runtime
         GameObject highlightBox = null;
         VisualElement uiRoot;
 
-        private readonly VisualElement materialPanel;
         private const string UIMaterialPanel = "Panel_MaterialEditor";
+        private const string UIDeleteBuildingPanel = "Panel_DeleteBuilding";
+
+        private const string UISelectDeleteButtonPanel = "ContextButtonGroup";
+        private const string UISelectDeleteButton = "ContextButton";
+
+        readonly List<VisualElement> panelList = new();
 
         public EditBuilding(VisualElement uiRoot)
         {
             this.uiRoot = uiRoot;
-            materialPanel = uiRoot.Q<VisualElement>(UIMaterialPanel);
+            var materialPanel = uiRoot.Q<VisualElement>(UIMaterialPanel);
+            panelList.Add(materialPanel);
+            var deleteBuildingPanel = uiRoot.Q<VisualElement>(UIDeleteBuildingPanel);
+            panelList.Add(deleteBuildingPanel);
 
             // 建物編集画面が閉じられたとき
             uiRoot.RegisterCallback<GeometryChangedEvent>(evt =>
             {
-                if(uiRoot.style.display == DisplayStyle.None)
+                if (uiRoot.style.display == DisplayStyle.None)
                 {
                     OnDisable();
                 }
@@ -43,14 +50,27 @@ namespace Landscape2.Runtime
             {
                 if (Input.GetMouseButtonDown(0))
                 {
-                    // マウスの座標がパネルの範囲内ある場合は反応しない
-                    var panelBound = materialPanel.worldBound;
-                    panelBound.position = new Vector2(panelBound.position.x, Screen.height - panelBound.position.y - panelBound.size.y);
-                    if (panelBound.Contains(Input.mousePosition))
+                    var cbg = panelList.Where(x => x.name == UISelectDeleteButton).FirstOrDefault();
+                    if (cbg == null)
                     {
-                        return;
+                        var contextButtonGroup = uiRoot.parent.Q<VisualElement>(UISelectDeleteButtonPanel);
+                        var deleteButton = contextButtonGroup.Q<Button>(UISelectDeleteButton);
+                        if (deleteButton != null)
+                        {
+                            panelList.Add(deleteButton);
+                        }
                     }
 
+                    // マウスの座標がパネルの範囲内ある場合は反応しない
+                    foreach (var panel in panelList)
+                    {
+                        var panelBound = panel.worldBound;
+                        panelBound.position = new Vector2(panelBound.position.x, Screen.height - panelBound.position.y - panelBound.size.y);
+                        if (panelBound.Contains(Input.mousePosition))
+                        {
+                            return;
+                        }
+                    }
                     Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                     RaycastHit hit = new RaycastHit();
 
