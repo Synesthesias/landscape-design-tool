@@ -23,15 +23,31 @@ namespace Landscape2.Runtime
         private RaycastHit rotateHit, parallelHit;
         private float translationFactor = 1f;
 
+        private static bool isKeyboardActive = true;
+        private static bool isMouseActive = true;
+
+        public static bool IsCameraMoveActive { get; set; } = true;
+
         /// <summary>
-        /// キーボードでの移動を有効にするかどうかです
+        /// キーボードでの移動を有効にするかどうか
         /// </summary>
-        public static bool IsKeyboardActive = true;
+        public static bool IsKeyboardActive {
+            get => isKeyboardActive && IsCameraMoveActive;
+            set
+            {
+                isKeyboardActive = value;
+            }
+        }
 
         /// <summary>
         /// マウスでの移動を有効にするかどうか
         /// </summary>
-        public static bool IsMouseActive = true;
+        public static bool IsMouseActive {
+            get => isMouseActive && IsCameraMoveActive;
+            set {
+                isMouseActive = value;
+            }
+        }
 
 	    public CameraMoveByUserInput(CinemachineVirtualCamera camera)
 	    {
@@ -238,7 +254,7 @@ namespace Landscape2.Runtime
         /// <param name="cameraTrans"></param>
         private void MoveCameraParallel(Vector2 moveDelta, Transform cameraTrans)
         {
-            if (!isParallelMoveByMouse) return;
+            if (!isParallelMoveByMouse || !IsCameraMoveActive) return;
 
             
 

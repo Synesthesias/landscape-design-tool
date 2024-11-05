@@ -132,6 +132,12 @@ namespace Landscape2.Runtime
             {
                 currentMode.Update();
             }
+
+            var isEditMode = currentMode == editMode;
+            var isEditingAssetTRS = isEditMode &&
+                editMode.RuntimeTransformHandleScript != null &&
+                editMode.RuntimeTransformHandleScript.isDragging;
+            CameraMoveByUserInput.IsCameraMoveActive = !isEditingAssetTRS;
         }
 
         public void OnSelect(InputAction.CallbackContext context)

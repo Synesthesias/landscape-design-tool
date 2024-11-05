@@ -21,6 +21,7 @@ namespace Landscape2.Runtime
 
         public BuildingTRSEditor(EditBuilding editBuilding, VisualElement element)
         {
+            editMode.OnCancel();
             trsUI = new(editBuilding, element);
             deleteListUI = new(element, this);
 
@@ -79,7 +80,8 @@ namespace Landscape2.Runtime
         void ChangeEditMode(GameObject target, TransformType type)
         {
             editMode.OnCancel();
-            editMode.CreateRuntimeHandle(target, type);
+            //  後で使用するかも知れないので一旦コメントアウトのみ
+            // editMode.CreateRuntimeHandle(target, type);
         }
 
         public void OnSelectBuilding(GameObject select)

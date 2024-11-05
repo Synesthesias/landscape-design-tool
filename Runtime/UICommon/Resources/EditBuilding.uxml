@@ -2,8 +2,8 @@
     <Style src="project://database/Packages/com.synesthesias.landscape-design-tool-2/Runtime/UICommon/UIStyleCommon.uss?fileID=7433441132597879392&amp;guid=5003ef441f4ce7e4881f663b95f4df1d&amp;type=3#UIStyleCommon" />
     <ui:Template name="Panel_MaterialEditor" path="Panel_MaterialEditor" />
     <ui:Template name="Panel_DeleteBuilding" path="Panel_DeleteBuilding" />
-    <ui:VisualElement name="MainContainer" style="flex-grow: 1;">
-        <ui:VisualElement name="LeftContainer" style="flex-grow: 1; flex-shrink: 0;" >
+    <ui:VisualElement name="MainContainer" picking-mode="Ignore" style="flex-grow: 1;">
+        <ui:VisualElement name="LeftContainer" picking-mode="Ignore" style="flex-grow: 1; flex-shrink: 0;" >
 
             <ui:VisualElement name="LeftUpper" style="flex-grow: 1;">
                 <ui:VisualElement name="Title_Left" style="flex-grow: 0;">
@@ -13,9 +13,9 @@
             </ui:VisualElement>
         </ui:VisualElement>
 
+        <ui:VisualElement name="CenterContainer" picking-mode="Ignore" style="flex-grow: 1;" />
 
-        <ui:VisualElement name="CenterContainer" style="flex-grow: 1;" />
-        <ui:VisualElement name="RightContainer" style="flex-grow: 1; flex-shrink: 0;">
+        <ui:VisualElement name="RightContainer" picking-mode="Ignore" style="flex-grow: 1; flex-shrink: 0;">
             <ui:VisualElement name="RightUpper" style="flex-grow: 1;">
                 <ui:VisualElement name="Title_Right" style="flex-grow: 0;">
                     <ui:Label tabindex="-1" text="色彩編集" parse-escape-sequences="true" display-tooltip-when-elided="true" />

@@ -20,6 +20,8 @@ namespace Landscape2.Runtime
         private RuntimeTransformHandle runtimeTransformHandleScript;
         private GameObject editAsset;
 
+        public RuntimeTransformHandle RuntimeTransformHandleScript => runtimeTransformHandleScript;
+
         public void CreateRuntimeHandle(GameObject obj,TransformType transformType)
         {
             ClearHandleObject();
@@ -54,6 +56,7 @@ namespace Landscape2.Runtime
         private void CreateHandleObject(GameObject obj,TransformType transformType)
         {
             runtimeTransformHandleScript = RuntimeTransformHandle.Create(null,HandleType.POSITION);
+            runtimeTransformHandleScript.autoScale = true;
             runtimeTransformHandleScript.target = obj.transform;
         }
 
