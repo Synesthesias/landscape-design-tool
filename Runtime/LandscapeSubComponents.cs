@@ -137,7 +137,7 @@ namespace Landscape2.Runtime
                 editBuilding,
                 new BuildingColorEditorUI(new BuildingColorEditor(),editBuilding,subMenuUxmls[(int)SubMenuUxmlType.EditBuilding]),
                 new BuildingTRSEditor(editBuilding,subMenuUxmls[(int)SubMenuUxmlType.EditBuilding]),
-                new VisualizeHeightUI(new VisualizeHeight(),uiRoot),
+                new VisualizeHeightUI(new VisualizeHeight(),uiRoot,landscapeCamera),
                 new GisDataLoaderUI(subMenuUxmls[(int)SubMenuUxmlType.Gis], saveSystem),
             };
         }

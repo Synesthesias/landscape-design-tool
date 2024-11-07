@@ -6,16 +6,18 @@ namespace Landscape2.Runtime
 {
     public class LandscapeCamera
     {
-        private LandscapeCameraState cameraState = LandscapeCameraState.PointOfView;
+
         private CinemachineVirtualCamera vcam1;
         private CinemachineVirtualCamera vcam2;
         private GameObject walker;
         private RaycastHit hit;
 
+        public LandscapeCameraState cameraState { get; private set; }
         public event Action OnSetCameraCalled;
 
         public LandscapeCamera(CinemachineVirtualCamera vcam1, CinemachineVirtualCamera vcam2, GameObject walker)
         {
+            cameraState = LandscapeCameraState.PointOfView;
             this.vcam1 = vcam1;
             this.vcam2 = vcam2;
             this.walker = walker;
