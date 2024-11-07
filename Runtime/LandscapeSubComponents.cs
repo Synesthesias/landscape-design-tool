@@ -6,6 +6,7 @@ using Landscape2.Runtime.LandscapePlanLoader;
 using UnityEngine.UIElements;
 using UnityEngine;
 using Cinemachine;
+using Landscape2.Runtime.GisDataLoader;
 using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.InputSystem;
 using System;
@@ -136,7 +137,8 @@ namespace Landscape2.Runtime
                 editBuilding,
                 new BuildingColorEditorUI(new BuildingColorEditor(),editBuilding,subMenuUxmls[(int)SubMenuUxmlType.EditBuilding]),
                 new BuildingTRSEditor(editBuilding,subMenuUxmls[(int)SubMenuUxmlType.EditBuilding]),
-                new VisualizeHeightUI(new VisualizeHeight(),uiRoot)
+                new VisualizeHeightUI(new VisualizeHeight(),uiRoot),
+                new GisDataLoaderUI(subMenuUxmls[(int)SubMenuUxmlType.Gis], saveSystem),
             };
         }
 

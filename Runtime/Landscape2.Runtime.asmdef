@@ -32,7 +32,8 @@
     "overrideReferences": true,
     "precompiledReferences": [
         "System.Windows.Forms.dll",
-        "Ookii.Dialogs.dll"
+        "Ookii.Dialogs.dll",
+        "Newtonsoft.Json.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [],
