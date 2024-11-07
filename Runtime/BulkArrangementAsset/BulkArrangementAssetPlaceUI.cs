@@ -25,8 +25,8 @@ namespace Landscape2.Runtime
             placeButton.clicked += async () =>
             {
                 ShowProgress();
-                await bulkArrangementAssetPlace.PlaceAll(bulkArrangementAsset);
-                ShowResultDialog();
+                var resultText = await bulkArrangementAssetPlace.PlaceAll(bulkArrangementAsset);
+                ShowResultDialog(resultText);
             };
         }
 
@@ -45,10 +45,14 @@ namespace Landscape2.Runtime
             });
         }
         
-        private void ShowResultDialog()
+        private void ShowResultDialog(string resultText)
         {
             var title = "アセット一括配置";
-            if (bulkArrangementAssetPlace.IsAllPlaceSuccess())
+            if (!string.IsNullOrEmpty(resultText))
+            {
+                ModalUI.ShowModal("アセット一括配置", resultText, false, true);
+            }
+            else if (bulkArrangementAssetPlace.IsAllPlaceSuccess())
             {
                 ModalUI.ShowModal(title, "全てのアセットの配置に成功しました", true, false);
             }

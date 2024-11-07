@@ -1,3 +1,4 @@
+using Landscape2.Runtime.Common;
 using PlateauToolkit.Sandbox.Runtime;
 using System;
 using System.Linq;
@@ -12,19 +13,17 @@ namespace Landscape2.Runtime
         private CancellationTokenSource cancellation;
         private PlateauSandboxPrefabPlacement prefabPlacement;
         
-        public async Task PlaceAll(BulkArrangementAsset bulkArrangementAsset)
+        public async Task<string> PlaceAll(BulkArrangementAsset bulkArrangementAsset)
         {
             prefabPlacement = new PlateauSandboxPrefabPlacement();
             if (!prefabPlacement.IsValidCityModel())
             {
-                Debug.LogWarning("配置範囲内に3D都市モデルが存在しません");
-                return;
+                return "配置範囲内に3D都市モデルが存在しません";
             }
             
             if (bulkArrangementAsset.AssetTypes.All(n => n.PrefabConstantID < 0))
             {
-                Debug.LogWarning("プレハブを設定してください");
-                return;
+                return "プレハブを設定してください";
             }
             
             // 作成するAssetの親オブジェクトを更新しておく
@@ -67,8 +66,14 @@ namespace Landscape2.Runtime
 
             if (prefabPlacement.PlacingCount == 0)
             {
-                Debug.LogWarning("配置できるアセットがありません");
-                return;
+                return "配置情報の取得に失敗しました";
+            }
+
+            if (prefabPlacement.PlacementContexts.Any(context => 
+                    !CoordinateUtils.IsValidLatitude(context.m_Latitude) ||
+                    !CoordinateUtils.IsValidLongitude(context.m_Longitude)))
+            {
+                return "データの座標系が異なっています。";
             }
 
             Debug.Log($"アセットの一括配置を開始しました。{prefabPlacement.PlacingCount}個の配置");
@@ -78,6 +83,9 @@ namespace Landscape2.Runtime
                 cancellation = new CancellationTokenSource();
             }
             await prefabPlacement.PlaceAllAsync(cancellation.Token);
+            
+            // 空文字で返す
+            return string.Empty;
         }
 
         public void Stop()
@@ -91,7 +99,7 @@ namespace Landscape2.Runtime
             cancellation.Dispose();
             cancellation = null;
             prefabPlacement.StopPlace();
-       }
+        }
         
         public bool IsAllPlaceSuccess()
         {
