@@ -36,7 +36,7 @@ namespace Landscape2.Runtime
 
         // サブメニューのuxmlを格納する配列
         public VisualElement[] subMenuUxmls;
-       
+
         // 最後に開いたサブメニューuxml
         private VisualElement lastSubMenuUxml;
 
@@ -61,7 +61,7 @@ namespace Landscape2.Runtime
 
             // メニューボタンリスト
             var menuButtons = menuGroup.Children();
-            
+
             // メニューボタンの値が変更されたとき
             menuButtons.ToList().ForEach(r =>
             {
@@ -74,7 +74,7 @@ namespace Landscape2.Runtime
                         ShowSubMenuPanel(button.tabIndex);
 
                         // メニュー切り替え時はサブメニューの最初の要素であるuxmlを表示
-                        if(button.tabIndex >= 0) // tabIndexが-1(Menu)の場合は何も表示しない)
+                        if (button.tabIndex >= 0) // tabIndexが-1(Menu)の場合は何も表示しない)
                         {
                             var subMenu = subMenuElement.Children().ElementAt(button.tabIndex);
                             var subMenuButton = subMenu.Children().ElementAt(0) as RadioButton;
@@ -94,7 +94,7 @@ namespace Landscape2.Runtime
                     button.RegisterValueChangedCallback(evt =>
                     {
                         if (button.value)
-                        {                           
+                        {
                             // tabIndexに該当するuxmlを表示
                             if (functionContainer.Q<Toggle>("Toggle_WalkMode").value && button.tabIndex == (int)SubMenuUxmlType.CameraList)
                             {
@@ -126,6 +126,12 @@ namespace Landscape2.Runtime
                     });
                 });
             });
+
+            // ScreenCaptureボタンを押下された時
+            functionContainer.Q<Button>("Button_Capture").clicked += () =>
+            {
+                ScreenCapture.Instance.OnClickCaptureButton();
+            };
 
             // 設定ボタンがクリックされたとき
             settingButton.clicked += () =>
