@@ -31,8 +31,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
         public DisplayPinLine()
         {
-            pin = Resources.Load("Pin") as GameObject;
-            line = Resources.Load("Line") as GameObject;
+            pin = Resources.Load("PlanAreaPin") as GameObject;
+            line = Resources.Load("PlanAreaLine") as GameObject;
             scaleValue = currentScale;
             widthValue = currentWidth;
         }
@@ -214,6 +214,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// </summary>
         public bool IsClickFirstPin(RaycastHit[] hits)
         {
+            if (pinList == null) return false;
             return Array.Exists(hits, h => h.collider.gameObject == pinList[0]);
         }
 

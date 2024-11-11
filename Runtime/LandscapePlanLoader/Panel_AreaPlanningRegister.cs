@@ -38,7 +38,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
             limitHeight = 1.0f;
             areaPlanningHeight.value = limitHeight.ToString();
-            areaPlanningColor.style.backgroundColor = Color.red;
         }
 
         /// <summary>
@@ -50,13 +49,13 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             {
                 panel_PointEditor.style.display = DisplayStyle.Flex;
                 okButton.visible = false;
-                base.CreateSnackbar("地形をクリックして領域を作成してください");
+                base.DisplaySnackbar("地形をクリックして領域を作成してください");
             }
             else
             {
                 panel_PointEditor.style.display = DisplayStyle.None;
                 areaPlanningRegister.ClearVertexEdit();
-                base.RemoveSnackbar();
+                base.HideSnackbar();
             }
         }
 
@@ -114,7 +113,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 base.EditColor();
 
                 // 色彩の変更を反映
-                ColorEditorUI colorEditorUI = new ColorEditorUI(colorEditorClone, Color.red);
+                ColorEditorUI colorEditorUI = new ColorEditorUI(colorEditorClone, areaPlanningColor.resolvedStyle.backgroundColor);
                 colorEditorUI.OnColorEdited += (newColor) =>
                 {
                     areaPlanningColor.style.backgroundColor = newColor;

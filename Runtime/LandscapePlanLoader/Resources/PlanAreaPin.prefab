@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1506876401998548646}
   - component: {fileID: 8273288876914002277}
   m_Layer: 0
-  m_Name: Pin
+  m_Name: PlanAreaPin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

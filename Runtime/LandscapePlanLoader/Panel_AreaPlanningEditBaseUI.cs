@@ -23,8 +23,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         protected VisualElement areaPlanningColor;    // 色彩表示欄
         protected VisualTreeAsset colorEditor;    // 色彩編集用のテンプレート
         protected VisualElement colorEditorClone; // 色彩編集用クローン
-        protected VisualTreeAsset snackBar;    // Snackbar用のテンプレート
-        protected VisualElement snackBarClone;
+        protected VisualElement snackBarClone; // Snackbarのクローン
 
         protected bool isColorEditing = false;
 
@@ -35,8 +34,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             displayPinLine = new DisplayPinLine();
 
             colorEditor = Resources.Load<VisualTreeAsset>("UIColorEditor");
-            snackBar = Resources.Load<VisualTreeAsset>("Snackbar");
-            snackBarClone = snackBar.CloneTree();
+            CreateSnackbar();
+            snackBarClone.Q<Button>("CloseButton").clicked += () => HideSnackbar();
         }
 
         /// <summary>
@@ -110,8 +109,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         {
             // 色彩変更パネルを画面中央に表示
             colorEditorClone = colorEditor.CloneTree();
-            planning.Q<VisualElement>("CenterUpper").Add(colorEditorClone);
-            colorEditorClone.style.position = Position.Absolute;
+            planning.Q<VisualElement>("CenterLower").Add(colorEditorClone);
         }
 
         /// <summary>
@@ -127,28 +125,40 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// <summary>
         /// Snackbarを新しく生成する関数
         /// </summary>
-        /// <param name="text">表示したい文章</param>
-        protected void CreateSnackbar(string text)
+        protected void CreateSnackbar()
         {
-            // 既にSnackbarが表示されている場合は削除
-            RemoveSnackbar();
-            planning.Q<VisualElement>("CenterUpper").Add(snackBarClone);
-            snackBarClone.Q<Label>("SnackbarText").text = text;
-
-            snackBarClone.Q<Button>("CloseButton").clicked += () =>
+            if (planning.Q<VisualElement>("Snackbar") == null)
             {
-                snackBarClone.RemoveFromHierarchy();
-            };
+                var snackBar = Resources.Load<VisualTreeAsset>("Snackbar");
+                snackBarClone = snackBar.CloneTree();
+                planning.Q<VisualElement>("CenterUpper").Add(snackBarClone);
+            }
+            snackBarClone = planning.Q<VisualElement>("Snackbar");
+            snackBarClone.visible = false;
+            snackBarClone.Q<Button>("CloseButton").visible = false;
+
         }
 
         /// <summary>
-        /// Snackbarを取り除く
+        /// Snackbarを表示する関数
         /// </summary>
-        protected void RemoveSnackbar()
+        /// <param name="text">表示したい文章</param>
+        protected void DisplaySnackbar(string text)
+        {
+            snackBarClone.Q<Label>("SnackbarText").text = text;
+            snackBarClone.visible = true;
+            snackBarClone.Q<Button>("CloseButton").visible = true;
+        }
+
+        /// <summary>
+        /// Snackbarを非表示にする
+        /// </summary>
+        protected void HideSnackbar()
         {
             if (planning.Q<VisualElement>("Snackbar") != null)
             {
-                snackBarClone.RemoveFromHierarchy();
+                snackBarClone.visible = false;
+                snackBarClone.Q<Button>("CloseButton").visible = false;
             }
         }
 

@@ -24,6 +24,7 @@
         </ui:VisualElement>
         <ui:VisualElement name="CenterContainer" picking-mode="Ignore" style="flex-grow: 1; padding-top: 145px;">
             <ui:VisualElement name="CenterUpper" picking-mode="Ignore" style="flex-grow: 0; flex-shrink: 0;" />
+            <ui:VisualElement name="CenterLower" picking-mode="Ignore" style="flex-grow: 0; flex-shrink: 0;" />
         </ui:VisualElement>
         <ui:VisualElement name="RightContainer" picking-mode="Ignore" style="flex-grow: 1; flex-shrink: 0;">
             <ui:VisualElement name="RightUpper" picking-mode="Ignore" style="flex-grow: 0; flex-shrink: 0;">

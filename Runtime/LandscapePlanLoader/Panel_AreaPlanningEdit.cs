@@ -54,14 +54,14 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 panel_PointEditor.style.display = DisplayStyle.Flex;
                 panel_ViewFix.style.display = DisplayStyle.Flex;
                 areaPlanningEdit.CreatePinline();
-                base.CreateSnackbar("頂点ピンをドラッグすると形状を編集できます");
+                base.DisplaySnackbar("頂点ピンをドラッグすると形状を編集できます");
             }
             else
             {
                 areaPlanningEdit.ClearVertexEdit();
                 panel_PointEditor.style.display = DisplayStyle.None;
                 panel_ViewFix.style.display = DisplayStyle.None;
-                base.RemoveSnackbar();
+                base.HideSnackbar();
             }
         }
 
