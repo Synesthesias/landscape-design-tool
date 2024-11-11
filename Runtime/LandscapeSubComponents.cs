@@ -121,6 +121,8 @@ namespace Landscape2.Runtime
             var saveSystem = new SaveSystem(uiRoot);
             LandscapePlanSaveSystem.SetEvent(saveSystem);
 
+            var cameraAutoRotate = new CameraAutoRotate();
+
             // 必要な機能をここに追加します
             subComponents = new List<ISubComponent>
             {
@@ -139,6 +141,9 @@ namespace Landscape2.Runtime
                 new BuildingTRSEditor(editBuilding,subMenuUxmls[(int)SubMenuUxmlType.EditBuilding]),
                 new VisualizeHeightUI(new VisualizeHeight(),uiRoot,landscapeCamera),
                 new GisDataLoaderUI(subMenuUxmls[(int)SubMenuUxmlType.Gis], saveSystem),
+                cameraAutoRotate,
+                new CameraAutoRotateUI(cameraAutoRotate,uiRoot)
+
             };
         }
 
