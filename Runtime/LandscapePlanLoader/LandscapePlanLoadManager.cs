@@ -95,7 +95,13 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     Debug.LogError($"{gisObject.name} is out of range of the loaded map");
                     return;
                 }
-
+                
+                // コライダー判定用のMeshColliderを追加
+                if (!gisObject.GetComponent<AreaPlanningCollisionHandler>())
+                {
+                    gisObject.AddComponent<AreaPlanningCollisionHandler>();
+                }
+                
                 //新規のAreaPropertyを生成し初期化
                 float initLimitHeight = float.TryParse(GetPropertyValueOf("HEIGHT", dbf), out float heightValue) ? heightValue : 0; // 区画の制限高さを取得
                 int id = int.TryParse(GetPropertyValueOf("ID", dbf), out int idValue) ? idValue : 0;
@@ -110,7 +116,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     Mathf.Max(300, initLimitHeight + 50),
                     gisObject.transform.position + mesh.bounds.center,
                     gisObject.transform,
-                    areaPointData
+                    areaPointData,
+                    false
                     );
 
 
@@ -212,6 +219,13 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     Debug.LogError($"{gisObject.name} is out of range of the loaded map");
                     return;
                 }
+                
+                // コライダー判定用のMeshColliderを追加
+                if (!gisObject.GetComponent<AreaPlanningCollisionHandler>())
+                {
+                    gisObject.AddComponent<AreaPlanningCollisionHandler>();
+                }
+                
                 // 新規のAreaPropertyを生成し初期化
                 float initLimitHeight = saveData.LimitHeight;
                 AreaProperty areaProperty = new AreaProperty(
@@ -225,7 +239,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     Mathf.Max(300, initLimitHeight + 50),
                     gisObject.transform.position + mesh.bounds.center,
                     gisObject.transform,
-                    areaPointData
+                    areaPointData,
+                    saveData.IsApplyBuildingHeight
                     );
 
                 // 上面Meshのマテリアルを設定
@@ -249,6 +264,9 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     areaProperty.Transform.localPosition.z
                     ));
                 gisObject.name = $"Area_{areaProperty.ID}";
+                
+                // 高さを適用
+                areaProperty.ApplyBuildingHeight(areaProperty.IsApplyBuildingHeight);
 
                 // 区画データリストにAreaPropertyを追加登録
                 AreasDataComponent.AddNewProperty(areaProperty);

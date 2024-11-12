@@ -36,7 +36,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             base.InitializeUI();
             base.RegisterCommonCallbacks();
 
-            limitHeight = 1.0f;
+            limitHeight = 15.0f; // 初期値15mで設定
             areaPlanningHeight.value = limitHeight.ToString();
         }
 

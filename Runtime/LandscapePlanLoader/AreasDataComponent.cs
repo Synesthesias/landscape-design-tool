@@ -123,6 +123,10 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         {
             if (index < 0 || index >= properties.Count) return false;
 
+            // 建物高さをリセット
+            properties[index].ApplyBuildingHeight(false);
+            
+            // 削除
             GameObject.Destroy(properties[index].Transform.gameObject);
             properties.RemoveAt(index);
             propertiesSnapshot.RemoveAt(index);
@@ -137,6 +141,24 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         public static int GetPropertyCount()
         {
             return properties.Count;
+        }
+
+        /// <summary>
+        /// 区画の高さを建物に適用
+        /// </summary>
+        public static bool ApplyBuildingHeight(int index, bool isApply)
+        {
+            if (index < 0 || index >= properties.Count) return false;
+            
+            var property = properties[index];
+            
+            // 高さを適用
+            property.ApplyBuildingHeight(isApply);
+            
+            // コライダーをセットし直す
+            var mesh = property.Transform.gameObject.GetComponent<MeshFilter>().sharedMesh;
+            property.Transform.gameObject.GetComponent<AreaPlanningCollisionHandler>().SetCollider(mesh);
+            return true;
         }
     }
 
@@ -157,8 +179,11 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         public Transform Transform { get; private set; }
         public Vector3 ReferencePosition { get; private set; }
         public List<List<Vector3>> PointData { get ; set; }
+        public bool IsApplyBuildingHeight { get; private set; }
 
-        public AreaProperty(int id, string name, float limitHeight, float lineOffset, Color areaColor, Material wallMaterial, Material ceilingMaterial, float wallMaxHeight, Vector3 referencePos, Transform areaTransform, List<List<Vector3>> pointData)
+        private AreaPlanningBuildingHeight areaBuildingHeight;
+        
+        public AreaProperty(int id, string name, float limitHeight, float lineOffset, Color areaColor, Material wallMaterial, Material ceilingMaterial, float wallMaxHeight, Vector3 referencePos, Transform areaTransform, List<List<Vector3>> pointData, bool isApplyBuildingHeight)
         {
             ID = id;
             Name = name;
@@ -171,12 +196,27 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             ReferencePosition = referencePos;
             Transform = areaTransform;
             PointData = pointData;
+            IsApplyBuildingHeight = isApplyBuildingHeight;
+            
+            areaBuildingHeight = new AreaPlanningBuildingHeight(areaTransform);
         }
 
         public void SetLocalPosition(Vector3 newPosition)
         {
             ReferencePosition += newPosition - Transform.position;
             Transform.localPosition = newPosition;
+        }
+        
+        public void ApplyBuildingHeight(bool isApply)
+        {
+            IsApplyBuildingHeight = isApply;
+            
+            // 高さを一度リセット
+            areaBuildingHeight.Reset();
+            if (isApply)
+            {
+                areaBuildingHeight.SetHeight(LimitHeight);
+            }
         }
     }
 

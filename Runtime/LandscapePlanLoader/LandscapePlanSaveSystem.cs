@@ -35,7 +35,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     areaProperty.LineOffset,
                     areaProperty.Color,
                     areaProperty.WallMaxHeight,
-                    areaProperty.PointData
+                    areaProperty.PointData,
+                    areaProperty.IsApplyBuildingHeight
                     );
 
                 planAreaSaveDatas.Add(saveData);

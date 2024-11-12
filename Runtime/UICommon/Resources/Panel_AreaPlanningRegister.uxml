@@ -20,7 +20,7 @@
                             <ui:VisualElement name="Icon_Down" style="flex-grow: 1;" />
                         </ui:Button>
                     </ui:VisualElement>
-                    <ui:Button text="適用" parse-escape-sequences="true" display-tooltip-when-elided="true" name="HeightApplyButton" class="ActionButton" style="margin-right: 10px;" />
+                    <!-- <ui:Button text="適用" parse-escape-sequences="true" display-tooltip-when-elided="true" name="HeightApplyButton" class="ActionButton" style="margin-right: 10px;" /> -->
                 </ui:VisualElement>
                 <ui:VisualElement style="flex-grow: 0; flex-direction: row; justify-content: center; align-items: center; flex-shrink: 1; width: 100%;">
                     <ui:Label tabindex="-1" text="選択色" parse-escape-sequences="true" display-tooltip-when-elided="true" style="width: 50px; font-size: 16px; -unity-text-align: middle-right; flex-shrink: 0;" />

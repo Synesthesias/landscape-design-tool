@@ -177,5 +177,24 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             if (editingAreaIndex == -1) return;
             AreasDataComponent.TryUpdateSnapshotProperty(editingAreaIndex);
         }
+
+        /// <summary>
+        /// 対象区画の建物の高さを適用
+        /// </summary>
+        public void ApplyBuildingHeight(bool isApply)
+        {
+            if (editingAreaIndex == -1) return;
+            AreasDataComponent.ApplyBuildingHeight(editingAreaIndex, isApply);
+        }
+        
+        /// <summary>
+        /// 対象区画の建物の高さを適用しているかを取得
+        /// </summary>
+        /// <returns></returns>
+        public bool IsApplyingBuildingHeight()
+        {
+            if (editingAreaIndex == -1) return false;
+            return editingAreaProperty.IsApplyBuildingHeight;
+        }
     }
 }

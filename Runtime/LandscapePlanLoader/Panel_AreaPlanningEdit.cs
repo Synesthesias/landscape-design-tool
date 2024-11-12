@@ -14,6 +14,9 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         private AreaPlanningEdit areaPlanningEdit;
         private VisualElement panel_ViewFix; // 視点固定用パネル
 
+        private Button heightApplyButton;
+        private Button heightResetButton;
+        
         public Panel_AreaPlanningEdit(VisualElement planning, PlanningUI planningUI) : base(planning, planningUI)
         {
             // 親のパネルを取得
@@ -36,9 +39,15 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             panel_ViewFix.RegisterCallback<MouseMoveEvent>(ev => OnDragPanel());
             panel_ViewFix.RegisterCallback<MouseUpEvent>(ev => OnReleasePanel());
             panel_ViewFix.style.display = DisplayStyle.None;
-
+            
             panel_PointEditor.RegisterCallback<MouseUpEvent>(ev => panel_ViewFix.style.display = DisplayStyle.Flex);
 
+            // 高さ反映/元に戻す
+            heightApplyButton = panel_AreaPlanningEdit.Q<Button>("HeightApplyButton");
+            heightApplyButton.clicked += ApplyHeight;
+            heightResetButton = panel_AreaPlanningEdit.Q<Button>("HeightResetButton");
+            heightResetButton.clicked += ResetHeight;
+            
             base.InitializeUI();
             base.RegisterCommonCallbacks();
 
@@ -54,6 +63,11 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 panel_PointEditor.style.display = DisplayStyle.Flex;
                 panel_ViewFix.style.display = DisplayStyle.Flex;
                 areaPlanningEdit.CreatePinline();
+                
+                // 高さ適用ボタンの活性化
+                heightApplyButton.SetEnabled(!areaEditManager.IsApplyingBuildingHeight());
+                heightResetButton.SetEnabled(areaEditManager.IsApplyingBuildingHeight());
+                
                 base.DisplaySnackbar("頂点ピンをドラッグすると形状を編集できます");
             }
             else
@@ -73,6 +87,9 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             if(areaEditManager.GetLimitHeight() == null) return;
             areaEditManager.ChangeHeight((float)areaEditManager.GetLimitHeight() + 1);  //インクリメント
             areaPlanningHeight.value = areaEditManager.GetLimitHeight().ToString(); //テキストフィールドに反映
+            
+            // 高さ適用ボタンの活性化
+            heightApplyButton.SetEnabled(true);
         }
 
         /// <summary>
@@ -83,6 +100,9 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             if(areaEditManager.GetLimitHeight() == null) return;
             areaEditManager.ChangeHeight((float)areaEditManager.GetLimitHeight() - 1);  //デクリメント
             areaPlanningHeight.value = areaEditManager.GetLimitHeight().ToString(); //テキストフィールドに反映
+            
+            // 高さ適用ボタンの活性化
+            heightApplyButton.SetEnabled(true);
         }
 
         /// <summary>
@@ -95,6 +115,9 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             if(float.TryParse(evt.newValue, out float value) && value <= areaEditManager.GetMaxHeight())
             {
                 areaEditManager.ChangeHeight(value);
+                
+                // 高さ適用ボタンの活性化
+                heightApplyButton.SetEnabled(true);
             }
             else
             {
@@ -164,7 +187,12 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             //データベースに変更確定を反映
             areaEditManager.ConfirmUpdatedProperty();   
            planningUI.InvokeOnChangeConfirmed();
-
+           
+           // 高さを反映し直す
+           if (areaEditManager.IsApplyingBuildingHeight())
+           {
+               areaEditManager.ApplyBuildingHeight(true);
+           }
         }
 
         /// <summary>
@@ -230,6 +258,20 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             areaPlanningName.value = name == null ? "" : name;
             areaPlanningHeight.value = height == null ? "" : height.ToString();
             areaPlanningColor.style.backgroundColor = areaEditManager.GetColor();
+        }
+
+        private void ApplyHeight()
+        {
+            areaEditManager.ApplyBuildingHeight(true);
+            heightApplyButton.SetEnabled(false);
+            heightResetButton.SetEnabled(true);
+        }
+        
+        private void ResetHeight()
+        {
+            areaEditManager.ApplyBuildingHeight(false);
+            heightApplyButton.SetEnabled(true);
+            heightResetButton.SetEnabled(false);
         }
     }
 }

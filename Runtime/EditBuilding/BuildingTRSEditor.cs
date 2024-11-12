@@ -34,7 +34,9 @@ namespace Landscape2.Runtime
                 {
                     return;
                 }
-                r.enabled = true;
+                var editComponent = BuildingTRSEditingComponent.TryGetOrCreate(r.gameObject);
+                editComponent.ShowBuilding(true);
+                
                 disableList.Remove(r);
             };
 
@@ -51,7 +53,9 @@ namespace Landscape2.Runtime
                     Debug.LogWarning($"{target.name} : rendererがnullです");
                 }
 
-                r.enabled = false;
+                var editComponent = BuildingTRSEditingComponent.TryGetOrCreate(r.gameObject);
+                editComponent.ShowBuilding(false);
+                
                 if (!disableList.Contains(r))
                 {
                     disableList.Add(r);

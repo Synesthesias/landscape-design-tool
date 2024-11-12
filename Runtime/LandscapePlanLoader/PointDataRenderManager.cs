@@ -32,7 +32,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 CesiumGlobeAnchor anchor = rootObject.AddComponent<CesiumGlobeAnchor>();
                 rootObject.AddComponent<MeshFilter>();
                 rootObject.AddComponent<MeshRenderer>();
-
+                
                 GameObject mesh = Resources.Load<GameObject>(PlateauToolkitMapsConstants.k_MeshObjectPrefab);
 
                 DrawPolygonOrPolyline(rootObject, mesh, pointDatas);
