@@ -39,7 +39,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             panel_ViewFix.RegisterCallback<MouseMoveEvent>(ev => OnDragPanel());
             panel_ViewFix.RegisterCallback<MouseUpEvent>(ev => OnReleasePanel());
             panel_ViewFix.style.display = DisplayStyle.None;
-            
             panel_PointEditor.RegisterCallback<MouseUpEvent>(ev => panel_ViewFix.style.display = DisplayStyle.Flex);
 
             // 高さ反映/元に戻す
@@ -50,7 +49,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             
             base.InitializeUI();
             base.RegisterCommonCallbacks();
-
         }
 
         /// <summary>
@@ -145,7 +143,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 base.EditColor();
 
                 // 色彩の変更を反映
-                ColorEditorUI colorEditorUI = new ColorEditorUI(colorEditorClone, areaEditManager.GetColor()) ;
+                ColorEditorUI colorEditorUI = new ColorEditorUI(colorEditorClone, areaEditManager.GetColor());
                 colorEditorUI.OnColorEdited += (newColor) =>
                 {
                     areaPlanningColor.style.backgroundColor = newColor;
@@ -201,8 +199,15 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         private void OnClickPanel()
         {
             if (areaPlanningEdit.IsClickPin()) // ピンをクリック 
-            { 
-                panel_ViewFix.style.display = DisplayStyle.Flex;
+            {              
+                if(Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) // ctrlキーを押しながらクリックした場合は頂点を削除
+                {
+                    areaPlanningEdit.DeleteVertex();
+                }
+                else // 通常クリックの場合は頂点を移動
+                {
+                    panel_ViewFix.style.display = DisplayStyle.Flex;
+                }   
             }
             else if(areaPlanningEdit.IsClickLine()) // ラインをクリック
             {

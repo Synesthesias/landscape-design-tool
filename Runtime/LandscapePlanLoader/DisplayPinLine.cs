@@ -100,6 +100,38 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         }
 
         /// <summary>
+        /// PinとLine削除するメソッド
+        /// </summary>
+        public void RemovePinLine(int index)
+        {
+            // ピンを削除
+            GameObject.Destroy(pinList[index]);
+            pinList.RemoveAt(index);
+
+            // ラインの終点を更新
+            GameObject.Destroy(lineList[index]);
+            lineList.RemoveAt(index);
+            if (index == 0)
+            {
+                GameObject.Destroy(lineList[lineList.Count - 1]);
+                lineList.RemoveAt(lineList.Count - 1);
+                DrawLine(pinList[pinList.Count - 1].transform.position, pinList[0].transform.position, index);
+            }
+            else if(index == pinList.Count)
+            {
+                GameObject.Destroy(lineList[index - 1]);
+                lineList.RemoveAt(index - 1);
+                DrawLine(pinList[index - 1].transform.position, pinList[0].transform.position, index - 1);
+            }
+            else
+            {
+                GameObject.Destroy(lineList[index - 1]);
+                lineList.RemoveAt(index - 1);
+                DrawLine(pinList[index - 1].transform.position, pinList[index].transform.position, index - 1);
+            }
+        }
+
+        /// <summary>
         /// Lineに線とコライダーを追加するメソッド
         /// </summary>
         private void AddColliderToLine(GameObject lineObj,Vector3 startVec,Vector3 endVec)

@@ -48,13 +48,23 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// </summary>
         private void CreateMeshByVertice()
         {
-            if (!isVertexEditing) return;
-            List<List<Vector3>> listOfVertices = new List<List<Vector3>>();
-            listOfVertices.Add(new List<Vector3>(vertices));
+            if (!isVertexEditing)
+            {
+                Debug.LogWarning("Vertex is not edited");
+                return;
+            }
+            List<List<Vector3>> listOfVertices = new List<List<Vector3>>
+            {
+                new List<Vector3>(vertices)
+            };
 
             // テッセレーション処理を行ったメッシュを生成
             GameObject gisObject = GameObject.Find("Area_" + areaEditManager.GetAreaID());
-            if (gisObject == null) return;
+            if (gisObject == null)
+            {
+                Debug.LogError("GIS object is not found");
+                return;
+            } 
             
             MeshFilter gisObjMeshFilter = gisObject.GetComponent<MeshFilter>();
             tessellatedMeshCreator.CreateTessellatedMesh(listOfVertices, gisObjMeshFilter, 30, 40);
@@ -95,14 +105,22 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         public void CreatePinline()
         {
             int count = areaEditManager.GetPointCount();
-            if(count < 3) return;
+            if (count < 3)
+            {
+                Debug.LogWarning("The number of vertices is less than 3");
+                return;
+            };
             Vector3 startVec = Vector3.zero;
             Vector3 endVec = Vector3.zero;
 
             for (int i = 0; i < count; i++)
             {
                 Vector3 vertex = areaEditManager.GetPointData(i);
-                if (vertex == null) return;
+                if (vertex == null)
+                {
+                    Debug.LogWarning("Vertex is null");
+                    return;
+                }
 
                 vertices.Add(vertex);
 
@@ -176,7 +194,11 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         public void AddVertexToLine()
         {
             int lineIndex = displayPinLine.FindLineIndex(editingLine);
-            if (lineIndex == -1) return;
+            if (lineIndex == -1)
+            { 
+                Debug.LogWarning("Line is not found");
+                return;
+            };
 
             //// y座標は前後の頂点の中点の座標にする           
             Vector3 previousVec = vertices[lineIndex];
@@ -225,6 +247,35 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         {
             editingPin = null;
             editingLine = null;
+        }
+
+        /// <summary>
+        /// 頂点を削除するメソッド
+        /// </summary>
+        public void DeleteVertex()
+        {
+            if (editingPin == null)
+            {
+                Debug.LogWarning("Pin is not selected");
+                return;
+            }
+            if (vertices.Count < 4)
+            {
+                Debug.LogWarning("The number of vertices is less than 4");
+                return;
+            }
+
+            int index = displayPinLine.FindPinIndex(editingPin);
+            if (index == -1)
+            { 
+                Debug.LogWarning("Pin is not found");
+                return;
+            };
+
+            // ピンとラインを削除
+            displayPinLine.RemovePinLine(index);
+            vertices.RemoveAt(index);
+            isVertexEditing = true;
         }
 
         /// <summary>

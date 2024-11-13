@@ -150,8 +150,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             areaPlanningRegister.CreateAreaData(
                 areaPlanningName.value, 
                 float.Parse(areaPlanningHeight.value),
-                wallMaxHeight, 
-                areaPlanningColor.style.backgroundColor.value);
+                wallMaxHeight,
+                areaPlanningColor.resolvedStyle.backgroundColor);
 
             areaPlanningRegister.ClearVertexEdit();
             planningUI.InvokeOnChangeConfirmed();

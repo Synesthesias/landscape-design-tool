@@ -59,6 +59,7 @@ namespace Landscape2.Runtime
             pointOfViewPanel = visualizeHeightPanel.Q<VisualElement>("PointOfViewDisplay");
             walkerPanel = visualizeHeightPanel.Q<VisualElement>("WalkerViewDisplay");
             walkerPanel.RegisterCallback<MouseDownEvent>(evt => OnPanelClick());
+            walkerPanel.style.display = DisplayStyle.None;
             heightToggle = uiRoot.Q<Toggle>(UIHeightToggle);
             heightSlider = uiRoot.Q<SliderInt>(UIHeightSlider);
 
