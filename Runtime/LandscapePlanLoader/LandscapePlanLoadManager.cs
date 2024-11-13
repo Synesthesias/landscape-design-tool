@@ -3,6 +3,9 @@ using UnityEngine;
 using SFB;
 using PlateauToolkit.Maps;
 using UnityEngine.Rendering.HighDefinition;
+using System.IO;
+using System.Text;
+using System;
 
 namespace Landscape2.Runtime.LandscapePlanLoader
 {
@@ -31,8 +34,11 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             List<GameObject> listOfGISObjects;
             List<List<List<Vector3>>> listOfAreaPointDatas;
 
+            // エンコーディングの判定
+            var encoding = DetectEncoding(gisTargetFolderPath);
+
             // GISデータの読み込みとメッシュオブジェクトの生成
-            using (ShapefileRenderManager shapefileRenderManager = new ShapefileRenderManager(gisTargetFolderPath, 0 /*RenderMode:Mesh*/, 0, false, false, SupportedEncoding.ShiftJIS, null))
+            using (ShapefileRenderManager shapefileRenderManager = new ShapefileRenderManager(gisTargetFolderPath, 0 /*RenderMode:Mesh*/, 0, false, false,encoding, null))
             {
                 if (shapefileRenderManager.Read(0, out listOfGISObjects, out listOfAreaPointDatas))
                 {
@@ -270,7 +276,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
                 // 区画データリストにAreaPropertyを追加登録
                 AreasDataComponent.AddNewProperty(areaProperty);
-
+                
             }
             Debug.Log("Mesh modification and wall generation completed");
         }
@@ -320,6 +326,45 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
             Debug.LogError($"Attribute name '{propertyName}' was not found.");
             return "";
+        }
+
+        /// <summary>
+        /// 指定された.cpgファイルのテキストからエンコーディングがUTF-8かを判定するメソッド
+        /// </summary>
+        /// <param name="filePath">判定したい.dbfファイルのパス</param>
+        /// <returns>判定結果：UTF-8 または Shift-JIS のいずれか。判定できない場合はShift-JISを返す</returns>
+        public SupportedEncoding DetectEncoding(string folderPath)
+        {
+            try
+            {
+                // 指定されたディレクトリ内で ".cpg" 拡張子のファイルを検索
+                string[] cpgFiles = Directory.GetFiles(folderPath, "*.cpg");
+
+                if (cpgFiles.Length == 0)
+                {
+                    // 見つからなかった場合はワーニングを表示し、Shift-JISを返す
+                    Debug.LogWarning($"'.cpg' ファイルが見つかりませんでした。");
+                    return SupportedEncoding.ShiftJIS;
+                }
+
+                // .cpgファイルが見つかった場合、テキストの内容からエンコーディングを判定
+                foreach (var cpgFile in cpgFiles)
+                {
+                    // ファイル内容を読み込み
+                    string content = File.ReadAllText(cpgFile);
+
+                    // "utf-8" が含まれているかを確認
+                    if (content.Contains("utf-8") || content.Contains("UTF-8"))
+                    {
+                        return SupportedEncoding.UTF8;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"エンコーディングの判定に失敗しました。Shift-JISを返します。");
+            }
+            return SupportedEncoding.ShiftJIS;
         }
     }
 }

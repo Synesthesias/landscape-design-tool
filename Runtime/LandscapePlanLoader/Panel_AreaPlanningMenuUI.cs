@@ -8,10 +8,12 @@ namespace Landscape2.Runtime.LandscapePlanLoader
     public class Panel_AreaPlanningMenuUI
     {
         private readonly LandscapePlanLoadManager landscapePlanLoadManager;
+        private readonly LandscapeExportManager landscapeExportManager;
 
         public Panel_AreaPlanningMenuUI(VisualElement planning, PlanningUI planningUI)
         {
             landscapePlanLoadManager = new LandscapePlanLoadManager();
+            landscapeExportManager = new LandscapeExportManager();
 
             // ボタンへ処理を登録
             VisualElement panel_AreaPlanningMenu = planning.Q<VisualElement>("Panel_AreaPlanningMenu");
@@ -40,10 +42,10 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// </summary>
         void ExportSHPFile()
         {
-            string path = LandscapePlanSaveSystem.OpenSaveDialog("shp");  // ファイル保存ダイアログを表示
+            string path = landscapeExportManager.OpenShapeExportDialog();  // ファイル保存ダイアログを表示
             if (path != null)
             {
-                landscapePlanLoadManager.LoadShapefile(path);
+                landscapeExportManager.WriteShapeFile(path);
             }
         }
     }

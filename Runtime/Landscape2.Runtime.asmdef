@@ -33,7 +33,8 @@
     "precompiledReferences": [
         "System.Windows.Forms.dll",
         "Ookii.Dialogs.dll",
-        "Newtonsoft.Json.dll"
+        "Newtonsoft.Json.dll",
+        "EGIS.ShapeFileLib.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [],
