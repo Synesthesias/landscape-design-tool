@@ -29,7 +29,7 @@ namespace Landscape2.Runtime.GisDataLoader
         public void SetShow(bool isShow) => IsShow = isShow;
         
         // ポイントの色
-        public GisPointColor Color { get; private set; }
+        public Color Color { get; private set; }
 
         public GisPointInfo(
             int index,
@@ -37,6 +37,7 @@ namespace Landscape2.Runtime.GisDataLoader
             string facilityName,
             string displayName,
             Vector3 facilityPosition,
+            Color color,
             bool isShow)
         {
             ID = index;
@@ -44,42 +45,8 @@ namespace Landscape2.Runtime.GisDataLoader
             FacilityName = facilityName;
             DisplayName = displayName;
             FacilityPosition = facilityPosition;
+            Color = color;
             IsShow = isShow;
-            
-            // すべての色を列挙
-            var allColors = (GisPointColor[])System.Enum.GetValues(typeof(GisPointColor));
-
-            // IDを使って色を決定
-            Color = allColors[attributeIndex % allColors.Length];
-        }
-    }
-    
-    [Serializable]
-    public enum GisPointColor
-    {
-        Red,
-        Green,
-        Blue,
-        Yellow,
-    }
-    
-    public static class GisPointColorExtension
-    {
-        public static Color ToColor(this GisPointColor color)
-        {
-            switch (color)
-            {
-                case GisPointColor.Red:
-                    return Color.red;
-                case GisPointColor.Green:
-                    return Color.green;
-                case GisPointColor.Blue:
-                    return Color.blue;
-                case GisPointColor.Yellow:
-                    return Color.yellow;
-                default:
-                    return Color.white;
-            }
         }
     }
 }

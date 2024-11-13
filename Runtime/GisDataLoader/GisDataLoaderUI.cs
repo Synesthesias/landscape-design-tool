@@ -6,7 +6,7 @@ namespace Landscape2.Runtime.GisDataLoader
     /// <summary>
     /// GISデータをロードして表示するプレゼンター
     /// </summary>
-    public class GisDataLoaderUI : ISubComponent
+    public class GisDataLoaderUI
     {
         // UI
         private GisLoadUI gisLoadUI;
@@ -16,7 +16,7 @@ namespace Landscape2.Runtime.GisDataLoader
         // カメラが移動したか
         private bool isCameraMoved = false;
 
-        public GisDataLoaderUI(VisualElement root, SaveSystem saveSystem)
+        public GisDataLoaderUI(VisualElement gisElement, SaveSystem saveSystem)
         {
             // ローダー
             var gisDataLoader = new GisLoader(); 
@@ -25,44 +25,19 @@ namespace Landscape2.Runtime.GisDataLoader
             var gisPointInfos = new GisPointInfos();
             
             // 各UIを初期化
-            gisLoadUI = new GisLoadUI(gisDataLoader, gisPointInfos, root);
-            gisPointListUI = new GisPointListUI(gisPointInfos, root);
+            gisLoadUI = new GisLoadUI(gisDataLoader, gisPointInfos, gisElement);
+            gisPointListUI = new GisPointListUI(gisPointInfos, gisElement);
             gisPointPinsUI = new GisPointPinsUI(gisPointInfos);
 
             // セーブシステム
             var gisSaveSystem = new GisDataSaveSystem(saveSystem, gisPointInfos);
-        }
-        
-        public void Update(float deltaTime)
-        {
-            if (Camera.main.transform.hasChanged)
-            {
-                isCameraMoved = true;
-                Camera.main.transform.hasChanged = false;
-            }
-
-            // 視点が変更された場合のみ処理
-            if (!isCameraMoved)
-            {
-                return;
-            }
             
-            // ピンの更新
-            gisPointPinsUI?.OnUpdate();
-            
-            isCameraMoved = false;
-        }
-
-        public void OnEnable()
-        {
-        }
-
-        public void OnDisable()
-        {
-        }
-
-        public void Start()
-        {
+            // カメラ変更監視
+            CameraMoveByUserInput.OnCameraMoved.AddListener(() =>
+            {
+                // ピンの更新
+                gisPointPinsUI?.OnUpdate();
+            });
         }
     }
 }

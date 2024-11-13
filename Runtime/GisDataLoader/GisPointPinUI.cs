@@ -32,7 +32,7 @@ namespace Landscape2.Runtime.GisDataLoader
             
             // ピンの色を設定
             var color = element.Q<VisualElement>("Icon_Pin");
-            color.style.unityBackgroundImageTintColor = info.Color.ToColor();
+            color.style.unityBackgroundImageTintColor = info.Color;
             
             // 施設の位置を保持
             facilityPosition = info.FacilityPosition;

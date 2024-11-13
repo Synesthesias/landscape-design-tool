@@ -59,7 +59,7 @@ namespace Landscape2.Runtime.GisDataLoader
             
             // ピンの色セット
             var pin = item.Q<VisualElement>("Icon_Pin");
-            pin.style.unityBackgroundImageTintColor = new StyleColor(info.Color.ToColor());
+            pin.style.unityBackgroundImageTintColor = new StyleColor(info.Color);
             
             // 非表示ボタン
             var toggleButton = item.Q<Toggle>("Toggle_HideList");

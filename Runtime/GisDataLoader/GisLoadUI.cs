@@ -10,10 +10,14 @@ namespace Landscape2.Runtime.GisDataLoader
     /// </summary>
     public class GisLoadUI
     {
+        private VisualElement root;
         private VisualElement panel;
         private DropdownField dropdownField;
         private Button deleteAllButton;
         private TextField nameTextField;
+        
+        private VisualElement colorElement;
+        private VisualElement colorEditPanel;
         
         private GisLoader gisLoader;
         private GisPointInfos gisPointInfos;
@@ -24,8 +28,12 @@ namespace Landscape2.Runtime.GisDataLoader
         // 入力したデータ名保持
         private string dataName;
         
+        // 選択したカラー
+        private Color selectedColor = new Color(255f/255f,64f/255f,109f/255f,255f/255f);
+        
         public GisLoadUI(GisLoader gisLoader, GisPointInfos gisPointInfos, VisualElement root)
         {
+            this.root = root;
             panel = root.Q<VisualElement>("Panel_GisImport");
             this.gisLoader = gisLoader;
             this.gisPointInfos = gisPointInfos;
@@ -59,7 +67,27 @@ namespace Landscape2.Runtime.GisDataLoader
             {
                 SelectAttribute(dropdownField.index);
             });
-
+            
+            // ピンの色変更
+            colorElement = panel.Q<VisualElement>("GisPinColor");
+            colorElement.RegisterCallback<ClickEvent>((evt) =>
+            {
+                var isShow =  colorEditPanel.style.display == DisplayStyle.None;
+                ShowColor(isShow);
+            });
+            
+            // カラーパレット
+            colorEditPanel = root.Q<VisualElement>("ColorEditorPanel");
+            colorEditPanel.style.display = DisplayStyle.None;// 初期非表示
+            
+            ColorEditorUI colorEditorUI = new ColorEditorUI(colorEditPanel, selectedColor);
+            colorEditorUI.OnColorEdited += (newColor) =>
+            {
+                colorElement.style.backgroundColor = newColor;
+                selectedColor = newColor;
+            };
+            colorEditorUI.OnCloseButtonClicked += () => ShowColor(false);
+            
             // データ名入力
             nameTextField = panel.Q<TextField>("GisDataName");
             nameTextField.RegisterValueChangedCallback((evt) =>
@@ -132,6 +160,11 @@ namespace Landscape2.Runtime.GisDataLoader
             TryEnableRegistButton();
         }
 
+        private void ShowColor(bool isShow)
+        {
+            colorEditPanel.style.display = isShow ? DisplayStyle.Flex : DisplayStyle.None;
+        }
+
         private void SetDataName(string name)
         {
             dataName = name;
@@ -170,7 +203,7 @@ namespace Landscape2.Runtime.GisDataLoader
         private void Regist()
         {
             // データ登録
-            gisPointInfos.Regist(dataName, gisLoader.GisDataList, selectAttributeIndex);
+            gisPointInfos.Regist(dataName, gisLoader.GisDataList, selectAttributeIndex, selectedColor);
         }
     }
 }

@@ -22,7 +22,7 @@ namespace Landscape2.Runtime.GisDataLoader
         
         private const string ErrorTitle = "GISデータ登録";
         
-        public void Regist(string name, List<GisData> gisDataList, int selectAttributeIndex)
+        public void Regist(string name, List<GisData> gisDataList, int selectAttributeIndex, Color color)
         {
             if (Points.Any(p => p.AttributeIndex == selectAttributeIndex))
             {
@@ -50,6 +50,7 @@ namespace Landscape2.Runtime.GisDataLoader
                     facilityName,
                     name,
                     facilityPosition,
+                    color,
                     true
                 ));
                 count++;

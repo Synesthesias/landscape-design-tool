@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Cinemachine;
+using UnityEngine.Events;
 
 namespace Landscape2.Runtime
 {
@@ -27,6 +28,8 @@ namespace Landscape2.Runtime
         private static bool isMouseActive = true;
 
         public static bool IsCameraMoveActive { get; set; } = true;
+
+        public static UnityEvent OnCameraMoved { get; private set; } = new();
 
         /// <summary>
         /// キーボードでの移動を有効にするかどうか
@@ -210,8 +213,8 @@ namespace Landscape2.Runtime
             cameraParent.transform.SetPositionAndRotation(new Vector3(0,215,0), Quaternion.Euler(new Vector3(45,0,0)));
         }
 
-		public void Update(float deltaTime)
-		{
+        public void Update(float deltaTime)
+        {
             var trans = cameraParent.transform;
             parallelMoveByMouse = Mouse.current.delta.ReadValue();
             rotateByMouse = Mouse.current.delta.ReadValue();
@@ -224,6 +227,11 @@ namespace Landscape2.Runtime
             if (cameraParent.transform.position.y < cameraMoveSpeedData.heightLimitY)
             {
                 cameraParent.transform.position = new Vector3(cameraParent.transform.position.x, cameraMoveSpeedData.heightLimitY, cameraParent.transform.position.z);
+            }
+
+            if (camera.transform.hasChanged)
+            {
+                OnCameraMoved.Invoke();
             }
         }
 		
