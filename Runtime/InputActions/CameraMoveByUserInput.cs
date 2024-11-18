@@ -10,7 +10,7 @@ namespace Landscape2.Runtime
     /// </summary>
     public class CameraMoveByUserInput : LandscapeInputActions.ICameraMoveActions, ISubComponent
     {
-	    private readonly CinemachineVirtualCamera camera;
+        private readonly CinemachineVirtualCamera camera;
         CameraMoveData cameraMoveSpeedData;
         private Vector2 horizontalMoveByKeyboard;
         private float verticalMoveByKeyboard;
@@ -34,7 +34,8 @@ namespace Landscape2.Runtime
         /// <summary>
         /// キーボードでの移動を有効にするかどうか
         /// </summary>
-        public static bool IsKeyboardActive {
+        public static bool IsKeyboardActive
+        {
             get => isKeyboardActive && IsCameraMoveActive;
             set
             {
@@ -45,34 +46,36 @@ namespace Landscape2.Runtime
         /// <summary>
         /// マウスでの移動を有効にするかどうか
         /// </summary>
-        public static bool IsMouseActive {
+        public static bool IsMouseActive
+        {
             get => isMouseActive && IsCameraMoveActive;
-            set {
+            set
+            {
                 isMouseActive = value;
             }
         }
 
-	    public CameraMoveByUserInput(CinemachineVirtualCamera camera)
-	    {
-		    this.camera = camera;
+        public CameraMoveByUserInput(CinemachineVirtualCamera camera)
+        {
+            this.camera = camera;
         }
-	    
-	    public void OnEnable()
-	    {
-		    // ユーザーの操作を受け取る準備
-		    input = new LandscapeInputActions.CameraMoveActions(new LandscapeInputActions());
-		    input.SetCallbacks(this);
-		    input.Enable();
-	    }
 
-	    public void OnDisable()
-	    {
-		    input.Disable();
-	    }
-	    
-		/// <summary>
-		/// InputActionsからカメラWASD移動のキーボード操作を受け取り、カメラをWASD移動します。
-		/// </summary>
+        public void OnEnable()
+        {
+            // ユーザーの操作を受け取る準備
+            input = new LandscapeInputActions.CameraMoveActions(new LandscapeInputActions());
+            input.SetCallbacks(this);
+            input.Enable();
+        }
+
+        public void OnDisable()
+        {
+            input.Disable();
+        }
+
+        /// <summary>
+        /// InputActionsからカメラWASD移動のキーボード操作を受け取り、カメラをWASD移動します。
+        /// </summary>
         public void OnHorizontalMoveCameraByKeyboard(InputAction.CallbackContext context)
         {
             if (!IsKeyboardActive)
@@ -80,15 +83,16 @@ namespace Landscape2.Runtime
                 horizontalMoveByKeyboard = Vector2.zero;
                 return;
             }
-			if (context.performed)
-			{
-				var delta = context.ReadValue<Vector2>();
-				horizontalMoveByKeyboard = delta;
-			}else if (context.canceled)
-			{
-				horizontalMoveByKeyboard = Vector2.zero;
-			}
-		}
+            if (context.performed)
+            {
+                var delta = context.ReadValue<Vector2>();
+                horizontalMoveByKeyboard = delta;
+            }
+            else if (context.canceled)
+            {
+                horizontalMoveByKeyboard = Vector2.zero;
+            }
+        }
 
         /// <summary>
         /// InputActionsからカメラ上下移動のキーボード操作を受け取り、カメラを上下移動します。
@@ -101,11 +105,12 @@ namespace Landscape2.Runtime
                 verticalMoveByKeyboard = 0f;
                 return;
             }
-            if(context.performed)
+            if (context.performed)
             {
                 var delta = context.ReadValue<float>();
                 verticalMoveByKeyboard = delta;
-            }else if (context.canceled)
+            }
+            else if (context.canceled)
             {
                 verticalMoveByKeyboard = 0f;
             }
@@ -165,9 +170,10 @@ namespace Landscape2.Runtime
             {
                 var delta = context.ReadValue<float>();
                 zoomMoveByMouse = delta;
-            }else if (context.canceled)
+            }
+            else if (context.canceled)
             {
-                zoomMoveByMouse= 0f;
+                zoomMoveByMouse = 0f;
             }
         }
 
@@ -184,13 +190,13 @@ namespace Landscape2.Runtime
             }
             if (context.started)
             {
-                if(Camera.main == null)
+                if (Camera.main == null)
                 {
                     Debug.LogError("カメラが必要です");
                     return;
                 }
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                
+
                 if (Physics.Raycast(ray, out rotateHit))
                 {
                     isRotateByMouse = true;
@@ -210,7 +216,7 @@ namespace Landscape2.Runtime
             camera.transform.SetParent(cameraParent.transform);
             camera.transform.position = new Vector3(0, 0, 0);
             cameraMoveSpeedData = Resources.Load<CameraMoveData>("CameraMoveSpeedData");
-            cameraParent.transform.SetPositionAndRotation(new Vector3(0,215,0), Quaternion.Euler(new Vector3(45,0,0)));
+            cameraParent.transform.SetPositionAndRotation(new Vector3(0, 215, 0), Quaternion.Euler(new Vector3(45, 0, 0)));
         }
 
         public void Update(float deltaTime)
@@ -221,9 +227,9 @@ namespace Landscape2.Runtime
 
             MoveCameraHorizontal(cameraMoveSpeedData.horizontalMoveSpeed * deltaTime * horizontalMoveByKeyboard, trans);
             MoveCameraVertical(cameraMoveSpeedData.verticalMoveSpeed * deltaTime * verticalMoveByKeyboard, trans);
-            MoveCameraParallel(deltaTime * parallelMoveByMouse, trans);
-            MoveCameraZoom(cameraMoveSpeedData.zoomMoveSpeed * deltaTime * zoomMoveByMouse, trans);
-            RotateCamera(cameraMoveSpeedData.rotateSpeed * deltaTime * rotateByMouse, trans);
+            MoveCameraParallel(parallelMoveByMouse, trans);
+            MoveCameraZoom(cameraMoveSpeedData.zoomMoveSpeed * zoomMoveByMouse, trans);
+            RotateCamera(cameraMoveSpeedData.rotateSpeed * rotateByMouse, trans);
             if (cameraParent.transform.position.y < cameraMoveSpeedData.heightLimitY)
             {
                 cameraParent.transform.position = new Vector3(cameraParent.transform.position.x, cameraMoveSpeedData.heightLimitY, cameraParent.transform.position.z);
@@ -234,26 +240,26 @@ namespace Landscape2.Runtime
                 OnCameraMoved.Invoke();
             }
         }
-		
-		/// <summary>
-		/// カメラ水平移動
-		/// </summary>
-		private void MoveCameraHorizontal(Vector2 moveDelta, Transform cameraTrans)
-		{
-			var dir = new Vector3(moveDelta.x, 0.0f, moveDelta.y);
+
+        /// <summary>
+        /// カメラ水平移動
+        /// </summary>
+        private void MoveCameraHorizontal(Vector2 moveDelta, Transform cameraTrans)
+        {
+            var dir = new Vector3(moveDelta.x, 0.0f, moveDelta.y);
             var rot = camera.transform.eulerAngles;
             dir = Quaternion.Euler(new Vector3(0.0f, rot.y, rot.z)) * dir;
-			cameraTrans.position -= dir;
-		}
+            cameraTrans.position -= dir;
+        }
 
-		/// <summary>
-		/// カメラ垂直移動
-		/// </summary>
-		private void MoveCameraVertical(float moveDelta, Transform cameraTrans)
-		{
+        /// <summary>
+        /// カメラ垂直移動
+        /// </summary>
+        private void MoveCameraVertical(float moveDelta, Transform cameraTrans)
+        {
             var dir = new Vector3(0.0f, moveDelta, 0.0f);
             cameraTrans.position += dir;
-		}
+        }
 
         /// <summary>
         /// カメラ平行移動
@@ -264,9 +270,7 @@ namespace Landscape2.Runtime
         {
             if (!isParallelMoveByMouse || !IsCameraMoveActive) return;
 
-            
-
-            var dir = new Vector3(-moveDelta.x,  0.0f, - moveDelta.y) * translationFactor;
+            var dir = new Vector3(-moveDelta.x, 0.0f, -moveDelta.y) * translationFactor;
             var rotY = camera.transform.eulerAngles.y;
             dir = Quaternion.Euler(new Vector3(0, rotY, 0)) * dir;
             cameraTrans.position += dir;
@@ -284,7 +288,7 @@ namespace Landscape2.Runtime
             var rot = camera.transform.eulerAngles;
             dir = Quaternion.Euler(new Vector3(rot.x, rot.y, rot.z)) * dir;
             cameraTrans.position += dir;
-            if(moveDelta < 0.0f || (cameraTrans.position - camera.transform.position).magnitude > cameraMoveSpeedData.zoomLimit)
+            if (moveDelta < 0.0f || (cameraTrans.position - camera.transform.position).magnitude > cameraMoveSpeedData.zoomLimit)
             {
                 camera.transform.position += dir;
             }
@@ -303,7 +307,7 @@ namespace Landscape2.Runtime
             cameraTrans.RotateAround(rotateHit.point, Vector3.up, moveDelta.x);
 
             float pitch = camera.transform.eulerAngles.x;
-            pitch = (pitch > 180) ? pitch  -360 : pitch;
+            pitch = (pitch > 180) ? pitch - 360 : pitch;
             float newPitch = Mathf.Clamp(pitch - moveDelta.y, 0, 85);
             float pitchDelta = pitch - newPitch;
             cameraTrans.RotateAround(rotateHit.point, camera.transform.right, -pitchDelta);

@@ -90,7 +90,6 @@ namespace Landscape2.Runtime
             walkerCamVC.Priority = 9;
             walkerCamVC.m_StandbyUpdate = CinemachineVirtualCameraBase.StandbyUpdateMode.Never;
             walkerCamVC.AddCinemachineComponent<CinemachineTransposer>();
-            walkerCamVC.AddCinemachineComponent<CinemachinePOV>();
             CinemachineInputProvider walkerCamInput = walkerCam.AddComponent<CinemachineInputProvider>();
 
             // 歩行者視点時カメラ回転の移動量補正

@@ -155,10 +155,10 @@ namespace Landscape2.Runtime
                 var cc = walker.GetComponent<CharacterController>();
                 cc.enabled = false;
                 walker.transform.position = new Vector3(hit.point.x, hit.point.y + 1.0f, hit.point.z);
-                var pov = vcam2.GetCinemachineComponent<CinemachinePOV>();
-                var vcam1Euler = vcam1.transform.rotation.eulerAngles;
-                pov.m_VerticalAxis.Value = vcam1Euler.x;
-                pov.m_HorizontalAxis.Value = vcam1Euler.y;
+                //var pov = vcam2.GetCinemachineComponent<CinemachinePOV>();
+                //var vcam1Euler = vcam1.transform.rotation.eulerAngles;
+                //pov.m_VerticalAxis.Value = 0f;
+                //pov.m_HorizontalAxis.Value = vcam1Euler.y;
                 cc.enabled = true;
 
                 WalkerMoveByUserInput.IsActive = true;

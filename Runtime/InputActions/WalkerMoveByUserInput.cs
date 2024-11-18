@@ -1,10 +1,11 @@
 using UnityEngine.InputSystem;
 using UnityEngine;
 using Cinemachine;
+using UnityEngine.UIElements;
 
 namespace Landscape2.Runtime
 {
-    public class WalkerMoveByUserInput : LandscapeInputActions.IWalkerMoveActions ,ISubComponent
+    public class WalkerMoveByUserInput : LandscapeInputActions.IWalkerMoveActions, ISubComponent
     {
         private readonly CinemachineVirtualCamera camera;
         private readonly GameObject mainCam;
@@ -13,6 +14,10 @@ namespace Landscape2.Runtime
         private LandscapeInputActions.WalkerMoveActions input;
         private Vector2 deltaWASD;
         private float deltaUpDown;
+        private float deltaWheel;
+
+        private bool isRightClicking = false;
+        // TODO: コンポーネント消す
         private CinemachineInputProvider inputProviderComponent;
         private CameraMoveData cameraMoveSpeedData;
 
@@ -49,7 +54,31 @@ namespace Landscape2.Runtime
             {
                 MoveUpDown(cameraMoveSpeedData.walkerOffsetYSpeed * deltaUpDown * deltaTime, transposer);
                 MoveWASD(cameraMoveSpeedData.walkerMoveSpeed * deltaTime * deltaWASD);
+                MoveForward(cameraMoveSpeedData.walkerMoveSpeed * 0.01f * deltaWheel);
+
+                var deltaMouseXY= Mouse.current.delta.ReadValue();
+                RotateCamera(cameraMoveSpeedData.rotateSpeed * deltaMouseXY);
             }
+        }
+
+        private void RotateCamera(Vector2 rotationDelta)
+        {
+            if (isRightClicking == false)
+                return;
+
+            var newAngles = camera.transform.eulerAngles;
+            newAngles.x -= rotationDelta.y;
+            newAngles.y += rotationDelta.x;
+            newAngles.z = 0f;
+            camera.transform.eulerAngles = newAngles;
+        }
+
+        private void MoveForward(float walkerMoveDelta)
+        {
+            var dir = new Vector3(0f, 0f, walkerMoveDelta);
+            var rot = mainCam.transform.eulerAngles;
+            dir = Quaternion.Euler(new Vector3(0.0f, rot.y, rot.z)) * dir;
+            walker.GetComponent<CharacterController>().Move(dir);
         }
 
         /// <summary>
@@ -66,6 +95,23 @@ namespace Landscape2.Runtime
             else if (context.canceled)
             {
                 deltaWASD = Vector2.zero;
+            }
+        }
+
+        /// <summary>
+        /// InputActionsからマウスのホイール操作を受け取り、歩行者カメラを移動します。
+        /// </summary>
+        /// <param name="context"></param>
+        public void OnWheel(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+            {
+                var delta = context.ReadValue<float>();
+                deltaWheel = delta;
+            }
+            else if (context.canceled)
+            {
+                deltaWheel = 0f;
             }
         }
 
@@ -90,14 +136,15 @@ namespace Landscape2.Runtime
         /// InputActionsから右クリックを受け取り、右クリックされているときのみ歩行者カメラを回転できるようにする。
         /// </summary>
         /// <param name="context"></param>
-        public void OnRightClick(InputAction.CallbackContext context)
+        public void OnRotateCameraByMouse(InputAction.CallbackContext context)
         {
             if (context.performed)
             {
-                inputProviderComponent.enabled = true;
-            }else if (context.canceled)
+                isRightClicking = true;
+            }
+            else if (context.canceled)
             {
-                inputProviderComponent.enabled=false;
+                isRightClicking = false;
             }
         }
 
@@ -120,11 +167,11 @@ namespace Landscape2.Runtime
         /// <param name="trans"></param>
         private void MoveUpDown(float moveDelta, CinemachineTransposer trans)
         {
-           if(trans != null)
+            if (trans != null)
             {
                 Vector3 currentOffset = trans.m_FollowOffset;
                 currentOffset.y += moveDelta;
-                if(currentOffset.y < 0.5f)
+                if (currentOffset.y < 0.5f)
                 {
                     ResetOffsetY(trans);
                 }
@@ -148,7 +195,7 @@ namespace Landscape2.Runtime
             if (trans != null)
             {
                 Vector3 currentOffset = trans.m_FollowOffset;
-                currentOffset.y = 0.5f;
+                currentOffset.y = 1.5f;
                 trans.m_FollowOffset = currentOffset;
             }
             else

@@ -270,9 +270,18 @@ namespace Landscape2.Runtime
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""RightClick"",
+                    ""name"": ""Wheel"",
+                    ""type"": ""Value"",
+                    ""id"": ""f1a4ada4-6fb4-4596-8060-6ec96dc43372"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""RotateCameraByMouse"",
                     ""type"": ""Button"",
-                    ""id"": ""aee1907c-3295-42dd-945f-6c4a5f13c4be"",
+                    ""id"": ""f93bf0cf-9464-4768-8357-daa4ff533765"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -370,12 +379,23 @@ namespace Landscape2.Runtime
                 },
                 {
                     ""name"": """",
-                    ""id"": ""da7710d9-5bc6-4c35-a3c1-6515142ff33a"",
+                    ""id"": ""620caf7c-3446-4939-b481-85320be38b9b"",
+                    ""path"": ""<Mouse>/scroll/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Wheel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""88f1b815-fb81-4239-89b9-74303d443985"",
                     ""path"": ""<Mouse>/rightButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""RightClick"",
+                    ""action"": ""RotateCameraByMouse"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -427,7 +447,8 @@ namespace Landscape2.Runtime
             m_WalkerMove = asset.FindActionMap("WalkerMove", throwIfNotFound: true);
             m_WalkerMove_UpDown = m_WalkerMove.FindAction("UpDown", throwIfNotFound: true);
             m_WalkerMove_WASD = m_WalkerMove.FindAction("WASD", throwIfNotFound: true);
-            m_WalkerMove_RightClick = m_WalkerMove.FindAction("RightClick", throwIfNotFound: true);
+            m_WalkerMove_Wheel = m_WalkerMove.FindAction("Wheel", throwIfNotFound: true);
+            m_WalkerMove_RotateCameraByMouse = m_WalkerMove.FindAction("RotateCameraByMouse", throwIfNotFound: true);
             // SelectCamPos
             m_SelectCamPos = asset.FindActionMap("SelectCamPos", throwIfNotFound: true);
             m_SelectCamPos_SelectPosByInput = m_SelectCamPos.FindAction("SelectPosByInput", throwIfNotFound: true);
@@ -626,14 +647,16 @@ namespace Landscape2.Runtime
         private List<IWalkerMoveActions> m_WalkerMoveActionsCallbackInterfaces = new List<IWalkerMoveActions>();
         private readonly InputAction m_WalkerMove_UpDown;
         private readonly InputAction m_WalkerMove_WASD;
-        private readonly InputAction m_WalkerMove_RightClick;
+        private readonly InputAction m_WalkerMove_Wheel;
+        private readonly InputAction m_WalkerMove_RotateCameraByMouse;
         public struct WalkerMoveActions
         {
             private @LandscapeInputActions m_Wrapper;
             public WalkerMoveActions(@LandscapeInputActions wrapper) { m_Wrapper = wrapper; }
             public InputAction @UpDown => m_Wrapper.m_WalkerMove_UpDown;
             public InputAction @WASD => m_Wrapper.m_WalkerMove_WASD;
-            public InputAction @RightClick => m_Wrapper.m_WalkerMove_RightClick;
+            public InputAction @Wheel => m_Wrapper.m_WalkerMove_Wheel;
+            public InputAction @RotateCameraByMouse => m_Wrapper.m_WalkerMove_RotateCameraByMouse;
             public InputActionMap Get() { return m_Wrapper.m_WalkerMove; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -649,9 +672,12 @@ namespace Landscape2.Runtime
                 @WASD.started += instance.OnWASD;
                 @WASD.performed += instance.OnWASD;
                 @WASD.canceled += instance.OnWASD;
-                @RightClick.started += instance.OnRightClick;
-                @RightClick.performed += instance.OnRightClick;
-                @RightClick.canceled += instance.OnRightClick;
+                @Wheel.started += instance.OnWheel;
+                @Wheel.performed += instance.OnWheel;
+                @Wheel.canceled += instance.OnWheel;
+                @RotateCameraByMouse.started += instance.OnRotateCameraByMouse;
+                @RotateCameraByMouse.performed += instance.OnRotateCameraByMouse;
+                @RotateCameraByMouse.canceled += instance.OnRotateCameraByMouse;
             }
 
             private void UnregisterCallbacks(IWalkerMoveActions instance)
@@ -662,9 +688,12 @@ namespace Landscape2.Runtime
                 @WASD.started -= instance.OnWASD;
                 @WASD.performed -= instance.OnWASD;
                 @WASD.canceled -= instance.OnWASD;
-                @RightClick.started -= instance.OnRightClick;
-                @RightClick.performed -= instance.OnRightClick;
-                @RightClick.canceled -= instance.OnRightClick;
+                @Wheel.started -= instance.OnWheel;
+                @Wheel.performed -= instance.OnWheel;
+                @Wheel.canceled -= instance.OnWheel;
+                @RotateCameraByMouse.started -= instance.OnRotateCameraByMouse;
+                @RotateCameraByMouse.performed -= instance.OnRotateCameraByMouse;
+                @RotateCameraByMouse.canceled -= instance.OnRotateCameraByMouse;
             }
 
             public void RemoveCallbacks(IWalkerMoveActions instance)
@@ -745,7 +774,8 @@ namespace Landscape2.Runtime
         {
             void OnUpDown(InputAction.CallbackContext context);
             void OnWASD(InputAction.CallbackContext context);
-            void OnRightClick(InputAction.CallbackContext context);
+            void OnWheel(InputAction.CallbackContext context);
+            void OnRotateCameraByMouse(InputAction.CallbackContext context);
         }
         public interface ISelectCamPosActions
         {

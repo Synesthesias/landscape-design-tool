@@ -246,9 +246,18 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "RightClick",
+                    "name": "Wheel",
+                    "type": "Value",
+                    "id": "f1a4ada4-6fb4-4596-8060-6ec96dc43372",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "RotateCameraByMouse",
                     "type": "Button",
-                    "id": "aee1907c-3295-42dd-945f-6c4a5f13c4be",
+                    "id": "f93bf0cf-9464-4768-8357-daa4ff533765",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -346,12 +355,23 @@
                 },
                 {
                     "name": "",
-                    "id": "da7710d9-5bc6-4c35-a3c1-6515142ff33a",
+                    "id": "620caf7c-3446-4939-b481-85320be38b9b",
+                    "path": "<Mouse>/scroll/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Wheel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "88f1b815-fb81-4239-89b9-74303d443985",
                     "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "RightClick",
+                    "action": "RotateCameraByMouse",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
