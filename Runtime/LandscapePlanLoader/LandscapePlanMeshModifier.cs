@@ -60,7 +60,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             }
 
             mesh.vertices = vertices; // 修正した頂点データをメッシュに適用
-
+            mesh.RecalculateBounds();
             return true;    // 全ての頂点の修正に成功
         }
 

@@ -91,7 +91,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 if (mesh == null)
                 {
                     Debug.LogError($"Mesh in MeshFilter of {gisObject.name} is null");
-                    return;
+                    continue;
                 }
 
 
@@ -99,7 +99,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 if (!landscapePlanMeshModifier.TryModifyMeshToTargetHeight(mesh, 0, gisObject.transform.position))
                 {
                     Debug.LogError($"{gisObject.name} is out of range of the loaded map");
-                    return;
+                    continue;
                 }
                 
                 // コライダー判定用のMeshColliderを追加
@@ -109,14 +109,17 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 }
                 
                 //新規のAreaPropertyを生成し初期化
-                float initLimitHeight = float.TryParse(GetPropertyValueOf("HEIGHT", dbf), out float heightValue) ? heightValue : 0; // 区画の制限高さを取得
+                float initLimitHeight = float.TryParse(GetPropertyValueOf("HEIGHT", dbf), out float heightValue) ? heightValue : 50; // 区画の制限高さを取得
                 int id = int.TryParse(GetPropertyValueOf("ID", dbf), out int idValue) ? idValue : 0;
+                string colorString = GetPropertyValueOf("COLOR", dbf);
+                var color = colorString != "" ? DbfStringToColor(colorString) : Color.red;
+
                 AreaProperty areaProperty = new AreaProperty(
                     id,
                     GetPropertyValueOf("AREANAME", dbf),
                     initLimitHeight,
                     10,
-                    DbfStringToColor(GetPropertyValueOf("COLOR", dbf)),
+                    color,
                     new Material(wallMaterial),
                     new Material(ceilingMaterial),
                     Mathf.Max(300, initLimitHeight + 50),

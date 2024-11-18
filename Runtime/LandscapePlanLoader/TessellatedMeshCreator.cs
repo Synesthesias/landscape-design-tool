@@ -160,6 +160,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             colorMesh.FillAndDispose(mesh);
 
             mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
             meshFilter.mesh = mesh;
             pShape.Dispose();
         }
