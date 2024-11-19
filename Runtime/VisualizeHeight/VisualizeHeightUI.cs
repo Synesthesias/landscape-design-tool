@@ -110,11 +110,8 @@ namespace Landscape2.Runtime
                 heightToggle.style.display = DisplayStyle.None;
                 walkerPanel.style.display = DisplayStyle.Flex;
 
-                if (heightToggle.value) // 高さ可視化がONの場合
-                {
-                    heightSlider.style.display = DisplayStyle.None;
-                    pointOfViewPanel.style.display = DisplayStyle.None;
-                }
+                // 俯瞰モードにおける高さ可視化をOFFにする
+                heightToggle.value = false;
             }
             else if (cameraState == LandscapeCameraState.PointOfView)
             {
@@ -122,12 +119,6 @@ namespace Landscape2.Runtime
                 walkerPanel.style.display = DisplayStyle.None;
                 walkerPin.style.display = DisplayStyle.None;
                 selectedBuilding = null;
-
-                if(heightToggle.value) // 高さ可視化がONの場合
-                {
-                    heightSlider.style.display = DisplayStyle.Flex;
-                    pointOfViewPanel.style.display = DisplayStyle.Flex;
-                }
             }
         }
 
@@ -267,14 +258,13 @@ namespace Landscape2.Runtime
 
             if (building != selectedBuilding)
             {
-                walkerPin.style.display = DisplayStyle.Flex;
                 // 高さを更新
                 walkerPin.Q<Label>().text = bldgList.FirstOrDefault(item => item.Building == building).Pin.Q<Label>().text;
                 // 位置を更新
                 walkerPin.style.translate = UpdateHeightPinPosition(building);
                 selectedBuilding = building;
             }
-            else
+            else // 同じ建物をクリックした場合
             {
                 walkerPin.style.display = DisplayStyle.None;
                 selectedBuilding = null;
@@ -289,7 +279,14 @@ namespace Landscape2.Runtime
             // 視点が変更された場合は高さピンを更新
             if (Camera.main.transform.hasChanged)
             {
-                visualizeHeightPanel.style.display = DisplayStyle.None;
+                if (landscapeCamera.cameraState == LandscapeCameraState.Walker) // 歩行者モードの場合
+                {
+                    walkerPin.style.display = DisplayStyle.None;
+                }
+                else
+                {
+                    pointOfViewPanel.style.display = DisplayStyle.None;
+                }                  
                 // 視点が変更されたフラグを立てる
                 isCameraMoved = true;
                 Camera.main.transform.hasChanged = false;
@@ -298,7 +295,6 @@ namespace Landscape2.Runtime
             {
                 if (isCameraMoved == true)
                 {
-                    visualizeHeightPanel.style.display = DisplayStyle.Flex;
                     isCameraMoved = false;
 
                     // ピンの位置を更新
@@ -306,11 +302,13 @@ namespace Landscape2.Runtime
                     {
                         if (selectedBuilding != null)
                         {
+                            walkerPin.style.display = DisplayStyle.Flex;
                             walkerPin.style.translate = UpdateHeightPinPosition(selectedBuilding);
                         } 
                     }
                     else if (heightToggle.value == true) // 俯瞰モードの場合
                     {
+                        pointOfViewPanel.style.display = DisplayStyle.Flex;
                         for (int i = 0; i <= lastPinID; i++)
                         {
                             bldgList[i].Pin.style.translate = UpdateHeightPinPosition(bldgList[i].Building);
