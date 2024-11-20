@@ -55,7 +55,7 @@ namespace Landscape2.Runtime.GisDataLoader
 
                 // ピンの位置更新
                 var screenPos = GetPinScreenPosition(gisPointInfo.FacilityPosition);
-                pin.SetScreen(screenPos);
+                pin.SetScreen(screenPos, gisPointInfo.IsShow);
                 
                 // ピンのElementを追加
                 pinPanel.Add(pinElement);
@@ -138,7 +138,7 @@ namespace Landscape2.Runtime.GisDataLoader
             {
                 var info = gisPointInfos.Get(pin.GetID());
                 var screenPos = GetPinScreenPosition(info.FacilityPosition);
-                pin.SetScreen(screenPos);
+                pin.SetScreen(screenPos, info.IsShow);
             }
         }
     }

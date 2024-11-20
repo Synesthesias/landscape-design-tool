@@ -21,6 +21,7 @@ namespace Landscape2.Runtime.GisDataLoader
         public UnityEvent OnDeleteAll = new();
         
         private const string ErrorTitle = "GISデータ登録";
+        private int pointIndex = 0;
         
         public void Regist(string name, List<GisData> gisDataList, int selectAttributeIndex, Color color)
         {
@@ -30,7 +31,6 @@ namespace Landscape2.Runtime.GisDataLoader
                 return;
             }
 
-            int count = 0;
             foreach (var gisData in gisDataList)
             {
                 var facilityName = gisData.Attributes[selectAttributeIndex].Value;
@@ -45,7 +45,7 @@ namespace Landscape2.Runtime.GisDataLoader
 
                 // ポイント情報を登録
                 Points.Add(new GisPointInfo(
-                    count,
+                    pointIndex,
                     selectAttributeIndex,
                     facilityName,
                     name,
@@ -53,7 +53,7 @@ namespace Landscape2.Runtime.GisDataLoader
                     color,
                     true
                 ));
-                count++;
+                pointIndex++;
             }
 
             OnCreate.Invoke(selectAttributeIndex);

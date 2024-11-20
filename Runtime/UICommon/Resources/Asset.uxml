@@ -13,7 +13,7 @@
         </ui:VisualElement>
         <ui:VisualElement name="CenterContainer" picking-mode="Ignore" style="flex-grow: 1; padding-top: 190px; padding-right: 16px; align-items: flex-end;">
             <ui:Instance template="Panel_AssetSelect" name="Panel_AssetSelect" style="display: none;" />
-            <ui:VisualElement style="flex-grow: 1; width: 100%; justify-content: flex-end; margin-bottom: 0; margin-right: 0; margin-left: 0; padding-left: 16px; padding-bottom: 16px;">
+            <ui:VisualElement name="EditBuildingArea" style="flex-grow: 1; width: 100%; justify-content: flex-end; margin-bottom: 0; margin-right: 0; margin-left: 0; padding-left: 16px; padding-bottom: 16px;">
                 <ui:Instance template="Panel_EditBuilding" name="Panel_EditBuilding" picking-mode="Ignore" style="width: 100%;" />
             </ui:VisualElement>
         </ui:VisualElement>

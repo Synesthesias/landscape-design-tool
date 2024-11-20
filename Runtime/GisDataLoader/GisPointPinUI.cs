@@ -63,9 +63,9 @@ namespace Landscape2.Runtime.GisDataLoader
             pin.Element.Q<Label>("Icon_Name").style.display = isShow ? DisplayStyle.Flex : DisplayStyle.None;
         }
 
-        public void SetScreen(Vector2 position)
+        public void SetScreen(Vector2 position, bool isShow)
         {
-            if (position == Vector2.zero)
+            if (position == Vector2.zero || !isShow)
             {
                 Show(false);
                 return;
