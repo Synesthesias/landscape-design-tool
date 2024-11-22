@@ -26,7 +26,8 @@ namespace Landscape2.Runtime.WeatherTimeEditor
         private GameObject volumeObj; // Environment Volumeを格納するGameObject
         private Volume volume;
         private VisualEnvironment visualEnvironment;
-
+        private SkyEnvironment skyEnvironment;
+        
         public WeatherTimeEditor()
         {
             environmentController = GameObject.FindObjectOfType<EnvironmentController>();
@@ -47,16 +48,19 @@ namespace Landscape2.Runtime.WeatherTimeEditor
                 Debug.LogError("Failed to load Environment Volume.");
             }
             volume = volumeObj.GetComponent<Volume>();
-
+            
             // VolumeコンポーネントにあるVisualEnvironmentを取得
             volume.profile.TryGet(out visualEnvironment);
             if(visualEnvironment == null)
             {
                 Debug.LogError("Failed to load VisualEnvironment.");
             }
-
+            
             currentWeather = Weather.Sun;
+            
+            skyEnvironment = new SkyEnvironment(environmentObj);
         }
+        
         /// <summary>
         /// 天候を変更
         /// </summary>
@@ -145,6 +149,11 @@ namespace Landscape2.Runtime.WeatherTimeEditor
         {      
             DateTime time = CalculateTime(timeValue);
             return time.ToString("HH:mm");
+        }
+
+        public void OnUpdate()
+        {
+            skyEnvironment.OnUpdate(currentWeather);
         }
     }
 }

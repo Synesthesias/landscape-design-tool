@@ -34,8 +34,8 @@ namespace Landscape2.Runtime.WeatherTimeEditor
             timeLabel = uiRoot.Q<Label>(UITimeLabel);
 
             // 時間帯の初期値の設定
-            timeSlider.lowValue = 0.292f; //7:00
-            timeSlider.highValue = 0.792f; //19:00
+            timeSlider.lowValue = 0f; //0:00
+            timeSlider.highValue = 1f; //24:00
             timeSlider.value = 0.5f; //12:00
             timeLabel.text = this.weatherTimeEditor.GetTimeString(timeSlider.value);
 
@@ -69,6 +69,7 @@ namespace Landscape2.Runtime.WeatherTimeEditor
         }
         public void Update(float deltaTime)
         {
+            this.weatherTimeEditor.OnUpdate();
         }
         public void OnEnable()
         {
