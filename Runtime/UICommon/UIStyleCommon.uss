@@ -1507,3 +1507,16 @@ Scroller #unity-drag-container {
 .unity-base-dropdown .unity-text-element {
     color: rgb(0, 0, 0);
 }
+
+#Tiparrow_Up {
+    background-image: resource('Tiparrow_Up');
+}
+#Tiparrow_Down {
+    background-image: resource('Tiparrow_Down');
+}
+#Tiparrow_Right {
+    background-image: resource('Tiparrow_Right');
+}
+#Tiparrow_Left {
+    background-image: resource('Tiparrow_Left');
+}
