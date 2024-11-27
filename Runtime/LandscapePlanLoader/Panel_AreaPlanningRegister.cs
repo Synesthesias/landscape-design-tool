@@ -1,7 +1,4 @@
 using Landscape2.Runtime.UiCommon;
-using System;
-using System.Collections.Generic;
-using System.Security.AccessControl;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -47,6 +44,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         {
             if (panel_AreaPlanningEdit.style.display == DisplayStyle.Flex)
             {
+                displayPinLine.InitializePinLineSize();
                 panel_PointEditor.style.display = DisplayStyle.Flex;
                 okButton.visible = false;
                 base.DisplaySnackbar("地形をクリックして領域を作成してください");

@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UIElements;
-using System.Collections.Generic;
 using Landscape2.Runtime.UiCommon;
 
 namespace Landscape2.Runtime.LandscapePlanLoader
@@ -57,7 +56,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         protected override void OnDisplayPanel()
         {
             if (panel_AreaPlanningEdit.style.display == DisplayStyle.Flex)
-            {
+            {   
+                displayPinLine.InitializePinLineSize();
                 panel_PointEditor.style.display = DisplayStyle.Flex;
                 panel_ViewFix.style.display = DisplayStyle.Flex;
                 areaPlanningEdit.CreatePinline();

@@ -19,6 +19,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         private bool isVertexEditing = false;
         private GameObject editingPin;
         private GameObject editingLine;
+        private Vector3 lastPinPosition;
 
 
         public AreaPlanningEdit(AreaEditManager areaEditManager,DisplayPinLine displayPinLine)
@@ -158,6 +159,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 if (hits[i].collider.gameObject.name.Contains("Pin"))
                 {
                     editingPin = hits[i].collider.gameObject;
+                    lastPinPosition = editingPin.transform.position;
                     return true;
                 }
             }
@@ -226,16 +228,18 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         {
             if (editingPin == null)return;
 
-            Vector3 objPos = Camera.main.WorldToScreenPoint(editingPin.transform.position);
-            Vector3 mousePos = new Vector3(Input.mousePosition.x, Input.mousePosition.y, objPos.z);
+            Vector3 pinPos = Camera.main.WorldToScreenPoint(editingPin.transform.position);
+            Vector3 mousePos = new Vector3(Input.mousePosition.x, Input.mousePosition.y, pinPos.z);
+            // 地面の高さを取得
+            Vector3 groundPos = landscapePlanMeshModifier.SearchGroundPoint(editingPin.transform.position);
             Vector3 worldPos = Camera.main.ScreenToWorldPoint(mousePos);
-            editingPin.transform.position = new Vector3(worldPos.x, editingPin.transform.position.y, worldPos.z);
+            editingPin.transform.position = new Vector3(worldPos.x, groundPos.y, worldPos.z) + new Vector3(0, 5.0f, 0);
             // ラインの頂点を移動させる
             displayPinLine.MoveLineVertex(editingPin, editingPin.transform.position);
             // 頂点データを更新
             int index = displayPinLine.FindPinIndex(editingPin);
             if (index == -1) return;
-            vertices[index] = new Vector3(editingPin.transform.position.x, vertices[index].y, editingPin.transform.position.z);
+            vertices[index] = new Vector3(editingPin.transform.position.x, groundPos.y, editingPin.transform.position.z);
             
             isVertexEditing = true;
         }
@@ -245,8 +249,19 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// </summary>
         public void OnReleasePin()
         {
+            if(editingPin == null)return;
+
+            // ラインが交差しているかを判定
+            if (displayPinLine.IsIntersectedByPin(editingPin))
+            {
+                Debug.LogWarning("Vertices are crossing");
+                // 頂点，ピン，ラインを元の位置に戻す
+                editingPin.transform.position = lastPinPosition;
+                vertices[displayPinLine.FindPinIndex(editingPin)] = lastPinPosition;
+                displayPinLine.MoveLineVertex(editingPin, lastPinPosition);
+            }
             editingPin = null;
-            editingLine = null;
+            editingLine = null;           
         }
 
         /// <summary>
@@ -295,76 +310,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             displayPinLine.ClearPins();
             displayPinLine.ClearLines();
             isVertexEditing = false;
-        }
-
-        /// <summary>
-        /// 2つの線分が交差しているかを判定するヘルパーメソッド (Y軸無視)
-        /// </summary>
-        private bool DoLinesIntersect2D(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4)
-        {
-            // 線分p1-p2と線分p3-p4がXY平面で交差しているか判定する
-
-            // p1, p2の線分がp3, p4の線分をまたいでいるか判定
-            float d1 = Direction2D(p3, p4, p1);
-            float d2 = Direction2D(p3, p4, p2);
-            float d3 = Direction2D(p1, p2, p3);
-            float d4 = Direction2D(p1, p2, p4);
-
-            // 互いに異なる方向に向かっている場合は交差している
-            if (d1 * d2 < 0 && d3 * d4 < 0)
-                return true;
-
-            // 特殊ケース: 線分が同じ直線上に存在する場合（共線）
-            if (d1 == 0 && OnSegment2D(p3, p4, p1)) return true;
-            if (d2 == 0 && OnSegment2D(p3, p4, p2)) return true;
-            if (d3 == 0 && OnSegment2D(p1, p2, p3)) return true;
-            if (d4 == 0 && OnSegment2D(p1, p2, p4)) return true;
-
-            return false;
-        }
-
-        /// <summary>
-        /// 方向を判定するヘルパーメソッド (Y軸無視)
-        /// </summary>
-        private float Direction2D(Vector3 p1, Vector3 p2, Vector3 p3)
-        {
-            // p1-p2ベクトルとp1-p3ベクトルの外積で方向を判定（Y軸を無視）
-            return (p3.x - p1.x) * (p2.z - p1.z) - (p2.x - p1.x) * (p3.z - p1.z);
-        }
-
-        /// <summary>
-        /// 点pが線分p1-p2上にあるかを判定するヘルパーメソッド (Y軸無視)
-        /// </summary>
-        private bool OnSegment2D(Vector3 p1, Vector3 p2, Vector3 p)
-        {
-            // Y軸を無視してXとZのみで判定
-            return Mathf.Min(p1.x, p2.x) <= p.x && p.x <= Mathf.Max(p1.x, p2.x) &&
-                   Mathf.Min(p1.z, p2.z) <= p.z && p.z <= Mathf.Max(p1.z, p2.z);
-        }
-
-        /// <summary>
-        /// Vector3のリストがXY平面上でクロスしているかを判定するメソッド (Y軸無視)
-        /// </summary>
-        public bool AreVerticesCrossing2D(List<Vector3> vertices)
-        {
-            // 頂点が少なくとも3つ必要（線分が2つ以上必要）
-            if (vertices.Count < 4) return false;
-
-            // 頂点リスト内の全線分ペアの交差を判定 (Y軸無視)
-            for (int i = 0; i < vertices.Count - 1; i++)
-            {
-                for (int j = i + 2; j < vertices.Count - 1; j++)
-                {
-                    // 隣接する線分同士は交差しない（同じ頂点を共有するため）
-                    if (i == 0 && j == vertices.Count - 1) continue; // 最後の頂点と最初の頂点は無視
-
-                    if (DoLinesIntersect2D(vertices[i], vertices[i + 1], vertices[j], vertices[j + 1]))
-                    {
-                        return true; // 交差している
-                    }
-                }
-            }
-            return false; // 交差なし
         }
     }
 }

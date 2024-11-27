@@ -1,6 +1,3 @@
-using Landscape2.Runtime.UiCommon;
-using System.Collections.Generic;
-using System.Security;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -16,7 +13,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         protected readonly PlanningUI planningUI;
         protected VisualElement panel_AreaPlanningEdit; // 親パネル
         protected VisualElement panel_PointEditor; // 頂点編集パネル
-
         protected Button okButton;    // OKボタン
         protected TextField areaPlanningName; // エリア名入力欄
         protected TextField areaPlanningHeight;   // 高さ入力欄
@@ -24,7 +20,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         protected VisualTreeAsset colorEditor;    // 色彩編集用のテンプレート
         protected VisualElement colorEditorClone; // 色彩編集用クローン
         protected VisualElement snackBarClone; // Snackbarのクローン
-
         protected bool isColorEditing = false;
 
         public Panel_AreaPlanningEditBaseUI(VisualElement planning, PlanningUI planningUI)
@@ -63,6 +58,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             areaPlanningHeight.RegisterValueChangedCallback(InputHeight);
             areaPlanningColor.RegisterCallback<ClickEvent>(ev => ToggleColorEditing());
             areaPlanningName.RegisterValueChangedCallback(InputAreaName);
+
             panel_PointEditor.RegisterCallback<WheelEvent>(ev => OnPointEditorWheeled(ev));
         }
 
