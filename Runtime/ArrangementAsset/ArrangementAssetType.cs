@@ -1,4 +1,8 @@
+using PlateauToolkit.Sandbox;
+using PlateauToolkit.Sandbox.Runtime;
 using System;
+using UnityEngine;
+using PlateauSandboxBuilding = PlateauToolkit.Sandbox.Runtime.PlateauSandboxBuildings.Runtime.PlateauSandboxBuilding;
 
 namespace Landscape2.Runtime
 {
@@ -62,6 +66,46 @@ namespace Landscape2.Runtime
                 ArrangementAssetType.Miscellaneous => "その他",
                 _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
             };
+        }
+        
+        public static ArrangementAssetType GetArrangementAssetType(GameObject target)
+        {
+            if (target.TryGetComponent<PlateauSandboxPlant>(out var plant))
+            {
+                return ArrangementAssetType.Plant;
+            }
+            else if (target.TryGetComponent<PlateauSandboxAdvertisement>(out var advertisement))
+            {
+                return ArrangementAssetType.Advertisement;
+            }
+            else if (target.TryGetComponent<PlateauSandboxHuman>(out var human))
+            {
+                return ArrangementAssetType.Human;
+            }
+            else if (target.TryGetComponent<PlateauSandboxVehicle>(out var vehicle))
+            {
+                return ArrangementAssetType.Vehicle;
+            }
+            else if (target.TryGetComponent<PlateauSandboxBuilding>(out var building))
+            {
+                return ArrangementAssetType.Building;
+            }
+            else if (target.TryGetComponent<PlateauSandboxStreetFurniture>(out var streetFurniture))
+            {
+                return ArrangementAssetType.StreetFurniture;
+            }
+            else if (target.TryGetComponent<PlateauSandboxSign>(out var sign))
+            {
+                return ArrangementAssetType.Sign;
+            }
+            else if (target.TryGetComponent<PlateauSandboxMiscellaneous>(out var miscellaneous))
+            {
+                return ArrangementAssetType.Miscellaneous;
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException(nameof(target), target, null);
+            }
         }
     }
 }

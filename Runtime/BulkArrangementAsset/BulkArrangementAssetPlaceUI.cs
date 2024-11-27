@@ -27,6 +27,12 @@ namespace Landscape2.Runtime
                 ShowProgress();
                 var resultText = await bulkArrangementAssetPlace.PlaceAll(bulkArrangementAsset);
                 ShowResultDialog(resultText);
+                
+                // リストに追加
+                bulkArrangementAssetPlace.TrySetAssetList();
+                
+                // アセット配置終了処理
+                bulkArrangementAssetPlace.Stop();
             };
         }
 

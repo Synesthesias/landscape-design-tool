@@ -1,6 +1,9 @@
 using Cinemachine;
 using System;
+using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Landscape2.Runtime
 {
@@ -166,6 +169,89 @@ namespace Landscape2.Runtime
                 OnSetCameraCalled?.Invoke();
             }
             return canRaycast;
+        }
+
+        /// <summary>
+        /// ターゲット位置にフォーカスする
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="endCallback"></param>
+        public void FocusPoint(GameObject target, UnityAction endCallback = null)
+        {
+            if (cameraState != LandscapeCameraState.PointOfView)
+            {
+                return;
+            }
+            FocusPointAsync(target, endCallback);
+        }
+
+        private async void FocusPointAsync(GameObject target, UnityAction endCallback = null)
+        {
+            const float upAngle = 45f; // 斜めから見下ろす
+            const float distanceMultiplier = 4f; // 距離の倍率
+            const float duration = 0.5f; // 移動時間
+            
+            var startRotation = vcam1.transform.rotation;
+            var startPosition = vcam1.transform.position;
+            
+            // カメラの回転
+            var endRotation = Quaternion.LookRotation(target.transform.position - vcam1.transform.position);
+            endRotation = Quaternion.Euler(new Vector3(upAngle, endRotation.eulerAngles.y, endRotation.eulerAngles.z));
+
+            // カメラの距離
+            var distance = 50f;
+            var renderer = GetTargetMesh(target);
+            if (renderer != null)
+            {
+                // メッシュのサイズからカメラの距離を決定
+                distance = renderer.bounds.size.magnitude * distanceMultiplier;
+            }
+
+            // カメラの位置
+            var endPosition = target.transform.position -  endRotation * Vector3.forward * distance; // 一定の距離を保つ
+            
+            // カメラの移動
+            var elapsedTime = 0f;
+            while (elapsedTime < duration)
+            {
+                vcam1.transform.position = Vector3.Lerp(startPosition, endPosition, elapsedTime / duration);
+                vcam1.transform.rotation = Quaternion.Lerp(startRotation, endRotation, elapsedTime / duration);
+                elapsedTime += Time.deltaTime;
+                await Task.Yield(); // フレームの終わりまで待機
+            }
+            vcam1.transform.rotation = endRotation;
+            vcam1.transform.position = endPosition;
+            
+            endCallback?.Invoke();
+        }
+
+        private Renderer GetTargetMesh(GameObject target)
+        {
+            var renderer = target.GetComponent<Renderer>();
+            if (renderer != null)
+            {
+                return renderer as MeshRenderer;
+            }
+            
+            if (target.TryGetComponent<LODGroup>(out var meshLod))
+            {
+                var lods = meshLod.GetLODs();
+                if (lods.Length > 0)
+                {
+                    var renderers = lods[0].renderers;
+                    if (renderers.Length > 0)
+                    {
+                        return renderers[0];
+                    }
+                }
+            }
+
+            var rendererChildren = target.GetComponentsInChildren<Renderer>();
+            if (rendererChildren.Length > 0)
+            {
+                return rendererChildren[0];
+            }
+            return null;
         }
     }
 }

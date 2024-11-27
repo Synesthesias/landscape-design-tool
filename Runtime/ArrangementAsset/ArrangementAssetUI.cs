@@ -16,17 +16,27 @@ namespace Landscape2.Runtime
         private EditMode editMode;
         private GameObject editTarget;
         private VisualElement editPanel;
-        private BulkArrangementAssetUI bulkArrangementAssetUI;
         private VisualElement assetListScrollView;
+        
+        // 一括配置
+        private BulkArrangementAssetUI bulkArrangementAssetUI;
+        
+        // 広告
         private AdvertisementRenderer advertisementRenderer;
+        
+        // 建物UI
         private ArrangementBuildingEditorUI arrangementBuildingEditorUI;
+        
+        // アセット一覧
+        private ArrangementAssetListUI arrangementAssetListUI;
         
         public ArrangementAssetUI(
             VisualElement element,
             ArrangementAsset arrangementAssetInstance,
             CreateMode createModeInstance,
             EditMode  editModeInstance,
-            AdvertisementRenderer advertisementRendererInstance)
+            AdvertisementRenderer advertisementRendererInstance,
+            LandscapeCamera landscapeCamera)
         {
             UIElement = element;
             arrangementAsset = arrangementAssetInstance;
@@ -36,10 +46,20 @@ namespace Landscape2.Runtime
             editPanel = UIElement.Q<VisualElement>("EditPanel");
             bulkArrangementAssetUI = new BulkArrangementAssetUI(UIElement);
             assetListScrollView = UIElement.Q<ScrollView>("AssetListScrollView");
+            arrangementBuildingEditorUI = new ArrangementBuildingEditorUI(element);
+            arrangementAssetListUI = new ArrangementAssetListUI(element, landscapeCamera);
+            arrangementAssetListUI.OnDeleteAsset.AddListener((target) =>
+            {
+                if (editTarget == null)
+                {
+                    // 編集中でなければそのまま消す
+                    GameObject.Destroy(target);
+                    return;
+                }
+                DeleteAsset();
+            });
             
             RegisterEditButtonAction();
-
-            arrangementBuildingEditorUI = new ArrangementBuildingEditorUI(element);
             
             // デフォルトでは非表示
             editPanel.style.display = DisplayStyle.None;
@@ -93,15 +113,20 @@ namespace Landscape2.Runtime
             movieContainer.style.display = DisplayStyle.None; // デフォルトでは非表示
             
             var deleteButton = editPanel.Q<Button>("ContextButton");
-            deleteButton.clicked += () =>
-            {
-                editMode.DeleteAsset(editTarget);
-                editPanel.style.display = DisplayStyle.None;
-                ResetEditButton();
-                
-                // 建物UIを非表示
-                arrangementBuildingEditorUI.ShowPanel(false);
-            };
+            deleteButton.clicked += DeleteAsset;
+        }
+
+        private void DeleteAsset()
+        {
+            editMode.DeleteAsset(editTarget);
+            editPanel.style.display = DisplayStyle.None;
+            ResetEditButton();
+            
+            // 建物UIを非表示
+            arrangementBuildingEditorUI.ShowPanel(false);
+            
+            // リストから削除
+            arrangementAssetListUI.RemoveAsset(editTarget.GetInstanceID());
         }
 
         /// <summary>

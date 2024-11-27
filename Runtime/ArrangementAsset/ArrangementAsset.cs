@@ -44,7 +44,7 @@ namespace Landscape2.Runtime
         private CreateMode createMode;
         private EditMode editMode;
 
-        public ArrangementAsset(VisualElement element,SaveSystem saveSystemInstance)
+        public ArrangementAsset(VisualElement element,SaveSystem saveSystemInstance, LandscapeCamera landscapeCamera)
         {
             new AssetsSubscribeSaveSystem(saveSystemInstance);
             createMode = new CreateMode();
@@ -56,7 +56,8 @@ namespace Landscape2.Runtime
                 arrangementAssetUI,
                 this,createMode,
                 editMode,
-                new AdvertisementRenderer());
+                new AdvertisementRenderer(),
+                landscapeCamera);
         }
 
         public async void OnEnable()

@@ -49,6 +49,9 @@ namespace Landscape2.Runtime
                     
                     // 生成したオブジェクトにデータを反映
                     savedData.Apply(generatedAsset);
+                    
+                    // リストに追加
+                    ArrangementAssetListUI.OnCreatedAsset.Invoke(generatedAsset);
                 }
             }
             else

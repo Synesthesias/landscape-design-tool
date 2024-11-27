@@ -54,7 +54,8 @@ namespace Landscape2.Runtime
                         m_Prefab = prefab,
                         m_IsIgnoreHeight = isIgnoreHeight,
                         m_IsPlaced = false,
-                        m_ObjectName = prefab.name
+                        // 判別できるようにプレハブ名とGUIDを結合して名前をつける
+                        m_ObjectName = prefab.name + "_" + Guid.NewGuid().ToString("N"),
                     };
                     prefabPlacement.AddContext(context);
                 }
@@ -83,7 +84,7 @@ namespace Landscape2.Runtime
                 cancellation = new CancellationTokenSource();
             }
             await prefabPlacement.PlaceAllAsync(cancellation.Token);
-            
+
             // 空文字で返す
             return string.Empty;
         }
@@ -109,6 +110,27 @@ namespace Landscape2.Runtime
         public bool IsAllPlaceFailed()
         {
             return prefabPlacement.PlacementContexts.All(context => !context.m_IsPlaced);
+        }
+
+        public void TrySetAssetList()
+        {
+            foreach (var context in prefabPlacement.PlacementContexts)
+            {
+                // 成功した分だけリストに追加
+                if (!context.m_IsPlaced)
+                {
+                    continue;
+                }
+
+                var target = GameObject.Find(context.m_ObjectName);
+                if (target == null)
+                {
+                    Debug.LogWarning($"配置したアセットが見つかりませんでした。{context.m_ObjectName}");
+                    continue;
+                }
+                // リストに通知
+                ArrangementAssetListUI.OnCreatedAsset.Invoke(target);
+            }
         }
     }
 }

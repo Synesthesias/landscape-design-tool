@@ -9,6 +9,7 @@ using System.Linq;
 using UnityEngine.UIElements;
 // OnSelectの処理待ちに使用
 using System.Threading.Tasks;
+
 namespace Landscape2.Runtime
 {
     // ArrangeModeクラスの派生クラス
@@ -50,6 +51,7 @@ namespace Landscape2.Runtime
             ray = cam.ScreenPointToRay(Input.mousePosition);
             if(isMouseOverUI && generatedAsset != null)
             {
+                ArrangementAssetListUI.OnCancelAsset.Invoke(generatedAsset);
                 GameObject.Destroy(generatedAsset);
             }
             
@@ -65,7 +67,7 @@ namespace Landscape2.Runtime
             }
             generatedAsset.name =  obj.name;
             int generateLayer = LayerMask.NameToLayer("Ignore Raycast");
-            SetLayerRecursively(generatedAsset, generateLayer); 
+            SetLayerRecursively(generatedAsset, generateLayer);
         }
 
         public void SetAsset(string assetName,IList<GameObject> plateauAssets)
@@ -105,6 +107,9 @@ namespace Landscape2.Runtime
         {   
             if(selectedAsset != null)
             {
+                // アセット作成通知
+                ArrangementAssetListUI.OnCreatedAsset.Invoke(generatedAsset);
+                
                 SetLayerRecursively(generatedAsset,0);
                 generateAssets(selectedAsset);
             }
