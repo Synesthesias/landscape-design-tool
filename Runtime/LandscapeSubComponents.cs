@@ -116,7 +116,10 @@ namespace Landscape2.Runtime
             var walkerMoveByUserInput = new WalkerMoveByUserInput(walkerCamVC, walker);
             var cameraPositionMemory = new CameraPositionMemory.CameraPositionMemory(mainCamVC, walkerCamVC, landscapeCamera);
 
+            // 建物設定
+            var cityModelHandler = new CityModelHandler();
             var editBuilding = new EditBuilding(subMenuUxmls[(int)SubMenuUxmlType.EditBuilding]);
+            
             var saveSystem = new SaveSystem(uiRoot);
             LandscapePlanSaveSystem.SetEvent(saveSystem);
 

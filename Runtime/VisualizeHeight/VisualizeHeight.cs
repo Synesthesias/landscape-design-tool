@@ -16,20 +16,15 @@ namespace Landscape2.Runtime
         private List<PLATEAUCityObjectGroup> buildingList = new List<PLATEAUCityObjectGroup>();
         public VisualizeHeight()
         {
-            var cityModels = GameObject.FindObjectsByType<PLATEAUInstancedCityModel>(FindObjectsSortMode.None);
-            foreach (var cityModel in cityModels)
+            foreach (var cityModelObj in CityModelHandler.CityModelList)
             {
-                var cityModelObjs = cityModel.GetComponentsInChildren<PLATEAUCityObjectGroup>();
-                foreach (var cityModelObj in cityModelObjs)
-                {          
-                    foreach (var buildingObj in cityModelObj.GetAllCityObjects())
+                foreach (var buildingObj in cityModelObj.GetAllCityObjects())
+                {
+                    // 建物の高さが取得できるか確認
+                    if(buildingObj.AttributesMap.TryGetValue("bldg:measuredheight", out var height))
                     {
-                        // 建物の高さが取得できるか確認
-                        if(buildingObj.AttributesMap.TryGetValue("bldg:measuredheight", out var height))
-                        {
-                            // 建物オブジェクトをリストに格納
-                            buildingList.Add(cityModelObj);
-                        }
+                        // 建物オブジェクトをリストに格納
+                        buildingList.Add(cityModelObj);
                     }
                 }
             }
