@@ -189,14 +189,11 @@ namespace Landscape2.Runtime
                 // ボタンの生成
                 Button newButton = new Button()
                 {
-                    name = asset.name
+                    name = "Thumbnail_Asset" // ussにスタイルが指定してある
                 };
-                // ussに移行すべき
+                
                 newButton.style.width = Length.Percent(30f);
-                newButton.style.height = new Length(100, LengthUnit.Pixel);
-                newButton.style.marginRight = 5;
-                newButton.style.marginBottom = 5;
-
+                
                 newButton.style.backgroundImage = new StyleBackground(assetPicture);
                 newButton.style.backgroundSize = new BackgroundSize(Length.Percent(100), Length.Percent(100));
                 newButton.style.backgroundColor = Color.clear;
