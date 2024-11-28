@@ -74,7 +74,7 @@ namespace Landscape2.Runtime
                     !CoordinateUtils.IsValidLatitude(context.m_Latitude) ||
                     !CoordinateUtils.IsValidLongitude(context.m_Longitude)))
             {
-                return "データの座標系が異なっています。";
+                return "データの座標系が異なっています。\n緯度経度座標を持ったデータを入力してください。";
             }
 
             Debug.Log($"アセットの一括配置を開始しました。{prefabPlacement.PlacingCount}個の配置");
