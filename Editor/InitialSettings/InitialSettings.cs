@@ -9,6 +9,7 @@ using PLATEAU.Util;
 using PLATEAU.CityAdjust.MaterialAdjust;
 using PLATEAU.Util.Async;
 using PlateauToolkit.Rendering;
+using System.Linq;
 
 namespace Landscape2.Editor
 {
@@ -23,6 +24,7 @@ namespace Landscape2.Editor
 
         private PLATEAUCityObjectGroup[] plateauCityObjectGroups;
         private PLATEAUInstancedCityModel cityModel;
+        private BIMImportMaterialReference bimImportMaterialReference;
         private IMAConfig maConfig;
         private UniqueParentTransformList targetTransforms;
         private GameObject environment;
@@ -51,8 +53,8 @@ namespace Landscape2.Editor
                 return true;
             }
             else
-            { 
-                return false;   
+            {
+                return false;
             }
         }
 
@@ -70,6 +72,12 @@ namespace Landscape2.Editor
             {
                 return false;
             }
+        }
+
+        public bool IsBIMImportMaterialReferenceExists()
+        {
+            bimImportMaterialReference = GameObject.FindObjectsByType<BIMImportMaterialReference>(FindObjectsInactive.Include, FindObjectsSortMode.None).FirstOrDefault();
+            return bimImportMaterialReference != null;
         }
 
         // SubComponentsを生成する
@@ -98,7 +106,7 @@ namespace Landscape2.Editor
                 GameObject.DestroyImmediate(environmentController.gameObject);
             }
             if (environment != null)
-            { 
+            {
                 environmentObj = GameObject.Instantiate(environment);
                 if (environmentObj == null)
                 {
@@ -106,6 +114,15 @@ namespace Landscape2.Editor
                 }
                 environmentObj.name = environment.name;
             }
+        }
+
+        // BimImport用material参照gameobjectを置く
+        public void CreateBIMImportMaterialSetting()
+        {
+
+            var res = Resources.Load<BIMImportMaterialReference>("BimImportMaterialReference");
+            var obj = GameObject.Instantiate(res);
+            obj.name = nameof(BIMImportMaterialReference);
         }
 
         // MainCameraを生成する
@@ -163,11 +180,11 @@ namespace Landscape2.Editor
             cityModel = GameObject.FindObjectOfType<PLATEAUInstancedCityModel>();
             cityModelObjs = cityModel.GetComponentsInChildren<PLATEAUCityObjectGroup>();
             foreach (var model in cityModelObjs)
-            {              
+            {
                 if (model.gameObject.name.Contains("bldg_"))
                 {
                     var mats = model.gameObject.GetComponent<MeshRenderer>().sharedMaterials;
-                    for (int i = 0; i < mats.Length; i ++)
+                    for (int i = 0; i < mats.Length; i++)
                     {
                         mats[i] = buildingMats[id];
                     }

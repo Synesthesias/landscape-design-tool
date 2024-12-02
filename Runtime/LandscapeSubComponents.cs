@@ -119,7 +119,7 @@ namespace Landscape2.Runtime
             // 建物設定
             var cityModelHandler = new CityModelHandler();
             var editBuilding = new EditBuilding(subMenuUxmls[(int)SubMenuUxmlType.EditBuilding]);
-            
+
             var saveSystem = new SaveSystem(uiRoot);
             LandscapePlanSaveSystem.SetEvent(saveSystem);
 
@@ -145,9 +145,8 @@ namespace Landscape2.Runtime
                 new VisualizeHeightUI(new VisualizeHeight(),uiRoot,landscapeCamera),
                 cameraAutoRotate,
                 new CameraAutoRotateUI(cameraAutoRotate,uiRoot),
-                new LineOfSight(saveSystem,subMenuUxmls[(int)SubMenuUxmlType.Analytics])
-
-
+                new BIMImport(subMenuUxmls[(int)SubMenuUxmlType.Bim]),
+                new LineOfSight(saveSystem,subMenuUxmls[(int)SubMenuUxmlType.Analytics]),
             };
 
         }

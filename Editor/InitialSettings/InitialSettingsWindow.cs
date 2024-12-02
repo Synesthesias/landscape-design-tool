@@ -78,6 +78,7 @@ namespace Landscape2.Editor
             environmentCheckHelpBox = new HelpBox("Environmentの生成が失敗しました", HelpBoxMessageType.Error);
             materialAdjustCheckHelpBox = new HelpBox("マテリアル分けの実行が失敗しました", HelpBoxMessageType.Error);
 
+
             importCheckImage = new Image();
             cityObjectCheckImage = new Image();
             subCompornentsCheckImage = new Image();
@@ -214,7 +215,12 @@ namespace Landscape2.Editor
                 AddCheckListUI(false, UIMaterialAdjustCheck, UIMaterialAdjustHelpbox, materialAdjustCheckHelpBox, materialAdjustCheckImage);
             }
             AddCheckListUI(true, UIMaterialAdjustCheck, UIMaterialAdjustHelpbox, materialAdjustCheckHelpBox, materialAdjustCheckImage);
-            
+
+            if (!initialSettings.IsBIMImportMaterialReferenceExists())
+            {
+                initialSettings.CreateBIMImportMaterialSetting();
+            }
+
             // 初期設定が完了したことをUIに表示
             uiRoot.Add(initialSettingsHelpBox);
         }
