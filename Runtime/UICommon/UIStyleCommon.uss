@@ -1604,3 +1604,17 @@ Scroller #unity-drag-container {
 #Tiparrow_Left {
     background-image: resource('Tiparrow_Left');
 }
+
+#Rotate_Up {
+    background-image: resource('Rotate_Up');
+}
+#Rotate_Down {
+    background-image: resource('Rotate_Down');
+}#Rotate_Left {
+    background-image: resource('Rotate_Left');
+}#Rotate_Right {
+    background-image: resource('Rotate_Right');
+}
+#Icon_View {
+    background-image: resource('Icon_View');
+}
