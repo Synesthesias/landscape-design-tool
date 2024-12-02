@@ -1,4 +1,5 @@
 ### 視点操作
+![歩行視点　一覧](https://github.com/user-attachments/assets/93c0a172-dec8-46ab-8540-9eea3562e65a)
 
 - 通常時、マウスとキーボードを使用してカメラを操作することができます。
 
