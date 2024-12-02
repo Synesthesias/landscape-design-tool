@@ -17,7 +17,7 @@ using UnityEngine.InputSystem.Utilities;
 
 namespace Landscape2.Runtime
 {
-    public partial class @LandscapeInputActions: IInputActionCollection2, IDisposable
+    public partial class @LandscapeInputActions : IInputActionCollection2, IDisposable
     {
         public InputActionAsset asset { get; }
         public @LandscapeInputActions()
@@ -428,7 +428,35 @@ namespace Landscape2.Runtime
                     ""isPartOfComposite"": false
                 }
             ]
-        }
+        },
+        {
+            ""name"": ""LineOfSight"",
+            ""id"": ""59c71817-28da-4877-add9-b4fd84e91be8"",
+            ""actions"": [
+                {
+                    ""name"": ""select"",
+                    ""type"": ""Button"",
+                    ""id"": ""5475ee6e-b86c-4aaa-98d0-644f148ec417"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""f99ae765-b25a-47cf-9afe-65b904a65aef"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""select"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        }        
     ],
     ""controlSchemes"": []
 }");
@@ -452,6 +480,9 @@ namespace Landscape2.Runtime
             // SelectCamPos
             m_SelectCamPos = asset.FindActionMap("SelectCamPos", throwIfNotFound: true);
             m_SelectCamPos_SelectPosByInput = m_SelectCamPos.FindAction("SelectPosByInput", throwIfNotFound: true);
+            // LineOfSight
+            m_LineOfSight = asset.FindActionMap("LineOfSight", throwIfNotFound: true);
+            m_LineOfSight_select = m_LineOfSight.FindAction("select", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -780,6 +811,56 @@ namespace Landscape2.Runtime
         public interface ISelectCamPosActions
         {
             void OnSelectPosByInput(InputAction.CallbackContext context);
+        }
+
+        // LineOfSight
+        private readonly InputActionMap m_LineOfSight;
+        private List<ILineOfSightActions> m_LineOfSightActionsCallbackInterfaces = new List<ILineOfSightActions>();
+        private readonly InputAction m_LineOfSight_select;
+        public struct LineOfSightActions
+        {
+            private @LandscapeInputActions m_Wrapper;
+            public LineOfSightActions(@LandscapeInputActions wrapper) { m_Wrapper = wrapper; }
+            public InputAction @select => m_Wrapper.m_LineOfSight_select;
+            public InputActionMap Get() { return m_Wrapper.m_LineOfSight; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(LineOfSightActions set) { return set.Get(); }
+            public void AddCallbacks(ILineOfSightActions instance)
+            {
+                if (instance == null || m_Wrapper.m_LineOfSightActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_LineOfSightActionsCallbackInterfaces.Add(instance);
+                @select.started += instance.OnSelect;
+                @select.performed += instance.OnSelect;
+                @select.canceled += instance.OnSelect;
+            }
+
+            private void UnregisterCallbacks(ILineOfSightActions instance)
+            {
+                @select.started -= instance.OnSelect;
+                @select.performed -= instance.OnSelect;
+                @select.canceled -= instance.OnSelect;
+            }
+
+            public void RemoveCallbacks(ILineOfSightActions instance)
+            {
+                if (m_Wrapper.m_LineOfSightActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            public void SetCallbacks(ILineOfSightActions instance)
+            {
+                foreach (var item in m_Wrapper.m_LineOfSightActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_LineOfSightActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        public LineOfSightActions @LineOfSight => new LineOfSightActions(this);
+        public interface ILineOfSightActions
+        {
+            void OnSelect(InputAction.CallbackContext context);
         }
     }
 }

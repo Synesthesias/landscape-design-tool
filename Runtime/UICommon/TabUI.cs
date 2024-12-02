@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.UIElements;
+using UnityEngine;
 
 namespace Landscape2.Runtime.UiCommon
 {
@@ -8,6 +9,7 @@ namespace Landscape2.Runtime.UiCommon
     {
         private readonly VisualElement tabRoot;
         private const string ClassNameTab = "tab";
+        private const string ClassNameTabRoot = "tabs";
         private const string ClassNameTabSelected = "tab-selected";
         private const string ClassNameContent = "tab-content";
         private const string ClassNameContentRoot = "tab-contents";
@@ -18,7 +20,9 @@ namespace Landscape2.Runtime.UiCommon
         public TabUI(VisualElement tabRoot)
         {
             this.tabRoot = tabRoot;
-            var tabs = GetAllTabs().ToList();
+            // var tabs = GetAllTabs().ToList();
+            var tabsRoot = tabRoot.Q(className : ClassNameTabRoot);
+            var tabs = tabsRoot.Children().Where(e => e.ClassListContains(ClassNameTab)).ToList();
 
             // タブとコンテンツを紐付けます。
             // タブの順番と、".tab-contents"の子の".tab-content"の順番が一致するものと過程して紐付けます。

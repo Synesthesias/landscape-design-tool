@@ -28,6 +28,7 @@ namespace Landscape2.Runtime
             // UIの設定
             Button saveButton = globalNavi.Q<Button>("SaveButton");
             Button loadButton = globalNavi.Q<Button>("LoadButton");
+
             saveButton.clicked += SaveProject;
             loadButton.clicked += LoadProject;
         }

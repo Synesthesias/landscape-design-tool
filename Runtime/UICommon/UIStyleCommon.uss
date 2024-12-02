@@ -820,6 +820,19 @@ Scroller #unity-drag-container {
     background-color: rgb(221, 228, 227);
 }
 
+.CircleButton {
+    width: 40px;
+    height: 40px;
+    background-color:#2F3636;
+    border-radius: 20px;
+    margin:0;
+    padding:0;
+}
+.CircleButton:hover {
+    background-color:#2F3636;
+}
+
+
 .OutlineButton {
     height: 40px;
     border-radius: 20px;
@@ -947,6 +960,7 @@ Scroller #unity-drag-container {
 .PanelIconButton:active {
     background-color: rgb(65, 71, 72);
 }
+
 
 #List {
     width: 100%;
@@ -1243,7 +1257,22 @@ Scroller #unity-drag-container {
     font-size: 24px;
     padding-left: 24px;
 }
-
+.Title_Left {
+        width: 490px;
+    height: 50px;
+    background-image: resource('Info_Title_Left');
+    font-size: 24px;
+    padding-right: 24px;
+    text-align: end;
+    -unity-text-align: upper-right;
+}
+.Title_Right {
+        width: 490px;
+    height: 50px;
+    background-image: resource('Info_Title_Right');
+    font-size: 24px;
+    padding-left: 24px;
+}
 #MainContainer {
     width: 100%;
     height: 100%;
@@ -1361,6 +1390,13 @@ Scroller #unity-drag-container {
     background-image: resource('Circle_Icon_Walk');
 }
 
+
+#Circle_Icon_View {
+    width: 40px;
+    height: 40px;
+    background-image: resource('Circle_Icon_View');
+}
+
 #IconExit {
     background-image: resource('Icon_Exit');
     max-width: 18px;
@@ -1369,6 +1405,16 @@ Scroller #unity-drag-container {
 
 #Icon_Up {
     background-image: resource('Icon_arrow-up');
+    max-width: 24px;
+    height: 24px;
+}
+#Icon_Back {
+    background-image: resource('Icon_Back');
+    max-width: 24px;
+    height: 24px;
+}
+#Icon_Building {
+    background-image: resource('Icon_Building');
     max-width: 24px;
     height: 24px;
 }
@@ -1409,6 +1455,9 @@ Scroller #unity-drag-container {
 
 #Icon_Import {
     background-image: resource('Icon_Import');
+}
+#Icon_Viewpoint {
+    background-image: resource('Icon_Viewpoint');
 }
 
 #AssetCategory_Tree {
@@ -1508,6 +1557,35 @@ Scroller #unity-drag-container {
     height: 1px;
     background-color: rgb(190, 201, 200);
     margin: 5px 0;
+}
+
+/* バッジ */
+.badge_Landmark {
+    width: 70px;
+    height:16px;
+    background-color:#FFC700;
+    border-width:1px;
+    border-color:white;
+    border-radius: 8px;
+    margin-right:4px;
+}
+.badge_ViewPoint {
+    width: 70px;
+    height:16px;
+    background-color:#BA1A1A;
+    border-width:1px;
+    border-color:white;
+    border-radius: 8px;
+    margin-right:4px;
+}
+.badge_ViewSetting {
+    width: 70px;
+    height:16px;
+    background-color:#006A6A;
+    border-width:1px;
+    border-color:white;
+    border-radius: 8px;
+    margin-right:4px;
 }
 
 .unity-base-dropdown .unity-text-element {

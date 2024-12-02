@@ -404,6 +404,34 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "LineOfSight",
+            "id": "59c71817-28da-4877-add9-b4fd84e91be8",
+            "actions": [
+                {
+                    "name": "select",
+                    "type": "Button",
+                    "id": "5475ee6e-b86c-4aaa-98d0-644f148ec417",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "f99ae765-b25a-47cf-9afe-65b904a65aef",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "select",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []
