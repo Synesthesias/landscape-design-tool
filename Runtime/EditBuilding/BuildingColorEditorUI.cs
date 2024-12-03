@@ -1,11 +1,10 @@
-﻿using Landscape2.Runtime.LandscapePlanLoader;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Landscape2.Runtime
+namespace Landscape2.Runtime.BuildingEditor
 {
     /// <summary>
     /// 建物編集の色彩を編集するUI
@@ -48,13 +47,16 @@ namespace Landscape2.Runtime
         private string[] uiBuildingFields = { "要素全体", "壁", "屋根/屋上" };
         // 色彩編集パネル表示ボタンの色
         private Color colorButtonColor;
-        // 初期化時の色
+        // 色彩編集パネル表示ボタンの初期色
         private Color initialColor;
+        // Smoothnessスライダーの初期値
+        private float initialSmoothness;
 
         public BuildingColorEditorUI(BuildingColorEditor buildingColorEditor,EditBuilding editBuilding,VisualElement uiRoot)
         {
             this.buildingColorEditor = buildingColorEditor;
-            initialColor = new Color(186 / 255f, 186 / 255f, 186 / 255f);
+            initialColor = buildingColorEditor.InitialColor;
+            initialSmoothness = buildingColorEditor.InitialSmoothness;
 
             // 建物編集画面の建物選択イベントに登録
             editBuilding.OnBuildingSelected += SetFieldList;
@@ -100,18 +102,11 @@ namespace Landscape2.Runtime
                 colorEditorClone.style.display = DisplayStyle.Flex;
             };
 
-            // Smoothnessスライダーの値が変更されたとき
-            smoothnessSlider.RegisterValueChangedCallback(evt =>
-            {
-                // Smoothnessを変更
-                buildingColorEditor.EditMaterialSmoothness(evt.newValue);
-            });
-
             // 変更ボタンが押されたとき
             okButton.clicked += () =>
             {
                 // 色を変更する
-                buildingColorEditor.EditMaterialColor(colorButtonColor);
+                buildingColorEditor.EditMaterialColor(colorButtonColor, smoothnessSlider.value);
             };
 
             // キャンセルボタンが押されたとき
@@ -130,7 +125,7 @@ namespace Landscape2.Runtime
             resetButton.clicked += () =>
             {
                 // 建物の色をリセット
-                buildingColorEditor.EditMaterialColor(initialColor);
+                buildingColorEditor.EditMaterialColor(initialColor, initialSmoothness);
                 // UIをリセット
                 colorEditorUI.ResetColorEditorUI(initialColor);
                 ResetBuildingEditorUI();

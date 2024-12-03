@@ -3,6 +3,7 @@ using Landscape2.Runtime.CameraPositionMemory;
 using Landscape2.Runtime.UiCommon;
 using Landscape2.Runtime.WeatherTimeEditor;
 using Landscape2.Runtime.LandscapePlanLoader;
+using Landscape2.Runtime.BuildingEditor;
 using UnityEngine.UIElements;
 using UnityEngine;
 using Cinemachine;
@@ -122,6 +123,8 @@ namespace Landscape2.Runtime
 
             var saveSystem = new SaveSystem(uiRoot);
             LandscapePlanSaveSystem.SetEvent(saveSystem);
+            var buildingSaveLoadSystem = new BuildingSaveLoadSystem();
+            buildingSaveLoadSystem.SetEvent(saveSystem);
 
             var cameraAutoRotate = new CameraAutoRotate();
             var gisDataLoaderUI = new GisDataLoaderUI(subMenuUxmls[(int)SubMenuUxmlType.Gis], saveSystem);
