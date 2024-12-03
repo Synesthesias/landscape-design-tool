@@ -6,6 +6,19 @@ namespace Landscape2.Runtime
 {
     public class CityModelHandler
     {
+        private static PLATEAUInstancedCityModel cityModel;
+        public static PLATEAUInstancedCityModel CityModel
+        {
+            get
+            {
+                if (cityModel == null)
+                {
+                    cityModel = GameObject.FindObjectOfType<PLATEAUInstancedCityModel>();
+                }
+                return cityModel;
+            }
+        }
+        
         private static List<PLATEAUCityObjectGroup> cityModelList = new ();
         public static List<PLATEAUCityObjectGroup> CityModelList
         {

@@ -8,6 +8,7 @@ using UnityEngine.UIElements;
 using UnityEngine;
 using Cinemachine;
 using Landscape2.Runtime.GisDataLoader;
+using Landscape2.Runtime.WalkerMode;
 using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.InputSystem;
 using System;
@@ -150,6 +151,7 @@ namespace Landscape2.Runtime
                 new CameraAutoRotateUI(cameraAutoRotate,uiRoot),
                 new BIMImport(subMenuUxmls[(int)SubMenuUxmlType.Bim]),
                 new LineOfSight(saveSystem,subMenuUxmls[(int)SubMenuUxmlType.Analytics]),
+                new WalkerModeUI(subMenuUxmls[(int)SubMenuUxmlType.WalkMode], landscapeCamera, walkerMoveByUserInput),
             };
 
         }

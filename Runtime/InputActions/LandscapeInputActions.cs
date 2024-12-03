@@ -15,14 +15,12 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 
-namespace Landscape2.Runtime
+public partial class @LandscapeInputActions: IInputActionCollection2, IDisposable
 {
-    public partial class @LandscapeInputActions : IInputActionCollection2, IDisposable
+    public InputActionAsset asset { get; }
+    public @LandscapeInputActions()
     {
-        public InputActionAsset asset { get; }
-        public @LandscapeInputActions()
-        {
-            asset = InputActionAsset.FromJson(@"{
+        asset = InputActionAsset.FromJson(@"{
     ""name"": ""LandscapeInputActions"",
     ""maps"": [
         {
@@ -456,411 +454,410 @@ namespace Landscape2.Runtime
                     ""isPartOfComposite"": false
                 }
             ]
-        }        
+        }
     ],
     ""controlSchemes"": []
 }");
-            // CameraMove
-            m_CameraMove = asset.FindActionMap("CameraMove", throwIfNotFound: true);
-            m_CameraMove_HorizontalMoveCameraByKeyboard = m_CameraMove.FindAction("HorizontalMoveCameraByKeyboard", throwIfNotFound: true);
-            m_CameraMove_VerticalMoveCameraByKeyboard = m_CameraMove.FindAction("VerticalMoveCameraByKeyboard", throwIfNotFound: true);
-            m_CameraMove_ParallelMoveCameraByMouse = m_CameraMove.FindAction("ParallelMoveCameraByMouse", throwIfNotFound: true);
-            m_CameraMove_ZoomMoveCameraByMouse = m_CameraMove.FindAction("ZoomMoveCameraByMouse", throwIfNotFound: true);
-            m_CameraMove_RotateCameraByMouse = m_CameraMove.FindAction("RotateCameraByMouse", throwIfNotFound: true);
-            // ArrangeAsset
-            m_ArrangeAsset = asset.FindActionMap("ArrangeAsset", throwIfNotFound: true);
-            m_ArrangeAsset_select = m_ArrangeAsset.FindAction("select", throwIfNotFound: true);
-            m_ArrangeAsset_cancel = m_ArrangeAsset.FindAction("cancel", throwIfNotFound: true);
-            // WalkerMove
-            m_WalkerMove = asset.FindActionMap("WalkerMove", throwIfNotFound: true);
-            m_WalkerMove_UpDown = m_WalkerMove.FindAction("UpDown", throwIfNotFound: true);
-            m_WalkerMove_WASD = m_WalkerMove.FindAction("WASD", throwIfNotFound: true);
-            m_WalkerMove_Wheel = m_WalkerMove.FindAction("Wheel", throwIfNotFound: true);
-            m_WalkerMove_RotateCameraByMouse = m_WalkerMove.FindAction("RotateCameraByMouse", throwIfNotFound: true);
-            // SelectCamPos
-            m_SelectCamPos = asset.FindActionMap("SelectCamPos", throwIfNotFound: true);
-            m_SelectCamPos_SelectPosByInput = m_SelectCamPos.FindAction("SelectPosByInput", throwIfNotFound: true);
-            // LineOfSight
-            m_LineOfSight = asset.FindActionMap("LineOfSight", throwIfNotFound: true);
-            m_LineOfSight_select = m_LineOfSight.FindAction("select", throwIfNotFound: true);
-        }
-
-        public void Dispose()
-        {
-            UnityEngine.Object.Destroy(asset);
-        }
-
-        public InputBinding? bindingMask
-        {
-            get => asset.bindingMask;
-            set => asset.bindingMask = value;
-        }
-
-        public ReadOnlyArray<InputDevice>? devices
-        {
-            get => asset.devices;
-            set => asset.devices = value;
-        }
-
-        public ReadOnlyArray<InputControlScheme> controlSchemes => asset.controlSchemes;
-
-        public bool Contains(InputAction action)
-        {
-            return asset.Contains(action);
-        }
-
-        public IEnumerator<InputAction> GetEnumerator()
-        {
-            return asset.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        public void Enable()
-        {
-            asset.Enable();
-        }
-
-        public void Disable()
-        {
-            asset.Disable();
-        }
-
-        public IEnumerable<InputBinding> bindings => asset.bindings;
-
-        public InputAction FindAction(string actionNameOrId, bool throwIfNotFound = false)
-        {
-            return asset.FindAction(actionNameOrId, throwIfNotFound);
-        }
-
-        public int FindBinding(InputBinding bindingMask, out InputAction action)
-        {
-            return asset.FindBinding(bindingMask, out action);
-        }
-
         // CameraMove
-        private readonly InputActionMap m_CameraMove;
-        private List<ICameraMoveActions> m_CameraMoveActionsCallbackInterfaces = new List<ICameraMoveActions>();
-        private readonly InputAction m_CameraMove_HorizontalMoveCameraByKeyboard;
-        private readonly InputAction m_CameraMove_VerticalMoveCameraByKeyboard;
-        private readonly InputAction m_CameraMove_ParallelMoveCameraByMouse;
-        private readonly InputAction m_CameraMove_ZoomMoveCameraByMouse;
-        private readonly InputAction m_CameraMove_RotateCameraByMouse;
-        public struct CameraMoveActions
-        {
-            private @LandscapeInputActions m_Wrapper;
-            public CameraMoveActions(@LandscapeInputActions wrapper) { m_Wrapper = wrapper; }
-            public InputAction @HorizontalMoveCameraByKeyboard => m_Wrapper.m_CameraMove_HorizontalMoveCameraByKeyboard;
-            public InputAction @VerticalMoveCameraByKeyboard => m_Wrapper.m_CameraMove_VerticalMoveCameraByKeyboard;
-            public InputAction @ParallelMoveCameraByMouse => m_Wrapper.m_CameraMove_ParallelMoveCameraByMouse;
-            public InputAction @ZoomMoveCameraByMouse => m_Wrapper.m_CameraMove_ZoomMoveCameraByMouse;
-            public InputAction @RotateCameraByMouse => m_Wrapper.m_CameraMove_RotateCameraByMouse;
-            public InputActionMap Get() { return m_Wrapper.m_CameraMove; }
-            public void Enable() { Get().Enable(); }
-            public void Disable() { Get().Disable(); }
-            public bool enabled => Get().enabled;
-            public static implicit operator InputActionMap(CameraMoveActions set) { return set.Get(); }
-            public void AddCallbacks(ICameraMoveActions instance)
-            {
-                if (instance == null || m_Wrapper.m_CameraMoveActionsCallbackInterfaces.Contains(instance)) return;
-                m_Wrapper.m_CameraMoveActionsCallbackInterfaces.Add(instance);
-                @HorizontalMoveCameraByKeyboard.started += instance.OnHorizontalMoveCameraByKeyboard;
-                @HorizontalMoveCameraByKeyboard.performed += instance.OnHorizontalMoveCameraByKeyboard;
-                @HorizontalMoveCameraByKeyboard.canceled += instance.OnHorizontalMoveCameraByKeyboard;
-                @VerticalMoveCameraByKeyboard.started += instance.OnVerticalMoveCameraByKeyboard;
-                @VerticalMoveCameraByKeyboard.performed += instance.OnVerticalMoveCameraByKeyboard;
-                @VerticalMoveCameraByKeyboard.canceled += instance.OnVerticalMoveCameraByKeyboard;
-                @ParallelMoveCameraByMouse.started += instance.OnParallelMoveCameraByMouse;
-                @ParallelMoveCameraByMouse.performed += instance.OnParallelMoveCameraByMouse;
-                @ParallelMoveCameraByMouse.canceled += instance.OnParallelMoveCameraByMouse;
-                @ZoomMoveCameraByMouse.started += instance.OnZoomMoveCameraByMouse;
-                @ZoomMoveCameraByMouse.performed += instance.OnZoomMoveCameraByMouse;
-                @ZoomMoveCameraByMouse.canceled += instance.OnZoomMoveCameraByMouse;
-                @RotateCameraByMouse.started += instance.OnRotateCameraByMouse;
-                @RotateCameraByMouse.performed += instance.OnRotateCameraByMouse;
-                @RotateCameraByMouse.canceled += instance.OnRotateCameraByMouse;
-            }
-
-            private void UnregisterCallbacks(ICameraMoveActions instance)
-            {
-                @HorizontalMoveCameraByKeyboard.started -= instance.OnHorizontalMoveCameraByKeyboard;
-                @HorizontalMoveCameraByKeyboard.performed -= instance.OnHorizontalMoveCameraByKeyboard;
-                @HorizontalMoveCameraByKeyboard.canceled -= instance.OnHorizontalMoveCameraByKeyboard;
-                @VerticalMoveCameraByKeyboard.started -= instance.OnVerticalMoveCameraByKeyboard;
-                @VerticalMoveCameraByKeyboard.performed -= instance.OnVerticalMoveCameraByKeyboard;
-                @VerticalMoveCameraByKeyboard.canceled -= instance.OnVerticalMoveCameraByKeyboard;
-                @ParallelMoveCameraByMouse.started -= instance.OnParallelMoveCameraByMouse;
-                @ParallelMoveCameraByMouse.performed -= instance.OnParallelMoveCameraByMouse;
-                @ParallelMoveCameraByMouse.canceled -= instance.OnParallelMoveCameraByMouse;
-                @ZoomMoveCameraByMouse.started -= instance.OnZoomMoveCameraByMouse;
-                @ZoomMoveCameraByMouse.performed -= instance.OnZoomMoveCameraByMouse;
-                @ZoomMoveCameraByMouse.canceled -= instance.OnZoomMoveCameraByMouse;
-                @RotateCameraByMouse.started -= instance.OnRotateCameraByMouse;
-                @RotateCameraByMouse.performed -= instance.OnRotateCameraByMouse;
-                @RotateCameraByMouse.canceled -= instance.OnRotateCameraByMouse;
-            }
-
-            public void RemoveCallbacks(ICameraMoveActions instance)
-            {
-                if (m_Wrapper.m_CameraMoveActionsCallbackInterfaces.Remove(instance))
-                    UnregisterCallbacks(instance);
-            }
-
-            public void SetCallbacks(ICameraMoveActions instance)
-            {
-                foreach (var item in m_Wrapper.m_CameraMoveActionsCallbackInterfaces)
-                    UnregisterCallbacks(item);
-                m_Wrapper.m_CameraMoveActionsCallbackInterfaces.Clear();
-                AddCallbacks(instance);
-            }
-        }
-        public CameraMoveActions @CameraMove => new CameraMoveActions(this);
-
+        m_CameraMove = asset.FindActionMap("CameraMove", throwIfNotFound: true);
+        m_CameraMove_HorizontalMoveCameraByKeyboard = m_CameraMove.FindAction("HorizontalMoveCameraByKeyboard", throwIfNotFound: true);
+        m_CameraMove_VerticalMoveCameraByKeyboard = m_CameraMove.FindAction("VerticalMoveCameraByKeyboard", throwIfNotFound: true);
+        m_CameraMove_ParallelMoveCameraByMouse = m_CameraMove.FindAction("ParallelMoveCameraByMouse", throwIfNotFound: true);
+        m_CameraMove_ZoomMoveCameraByMouse = m_CameraMove.FindAction("ZoomMoveCameraByMouse", throwIfNotFound: true);
+        m_CameraMove_RotateCameraByMouse = m_CameraMove.FindAction("RotateCameraByMouse", throwIfNotFound: true);
         // ArrangeAsset
-        private readonly InputActionMap m_ArrangeAsset;
-        private List<IArrangeAssetActions> m_ArrangeAssetActionsCallbackInterfaces = new List<IArrangeAssetActions>();
-        private readonly InputAction m_ArrangeAsset_select;
-        private readonly InputAction m_ArrangeAsset_cancel;
-        public struct ArrangeAssetActions
-        {
-            private @LandscapeInputActions m_Wrapper;
-            public ArrangeAssetActions(@LandscapeInputActions wrapper) { m_Wrapper = wrapper; }
-            public InputAction @select => m_Wrapper.m_ArrangeAsset_select;
-            public InputAction @cancel => m_Wrapper.m_ArrangeAsset_cancel;
-            public InputActionMap Get() { return m_Wrapper.m_ArrangeAsset; }
-            public void Enable() { Get().Enable(); }
-            public void Disable() { Get().Disable(); }
-            public bool enabled => Get().enabled;
-            public static implicit operator InputActionMap(ArrangeAssetActions set) { return set.Get(); }
-            public void AddCallbacks(IArrangeAssetActions instance)
-            {
-                if (instance == null || m_Wrapper.m_ArrangeAssetActionsCallbackInterfaces.Contains(instance)) return;
-                m_Wrapper.m_ArrangeAssetActionsCallbackInterfaces.Add(instance);
-                @select.started += instance.OnSelect;
-                @select.performed += instance.OnSelect;
-                @select.canceled += instance.OnSelect;
-                @cancel.started += instance.OnCancel;
-                @cancel.performed += instance.OnCancel;
-                @cancel.canceled += instance.OnCancel;
-            }
-
-            private void UnregisterCallbacks(IArrangeAssetActions instance)
-            {
-                @select.started -= instance.OnSelect;
-                @select.performed -= instance.OnSelect;
-                @select.canceled -= instance.OnSelect;
-                @cancel.started -= instance.OnCancel;
-                @cancel.performed -= instance.OnCancel;
-                @cancel.canceled -= instance.OnCancel;
-            }
-
-            public void RemoveCallbacks(IArrangeAssetActions instance)
-            {
-                if (m_Wrapper.m_ArrangeAssetActionsCallbackInterfaces.Remove(instance))
-                    UnregisterCallbacks(instance);
-            }
-
-            public void SetCallbacks(IArrangeAssetActions instance)
-            {
-                foreach (var item in m_Wrapper.m_ArrangeAssetActionsCallbackInterfaces)
-                    UnregisterCallbacks(item);
-                m_Wrapper.m_ArrangeAssetActionsCallbackInterfaces.Clear();
-                AddCallbacks(instance);
-            }
-        }
-        public ArrangeAssetActions @ArrangeAsset => new ArrangeAssetActions(this);
-
+        m_ArrangeAsset = asset.FindActionMap("ArrangeAsset", throwIfNotFound: true);
+        m_ArrangeAsset_select = m_ArrangeAsset.FindAction("select", throwIfNotFound: true);
+        m_ArrangeAsset_cancel = m_ArrangeAsset.FindAction("cancel", throwIfNotFound: true);
         // WalkerMove
-        private readonly InputActionMap m_WalkerMove;
-        private List<IWalkerMoveActions> m_WalkerMoveActionsCallbackInterfaces = new List<IWalkerMoveActions>();
-        private readonly InputAction m_WalkerMove_UpDown;
-        private readonly InputAction m_WalkerMove_WASD;
-        private readonly InputAction m_WalkerMove_Wheel;
-        private readonly InputAction m_WalkerMove_RotateCameraByMouse;
-        public struct WalkerMoveActions
-        {
-            private @LandscapeInputActions m_Wrapper;
-            public WalkerMoveActions(@LandscapeInputActions wrapper) { m_Wrapper = wrapper; }
-            public InputAction @UpDown => m_Wrapper.m_WalkerMove_UpDown;
-            public InputAction @WASD => m_Wrapper.m_WalkerMove_WASD;
-            public InputAction @Wheel => m_Wrapper.m_WalkerMove_Wheel;
-            public InputAction @RotateCameraByMouse => m_Wrapper.m_WalkerMove_RotateCameraByMouse;
-            public InputActionMap Get() { return m_Wrapper.m_WalkerMove; }
-            public void Enable() { Get().Enable(); }
-            public void Disable() { Get().Disable(); }
-            public bool enabled => Get().enabled;
-            public static implicit operator InputActionMap(WalkerMoveActions set) { return set.Get(); }
-            public void AddCallbacks(IWalkerMoveActions instance)
-            {
-                if (instance == null || m_Wrapper.m_WalkerMoveActionsCallbackInterfaces.Contains(instance)) return;
-                m_Wrapper.m_WalkerMoveActionsCallbackInterfaces.Add(instance);
-                @UpDown.started += instance.OnUpDown;
-                @UpDown.performed += instance.OnUpDown;
-                @UpDown.canceled += instance.OnUpDown;
-                @WASD.started += instance.OnWASD;
-                @WASD.performed += instance.OnWASD;
-                @WASD.canceled += instance.OnWASD;
-                @Wheel.started += instance.OnWheel;
-                @Wheel.performed += instance.OnWheel;
-                @Wheel.canceled += instance.OnWheel;
-                @RotateCameraByMouse.started += instance.OnRotateCameraByMouse;
-                @RotateCameraByMouse.performed += instance.OnRotateCameraByMouse;
-                @RotateCameraByMouse.canceled += instance.OnRotateCameraByMouse;
-            }
-
-            private void UnregisterCallbacks(IWalkerMoveActions instance)
-            {
-                @UpDown.started -= instance.OnUpDown;
-                @UpDown.performed -= instance.OnUpDown;
-                @UpDown.canceled -= instance.OnUpDown;
-                @WASD.started -= instance.OnWASD;
-                @WASD.performed -= instance.OnWASD;
-                @WASD.canceled -= instance.OnWASD;
-                @Wheel.started -= instance.OnWheel;
-                @Wheel.performed -= instance.OnWheel;
-                @Wheel.canceled -= instance.OnWheel;
-                @RotateCameraByMouse.started -= instance.OnRotateCameraByMouse;
-                @RotateCameraByMouse.performed -= instance.OnRotateCameraByMouse;
-                @RotateCameraByMouse.canceled -= instance.OnRotateCameraByMouse;
-            }
-
-            public void RemoveCallbacks(IWalkerMoveActions instance)
-            {
-                if (m_Wrapper.m_WalkerMoveActionsCallbackInterfaces.Remove(instance))
-                    UnregisterCallbacks(instance);
-            }
-
-            public void SetCallbacks(IWalkerMoveActions instance)
-            {
-                foreach (var item in m_Wrapper.m_WalkerMoveActionsCallbackInterfaces)
-                    UnregisterCallbacks(item);
-                m_Wrapper.m_WalkerMoveActionsCallbackInterfaces.Clear();
-                AddCallbacks(instance);
-            }
-        }
-        public WalkerMoveActions @WalkerMove => new WalkerMoveActions(this);
-
+        m_WalkerMove = asset.FindActionMap("WalkerMove", throwIfNotFound: true);
+        m_WalkerMove_UpDown = m_WalkerMove.FindAction("UpDown", throwIfNotFound: true);
+        m_WalkerMove_WASD = m_WalkerMove.FindAction("WASD", throwIfNotFound: true);
+        m_WalkerMove_Wheel = m_WalkerMove.FindAction("Wheel", throwIfNotFound: true);
+        m_WalkerMove_RotateCameraByMouse = m_WalkerMove.FindAction("RotateCameraByMouse", throwIfNotFound: true);
         // SelectCamPos
-        private readonly InputActionMap m_SelectCamPos;
-        private List<ISelectCamPosActions> m_SelectCamPosActionsCallbackInterfaces = new List<ISelectCamPosActions>();
-        private readonly InputAction m_SelectCamPos_SelectPosByInput;
-        public struct SelectCamPosActions
-        {
-            private @LandscapeInputActions m_Wrapper;
-            public SelectCamPosActions(@LandscapeInputActions wrapper) { m_Wrapper = wrapper; }
-            public InputAction @SelectPosByInput => m_Wrapper.m_SelectCamPos_SelectPosByInput;
-            public InputActionMap Get() { return m_Wrapper.m_SelectCamPos; }
-            public void Enable() { Get().Enable(); }
-            public void Disable() { Get().Disable(); }
-            public bool enabled => Get().enabled;
-            public static implicit operator InputActionMap(SelectCamPosActions set) { return set.Get(); }
-            public void AddCallbacks(ISelectCamPosActions instance)
-            {
-                if (instance == null || m_Wrapper.m_SelectCamPosActionsCallbackInterfaces.Contains(instance)) return;
-                m_Wrapper.m_SelectCamPosActionsCallbackInterfaces.Add(instance);
-                @SelectPosByInput.started += instance.OnSelectPosByInput;
-                @SelectPosByInput.performed += instance.OnSelectPosByInput;
-                @SelectPosByInput.canceled += instance.OnSelectPosByInput;
-            }
-
-            private void UnregisterCallbacks(ISelectCamPosActions instance)
-            {
-                @SelectPosByInput.started -= instance.OnSelectPosByInput;
-                @SelectPosByInput.performed -= instance.OnSelectPosByInput;
-                @SelectPosByInput.canceled -= instance.OnSelectPosByInput;
-            }
-
-            public void RemoveCallbacks(ISelectCamPosActions instance)
-            {
-                if (m_Wrapper.m_SelectCamPosActionsCallbackInterfaces.Remove(instance))
-                    UnregisterCallbacks(instance);
-            }
-
-            public void SetCallbacks(ISelectCamPosActions instance)
-            {
-                foreach (var item in m_Wrapper.m_SelectCamPosActionsCallbackInterfaces)
-                    UnregisterCallbacks(item);
-                m_Wrapper.m_SelectCamPosActionsCallbackInterfaces.Clear();
-                AddCallbacks(instance);
-            }
-        }
-        public SelectCamPosActions @SelectCamPos => new SelectCamPosActions(this);
-        public interface ICameraMoveActions
-        {
-            void OnHorizontalMoveCameraByKeyboard(InputAction.CallbackContext context);
-            void OnVerticalMoveCameraByKeyboard(InputAction.CallbackContext context);
-            void OnParallelMoveCameraByMouse(InputAction.CallbackContext context);
-            void OnZoomMoveCameraByMouse(InputAction.CallbackContext context);
-            void OnRotateCameraByMouse(InputAction.CallbackContext context);
-        }
-        public interface IArrangeAssetActions
-        {
-            void OnSelect(InputAction.CallbackContext context);
-            void OnCancel(InputAction.CallbackContext context);
-        }
-        public interface IWalkerMoveActions
-        {
-            void OnUpDown(InputAction.CallbackContext context);
-            void OnWASD(InputAction.CallbackContext context);
-            void OnWheel(InputAction.CallbackContext context);
-            void OnRotateCameraByMouse(InputAction.CallbackContext context);
-        }
-        public interface ISelectCamPosActions
-        {
-            void OnSelectPosByInput(InputAction.CallbackContext context);
-        }
-
+        m_SelectCamPos = asset.FindActionMap("SelectCamPos", throwIfNotFound: true);
+        m_SelectCamPos_SelectPosByInput = m_SelectCamPos.FindAction("SelectPosByInput", throwIfNotFound: true);
         // LineOfSight
-        private readonly InputActionMap m_LineOfSight;
-        private List<ILineOfSightActions> m_LineOfSightActionsCallbackInterfaces = new List<ILineOfSightActions>();
-        private readonly InputAction m_LineOfSight_select;
-        public struct LineOfSightActions
+        m_LineOfSight = asset.FindActionMap("LineOfSight", throwIfNotFound: true);
+        m_LineOfSight_select = m_LineOfSight.FindAction("select", throwIfNotFound: true);
+    }
+
+    public void Dispose()
+    {
+        UnityEngine.Object.Destroy(asset);
+    }
+
+    public InputBinding? bindingMask
+    {
+        get => asset.bindingMask;
+        set => asset.bindingMask = value;
+    }
+
+    public ReadOnlyArray<InputDevice>? devices
+    {
+        get => asset.devices;
+        set => asset.devices = value;
+    }
+
+    public ReadOnlyArray<InputControlScheme> controlSchemes => asset.controlSchemes;
+
+    public bool Contains(InputAction action)
+    {
+        return asset.Contains(action);
+    }
+
+    public IEnumerator<InputAction> GetEnumerator()
+    {
+        return asset.GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
+
+    public void Enable()
+    {
+        asset.Enable();
+    }
+
+    public void Disable()
+    {
+        asset.Disable();
+    }
+
+    public IEnumerable<InputBinding> bindings => asset.bindings;
+
+    public InputAction FindAction(string actionNameOrId, bool throwIfNotFound = false)
+    {
+        return asset.FindAction(actionNameOrId, throwIfNotFound);
+    }
+
+    public int FindBinding(InputBinding bindingMask, out InputAction action)
+    {
+        return asset.FindBinding(bindingMask, out action);
+    }
+
+    // CameraMove
+    private readonly InputActionMap m_CameraMove;
+    private List<ICameraMoveActions> m_CameraMoveActionsCallbackInterfaces = new List<ICameraMoveActions>();
+    private readonly InputAction m_CameraMove_HorizontalMoveCameraByKeyboard;
+    private readonly InputAction m_CameraMove_VerticalMoveCameraByKeyboard;
+    private readonly InputAction m_CameraMove_ParallelMoveCameraByMouse;
+    private readonly InputAction m_CameraMove_ZoomMoveCameraByMouse;
+    private readonly InputAction m_CameraMove_RotateCameraByMouse;
+    public struct CameraMoveActions
+    {
+        private @LandscapeInputActions m_Wrapper;
+        public CameraMoveActions(@LandscapeInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @HorizontalMoveCameraByKeyboard => m_Wrapper.m_CameraMove_HorizontalMoveCameraByKeyboard;
+        public InputAction @VerticalMoveCameraByKeyboard => m_Wrapper.m_CameraMove_VerticalMoveCameraByKeyboard;
+        public InputAction @ParallelMoveCameraByMouse => m_Wrapper.m_CameraMove_ParallelMoveCameraByMouse;
+        public InputAction @ZoomMoveCameraByMouse => m_Wrapper.m_CameraMove_ZoomMoveCameraByMouse;
+        public InputAction @RotateCameraByMouse => m_Wrapper.m_CameraMove_RotateCameraByMouse;
+        public InputActionMap Get() { return m_Wrapper.m_CameraMove; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(CameraMoveActions set) { return set.Get(); }
+        public void AddCallbacks(ICameraMoveActions instance)
         {
-            private @LandscapeInputActions m_Wrapper;
-            public LineOfSightActions(@LandscapeInputActions wrapper) { m_Wrapper = wrapper; }
-            public InputAction @select => m_Wrapper.m_LineOfSight_select;
-            public InputActionMap Get() { return m_Wrapper.m_LineOfSight; }
-            public void Enable() { Get().Enable(); }
-            public void Disable() { Get().Disable(); }
-            public bool enabled => Get().enabled;
-            public static implicit operator InputActionMap(LineOfSightActions set) { return set.Get(); }
-            public void AddCallbacks(ILineOfSightActions instance)
-            {
-                if (instance == null || m_Wrapper.m_LineOfSightActionsCallbackInterfaces.Contains(instance)) return;
-                m_Wrapper.m_LineOfSightActionsCallbackInterfaces.Add(instance);
-                @select.started += instance.OnSelect;
-                @select.performed += instance.OnSelect;
-                @select.canceled += instance.OnSelect;
-            }
-
-            private void UnregisterCallbacks(ILineOfSightActions instance)
-            {
-                @select.started -= instance.OnSelect;
-                @select.performed -= instance.OnSelect;
-                @select.canceled -= instance.OnSelect;
-            }
-
-            public void RemoveCallbacks(ILineOfSightActions instance)
-            {
-                if (m_Wrapper.m_LineOfSightActionsCallbackInterfaces.Remove(instance))
-                    UnregisterCallbacks(instance);
-            }
-
-            public void SetCallbacks(ILineOfSightActions instance)
-            {
-                foreach (var item in m_Wrapper.m_LineOfSightActionsCallbackInterfaces)
-                    UnregisterCallbacks(item);
-                m_Wrapper.m_LineOfSightActionsCallbackInterfaces.Clear();
-                AddCallbacks(instance);
-            }
+            if (instance == null || m_Wrapper.m_CameraMoveActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_CameraMoveActionsCallbackInterfaces.Add(instance);
+            @HorizontalMoveCameraByKeyboard.started += instance.OnHorizontalMoveCameraByKeyboard;
+            @HorizontalMoveCameraByKeyboard.performed += instance.OnHorizontalMoveCameraByKeyboard;
+            @HorizontalMoveCameraByKeyboard.canceled += instance.OnHorizontalMoveCameraByKeyboard;
+            @VerticalMoveCameraByKeyboard.started += instance.OnVerticalMoveCameraByKeyboard;
+            @VerticalMoveCameraByKeyboard.performed += instance.OnVerticalMoveCameraByKeyboard;
+            @VerticalMoveCameraByKeyboard.canceled += instance.OnVerticalMoveCameraByKeyboard;
+            @ParallelMoveCameraByMouse.started += instance.OnParallelMoveCameraByMouse;
+            @ParallelMoveCameraByMouse.performed += instance.OnParallelMoveCameraByMouse;
+            @ParallelMoveCameraByMouse.canceled += instance.OnParallelMoveCameraByMouse;
+            @ZoomMoveCameraByMouse.started += instance.OnZoomMoveCameraByMouse;
+            @ZoomMoveCameraByMouse.performed += instance.OnZoomMoveCameraByMouse;
+            @ZoomMoveCameraByMouse.canceled += instance.OnZoomMoveCameraByMouse;
+            @RotateCameraByMouse.started += instance.OnRotateCameraByMouse;
+            @RotateCameraByMouse.performed += instance.OnRotateCameraByMouse;
+            @RotateCameraByMouse.canceled += instance.OnRotateCameraByMouse;
         }
-        public LineOfSightActions @LineOfSight => new LineOfSightActions(this);
-        public interface ILineOfSightActions
+
+        private void UnregisterCallbacks(ICameraMoveActions instance)
         {
-            void OnSelect(InputAction.CallbackContext context);
+            @HorizontalMoveCameraByKeyboard.started -= instance.OnHorizontalMoveCameraByKeyboard;
+            @HorizontalMoveCameraByKeyboard.performed -= instance.OnHorizontalMoveCameraByKeyboard;
+            @HorizontalMoveCameraByKeyboard.canceled -= instance.OnHorizontalMoveCameraByKeyboard;
+            @VerticalMoveCameraByKeyboard.started -= instance.OnVerticalMoveCameraByKeyboard;
+            @VerticalMoveCameraByKeyboard.performed -= instance.OnVerticalMoveCameraByKeyboard;
+            @VerticalMoveCameraByKeyboard.canceled -= instance.OnVerticalMoveCameraByKeyboard;
+            @ParallelMoveCameraByMouse.started -= instance.OnParallelMoveCameraByMouse;
+            @ParallelMoveCameraByMouse.performed -= instance.OnParallelMoveCameraByMouse;
+            @ParallelMoveCameraByMouse.canceled -= instance.OnParallelMoveCameraByMouse;
+            @ZoomMoveCameraByMouse.started -= instance.OnZoomMoveCameraByMouse;
+            @ZoomMoveCameraByMouse.performed -= instance.OnZoomMoveCameraByMouse;
+            @ZoomMoveCameraByMouse.canceled -= instance.OnZoomMoveCameraByMouse;
+            @RotateCameraByMouse.started -= instance.OnRotateCameraByMouse;
+            @RotateCameraByMouse.performed -= instance.OnRotateCameraByMouse;
+            @RotateCameraByMouse.canceled -= instance.OnRotateCameraByMouse;
         }
+
+        public void RemoveCallbacks(ICameraMoveActions instance)
+        {
+            if (m_Wrapper.m_CameraMoveActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(ICameraMoveActions instance)
+        {
+            foreach (var item in m_Wrapper.m_CameraMoveActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_CameraMoveActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public CameraMoveActions @CameraMove => new CameraMoveActions(this);
+
+    // ArrangeAsset
+    private readonly InputActionMap m_ArrangeAsset;
+    private List<IArrangeAssetActions> m_ArrangeAssetActionsCallbackInterfaces = new List<IArrangeAssetActions>();
+    private readonly InputAction m_ArrangeAsset_select;
+    private readonly InputAction m_ArrangeAsset_cancel;
+    public struct ArrangeAssetActions
+    {
+        private @LandscapeInputActions m_Wrapper;
+        public ArrangeAssetActions(@LandscapeInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @select => m_Wrapper.m_ArrangeAsset_select;
+        public InputAction @cancel => m_Wrapper.m_ArrangeAsset_cancel;
+        public InputActionMap Get() { return m_Wrapper.m_ArrangeAsset; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(ArrangeAssetActions set) { return set.Get(); }
+        public void AddCallbacks(IArrangeAssetActions instance)
+        {
+            if (instance == null || m_Wrapper.m_ArrangeAssetActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_ArrangeAssetActionsCallbackInterfaces.Add(instance);
+            @select.started += instance.OnSelect;
+            @select.performed += instance.OnSelect;
+            @select.canceled += instance.OnSelect;
+            @cancel.started += instance.OnCancel;
+            @cancel.performed += instance.OnCancel;
+            @cancel.canceled += instance.OnCancel;
+        }
+
+        private void UnregisterCallbacks(IArrangeAssetActions instance)
+        {
+            @select.started -= instance.OnSelect;
+            @select.performed -= instance.OnSelect;
+            @select.canceled -= instance.OnSelect;
+            @cancel.started -= instance.OnCancel;
+            @cancel.performed -= instance.OnCancel;
+            @cancel.canceled -= instance.OnCancel;
+        }
+
+        public void RemoveCallbacks(IArrangeAssetActions instance)
+        {
+            if (m_Wrapper.m_ArrangeAssetActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IArrangeAssetActions instance)
+        {
+            foreach (var item in m_Wrapper.m_ArrangeAssetActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_ArrangeAssetActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public ArrangeAssetActions @ArrangeAsset => new ArrangeAssetActions(this);
+
+    // WalkerMove
+    private readonly InputActionMap m_WalkerMove;
+    private List<IWalkerMoveActions> m_WalkerMoveActionsCallbackInterfaces = new List<IWalkerMoveActions>();
+    private readonly InputAction m_WalkerMove_UpDown;
+    private readonly InputAction m_WalkerMove_WASD;
+    private readonly InputAction m_WalkerMove_Wheel;
+    private readonly InputAction m_WalkerMove_RotateCameraByMouse;
+    public struct WalkerMoveActions
+    {
+        private @LandscapeInputActions m_Wrapper;
+        public WalkerMoveActions(@LandscapeInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @UpDown => m_Wrapper.m_WalkerMove_UpDown;
+        public InputAction @WASD => m_Wrapper.m_WalkerMove_WASD;
+        public InputAction @Wheel => m_Wrapper.m_WalkerMove_Wheel;
+        public InputAction @RotateCameraByMouse => m_Wrapper.m_WalkerMove_RotateCameraByMouse;
+        public InputActionMap Get() { return m_Wrapper.m_WalkerMove; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(WalkerMoveActions set) { return set.Get(); }
+        public void AddCallbacks(IWalkerMoveActions instance)
+        {
+            if (instance == null || m_Wrapper.m_WalkerMoveActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_WalkerMoveActionsCallbackInterfaces.Add(instance);
+            @UpDown.started += instance.OnUpDown;
+            @UpDown.performed += instance.OnUpDown;
+            @UpDown.canceled += instance.OnUpDown;
+            @WASD.started += instance.OnWASD;
+            @WASD.performed += instance.OnWASD;
+            @WASD.canceled += instance.OnWASD;
+            @Wheel.started += instance.OnWheel;
+            @Wheel.performed += instance.OnWheel;
+            @Wheel.canceled += instance.OnWheel;
+            @RotateCameraByMouse.started += instance.OnRotateCameraByMouse;
+            @RotateCameraByMouse.performed += instance.OnRotateCameraByMouse;
+            @RotateCameraByMouse.canceled += instance.OnRotateCameraByMouse;
+        }
+
+        private void UnregisterCallbacks(IWalkerMoveActions instance)
+        {
+            @UpDown.started -= instance.OnUpDown;
+            @UpDown.performed -= instance.OnUpDown;
+            @UpDown.canceled -= instance.OnUpDown;
+            @WASD.started -= instance.OnWASD;
+            @WASD.performed -= instance.OnWASD;
+            @WASD.canceled -= instance.OnWASD;
+            @Wheel.started -= instance.OnWheel;
+            @Wheel.performed -= instance.OnWheel;
+            @Wheel.canceled -= instance.OnWheel;
+            @RotateCameraByMouse.started -= instance.OnRotateCameraByMouse;
+            @RotateCameraByMouse.performed -= instance.OnRotateCameraByMouse;
+            @RotateCameraByMouse.canceled -= instance.OnRotateCameraByMouse;
+        }
+
+        public void RemoveCallbacks(IWalkerMoveActions instance)
+        {
+            if (m_Wrapper.m_WalkerMoveActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IWalkerMoveActions instance)
+        {
+            foreach (var item in m_Wrapper.m_WalkerMoveActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_WalkerMoveActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public WalkerMoveActions @WalkerMove => new WalkerMoveActions(this);
+
+    // SelectCamPos
+    private readonly InputActionMap m_SelectCamPos;
+    private List<ISelectCamPosActions> m_SelectCamPosActionsCallbackInterfaces = new List<ISelectCamPosActions>();
+    private readonly InputAction m_SelectCamPos_SelectPosByInput;
+    public struct SelectCamPosActions
+    {
+        private @LandscapeInputActions m_Wrapper;
+        public SelectCamPosActions(@LandscapeInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @SelectPosByInput => m_Wrapper.m_SelectCamPos_SelectPosByInput;
+        public InputActionMap Get() { return m_Wrapper.m_SelectCamPos; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(SelectCamPosActions set) { return set.Get(); }
+        public void AddCallbacks(ISelectCamPosActions instance)
+        {
+            if (instance == null || m_Wrapper.m_SelectCamPosActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_SelectCamPosActionsCallbackInterfaces.Add(instance);
+            @SelectPosByInput.started += instance.OnSelectPosByInput;
+            @SelectPosByInput.performed += instance.OnSelectPosByInput;
+            @SelectPosByInput.canceled += instance.OnSelectPosByInput;
+        }
+
+        private void UnregisterCallbacks(ISelectCamPosActions instance)
+        {
+            @SelectPosByInput.started -= instance.OnSelectPosByInput;
+            @SelectPosByInput.performed -= instance.OnSelectPosByInput;
+            @SelectPosByInput.canceled -= instance.OnSelectPosByInput;
+        }
+
+        public void RemoveCallbacks(ISelectCamPosActions instance)
+        {
+            if (m_Wrapper.m_SelectCamPosActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(ISelectCamPosActions instance)
+        {
+            foreach (var item in m_Wrapper.m_SelectCamPosActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_SelectCamPosActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public SelectCamPosActions @SelectCamPos => new SelectCamPosActions(this);
+
+    // LineOfSight
+    private readonly InputActionMap m_LineOfSight;
+    private List<ILineOfSightActions> m_LineOfSightActionsCallbackInterfaces = new List<ILineOfSightActions>();
+    private readonly InputAction m_LineOfSight_select;
+    public struct LineOfSightActions
+    {
+        private @LandscapeInputActions m_Wrapper;
+        public LineOfSightActions(@LandscapeInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @select => m_Wrapper.m_LineOfSight_select;
+        public InputActionMap Get() { return m_Wrapper.m_LineOfSight; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(LineOfSightActions set) { return set.Get(); }
+        public void AddCallbacks(ILineOfSightActions instance)
+        {
+            if (instance == null || m_Wrapper.m_LineOfSightActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_LineOfSightActionsCallbackInterfaces.Add(instance);
+            @select.started += instance.OnSelect;
+            @select.performed += instance.OnSelect;
+            @select.canceled += instance.OnSelect;
+        }
+
+        private void UnregisterCallbacks(ILineOfSightActions instance)
+        {
+            @select.started -= instance.OnSelect;
+            @select.performed -= instance.OnSelect;
+            @select.canceled -= instance.OnSelect;
+        }
+
+        public void RemoveCallbacks(ILineOfSightActions instance)
+        {
+            if (m_Wrapper.m_LineOfSightActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(ILineOfSightActions instance)
+        {
+            foreach (var item in m_Wrapper.m_LineOfSightActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_LineOfSightActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public LineOfSightActions @LineOfSight => new LineOfSightActions(this);
+    public interface ICameraMoveActions
+    {
+        void OnHorizontalMoveCameraByKeyboard(InputAction.CallbackContext context);
+        void OnVerticalMoveCameraByKeyboard(InputAction.CallbackContext context);
+        void OnParallelMoveCameraByMouse(InputAction.CallbackContext context);
+        void OnZoomMoveCameraByMouse(InputAction.CallbackContext context);
+        void OnRotateCameraByMouse(InputAction.CallbackContext context);
+    }
+    public interface IArrangeAssetActions
+    {
+        void OnSelect(InputAction.CallbackContext context);
+        void OnCancel(InputAction.CallbackContext context);
+    }
+    public interface IWalkerMoveActions
+    {
+        void OnUpDown(InputAction.CallbackContext context);
+        void OnWASD(InputAction.CallbackContext context);
+        void OnWheel(InputAction.CallbackContext context);
+        void OnRotateCameraByMouse(InputAction.CallbackContext context);
+    }
+    public interface ISelectCamPosActions
+    {
+        void OnSelectPosByInput(InputAction.CallbackContext context);
+    }
+    public interface ILineOfSightActions
+    {
+        void OnSelect(InputAction.CallbackContext context);
     }
 }

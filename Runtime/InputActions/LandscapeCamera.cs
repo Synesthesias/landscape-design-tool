@@ -47,6 +47,15 @@ namespace Landscape2.Runtime
             walker.transform.position = pos;
             cc.enabled = true;
         }
+        
+        /// <summary>
+        /// 歩行者視点カメラのPositionを取得する
+        /// </summary>
+        /// <returns></returns>
+        public Vector3 GetWalkerPos()
+        {
+            return walker.transform.position;
+        }
 
         /// <summary>
         /// カメラの状態を変更する

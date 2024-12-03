@@ -25,14 +25,14 @@
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="CenterContainer" picking-mode="Ignore" style="flex-grow: 1; width: 100%; padding-top: 140px;">
-            <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-between; padding-right: 8px; padding-left: 8px; padding-bottom: 8px; padding-top: 8px;">
+            <ui:VisualElement name="container_coordinate" picking-mode="Ignore" style="flex-grow: 1; flex-direction: row; justify-content: space-between; padding-right: 8px; padding-left: 8px; padding-bottom: 8px; padding-top: 8px;">
                 <ui:VisualElement name="container_latitude" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0.71); width: 400px; height: 40px; flex-shrink: 0; border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; padding-right: 8px; padding-left: 8px; padding-bottom: 2px; padding-top: 2px; flex-direction: row; justify-content: flex-start;">
                     <ui:VisualElement name="VisualElement" style="flex-grow: 1; flex-direction: row;">
                         <ui:Label tabindex="-1" text="緯度:" parse-escape-sequences="true" display-tooltip-when-elided="true" name="label_latitude" />
                         <ui:Label tabindex="-1" text="0000" parse-escape-sequences="true" display-tooltip-when-elided="true" name="latitude" />
                     </ui:VisualElement>
                     <ui:VisualElement name="VisualElement" style="flex-grow: 1; flex-direction: row;">
-                        <ui:Label tabindex="-1" text="緯度:" parse-escape-sequences="true" display-tooltip-when-elided="true" name="label_longitude" />
+                        <ui:Label tabindex="-1" text="経度:" parse-escape-sequences="true" display-tooltip-when-elided="true" name="label_longitude" />
                         <ui:Label tabindex="-1" text="0000" parse-escape-sequences="true" display-tooltip-when-elided="true" name="longitude" />
                     </ui:VisualElement>
                 </ui:VisualElement>
@@ -43,8 +43,8 @@
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="VisualElement" style="flex-grow: 1; justify-content: flex-end; margin-bottom: 60px;">
-                <ui:Instance template="AngleController" name="AngleController" />
+            <ui:VisualElement name="VisualElement" picking-mode="Ignore" style="flex-grow: 1; justify-content: flex-end; margin-bottom: 60px;">
+                <ui:Instance template="AngleController" picking-mode="Ignore" name="AngleController" />
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="RightContainer" picking-mode="Ignore" style="flex-grow: 1; flex-shrink: 0;">

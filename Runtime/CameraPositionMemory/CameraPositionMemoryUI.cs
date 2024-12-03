@@ -97,6 +97,11 @@ namespace Landscape2.Runtime.CameraPositionMemory
             uiRootWalkMode.Q<TemplateContainer>(WalkEditor).Q<Button>("DownButton").clicked += () => OnClickedOffsetYDOWNButton();
 
             walkControllerHeightText = uiRootWalkMode.Q<Label>("HeightText");
+            var walkControllerHeightUp  = uiRootWalkMode.Q<TemplateContainer>("Panel_WalkController").Q<Button>("UpButton");
+            var walkControllerHeightDown  = uiRootWalkMode.Q<TemplateContainer>("Panel_WalkController").Q<Button>("DownButton");
+            walkControllerHeightUp.clicked += () => OnClickedOffsetYUPButton();
+            walkControllerHeightDown.clicked += () => OnClickedOffsetYDOWNButton();
+            
             walkControllerW = uiRootWalkMode.Q<Button>("FPSForwardButton");
             walkControllerS = uiRootWalkMode.Q<Button>("FpsBackButton");
             walkControllerA = uiRootWalkMode.Q<Button>("FpsLeftButton");

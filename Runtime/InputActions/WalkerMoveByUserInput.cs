@@ -1,6 +1,7 @@
 using UnityEngine.InputSystem;
 using UnityEngine;
 using Cinemachine;
+using System.Threading.Tasks;
 using UnityEngine.UIElements;
 
 namespace Landscape2.Runtime
@@ -202,6 +203,31 @@ namespace Landscape2.Runtime
             {
                 Debug.LogError("CinemachineTransposer component not found");
             }
+        }
+
+        public async void AddRotateWithDuration(Vector2 rotationDelta)
+        {
+            const float duration = 0.2f; // 移動時間
+            
+            var startAngles = camera.transform.eulerAngles;
+            var newAngles = camera.transform.eulerAngles;
+            newAngles.x -= rotationDelta.y;
+            newAngles.y += rotationDelta.x;
+            newAngles.z = 0f;
+            
+            var elapsedTime = 0f;
+            while (elapsedTime < duration)
+            {
+                camera.transform.rotation = Quaternion.Lerp(Quaternion.Euler(startAngles), Quaternion.Euler(newAngles), elapsedTime / duration);
+                elapsedTime += Time.deltaTime;
+                await Task.Yield();
+            }
+            camera.transform.eulerAngles = newAngles;
+        }
+        
+        public Transform GetWalkerCameraTransform()
+        {
+            return camera.transform;
         }
     }
 }
