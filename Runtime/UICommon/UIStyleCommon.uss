@@ -1325,6 +1325,9 @@ Scroller #unity-drag-container {
 #Toggle_HeightDisplay {
     background-image: resource('Icon_HeightDisplay');
 }
+#Toggle_Material {
+    background-image: resource('Icon_Material');
+}
 
 #Toggle_HideList {
     background-image: resource('Icon_Eye_On');

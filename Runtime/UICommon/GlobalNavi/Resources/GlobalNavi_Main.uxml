@@ -48,6 +48,7 @@
                     <ui:Toggle label="Toggle" name="Toggle_HideUI" tooltip="UIを非表示します" />
                     <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="Button_Capture" class="gnavi_fuction_button" />
                     <ui:Toggle label="Toggle" name="Toggle_HeightDisplay" tooltip="建物高さ可視化" usage-hints="-1" style="background-image: resource(&apos;Icon_HeightDisplay&apos;); width: 50px; height: 50px;" />
+                    <ui:Toggle label="Toggle" name="Toggle_Material" />
                 </ui:VisualElement>
                 <ui:VisualElement name="SettingContainer" style="flex-grow: 1; margin-right: 16px; margin-top: 0;">
                     <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="Button_Setting" style="width: 50px; height: 50px;" />

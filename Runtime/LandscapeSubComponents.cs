@@ -151,6 +151,7 @@ namespace Landscape2.Runtime
                 new CameraAutoRotateUI(cameraAutoRotate,uiRoot),
                 new BIMImport(subMenuUxmls[(int)SubMenuUxmlType.Bim]),
                 new LineOfSight(saveSystem,subMenuUxmls[(int)SubMenuUxmlType.Analytics]),
+                new TextureSwitch(uiRoot),
                 new WalkerModeUI(subMenuUxmls[(int)SubMenuUxmlType.WalkMode], landscapeCamera, walkerMoveByUserInput),
             };
 
