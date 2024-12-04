@@ -72,7 +72,7 @@
                 <ui:Button text="作成" parse-escape-sequences="true" display-tooltip-when-elided="true" name="OKButton" />
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="New_Analyze_Select" style="flex-grow: 1; display: none;">
+        <ui:VisualElement name="New_Analyze_Select" style="flex-grow: 1; display: flex;">
             <ui:VisualElement name="Header" style="flex-grow: 0;">
                 <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="BackButton" class="CircleButton" style="align-items: center; justify-content: center;">
                     <ui:VisualElement name="Icon_Back" style="flex-grow: 0; flex-shrink: 0; width: 24px; height: 24px;" />
@@ -82,11 +82,11 @@
                 <ui:Label tabindex="-1" text="解析したいタイプを選択してください" parse-escape-sequences="true" display-tooltip-when-elided="true" style="font-size: 22px; -unity-text-align: upper-center;" />
             </ui:VisualElement>
             <ui:VisualElement style="flex-grow: 1; flex-direction: row;">
-                <ui:Button text="&#x9;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="SelectButton_Landmark" class="AnalyzeSelectButton" style="border-top-left-radius: 24px; border-top-right-radius: 24px; border-bottom-right-radius: 24px; border-bottom-left-radius: 24px; width: 100%; align-items: center; justify-content: center; flex-direction: row; flex-shrink: 1;">
+                <ui:Button text="&#x9;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="SelectButton_Landmark" class="AnalyzeSelectButton" style="border-top-left-radius: 24px; border-top-right-radius: 24px; border-bottom-right-radius: 24px; border-bottom-left-radius: 24px; width: 100%; align-items: center; justify-content: center; flex-direction: row; flex-shrink: 1; background-color: rgba(188, 188, 188, 0);">
                     <ui:VisualElement name="Icon_Building" style="flex-grow: 1; -unity-background-image-tint-color: rgb(128, 213, 212);" />
                     <ui:Label tabindex="-1" text="眺望視点" parse-escape-sequences="true" display-tooltip-when-elided="true" style="color: rgb(128, 213, 212); font-size: 16px;" />
                 </ui:Button>
-                <ui:Button text="&#x9;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="SelectButton_Viewpoint" class="AnalyzeSelectButton" style="border-top-left-radius: 24px; border-top-right-radius: 24px; border-bottom-right-radius: 24px; border-bottom-left-radius: 24px; width: 100%; align-items: center; justify-content: center; flex-direction: column; flex-shrink: 1;">
+                <ui:Button text="&#x9;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="SelectButton_Viewpoint" class="AnalyzeSelectButton" style="border-top-left-radius: 24px; border-top-right-radius: 24px; border-bottom-right-radius: 24px; border-bottom-left-radius: 24px; width: 100%; align-items: center; justify-content: center; flex-direction: column; flex-shrink: 1; background-color: rgba(188, 188, 188, 0);">
                     <ui:VisualElement style="flex-grow: 0; flex-direction: row; align-items: center; justify-content: center; width: 100%;">
                         <ui:VisualElement name="Icon_Viewpoint" style="flex-grow: 0; -unity-background-image-tint-color: rgb(128, 213, 212); width: 24px; height: 24px; flex-shrink: 0;" />
                         <ui:Label tabindex="-1" text="視点場" parse-escape-sequences="true" display-tooltip-when-elided="true" style="color: rgb(128, 213, 212); font-size: 16px;" />
@@ -235,7 +235,7 @@
                 <ui:Button text="決定" parse-escape-sequences="true" display-tooltip-when-elided="true" name="OKButton" />
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="Slider_Landmark" style="flex-grow: 1; display: flex;">
+        <ui:VisualElement name="Slider_Landmark" style="flex-grow: 1; display: none;">
             <ui:VisualElement name="Header" style="flex-grow: 0;">
                 <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="BackButton" class="CircleButton" style="align-items: center; justify-content: center;">
                     <ui:VisualElement name="Icon_Back" style="flex-grow: 0; flex-shrink: 0; width: 24px; height: 24px;" />
