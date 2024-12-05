@@ -135,6 +135,46 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
             return true;
         }
+
+        /// <summary>
+        /// 対象の区画データの表示/非表示を切り替えるメソッド
+        /// </summary>
+        public static bool TogglePropertyVisibility(int index, bool isVisible)
+        {
+            if (index < 0 || index >= properties.Count) return false;
+
+            properties[index].Transform.gameObject.SetActive(isVisible);
+            return true;
+        }
+
+        /// <summary>
+        /// 対象の区画データの見た目を選択状態にするメソッド
+        /// </summary>
+        /// <returns>リセットが成功した場合はtrue、指定したindexがリスト範囲外の場合はfalse</returns>
+        public static bool SetPropertySelected(int index, bool isSelected)
+        {
+            if (index < 0 || index >= properties.Count) return false;
+            // 面と壁のマテリアルを取得
+            Material wallMaterial = properties[index].WallMaterial;
+            Material ceilingMaterial = properties[index].CeilingMaterial;
+
+            // 選択状態に応じてマテリアルのα値を変更
+            if (isSelected)
+            {
+                wallMaterial.SetVector("_WallAlphaRange", new Vector2(0.01f, 1f)); // X:0.01 Y:1.0
+                wallMaterial.SetVector("_LineAlphaRange", new Vector2(0.01f, 1f)); // X:0.01 Y:1.0
+                ceilingMaterial.SetFloat("_Alpha", 0.8f);
+            }
+            else
+            {
+                wallMaterial.SetVector("_WallAlphaRange", new Vector2( 0.01f,0.05f)); // X:0.01 Y:0.05
+                wallMaterial.SetVector("_LineAlphaRange", new Vector2( 0.01f,0.1f)); // X:0.01 Y:0.1
+                ceilingMaterial.SetFloat("_Alpha", 0.25f);
+            }
+
+            return true;
+        }
+
         /// <summary>
         /// 区画データリストの長さを取得するメソッド
         /// </summary>

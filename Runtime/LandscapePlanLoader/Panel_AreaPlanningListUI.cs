@@ -17,6 +17,9 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         // UXMLのエリアデータリスト要素のインスタンスを管理するリスト
         private readonly List<VisualElement> list_AreaPlanningList = new List<VisualElement>();
 
+        // 1つ前にフォーカスされているエリアデータのインデックス
+        private int lastFocusedAreaIndex = -1;
+
 
         public Panel_AreaPlanningListUI(VisualElement planning, PlanningUI planningUI)
         {
@@ -30,6 +33,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             AreasDataComponent.AreaCountChangedEvent += RefreshAreaPlanningList;    // エリアデータ数が変更されたときにエリア一覧リストを更新
 
             planningUI.OnChangeConfirmed += RefreshAreaPlanningList;  // エリアの編集が確定されたときにエリア一覧リスト情報を更新
+            planningUI.OnFocusedAreaChanged += SetAreaListSelected;  // エリアのフォーカスが変更されたときにエリア一覧リストの見た目を変更
         }
 
         /// <summary>
@@ -71,6 +75,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
                 int currentIndex = index;
                 newAreaListInstance.Q<VisualElement>("DeleteButton").AddManipulator(new Clickable(() => OnClickAreaDataDelete(currentIndex)));
+                newAreaListInstance.Q<Toggle>("Toggle_HideList").RegisterValueChangedCallback(ev => OnClickAreaDataVisibility(!ev.newValue, currentIndex));
                 newAreaListInstance.Q<Button>("List").RegisterCallback<ClickEvent>(ev => planningUI.InvokeOnFocusedAreaChanged(currentIndex));
             }
         }
@@ -83,6 +88,37 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         {
             AreasDataComponent.TryRemoveProperty(index);    // データベースのエリアデータを削除
             planningUI.InvokeOnFocusedAreaChanged(-1);      // エリアの選択状態をリセット
+        }
+
+        /// <summary>
+        /// リスト要素の表示/非表示切り替えボタンの処理
+        /// </summary>
+        /// <param name="index">リストの要素番号</param>
+        void OnClickAreaDataVisibility(bool isVisible,int index)
+        {
+            AreasDataComponent.TogglePropertyVisibility(index, isVisible);
+            // リストのボタンの有効/無効状態を切り替え
+            list_AreaPlanningList[index].Q<Button>("List").SetEnabled(isVisible);
+            // エリアの選択状態をリセット
+            planningUI.InvokeOnFocusedAreaChanged(-1);
+        }
+
+        /// <summary>
+        /// リスト要素の選択状態の見た目を変更するメソッド
+        /// </summary>
+        /// <param name="index">リストの要素番号</param>
+        void SetAreaListSelected(int index)
+        {
+            if (lastFocusedAreaIndex == index) return;
+            // 最後にフォーカスされていたエリアデータの見た目をリセット
+            if (lastFocusedAreaIndex >= 0)
+            {
+                AreasDataComponent.SetPropertySelected(lastFocusedAreaIndex, false);
+            }
+            // 選択されたエリアデータの見た目を変更
+            AreasDataComponent.SetPropertySelected(index, true);
+
+            lastFocusedAreaIndex = index;
         }
     }
 }
