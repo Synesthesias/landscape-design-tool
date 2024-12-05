@@ -14,9 +14,9 @@ namespace Landscape2.Runtime
         // 建物が選択されたときのイベント関数
         public event Action<GameObject> OnBuildingSelected = targetObject => { };
 
-        GameObject targetObject;
-        GameObject highlightBox = null;
-        VisualElement uiRoot;
+        private GameObject targetObject;
+        private GameObject highlightBox = null;
+        private VisualElement uiRoot;
 
         private const string UIMaterialPanel = "Panel_MaterialEditor";
         private const string UIDeleteBuildingPanel = "Panel_DeleteBuilding";

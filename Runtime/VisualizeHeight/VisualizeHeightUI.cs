@@ -44,6 +44,7 @@ namespace Landscape2.Runtime
         private const float cameraDistance = 500f;
         private PLATEAUCityObjectGroup selectedBuilding;
         private int lastPinID = 0;
+        private GameObject highlightBox = null;
 
         public VisualizeHeightUI(VisualizeHeight visualizeHeight,VisualElement uiRoot,LandscapeCamera landscapeCamera)
         {
@@ -119,6 +120,7 @@ namespace Landscape2.Runtime
                 walkerPanel.style.display = DisplayStyle.None;
                 walkerPin.style.display = DisplayStyle.None;
                 selectedBuilding = null;
+                if(highlightBox != null) GameObject.Destroy(highlightBox);
             }
         }
 
@@ -261,14 +263,38 @@ namespace Landscape2.Runtime
                 // 高さを更新
                 walkerPin.Q<Label>().text = bldgList.FirstOrDefault(item => item.Building == building).Pin.Q<Label>().text;
                 // 位置を更新
+                walkerPin.style.display = DisplayStyle.Flex;
                 walkerPin.style.translate = UpdateHeightPinPosition(building);
                 selectedBuilding = building;
+                CreateHighlightBox(targetObject);
             }
             else // 同じ建物をクリックした場合
             {
                 walkerPin.style.display = DisplayStyle.None;
                 selectedBuilding = null;
+                GameObject.Destroy(highlightBox);
             }
+        }
+
+        /// <summary>
+        /// 建物選択時のハイライトボックスを生成する
+        /// </summary>
+        private void CreateHighlightBox(GameObject targetObject)
+        {
+            if (highlightBox == null)
+            {
+                var bbox = Resources.Load("bbox") as GameObject;
+                highlightBox = GameObject.Instantiate(bbox);
+
+                MeshFilter mf = highlightBox.GetComponent<MeshFilter>();
+                mf.mesh.SetIndices(mf.mesh.GetIndices(0), MeshTopology.LineStrip, 0);
+            }
+
+            var meshColider = targetObject.GetComponent<MeshCollider>();
+            var bounds = meshColider.bounds;
+
+            highlightBox.transform.localPosition = bounds.center;
+            highlightBox.transform.localScale = new Vector3(bounds.size.x, bounds.size.y, bounds.size.z);
         }
 
         /// <summary>
