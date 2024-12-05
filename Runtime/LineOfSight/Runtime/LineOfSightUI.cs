@@ -36,6 +36,8 @@ namespace Landscape2.Runtime
         }
         class ListView : ViewStateControl
         {
+            Dictionary<string, Button> buttonIndex = new();
+
             public ListView(VisualElement title, VisualElement root) : base(title, root)
             {
 
@@ -68,33 +70,35 @@ namespace Landscape2.Runtime
                 emptyMessage.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
             }
 
-            public void AddButton(Button button)
+            public void AddButton(Button button, string name)
             {
                 var scrollView = rootElement.Q<ScrollView>("Panel");
                 ShowEmptyMessage(false);
-
+                buttonIndex.Add(name, button);
                 scrollView.Add(button);
-
             }
 
-            public void RemoveButton(string name)
+            void RemoveButton(VisualElement button)
             {
                 var scrollView = rootElement.Q<ScrollView>("Panel");
                 var childList = scrollView.Children();
                 var childCount = childList.Count();
-                var target = childList
-                                    .Where(x => x is Button)
-                                    .Where(x => x.name == name)
-                                    .FirstOrDefault();
 
-                Debug.Log($"remove Child : {childCount}");
-
-                scrollView.Remove(target);
+                scrollView.Remove(button);
 
                 if (childCount <= 2) // Dialogue含めて2つ
                 {
                     ShowEmptyMessage(true);
                 }
+
+            }
+
+            public void RemoveButton(string name)
+            {
+                // var scrollView = rootElement.Q<ScrollView>("Panel");
+
+                RemoveButton(buttonIndex[name]);
+                buttonIndex.Remove(name);
             }
 
             public void ClearList()
@@ -129,7 +133,8 @@ namespace Landscape2.Runtime
         Dictionary<Button, string> entryViewpointButton = new();
         Dictionary<Button, string> entryLandmarkButton = new();
 
-        Dictionary<Button, string> entryAnalyzeButton = new();
+        Dictionary<Button, string> entryAnalyzeButtonFromButton = new();
+        //Dictionary<string, Button> entryAnalyzeButtonFromName = new();
 
 
         private StyleSheet uiStyleCommon;
@@ -163,6 +168,8 @@ namespace Landscape2.Runtime
         }
         private void InitializeAnalyzeSettingPanel()
         {
+            ShowAnalyzeSettingPanel(true);
+
             InitializeNew_PointMenu();
             InitializeNew_Viewpoint();
             InitializeNew_Landmark();
@@ -280,16 +287,25 @@ namespace Landscape2.Runtime
 
             VisualElement currentElement = null;
 
+            System.Text.StringBuilder sb = new();
+
+            sb.AppendLine($"panelName: {panelName}");
+
             /// 毎回回しちゃうので改善の余地あり
             foreach (var c in childList)
             {
                 c.style.display = DisplayStyle.None;
+                sb.Append($"\t{c.name}");
                 if (c.name == panelName)
                 {
+                    sb.Append($"... bingo! {panelName}");
                     currentElement = c;
                     c.style.display = DisplayStyle.Flex;
                 }
+                sb.AppendLine();
             }
+
+            Debug.Log(sb.ToString());
             return currentElement;
         }
 
@@ -311,8 +327,6 @@ namespace Landscape2.Runtime
                 // 視点場ピン作成
                 Debug.Log($"視点場ピン作成: {newViewpoint_Button.name}");
                 FocusAnalyzeSettingPanel();
-                // new_PointMenu.style.display = DisplayStyle.None;
-                // new_Viewpoint.style.display = DisplayStyle.Flex;
                 SetCurrentAnalyzeSettingPanel("New_Viewpoint");
                 lineOfSight.SetMode(LineOfSightType.viewPoint);
                 PushElement(new_PointMenu);
@@ -324,8 +338,6 @@ namespace Landscape2.Runtime
                 // 眺望対象作成
                 Debug.Log($"眺望対象ピン作成: {newLandmark_Button.name}");
                 FocusAnalyzeSettingPanel();
-                // new_PointMenu.style.display = DisplayStyle.None;
-                // new_Landmark.style.display = DisplayStyle.Flex;
                 SetCurrentAnalyzeSettingPanel("New_Landmark");
                 lineOfSight.SetMode(LineOfSightType.landmark);
                 PushElement(new_PointMenu);
@@ -338,8 +350,6 @@ namespace Landscape2.Runtime
                 Debug.Log($"新規解析作成: {newLandmark_Button.name}");
 
                 FocusAnalyzeSettingPanel();
-                // new_PointMenu.style.display = DisplayStyle.None;
-                // new_Analyze_Select.style.display = DisplayStyle.Flex;
                 SetCurrentAnalyzeSettingPanel("New_Analyze_Select");
                 PushElement(new_PointMenu);
                 beforeElement = new_PointMenu;
@@ -446,8 +456,6 @@ namespace Landscape2.Runtime
             var selectButton_Viewpoint = new_Analyze_Select.Q<Button>("SelectButton_Viewpoint");
             selectButton_Viewpoint.clicked += () =>
             {
-                // new_Analyze_Select.style.display = DisplayStyle.None;
-                // new_Analyze_Viewpoint.style.display = DisplayStyle.Flex;
                 SetCurrentAnalyzeSettingPanel("New_Analyze_Viewpoint");
 
                 SetAnalyzeLandmarkTarget("選択されていません");
@@ -471,8 +479,7 @@ namespace Landscape2.Runtime
             var backButton = new_Analyze_Viewpoint.Q<Button>("BackButton");
             backButton.clicked += () =>
             {
-                //new_Analyze_Viewpoint.style.display = DisplayStyle.None;
-                SetCurrentAnalyzeSettingPanel("New_Analyze_Select");//new_Analyze_Select.style.display = DisplayStyle.Flex;
+                SetCurrentAnalyzeSettingPanel("New_Analyze_Select");
                 lineOfSight.SetMode(LineOfSightType.main);
                 analyzeViewPoint.ClearLineOfSight();
                 analyzeViewPoint.ClearSetMode();
@@ -577,7 +584,8 @@ namespace Landscape2.Runtime
                 var landmarkName = new_Analyze_Landmark.Q<Label>("LandmarkName");
 
                 analyzeLandmark.ClearSetMode();
-                analyzeLandmark.SetTargetLandmark(landmarkName.text);
+                var result = analyzeLandmark.SetTargetLandmark(landmarkName.text);
+                Debug.Log($"{landmarkName.text} result: {result}");
                 analyzeLandmark.SetAnalyzeRange();
                 PushElement(new_Analyze_Landmark);
                 beforeElement = new_Analyze_Landmark;
@@ -819,8 +827,6 @@ namespace Landscape2.Runtime
             var selectViewpointButton = edit_Analyze_Viewpoint.Q<Button>("SelectViewpointButton");
             selectViewpointButton.clicked += () =>
             {
-                // analyzeSettingPanel.style.display = DisplayStyle.None;
-                //viewPointListPanel.style.display = DisplayStyle.Flex;
                 ShowAnalyzeSettingPanel(false);
                 viewPointList_View.Show(true);
                 analyzeViewPoint.SetViewPoint();
@@ -848,9 +854,7 @@ namespace Landscape2.Runtime
             deleteButton.clicked += () =>
             {
                 var buttonName = analyzeViewPoint.DeleteAnalyzeData();
-                var analyzeListScrollView = analyzeListPanel.Q<ScrollView>("Panel");
-                var button = analyzeListScrollView.Q<Button>(buttonName);
-                analyzeListScrollView.Remove(button);
+                RemoveAnalyzeListButton(buttonName);
                 edit_Analyze_Viewpoint.style.display = DisplayStyle.None;
                 ViewDefaultPanels();
             };
@@ -867,12 +871,11 @@ namespace Landscape2.Runtime
                 var analyzeViewPointElements = analyzeViewPoint.EditAnalyzeData();
                 var deleteButtonName = analyzeViewPointElements.deleteButtonName;
                 var analyzeViewPointData = analyzeViewPointElements.analyzeViewPointData;
-                var analyzeListScrollView = analyzeListPanel.Q<ScrollView>("Panel");
-                var button = analyzeListScrollView.Q<Button>(deleteButtonName);
+                RemoveAnalyzeListButton(deleteButtonName);
 
-                analyzeListScrollView.Remove(button);
                 if (analyzeViewPointData.Equals(AnalyzeViewPointElements.Empty))
                 {
+                    Debug.LogWarning($"analyzeViewPointDataが空です");
                     return;
                 }
                 CreateAnalyzeViewPointButton(analyzeViewPointData);
@@ -911,7 +914,8 @@ namespace Landscape2.Runtime
 
                 var landmarkNameLabel = edit_Analyze_Landmark.Q<Label>("LandmarkName");
 
-                analyzeLandmark.SetTargetLandmark(landmarkNameLabel.text);
+                var result = analyzeLandmark.SetTargetLandmark(landmarkNameLabel.text);
+                Debug.Log($"{landmarkNameLabel.text} result: {result}");
                 analyzeLandmark.SetAnalyzeRange();
                 PushElement(edit_Analyze_Landmark);
                 beforeElement = edit_Analyze_Landmark;
@@ -920,10 +924,7 @@ namespace Landscape2.Runtime
             deleteButton.clicked += () =>
             {
                 var buttonName = analyzeLandmark.DeleteAnalyzeData();
-                var analyzeListScrollView = analyzeListPanel.Q<ScrollView>("Panel");
-                var button = analyzeListScrollView.Q<Button>(buttonName);
-                analyzeListScrollView.Remove(button);
-                edit_Analyze_Landmark.style.display = DisplayStyle.None;
+                RemoveAnalyzeListButton(buttonName);
                 ViewDefaultPanels();
             };
             var cancelButton = edit_Analyze_Landmark.Q<Button>("CancelButton");
@@ -941,10 +942,8 @@ namespace Landscape2.Runtime
                 var analyzeLandmarkElements = analyzeLandmark.EditAnalyzeData();
                 var deleteButtonName = analyzeLandmarkElements.deleteButtonName;
                 var analyzeLandmarkData = analyzeLandmarkElements.analyzeLandmarkData;
-                var analyzeListScrollView = analyzeListPanel.Q<ScrollView>("Panel");
-                var button = analyzeListScrollView.Q<Button>(deleteButtonName);
 
-                analyzeListScrollView.Remove(button);
+                RemoveAnalyzeListButton(deleteButtonName);
                 if (analyzeLandmarkData.Equals(AnalyzeLandmarkElements.Empty))
                 {
                     Debug.LogWarning($"analyzeLandmarkDataは空の様です");
@@ -973,7 +972,6 @@ namespace Landscape2.Runtime
                 // analyzeSettingPanelが
                 //  - New_PointMenuの時
                 //  - New_Analyze_ViewPointの時
-
                 if (analyzeSettingPanel.style.display == DisplayStyle.Flex)
                 {
                     //  - New_PointMenuの時
@@ -991,13 +989,13 @@ namespace Landscape2.Runtime
 
                     // パネルの表示を元に戻す
                     SetCurrentAnalyzeSettingPanel("New_Analyze_Viewpoint");
-                    ShowAnalyzeSettingPanel(true);//analyzeSettingPanel.style.display = DisplayStyle.Flex;
+                    ShowAnalyzeSettingPanel(true);
                 }
                 FocusAnalyzeSettingPanel();
 
             };
             entryViewpointButton.Add(newButton, buttonName);
-            viewPointList_View.AddButton(newButton);
+            viewPointList_View.AddButton(newButton, buttonName);
         }
         public void CreateLandmarkButton(string buttonName)
         {
@@ -1041,7 +1039,7 @@ namespace Landscape2.Runtime
                 FocusAnalyzeSettingPanel();
             };
             entryLandmarkButton.Add(newButton, buttonName);
-            landmarkList_View.AddButton(newButton);
+            landmarkList_View.AddButton(newButton, buttonName);
         }
 
         /// <summary>
@@ -1073,16 +1071,18 @@ namespace Landscape2.Runtime
                 analyzeViewPoint.ButtonAction(elements);
                 // UI
                 FocusAnalyzeSettingPanel();
+                analyzeList_View.Show(true);
                 //var new_PointMenu = analyzeSettingPanel.Q<VisualElement>("New_PointMenu");
                 //new_PointMenu.style.display = DisplayStyle.None;
                 var edit_Analyze_Viewpoint = analyzeSettingPanel.Q<VisualElement>("Edit_Analyze_Viewpoint");
-                SetCurrentAnalyzeSettingPanel("Edit_Analyze_ViewPoint");// edit_Analyze_Viewpoint.style.display = DisplayStyle.Flex;
+                SetCurrentAnalyzeSettingPanel("Edit_Analyze_Viewpoint");
                 edit_Analyze_Viewpoint.Q<Label>("ViewpointName").text = elements.startPosName;
                 edit_Analyze_Viewpoint.Q<Label>("LandmarkName").text = elements.endPosName;
             };
 
-            analyzeList_View.AddButton(newButton);
-            entryAnalyzeButton.Add(newButton, buttonName);
+            analyzeList_View.AddButton(newButton, buttonName);
+            entryAnalyzeButtonFromButton.Add(newButton, buttonName);
+            //entryAnalyzeButtonFromName.Add(buttonName, newButton);
         }
 
         /// <summary>
@@ -1112,24 +1112,31 @@ namespace Landscape2.Runtime
                 analyzeLandmark.ButtonAction(elements);
                 // UI
                 FocusAnalyzeSettingPanel();
-                //var new_PointMenu = analyzeSettingPanel.Q<VisualElement>("New_PointMenu");
-                //new_PointMenu.style.display = DisplayStyle.None;
+                analyzeList_View.Show(true);
                 var edit_Analyze_Landmark = analyzeSettingPanel.Q<VisualElement>("Edit_Analyze_Landmark");
                 SetCurrentAnalyzeSettingPanel("Edit_Analyze_Landmark");// edit_Analyze_Landmark.style.display = DisplayStyle.Flex;
                 edit_Analyze_Landmark.Q<Label>("LandmarkName").text = elements.startPosName;
             };
-            analyzeList_View.AddButton(newButton);
-            entryAnalyzeButton.Add(newButton, buttonName);
+            analyzeList_View.AddButton(newButton, buttonName);
+            entryAnalyzeButtonFromButton.Add(newButton, buttonName);
         }
 
         public void RemoveAnalyzeListButton(string keyName)
         {
             analyzeList_View.RemoveButton(keyName);
-            var button = entryAnalyzeButton.FirstOrDefault(b => b.Value == keyName).Key;
-            if (button != null)
+
+            var button = entryAnalyzeButtonFromButton.Where(x => x.Value == keyName).FirstOrDefault();
+
+            if (button.Key != null)
             {
-                entryAnalyzeButton.Remove(button);
+                entryAnalyzeButtonFromButton.Remove(button.Key);
             }
+
+            // var button = entryAnalyzeButtonFromButton.FirstOrDefault(b => b.Value == keyName).Key;
+            // if (button != null)
+            // {
+            //     entryAnalyzeButtonFromButton.Remove(button);
+            // }
             //var scrollView = analyzeListPanel.Q<ScrollView>("Panel");
             //var button = scrollView.Q<Button>(keyName);
             //scrollView.Remove(button);
