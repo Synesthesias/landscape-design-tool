@@ -14,13 +14,15 @@ using Landscape2.Runtime.UiCommon;
 using RuntimeHandle;
 
 using UnityEngine.InputSystem;
+using System.Linq;
+using PlateauToolkit.Sandbox;
 
 namespace Landscape2.Runtime
 {
     // CreateAsset,EditAsset,DeleteAssetクラスの基底クラス
     public abstract class ArrangeMode
     {
-        public virtual void OnCancel() {}
+        public virtual void OnCancel() { }
         public abstract void Update();
     }
 
@@ -31,7 +33,7 @@ namespace Landscape2.Runtime
         Edit
     }
 
-    public class ArrangementAsset : ISubComponent,LandscapeInputActions.IArrangeAssetActions
+    public class ArrangementAsset : ISubComponent, LandscapeInputActions.IArrangeAssetActions
     {
         private Camera cam;
         private Ray ray;
@@ -44,7 +46,7 @@ namespace Landscape2.Runtime
         private CreateMode createMode;
         private EditMode editMode;
 
-        public ArrangementAsset(VisualElement element,SaveSystem saveSystemInstance, LandscapeCamera landscapeCamera)
+        public ArrangementAsset(VisualElement element, SaveSystem saveSystemInstance, LandscapeCamera landscapeCamera)
         {
             new AssetsSubscribeSaveSystem(saveSystemInstance);
             createMode = new CreateMode();
@@ -54,7 +56,7 @@ namespace Landscape2.Runtime
             arrangementAssetUI.RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
             arrangementAssetUIClass = new ArrangementAssetUI(
                 arrangementAssetUI,
-                this,createMode,
+                this, createMode,
                 editMode,
                 new AdvertisementRenderer(),
                 landscapeCamera);
@@ -69,15 +71,15 @@ namespace Landscape2.Runtime
             input.SetCallbacks(this);
             input.Enable();
             // アセットのロード
-            SetPlateauAssets(ArrangementAssetType.Plant.GetKeyName(),ArrangementAssetType.Plant.GetButtonName());
-            SetPlateauAssets(ArrangementAssetType.Human.GetKeyName(),ArrangementAssetType.Human.GetButtonName());
+            SetPlateauAssets(ArrangementAssetType.Plant.GetKeyName(), ArrangementAssetType.Plant.GetButtonName());
+            SetPlateauAssets(ArrangementAssetType.Human.GetKeyName(), ArrangementAssetType.Human.GetButtonName());
             SetPlateauAssets(ArrangementAssetType.Building.GetKeyName(), ArrangementAssetType.Building.GetButtonName());
             SetPlateauAssets(ArrangementAssetType.Advertisement.GetKeyName(), ArrangementAssetType.Advertisement.GetButtonName());
             SetPlateauAssets(ArrangementAssetType.Sign.GetKeyName(), ArrangementAssetType.Sign.GetButtonName());
             SetPlateauAssets(ArrangementAssetType.Vehicle.GetKeyName(), ArrangementAssetType.Vehicle.GetButtonName());
             SetPlateauAssets(ArrangementAssetType.StreetFurniture.GetKeyName(), ArrangementAssetType.StreetFurniture.GetButtonName());
             SetPlateauAssets(ArrangementAssetType.Miscellaneous.GetKeyName(), ArrangementAssetType.Miscellaneous.GetButtonName());
-                    
+
             AsyncOperationHandle<GameObject> runtimeHandle = Addressables.LoadAssetAsync<GameObject>("RuntimeTransformHandle_Assets");
             GameObject runtimeTransformHandle = await runtimeHandle.Task;
             AsyncOperationHandle<GameObject> customPassHandle = Addressables.LoadAssetAsync<GameObject>("CustomPass");
@@ -88,19 +90,21 @@ namespace Landscape2.Runtime
             IList<GameObject> treeAssetsList = await plateauAssetHandle.Task;
             AsyncOperationHandle<IList<Texture2D>> assetsPictureHandle = Addressables.LoadAssetsAsync<Texture2D>("AssetsPicture", null);
             IList<Texture2D> assetsPicture = await assetsPictureHandle.Task;
-            arrangementAssetUIClass.CreateButton(treeAssetsList,assetsPicture);
+            arrangementAssetUIClass.CreateButton(treeAssetsList, assetsPicture);
 
             // インポートボタンの登録
             arrangementAssetUIClass.RegisterImportButtonAction();
         }
 
-        private async void SetPlateauAssets(string keyName,string buttonName)
+        private async void SetPlateauAssets(string keyName, string buttonName)
         {
             AsyncOperationHandle<IList<GameObject>> plateauAssetHandle = Addressables.LoadAssetsAsync<GameObject>(keyName, null);
             IList<GameObject> assetsList = await plateauAssetHandle.Task;
+            assetsList = assetsList.Where(n => n.GetComponent<PlateauSandboxPlaceableHandler>() != null).ToList();
+
             AsyncOperationHandle<IList<Texture2D>> assetsPictureHandle = Addressables.LoadAssetsAsync<Texture2D>("AssetsPicture", null);
             IList<Texture2D> assetsPicture = await assetsPictureHandle.Task;
-            arrangementAssetUIClass.RegisterCategoryPanelAction(buttonName,assetsList,assetsPicture);
+            arrangementAssetUIClass.RegisterCategoryPanelAction(buttonName, assetsList, assetsPicture);
         }
 
         public void SetMode(ArrangeModeName mode)
@@ -113,15 +117,15 @@ namespace Landscape2.Runtime
             if (mode == ArrangeModeName.Create)
             {
                 currentMode = createMode;
-                createMode.OnEnable(arrangementAssetUI);        
+                createMode.OnEnable(arrangementAssetUI);
             }
-            else if(mode == ArrangeModeName.Edit)
+            else if (mode == ArrangeModeName.Edit)
             {
                 currentMode = editMode;
                 arrangementAssetUIClass.DisplayEditPanel(true);
                 return;
             }
-            else if(mode == ArrangeModeName.Normal)
+            else if (mode == ArrangeModeName.Normal)
             {
                 currentMode = null;
             }
@@ -129,7 +133,7 @@ namespace Landscape2.Runtime
         }
         public void Update(float deltaTime)
         {
-            if(currentMode != null)
+            if (currentMode != null)
             {
                 currentMode.Update();
             }
@@ -143,9 +147,9 @@ namespace Landscape2.Runtime
 
         public void OnSelect(InputAction.CallbackContext context)
         {
-            if(context.performed && arrangementAssetUI.style.display == DisplayStyle.Flex)
+            if (context.performed && arrangementAssetUI.style.display == DisplayStyle.Flex)
             {
-                if(currentMode == createMode)
+                if (currentMode == createMode)
                 {
                     createMode.OnSelect();
                 }
@@ -160,19 +164,19 @@ namespace Landscape2.Runtime
         {
             cam = Camera.main;
             ray = cam.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit,Mathf.Infinity))
+            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity))
             {
-                if (CheckParentName(hit.transform,"CreatedAssets"))
+                if (CheckParentName(hit.transform, "CreatedAssets"))
                 {
                     editTarget = FindAssetComponent(hit.transform);
                     arrangementAssetUIClass.SetEditTarget(editTarget);
                     SetMode(ArrangeModeName.Edit);
-                    editMode.CreateRuntimeHandle(editTarget,TransformType.Position);
+                    editMode.CreateRuntimeHandle(editTarget, TransformType.Position);
                 }
             }
         }
 
-        private bool CheckParentName(Transform hitTransform,string parentName)
+        private bool CheckParentName(Transform hitTransform, string parentName)
         {
             Transform current = hitTransform;
             while (current != null)
@@ -202,11 +206,11 @@ namespace Landscape2.Runtime
 
         public void OnCancel(InputAction.CallbackContext context)
         {
-            if(context.performed)
+            if (context.performed)
             {
-                if(currentMode != null)
+                if (currentMode != null)
                 {
-                    if(currentMode == editMode)
+                    if (currentMode == editMode)
                     {
                         arrangementAssetUIClass.ResetEditButton();
                     }
