@@ -52,13 +52,28 @@
 ### プロジェクト管理機能
 ![メイン画面](../resources/ProjectManagement/ProjectManagement_main.png)
 - 画面右上の歯車アイコンを選択します。
+
 #### プロジェクトの保存
 ![メイン画面](../resources/ProjectManagement/ProjectManagement_Save.png)
 - 「プロジェクトを保存」を選択します。
 - ファイルブラウザが開かれるので、ファイル名を入力する。(拡張子は不要)
 - 「保存」を押します。
+
 #### プロジェクトの読み込み
 ![メイン画面](../resources/ProjectManagement/ProjectManagement_Load.png)
 - 「プロジェクトを切り替え」を選択します。
 - ファイルブラウザからロードしたいファイルを選択します。
 - 「開く」を押します。
+
+### 建物高さ表示
+
+![高さ表示ボタン](../resources/HeightDisplay/HeightDisplayIcon.png)
+
+- 建物高さ表示ボタンをクリックすると、建物の上に高さが表示されます。
+- 高さ表示設定スライダーを調整することで、表示したい建物の高さの下限値を設定できます。
+
+![建物高さ表示状態](../resources/HeightDisplay/HeightLimit.png)
+
+- 歩行者視点モードでは、建物をクリックすることで高さが表示されます。
+
+![歩行者始点建物高さ表示](../resources/HeightDisplay/WalkerViewHeightDisplay.png)

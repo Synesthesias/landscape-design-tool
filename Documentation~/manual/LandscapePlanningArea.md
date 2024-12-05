@@ -45,6 +45,17 @@
  
 ![フォルダ選択](../resources/LandscapePlanningAreaImages/BrowseShpFolder.png)
 
+## 景観計画データの書き出し
+「景観計画データ編集」パネルのデータ書き出しボタンをクリックすると、エクスプローラーが表示されます。
+
+![データ書き出し](../resources/LandscapePlanningAreaImages/SaveLandscapePlanButton.png)
+
+景観計画のShapeファイルとdbfファイルの保存先を選択し、「保存」をクリックします。
+ 
+エクスプローラーにShapeファイルとdbfファイルが保存されると書き出し完了です。
+ 
+![フォルダ選択](../resources/LandscapePlanningAreaImages/SaveDialog.png)
+
 ## 区域情報の編集
 「景観計画区域リスト」パネルから編集したい区域名を選択します。
 次に「景観計画データ編集」パネルの「データを編集」ボタンをクリックし、編集を開始します。
@@ -79,5 +90,32 @@
 
 ![区域カラー編集](../resources/LandscapePlanningAreaImages/EditAreaColor.png)
 
+### 区域頂点編集
+- 区域の頂点に表示されているピンをクリックしながらマウスを動かすことで、頂点を移動させることができます。
+- 頂点と頂点の間のラインをクリックすることで中点に頂点を追加することができます。
+- ctrlキーを押しながら頂点をクリックすることで頂点を削除できます。
+<br>　※頂点を交差させた場合、頂点が変更前の位置に戻ります。
+
+![区域頂点編集](../resources/LandscapePlanningAreaImages/EditPoint.png)
+
+## 区域情報の作成
+「景観計画区域リスト」パネルから編集したい区域名を選択します。
+次に「景観計画データ編集」パネルの「データを編集」ボタンをクリックし、編集を開始します。
+
+![データ作成画面を開く](../resources/LandscapePlanningAreaImages/RegisterAreaButton.png)
+
+区域情報の作成では、区域情報の編集と同様に区域名、高さ制限値、区域カラーを変更できます。
+
+完了後は「登録」ボタンをクリックし、変更内容を保存します。
+<br>　※ 頂点が閉じており、区域作成が可能な状態になると「登録」ボタンが表示されます。
+
+![データ作成画面](../resources/LandscapePlanningAreaImages/RegisterAreaPanel.png)
+
+### 区域頂点作成
+- 3Dビューにおける地面をクリックすると、区域の頂点が生成されます。
+- 作成したい区域を頂点で囲み、最初に生成した頂点をクリックするとエリアが閉じられ、区域作成が可能な状態になります。
+<br>　※頂点数が2つ以下および交差している頂点がある場合、「登録」ボタンをクリックしても区域は作成されません。
+
+![区域頂点作成](../resources/LandscapePlanningAreaImages/RegisterPoint.png)
 
 
