@@ -1,11 +1,8 @@
 using PLATEAU.CityInfo;
 using PLATEAU.Native;
-using PlateauToolkit.Sandbox.Runtime;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -37,6 +34,8 @@ namespace Landscape2.Runtime
 
         // uiの表示状態
         bool uiStatus = false;
+
+        LayoutMode layoutMode;
 
         PLATEAUInstancedCityModel instancedCityModel;
 
@@ -99,7 +98,7 @@ namespace Landscape2.Runtime
 
             InitializeLayoutUI(uiRoot);
 
-            editMode.OnCancel();
+            ChangeEditMode(LayoutMode.None);
         }
 
         void InitializeLayoutUI(VisualElement uiRoot)
@@ -205,6 +204,10 @@ namespace Landscape2.Runtime
         }
 
 
+        /// <summary>
+        /// カメラの座標から前方向にrayを飛ばした結果最初に当ったobjectの当った位置を返す
+        /// </summary>
+        /// <returns>当った位置。何もあたらない場合はnull</returns>
         private Vector3? UpdateCameraRayTargetPosition()
         {
             Transform cam = Camera.main.transform;
@@ -270,24 +273,27 @@ namespace Landscape2.Runtime
                 UpdateUILatLon(hitPos);
             }
 
-
             ui.Update(deltaTime);
 
-            CameraMoveByUserInput.IsCameraMoveActive = !layoutUI.IsShow;
-
-            if (currentLoadIfcObject != null)
+            if (layoutUI.IsShow)
             {
-                if (layoutUI.IsShow)
+                var isEditingAssetTRS = layoutUI.IsShow &&
+                    editMode.RuntimeTransformHandleScript != null &&
+                    editMode.RuntimeTransformHandleScript.isDragging;
+                CameraMoveByUserInput.IsCameraMoveActive = !isEditingAssetTRS;
+
+                if (currentLoadIfcObject != null)
                 {
                     layoutUI.Update(deltaTime);
                 }
+                if (uiStatus && !currentUIStatus)
+                {
+                    // 表示 -> 非表示
+                    CameraMoveByUserInput.IsCameraMoveActive = true;
+                }
+
             }
 
-            if (uiStatus && !currentUIStatus)
-            {
-                // 表示 -> 非表示
-                CameraMoveByUserInput.IsCameraMoveActive = true;
-            }
             uiStatus = currentUIStatus;
         }
 
@@ -313,6 +319,7 @@ namespace Landscape2.Runtime
                     return;
             }
 
+            layoutMode = mode;
             editMode?.CreateRuntimeHandle(currentLoadIfcObject, type);
         }
     }
