@@ -49,6 +49,13 @@
 
 ### 画面キャプチャー機能
 
+![メイン画面](../resources/ScreenCapture/ScreenCapture.png)
+- 画面右上のスクリーンキャプチャアイコンを選択します
+
+![メイン画面](../resources/ScreenCapture/ScreenCaptureFileDialog.png)
+- ファイルブラウザが開かれるので、スクリーンキャプチャを保存するフォルダとファイル名を選択します
+- 「保存」を押します
+
 ### プロジェクト管理機能
 ![メイン画面](../resources/ProjectManagement/ProjectManagement_main.png)
 - 画面右上の歯車アイコンを選択します。
