@@ -79,8 +79,13 @@
 ### 高さ制限値の編集
 - 高さ制限値の入力は半角数字のみ対応します。
 - 右側の矢印ボタンをクリックすることで、1メートルずつ値が増減します。
+- 「適用」ボタンを押すことで、区域範囲の施設の高さが変更されます。入力された高さに達していない施設には影響がありません。
 
 ![高さ制限値編集](../resources/LandscapePlanningAreaImages/EditAreaHeight.png)
+
+- 「元に戻す」ボタンを押すことで、施設が高さが元の高さに戻ります。
+
+![高さ制限値編集](../resources/LandscapePlanningAreaImages/EditAreaHeight_return.png)
 
 ### 区域カラー編集
 - 選択色のパネルをクリックすると「色彩変更」パネル表示されます。
