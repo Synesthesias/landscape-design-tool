@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
 
 namespace Landscape2.Runtime
@@ -38,7 +39,6 @@ namespace Landscape2.Runtime
         LayoutMode layoutMode;
 
         PLATEAUInstancedCityModel instancedCityModel;
-
 
         public BIMImport(VisualElement uiRoot)
         {
@@ -83,21 +83,23 @@ namespace Landscape2.Runtime
 
 
                 SetInstanceTransformFromInputState(ifcObj, lat, lon, height, yRot);
-                currentLoadIfcObject = ifcObj;
+
+                var bounds = GetLargestBounds(ifcObj);
+                if (bounds != null)
+                {
+                    var collider = ifcObj.AddComponent<BoxCollider>();
+                    collider.size = bounds.Value.size;
+                    collider.center = bounds.Value.center - ifcObj.transform.position;
+                }
 
                 // TODO: 配置できたGameObjectは
                 // persistentdatapathへcopyする
                 // copy先のpathとlatlon,height,yawを保持する
 
-                ChangeEditMode(LayoutMode.Trans);
-
-                ui.Show(false);
-                layoutUI.SetTarget(ifcObj);
-                layoutUI.Show(true);
+                SetupEditMode(ifcObj);
             };
 
             InitializeLayoutUI(uiRoot);
-
             ChangeEditMode(LayoutMode.None);
         }
 
@@ -125,7 +127,13 @@ namespace Landscape2.Runtime
                 ChangeEditMode(LayoutMode.None);
                 layoutUI.ReleaseTarget();
                 layoutUI.Show(false);
+
+                if (importedIFCList.Contains(currentLoadIfcObject))
+                {
+                    importedIFCList.Remove(currentLoadIfcObject);
+                }
                 GameObject.DestroyImmediate(currentLoadIfcObject, true);
+                currentLoadIfcObject = null;
                 ui.Show(true);
             };
 
@@ -135,6 +143,7 @@ namespace Landscape2.Runtime
                 layoutUI.ReleaseTarget();
                 layoutUI.Show(false);
                 importedIFCList.Add(currentLoadIfcObject);
+                currentLoadIfcObject = null;
                 ui.Show(true);
             };
         }
@@ -275,9 +284,45 @@ namespace Landscape2.Runtime
 
             ui.Update(deltaTime);
 
+            if (ui.IsShow())
+            {
+                // ボタンクリック時
+                if (Input.GetMouseButtonDown(0))
+                {
+                    var cam = Camera.main;
+                    var ray = cam.ScreenPointToRay(Input.mousePosition);
+                    var result = Physics.RaycastAll(ray.origin, ray.direction, float.MaxValue);
+                    if (0 < result.Length)
+                    {
+                        foreach (var hit in result)
+                        {
+                            var go = hit.collider.gameObject;
+                            if (importedIFCList.Contains(go))
+                            {
+                                if (currentLoadIfcObject != go)
+                                {
+                                    SetupEditMode(go);
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (currentLoadIfcObject == null)
+                        {
+                            if (!EventSystem.current.IsPointerOverGameObject())
+                            {
+                                UpdateUILatLon(result[0].point);
+                            }
+                        }
+
+                    }
+                }
+            }
+
+
             if (layoutUI.IsShow)
             {
-                var isEditingAssetTRS = layoutUI.IsShow &&
+                var isEditingAssetTRS =
                     editMode.RuntimeTransformHandleScript != null &&
                     editMode.RuntimeTransformHandleScript.isDragging;
                 CameraMoveByUserInput.IsCameraMoveActive = !isEditingAssetTRS;
@@ -293,8 +338,26 @@ namespace Landscape2.Runtime
                 }
 
             }
-
             uiStatus = currentUIStatus;
+        }
+
+        void SetupLoadMode()
+        {
+            ui.Show(true);
+            layoutUI.ReleaseTarget();
+            layoutUI.Show(false);
+        }
+
+
+        void SetupEditMode(GameObject target)
+        {
+            currentLoadIfcObject = target;
+            ChangeEditMode(LayoutMode.Trans);
+
+            ui.Show(false);
+            layoutUI.SetTarget(target);
+            layoutUI.Show(true);
+
         }
 
         void ChangeEditMode(LayoutMode mode)
@@ -320,7 +383,39 @@ namespace Landscape2.Runtime
             }
 
             layoutMode = mode;
-            editMode?.CreateRuntimeHandle(currentLoadIfcObject, type);
+            if (currentLoadIfcObject != null)
+            {
+                editMode?.CreateRuntimeHandle(currentLoadIfcObject, type);
+            }
+        }
+
+        private Bounds? GetLargestBounds(GameObject gameObject)
+        {
+            if (gameObject == null)
+            {
+                Debug.LogWarning("GameObject が null です。");
+                return null;
+            }
+
+            // 子オブジェクトを含むすべての Renderer を取得
+            Renderer[] renderers = gameObject.GetComponentsInChildren<Renderer>();
+
+            if (renderers.Length <= 0)
+            {
+                Debug.LogWarning("Renderer が見つかりません。");
+                return null;
+            }
+
+            // 最初の Renderer で初期 Bounds を設定
+            Bounds combinedBounds = renderers[0].bounds;
+
+            // すべての Renderer の Bounds を統合
+            foreach (var renderer in renderers)
+            {
+                combinedBounds.Encapsulate(renderer.bounds);
+            }
+
+            return combinedBounds;
         }
     }
 }
