@@ -38,9 +38,10 @@ namespace Landscape2.Runtime
         {
             Dictionary<string, Button> buttonIndex = new();
 
+            public int ButtonNum => buttonIndex.Count();
+
             public ListView(VisualElement title, VisualElement root) : base(title, root)
             {
-
                 Initialize();
             }
 
@@ -48,7 +49,6 @@ namespace Landscape2.Runtime
             {
                 rootElement.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
                 titleElement.style.display = rootElement.style.display;
-
             }
 
             public void Initialize()
@@ -130,11 +130,16 @@ namespace Landscape2.Runtime
 
         Stack<VisualElement> viewElementStack = new();
 
+        // FIXME: ListView側に持たせたので削除して良い
         Dictionary<Button, string> entryViewpointButton = new();
+
+        // FIXME: ListView側に持たせたので削除して良い
         Dictionary<Button, string> entryLandmarkButton = new();
 
+        // FIXME: ListView側に持たせたので削除して良い
         Dictionary<Button, string> entryAnalyzeButtonFromButton = new();
-        //Dictionary<string, Button> entryAnalyzeButtonFromName = new();
+
+        SnackBar snackbar;
 
 
         private StyleSheet uiStyleCommon;
@@ -160,6 +165,8 @@ namespace Landscape2.Runtime
             landmarkList_View = new(landmarkListTitle, landMarkListPanel);
             analyzeList_View = new(analyzeListTitle, analyzeListPanel);
 
+
+            snackbar = new(element);
 
             //AsyncOperationHandle<StyleSheet> uiStyleCommonHandle = Addressables.LoadAssetAsync<StyleSheet>("UIStyleCommon");
             //uiStyleCommon = await uiStyleCommonHandle.Task;
@@ -219,7 +226,6 @@ namespace Landscape2.Runtime
         private void SetAnalyzeViewpointTarget(string target)
         {
             var new_Analyze_Viewpoint = analyzeSettingPanel.Q<VisualElement>("New_Analyze_Viewpoint");
-            // var landmarkName = new_Analyze_Viewpoint.Q<Label>("LandmarkName");
             var viewpointName = new_Analyze_Viewpoint.Q<Label>("ViewpointName");
 
             viewpointName.text = target;
@@ -271,6 +277,15 @@ namespace Landscape2.Runtime
 
             upperLabel.text = $"{upper}";
             underLabel.text = $"{under}";
+        }
+
+        private void SetNewAnalyzeSelectPanelButtonState(VisualElement newAnalyzeSelect)
+        {
+            var viewpointLandmarkButton = newAnalyzeSelect.Q<Button>("SelectButton_Viewpoint");
+            var landmarkButton = newAnalyzeSelect.Q<Button>("SelectButton_Landmark");
+
+            viewpointLandmarkButton.SetEnabled(0 < viewPointList_View.ButtonNum && 0 < landmarkList_View.ButtonNum);
+            landmarkButton.SetEnabled(0 < landmarkList_View.ButtonNum);
         }
 
 
@@ -326,8 +341,12 @@ namespace Landscape2.Runtime
             {
                 // 視点場ピン作成
                 Debug.Log($"視点場ピン作成: {newViewpoint_Button.name}");
+                snackbar.ShowMessage("マップをクリックして視点を登録して下さい");
                 FocusAnalyzeSettingPanel();
-                SetCurrentAnalyzeSettingPanel("New_Viewpoint");
+                var elem = SetCurrentAnalyzeSettingPanel("New_Viewpoint");
+                var heightValueTextField = elem.Q<TextField>("heightValueTextField");
+                heightValueTextField.value = $"{1.5f}";
+
                 lineOfSight.SetMode(LineOfSightType.viewPoint);
                 PushElement(new_PointMenu);
                 beforeElement = new_PointMenu;
@@ -337,8 +356,12 @@ namespace Landscape2.Runtime
             {
                 // 眺望対象作成
                 Debug.Log($"眺望対象ピン作成: {newLandmark_Button.name}");
+                snackbar.ShowMessage("マップをクリックして眺望対象を登録して下さい");
                 FocusAnalyzeSettingPanel();
-                SetCurrentAnalyzeSettingPanel("New_Landmark");
+
+                var elem = SetCurrentAnalyzeSettingPanel("New_Landmark");
+                elem.Q<TextField>("heightValueTextField").value = $"0";
+
                 lineOfSight.SetMode(LineOfSightType.landmark);
                 PushElement(new_PointMenu);
                 beforeElement = new_PointMenu;
@@ -350,7 +373,9 @@ namespace Landscape2.Runtime
                 Debug.Log($"新規解析作成: {newLandmark_Button.name}");
 
                 FocusAnalyzeSettingPanel();
-                SetCurrentAnalyzeSettingPanel("New_Analyze_Select");
+                var panel = SetCurrentAnalyzeSettingPanel("New_Analyze_Select");
+                SetNewAnalyzeSelectPanelButtonState(panel);
+
                 PushElement(new_PointMenu);
                 beforeElement = new_PointMenu;
             };
@@ -366,6 +391,7 @@ namespace Landscape2.Runtime
             var backButton = new_Viewpoint.Q<Button>("BackButton");
             backButton.clicked += () =>
             {
+                snackbar.Hide();
                 viewPoint.OnDisable();
                 new_Viewpoint.style.display = DisplayStyle.None;
                 ViewDefaultPanels();
@@ -374,6 +400,7 @@ namespace Landscape2.Runtime
             var cancelButton = new_Viewpoint.Q<Button>("CancelButton");
             cancelButton.clicked += () =>
             {
+                snackbar.Hide();
                 viewPoint.OnDisable();
                 new_Viewpoint.style.display = DisplayStyle.None;
                 ViewDefaultPanels();
@@ -387,6 +414,7 @@ namespace Landscape2.Runtime
                     return;
                 }
 
+                snackbar.Hide();
                 CreateViewPointButton(buttonName);
                 new_Viewpoint.style.display = DisplayStyle.None;
                 ViewDefaultPanels();
@@ -404,6 +432,7 @@ namespace Landscape2.Runtime
             var backButton = new_Landmark.Q<Button>("BackButton");
             backButton.clicked += () =>
             {
+                snackbar.Hide();
                 landmark.OnDisable();
                 new_Landmark.style.display = DisplayStyle.None;
                 ViewDefaultPanels();
@@ -412,6 +441,7 @@ namespace Landscape2.Runtime
             var cancelButton = new_Landmark.Q<Button>("CancelButton");
             cancelButton.clicked += () =>
             {
+                snackbar.Hide();
                 landmark.OnDisable();
                 new_Landmark.style.display = DisplayStyle.None;
                 ViewDefaultPanels();
@@ -424,6 +454,7 @@ namespace Landscape2.Runtime
                 {
                     return;
                 }
+                snackbar.Hide();
                 CreateLandmarkButton(buttonName);
                 new_Landmark.style.display = DisplayStyle.None;
                 ViewDefaultPanels();
@@ -431,6 +462,7 @@ namespace Landscape2.Runtime
         }
 
         /// <summary>
+        /// 解析したいタイプを選んで下さい
         /// 視点場 -> 眺望対象 解析作成
         /// </summary>
         private void InitializeNew_Analyze_Select()
@@ -446,8 +478,10 @@ namespace Landscape2.Runtime
                 ViewDefaultPanels();
             };
             var selectButton_Landmark = new_Analyze_Select.Q<Button>("SelectButton_Landmark");
+
             selectButton_Landmark.clicked += () =>
             {
+                // 眺望対象
                 SetCurrentAnalyzeSettingPanel("New_Analyze_Landmark");
                 lineOfSight.SetMode(LineOfSightType.analyzeLandmark);
                 PushElement(new_Analyze_Select);
@@ -456,13 +490,12 @@ namespace Landscape2.Runtime
             var selectButton_Viewpoint = new_Analyze_Select.Q<Button>("SelectButton_Viewpoint");
             selectButton_Viewpoint.clicked += () =>
             {
+                // 視点場 -> 眺望対象
                 SetCurrentAnalyzeSettingPanel("New_Analyze_Viewpoint");
 
                 SetAnalyzeLandmarkTarget("選択されていません");
                 SetAnalyzeViewpointTarget("選択されていません");
                 SetAnalyzeViewingAngleTarget(0, 0);
-
-                // FIXME: 選択視点場/眺望対象のリセット
 
                 lineOfSight.SetMode(LineOfSightType.analyzeViewPoint);
                 PushElement(new_Analyze_Select);
@@ -479,7 +512,9 @@ namespace Landscape2.Runtime
             var backButton = new_Analyze_Viewpoint.Q<Button>("BackButton");
             backButton.clicked += () =>
             {
-                SetCurrentAnalyzeSettingPanel("New_Analyze_Select");
+                var panel = SetCurrentAnalyzeSettingPanel("New_Analyze_Select");
+                SetNewAnalyzeSelectPanelButtonState(panel);
+
                 lineOfSight.SetMode(LineOfSightType.main);
                 analyzeViewPoint.ClearLineOfSight();
                 analyzeViewPoint.ClearSetMode();
@@ -488,7 +523,7 @@ namespace Landscape2.Runtime
             var selectViewpointButton = new_Analyze_Viewpoint.Q<Button>("SelectViewpointButton");
             selectViewpointButton.clicked += () =>
             {
-                // analyzeSettingPanel.style.display = DisplayStyle.None;
+                snackbar.ShowMessage("リストから選択して下さい");
                 ShowAnalyzeSettingPanel(false);
                 viewPointList_View.Show(true);//viewPointListPanel.style.display = DisplayStyle.Flex;
                 analyzeViewPoint.SetViewPoint();
@@ -499,10 +534,11 @@ namespace Landscape2.Runtime
             var selectLandmarkButton = new_Analyze_Viewpoint.Q<Button>("SelectLandmarkButton");
             selectLandmarkButton.clicked += () =>
             {
+                snackbar.ShowMessage("リストから選択して下さい");
                 // analyzeSettingPanel.style.display = DisplayStyle.None;
                 ShowAnalyzeSettingPanel(false);
                 landmarkList_View.Show(true);
-                landMarkListPanel.style.display = DisplayStyle.Flex;
+                // landMarkListPanel.style.display = DisplayStyle.Flex;
                 analyzeViewPoint.SetLandMark();
                 PushElement(new_Analyze_Viewpoint); // ?
                 beforeElement = new_Analyze_Viewpoint;
@@ -511,8 +547,9 @@ namespace Landscape2.Runtime
             var settingButton = new_Analyze_Viewpoint.Q<Button>("SettingButton");
             settingButton.clicked += () =>
             {
-                new_Analyze_Viewpoint.style.display = DisplayStyle.None;
-                slider_Viewpoint.style.display = DisplayStyle.Flex;
+                // new_Analyze_Viewpoint.style.display = DisplayStyle.None;
+                // slider_Viewpoint.style.display = DisplayStyle.Flex;
+                SetCurrentAnalyzeSettingPanel("Slider_Viewpoint");
                 analyzeViewPoint.SetAnalyzeRange();
                 PushElement(new_Analyze_Viewpoint);
                 beforeElement = new_Analyze_Viewpoint;
@@ -520,8 +557,11 @@ namespace Landscape2.Runtime
             var cancelButton = new_Analyze_Viewpoint.Q<Button>("CancelButton");
             cancelButton.clicked += () =>
             {
-                new_Analyze_Viewpoint.style.display = DisplayStyle.None;
-                new_Analyze_Select.style.display = DisplayStyle.Flex;
+                // new_Analyze_Viewpoint.style.display = DisplayStyle.None;
+                // new_Analyze_Select.style.display = DisplayStyle.Flex;
+                var panel = SetCurrentAnalyzeSettingPanel("New_Analyze_Select");
+                SetNewAnalyzeSelectPanelButtonState(panel);
+
                 lineOfSight.SetMode(LineOfSightType.main);
                 analyzeViewPoint.ClearLineOfSight();
                 analyzeViewPoint.ClearSetMode();
@@ -595,7 +635,9 @@ namespace Landscape2.Runtime
             cancelButton.clicked += () =>
             {
                 new_Analyze_Landmark.style.display = DisplayStyle.None;
-                SetCurrentAnalyzeSettingPanel("New_Analyze_Select");//new_Analyze_Select.style.display = DisplayStyle.Flex;
+                var panel = SetCurrentAnalyzeSettingPanel("New_Analyze_Select");//new_Analyze_Select.style.display = DisplayStyle.Flex;
+                SetNewAnalyzeSelectPanelButtonState(panel);
+
                 analyzeLandmark.ClearLineOfSight();
                 analyzeLandmark.ClearSetMode();
             };
@@ -635,6 +677,8 @@ namespace Landscape2.Runtime
             {
                 var vslider = slider_Viewpoint.Q<SliderInt>("VerticalSlider");
                 var hslider = slider_Viewpoint.Q<SliderInt>("HorizontalSlider");
+
+                var spanSlider = slider_Viewpoint.Q<SliderInt>("RaySpanSlider");
 
                 SetAnalyzeViewingAngleTarget(hslider.value, vslider.value);
 
@@ -718,6 +762,7 @@ namespace Landscape2.Runtime
                 }
                 // UIの変更
                 edit_Viewpoint.style.display = DisplayStyle.None;
+                snackbar.ShowMessage("削除しました");
                 ViewDefaultPanels();
             };
             var okButton = edit_Viewpoint.Q<Button>("OKButton");
@@ -785,6 +830,7 @@ namespace Landscape2.Runtime
                     RemoveAnalyzeListButton(keyName);
                 }
                 // UIの変更
+                snackbar.ShowMessage("削除しました");
                 edit_Landmark.style.display = DisplayStyle.None;
                 ViewDefaultPanels();
             };
@@ -855,6 +901,7 @@ namespace Landscape2.Runtime
             {
                 var buttonName = analyzeViewPoint.DeleteAnalyzeData();
                 RemoveAnalyzeListButton(buttonName);
+                snackbar.ShowMessage("削除しました");
                 edit_Analyze_Viewpoint.style.display = DisplayStyle.None;
                 ViewDefaultPanels();
             };
@@ -925,6 +972,7 @@ namespace Landscape2.Runtime
             {
                 var buttonName = analyzeLandmark.DeleteAnalyzeData();
                 RemoveAnalyzeListButton(buttonName);
+                snackbar.ShowMessage("削除しました");
                 ViewDefaultPanels();
             };
             var cancelButton = edit_Analyze_Landmark.Q<Button>("CancelButton");
@@ -966,6 +1014,7 @@ namespace Landscape2.Runtime
             {
 
                 Debug.Log($"viewpoint {buttonName} clicked");
+                snackbar.Hide();
                 // 選択する場面に応じて処理を分ける
 
                 // モードが2つあって
@@ -1007,6 +1056,7 @@ namespace Landscape2.Runtime
             //newButton.name = buttonName;
             newButton.clicked += () =>
             {
+                snackbar.Hide();
                 // ここは3つ
                 // analyzeSettingPanelが表示されている時
 
@@ -1143,7 +1193,6 @@ namespace Landscape2.Runtime
         }
         public void ClearButton(LineOfSightType lineOfSightType)
         {
-#if true
             ListView scrollView = null;
             if (lineOfSightType == LineOfSightType.viewPoint)
             {
@@ -1159,27 +1208,6 @@ namespace Landscape2.Runtime
             }
 
             scrollView.ClearList();
-
-#else
-            ScrollView scrollView = null;
-            if (lineOfSightType == LineOfSightType.viewPoint)
-            {
-                scrollView = viewPointListPanel.Q<ScrollView>("Panel");
-            }
-            else if (lineOfSightType == LineOfSightType.landmark)
-            {
-                scrollView = landMarkListPanel.Q<ScrollView>("Panel");
-            }
-            else if (lineOfSightType == LineOfSightType.analyzeViewPoint || lineOfSightType == LineOfSightType.analyzeLandmark)
-            {
-                scrollView = analyzeListPanel.Q<ScrollView>("Panel");
-            }
-            var buttons = scrollView.Query<Button>().ToList();
-            foreach (var button in buttons)
-            {
-                scrollView.Remove(button);
-            }
-#endif
         }
         private void FocusAnalyzeSettingPanel()
         {

@@ -29,6 +29,8 @@ namespace Landscape2.Runtime
 
             deleteListUI.OnClickShowButton += (go) =>
             {
+                editBuilding.SetTargetObject(go);
+                CameraMoveByUserInput.FocusOnObject(go);
                 var r = disableList.Where(r => r.gameObject == go).FirstOrDefault();
                 if (!r)
                 {
@@ -38,6 +40,12 @@ namespace Landscape2.Runtime
                 editComponent.ShowBuilding(true);
                 
                 disableList.Remove(r);
+            };
+
+            deleteListUI.OnClickListElement += (go) =>
+            {
+                editBuilding.SetTargetObject(go);
+                CameraMoveByUserInput.FocusOnObject(go);
             };
 
             trsUI.OnClickDeleteButton += () =>

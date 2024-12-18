@@ -30,6 +30,13 @@ namespace Landscape2.Runtime
                     OnButtonClick?.Invoke(target);
                 });
 
+                var listElement = container.Q<VisualElement>("List");
+
+                listElement.RegisterCallback<ClickEvent>(evt =>
+                {
+                    OnListClick?.Invoke(target);
+                });
+
                 var nameLabel = container.Q<Label>("Name");
                 nameLabel.text = obj.name;
 
@@ -50,7 +57,7 @@ namespace Landscape2.Runtime
         /// <summary>
         /// リスト選択時コールバック
         /// </summary>
-        public System.Action<int> OnClickListElement { get; set; }
+        public System.Action<GameObject> OnClickListElement { get; set; }
 
 
         VisualElement rootElement;
@@ -123,6 +130,11 @@ namespace Landscape2.Runtime
                 listRootElement.Remove(elem.Element);
                 OnClickShowButton?.Invoke(go);
             };
+            elem.OnListClick += (go) =>
+            {
+                OnClickListElement?.Invoke(go);
+            };
+
             listRootElement.Add(elem.Element);
         }
 

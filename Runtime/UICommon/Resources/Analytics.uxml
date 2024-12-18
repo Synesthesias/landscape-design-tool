@@ -15,7 +15,10 @@
             </ui:VisualElement>
             <ui:Instance template="Panel_LandmarkList" name="LandmarkList" />
         </ui:VisualElement>
-        <ui:VisualElement name="CenterContainer" picking-mode="Ignore" style="flex-grow: 1;" />
+        <ui:VisualElement name="CenterContainer" picking-mode="Ignore" style="flex-grow: 1; padding-top: 145px;">
+            <ui:VisualElement name="CenterUpper" picking-mode="Ignore" style="flex-grow: 0; flex-shrink: 0;" />
+            <ui:VisualElement name="CenterLower" picking-mode="Ignore" style="flex-grow: 0; flex-shrink: 0;" />
+        </ui:VisualElement>
         <ui:VisualElement name="RightContainer" picking-mode="Ignore" style="flex-grow: 1; flex-shrink: 0;">
             <ui:VisualElement name="Title_AnalyzeSetting" class="Title_Right" style="flex-grow: 0;">
                 <ui:Label tabindex="-1" text="見通し解析登録・編集" parse-escape-sequences="true" display-tooltip-when-elided="true" />

@@ -24,6 +24,9 @@ namespace Landscape2.Runtime
         public int rangeWidth;
         // 0 ~ 50(m)
         public int rangeHeight;
+
+        // 1〜100。ray射出間隔
+        public int raySpan;
         public string startPosName;
         public string endPosName;
         public Vector3 startPos;
@@ -34,6 +37,7 @@ namespace Landscape2.Runtime
         {
             rangeWidth = 0,
             rangeHeight = 0,
+            raySpan = 1,
             startPosName = "",
             endPosName = "",
             startPos = Vector3.zero,
@@ -97,6 +101,7 @@ namespace Landscape2.Runtime
             targetLandmark = null;
             analyzeViewPointData.rangeWidth = 80;
             analyzeViewPointData.rangeHeight = 50;
+            analyzeViewPointData.raySpan = 1;
             analyzeViewPointData.lineColorValid = lineColorValid;
             analyzeViewPointData.lineColorInvalid = lineColorInvalid;
         }
@@ -123,8 +128,6 @@ namespace Landscape2.Runtime
         {
             cam = Camera.main;
             ray = cam.ScreenPointToRay(Input.mousePosition);
-
-            Debug.Log($"SetTarget");
 
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity))
             {
@@ -221,6 +224,10 @@ namespace Landscape2.Runtime
 
             float result = -1;
             int circumferenceInterval = Mathf.FloorToInt(rangeWidth * Mathf.Rad2Deg);
+            {
+                int cfi = Mathf.FloorToInt(rangeWidth * (float)analyzeViewPointData.raySpan * Mathf.Rad2Deg);
+                circumferenceInterval = cfi;
+            }
             var diff = endPointPos - startPointPos;
             float radius = Vector2.Distance(new Vector2(startPointPos.x, startPointPos.z), new Vector2(endPointPos.x, endPointPos.z));
 
@@ -229,9 +236,9 @@ namespace Landscape2.Runtime
             {
                 for (int j = 0; j < rangeHeight; j++)
                 {
-                    targetPoint.x = radius * Mathf.Sin(i * rangeWidth / circumferenceInterval - rangeWidth / 2);
+                    targetPoint.x = radius * Mathf.Sin(i * rangeWidth / (float)circumferenceInterval - rangeWidth / 2);
                     targetPoint.y = endPointPos.y - startPointPos.y + j - rangeHeight / 2;
-                    targetPoint.z = radius * Mathf.Cos(i * rangeWidth / circumferenceInterval - rangeWidth / 2);
+                    targetPoint.z = radius * Mathf.Cos(i * rangeWidth / (float)circumferenceInterval - rangeWidth / 2);
                     // 始点から終点のベクトルの角度を求めます。
                     float angle = Vector2.SignedAngle(Vector2.up, new Vector2(diff.x, diff.z));
                     var rotator = Quaternion.AngleAxis(-angle, Vector3.up);
@@ -406,9 +413,7 @@ namespace Landscape2.Runtime
         public void SetAnalyzeRange()
         {
             var slider_Viewpoint = analyzeSettingPanel.Q<VisualElement>("Slider_Viewpoint");
-            Debug.Log(slider_Viewpoint);
             var horizontalSlider = slider_Viewpoint.Q<SliderInt>("HorizontalSlider");
-            Debug.Log(horizontalSlider);
             horizontalSlider.lowValue = 10;
             horizontalSlider.highValue = 180;
             horizontalSlider.value = analyzeViewPointData.rangeWidth;
@@ -425,6 +430,16 @@ namespace Landscape2.Runtime
             verticalSlider.RegisterValueChangedCallback(evt =>
             {
                 analyzeViewPointData.rangeHeight = evt.newValue;
+                CreateLineOfSight();
+            });
+
+            var raySpanSlider = slider_Viewpoint.Q<SliderInt>("RaySpanSlider");
+            raySpanSlider.lowValue = 1;
+            raySpanSlider.highValue = 10;
+            raySpanSlider.value = analyzeViewPointData.raySpan;
+            raySpanSlider.RegisterValueChangedCallback(evt =>
+            {
+                analyzeViewPointData.raySpan = evt.newValue;
                 CreateLineOfSight();
             });
         }

@@ -39,14 +39,14 @@ namespace Landscape2.Runtime
 
         // 建物と高さピンの対応リスト
         private List<(PLATEAUCityObjectGroup Building, VisualElement Pin)> bldgList = new List<(PLATEAUCityObjectGroup, VisualElement)>();
-      
+
         private bool isCameraMoved = false;
         private const float cameraDistance = 500f;
         private PLATEAUCityObjectGroup selectedBuilding;
         private int lastPinID = 0;
         private GameObject highlightBox = null;
 
-        public VisualizeHeightUI(VisualizeHeight visualizeHeight,VisualElement uiRoot,LandscapeCamera landscapeCamera)
+        public VisualizeHeightUI(VisualizeHeight visualizeHeight, VisualElement uiRoot, LandscapeCamera landscapeCamera)
         {
             this.visualizeHeight = visualizeHeight;
             this.landscapeCamera = landscapeCamera;
@@ -54,7 +54,7 @@ namespace Landscape2.Runtime
 
             // 高さ可視化用のUXMLを生成
             visualizeHeightUXML = Resources.Load<VisualTreeAsset>("HeightHUD");
-            
+
             visualizeHeightPanel = new UIDocumentFactory().CreateWithUxmlName("HeightDisplay");
             visualizeHeightPanel.style.display = DisplayStyle.Flex;
             pointOfViewPanel = visualizeHeightPanel.Q<VisualElement>("PointOfViewDisplay");
@@ -71,7 +71,8 @@ namespace Landscape2.Runtime
             heightSlider.style.display = DisplayStyle.None;
             heightSlider.value = 10; // 初期値は10m
 
-            heightSlider.RegisterValueChangedCallback((evt) => {
+            heightSlider.RegisterValueChangedCallback((evt) =>
+            {
                 UpdateHeightPinsDisplay(evt.newValue);
             });
 
@@ -120,7 +121,7 @@ namespace Landscape2.Runtime
                 walkerPanel.style.display = DisplayStyle.None;
                 walkerPin.style.display = DisplayStyle.None;
                 selectedBuilding = null;
-                if(highlightBox != null) GameObject.Destroy(highlightBox);
+                if (highlightBox != null) GameObject.Destroy(highlightBox);
             }
         }
 
@@ -132,7 +133,7 @@ namespace Landscape2.Runtime
             // すべての建物を取得
             List<PLATEAUCityObjectGroup> buildingList = new List<PLATEAUCityObjectGroup>();
             buildingList = visualizeHeight.GetBuildingList();
-            
+
             foreach (var building in buildingList)
             {
                 heightPinClone = visualizeHeightUXML.CloneTree().Q<VisualElement>(UIHeightPin);
@@ -143,6 +144,10 @@ namespace Landscape2.Runtime
 
                 // 建物の高さを設定
                 string height = visualizeHeight.GetBuildingHeight(building);
+                if (string.IsNullOrEmpty(height))
+                {
+                    height = "---";
+                }
                 bldgList[bldgList.Count - 1].Pin.Q<Label>().text = height;
                 bldgList[bldgList.Count - 1].Pin.style.display = DisplayStyle.None;
 
@@ -153,6 +158,11 @@ namespace Landscape2.Runtime
             bldgList = bldgList.OrderByDescending(item => float.Parse(item.Pin.Q<Label>().text)).ToList();
 
             // 歩行者モードの高さピンを初期化
+            if (heightPinClone == null)
+            {
+                // buildingList.Count() <= 0の時
+                heightPinClone = visualizeHeightUXML.CloneTree().Q<VisualElement>(UIHeightPin);
+            }
             walkerPanel.Add(heightPinClone);
             walkerPin = walkerPanel.Q<VisualElement>(UIHeightPin);
             walkerPin.style.display = DisplayStyle.None;
@@ -165,6 +175,11 @@ namespace Landscape2.Runtime
         /// </summary>
         private void UpdateHeightPinsDisplay(float heightLimit)
         {
+            if (bldgList.Count() <= 0)
+            {
+                Debug.LogWarning($"bldgList.Count() <= 0");
+                return;
+            }
             // 高さピンのリストを初期化
             var pin = bldgList[lastPinID].Pin;
             float height = float.Parse(pin.Q<Label>().text);
@@ -191,7 +206,7 @@ namespace Landscape2.Runtime
                     }
                     else break;
                 }
-            }     
+            }
         }
 
         /// <summary>
@@ -208,7 +223,7 @@ namespace Landscape2.Runtime
             var vp = Camera.main.WorldToViewportPoint(topPos);
             bool isActive = vp.x >= 0.0f && vp.x <= 1.0f && vp.y >= 0.0f && vp.y <= 1.0f && vp.z >= 0.0f;
             bool isInScreen = screenPos.x > pinOffsetx && screenPos.x < Screen.width - pinOffsetx && screenPos.y > headerOffset + pinOffsety;
-            bool isNearCamera = Vector2.Distance(new Vector2(topPos.x,topPos.z), new Vector2(Camera.main.transform.position.x, Camera.main.transform.position.z)) < cameraDistance;
+            bool isNearCamera = Vector2.Distance(new Vector2(topPos.x, topPos.z), new Vector2(Camera.main.transform.position.x, Camera.main.transform.position.z)) < cameraDistance;
 
             // ヘッダーパネルをのぞくScreenに映る範囲内の場合は表示
             if (isActive && isInScreen && isNearCamera)
@@ -233,7 +248,7 @@ namespace Landscape2.Runtime
             if (landscapeCamera.cameraState != LandscapeCameraState.Walker)
             {
                 return;
-            } 
+            }
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit = new RaycastHit();
@@ -312,7 +327,7 @@ namespace Landscape2.Runtime
                 else
                 {
                     pointOfViewPanel.style.display = DisplayStyle.None;
-                }                  
+                }
                 // 視点が変更されたフラグを立てる
                 isCameraMoved = true;
                 Camera.main.transform.hasChanged = false;
@@ -330,7 +345,7 @@ namespace Landscape2.Runtime
                         {
                             walkerPin.style.display = DisplayStyle.Flex;
                             walkerPin.style.translate = UpdateHeightPinPosition(selectedBuilding);
-                        } 
+                        }
                     }
                     else if (heightToggle.value == true) // 俯瞰モードの場合
                     {
@@ -341,7 +356,7 @@ namespace Landscape2.Runtime
                         }
                     }
                 }
-            }          
+            }
         }
 
         public void Start()

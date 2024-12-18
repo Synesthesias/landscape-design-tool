@@ -72,7 +72,7 @@
                 <ui:Button text="作成" parse-escape-sequences="true" display-tooltip-when-elided="true" name="OKButton" />
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="New_Analyze_Select" style="flex-grow: 1; display: flex;">
+        <ui:VisualElement name="New_Analyze_Select" style="flex-grow: 1; display: none;">
             <ui:VisualElement name="Header" style="flex-grow: 0;">
                 <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="BackButton" class="CircleButton" style="align-items: center; justify-content: center;">
                     <ui:VisualElement name="Icon_Back" style="flex-grow: 0; flex-shrink: 0; width: 24px; height: 24px;" />
@@ -229,13 +229,17 @@
                         <ui:Label tabindex="-1" text="左右" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
                         <ui:SliderInt label="SliderInt" high-value="100" show-input-field="true" name="HorizontalSlider" style="flex-shrink: 1; width: 100%;" />
                     </ui:VisualElement>
+                    <ui:VisualElement name="row" style="flex-grow: 0; flex-direction: row; align-items: center; margin-top: 24px; width: 100%;">
+                        <ui:Label tabindex="-1" text="間隔" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
+                        <ui:SliderInt label="SliderInt" high-value="100" show-input-field="true" name="RaySpanSlider" style="flex-shrink: 1; width: 100%;" />
+                    </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="Footer" style="flex-grow: 0; flex-direction: row; justify-content: center;">
                 <ui:Button text="決定" parse-escape-sequences="true" display-tooltip-when-elided="true" name="OKButton" />
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="Slider_Landmark" style="flex-grow: 1; display: none;">
+        <ui:VisualElement name="Slider_Landmark" style="flex-grow: 1; display: flex;">
             <ui:VisualElement name="Header" style="flex-grow: 0;">
                 <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="BackButton" class="CircleButton" style="align-items: center; justify-content: center;">
                     <ui:VisualElement name="Icon_Back" style="flex-grow: 0; flex-shrink: 0; width: 24px; height: 24px;" />
@@ -247,17 +251,21 @@
                     <ui:Label tabindex="-1" text="眺望対象の視野角度を設定してください" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" style="font-size: 14px; -unity-text-align: upper-center;" />
                 </ui:VisualElement>
                 <ui:VisualElement style="flex-grow: 1; align-items: center; justify-content: center; width: 100%; flex-shrink: 0;">
-                    <ui:VisualElement name="row" style="flex-grow: 0; flex-direction: row; align-items: center; width: 100%;">
-                        <ui:Label tabindex="-1" text="距離" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
-                        <ui:SliderInt label="SliderInt" high-value="100" show-input-field="true" name="DistanceSlider" style="flex-shrink: 1; width: 100%;" />
-                    </ui:VisualElement>
                     <ui:VisualElement name="row" style="flex-grow: 0; flex-direction: row; align-items: center; margin-top: 24px; width: 100%;">
                         <ui:Label tabindex="-1" text="上方向" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
                         <ui:SliderInt label="SliderInt" high-value="100" show-input-field="true" name="UpperSlider" style="flex-shrink: 1; width: 100%;" />
                     </ui:VisualElement>
-                    <ui:VisualElement name="row" style="flex-grow: 0; flex-direction: row; align-items: center; margin-top: 24px; width: 100%;">
+                    <ui:VisualElement name="row" style="flex-grow: 0; flex-direction: row; align-items: center; margin-top: 12px; width: 100%;">
                         <ui:Label tabindex="-1" text="下方向" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
                         <ui:SliderInt label="SliderInt" high-value="100" show-input-field="true" name="DownSlider" style="flex-shrink: 1; width: 100%;" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="row" style="flex-grow: 0; flex-direction: row; align-items: center; width: 100%; margin-top: 12px;">
+                        <ui:Label tabindex="-1" text="距離" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
+                        <ui:SliderInt label="SliderInt" high-value="100" show-input-field="true" name="DistanceSlider" style="flex-shrink: 1; width: 100%;" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="row" style="flex-grow: 0; flex-direction: row; align-items: center; margin-top: 12px; width: 100%;">
+                        <ui:Label tabindex="-1" text="間隔" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
+                        <ui:SliderInt label="SliderInt" high-value="100" show-input-field="true" name="RaySpanSlider" style="flex-shrink: 1; width: 100%;" />
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>

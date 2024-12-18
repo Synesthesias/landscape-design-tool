@@ -118,6 +118,14 @@ namespace Landscape2.Runtime
         {
             return targetObject;
         }
+
+        public void SetTargetObject(GameObject obj)
+        {
+            targetObject = obj;
+            CreateHighlightBox();
+            OnBuildingSelected(targetObject);
+        }
+
         public void Start()
         {
         }

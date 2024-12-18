@@ -22,6 +22,8 @@ namespace Landscape2.Runtime
         public int rangeRadius;
         public int rangeUp;
         public int rangeDown;
+
+        public int raySpan;
         public string startPosName;
         public Vector3 startPos;
         public Color lineColorValid;
@@ -31,6 +33,7 @@ namespace Landscape2.Runtime
             rangeRadius = 0,
             rangeUp = 0,
             rangeDown = 0,
+            raySpan = 1,
             startPosName = "",
             startPos = Vector3.zero,
             lineColorValid = Color.clear,
@@ -95,6 +98,7 @@ namespace Landscape2.Runtime
             analyzeLandmarkData.rangeRadius = LandmarkViewMinDistance;
             analyzeLandmarkData.rangeUp = 1;
             analyzeLandmarkData.rangeDown = 1;
+            analyzeLandmarkData.raySpan = 1;
             analyzeLandmarkData.lineColorValid = lineColorValid;
             analyzeLandmarkData.lineColorInvalid = lineColorInvalid;
         }
@@ -152,7 +156,7 @@ namespace Landscape2.Runtime
             var obj = new GameObject(ObjNameLineOfSight);
             obj.transform.parent = targetLandmark.transform;
 
-            int circumferenceInterval = LandmarkViewRayInterval;
+            int circumferenceInterval = LandmarkViewRayInterval * analyzeLandmarkData.raySpan;
             int radiusInterval = 5;
             int radius = analyzeLandmarkData.rangeRadius;
             int rangeUp = analyzeLandmarkData.rangeUp;
@@ -166,9 +170,9 @@ namespace Landscape2.Runtime
                 for (int j = 0; j < rangeUp; j++)
                 {
                     targetPoint = targetLandmark.transform.position;
-                    targetPoint.x += radius * Mathf.Cos(2 * Mathf.PI * i / circumferenceInterval);
+                    targetPoint.x += radius * Mathf.Cos(2 * Mathf.PI * i / (float)circumferenceInterval);
                     targetPoint.y += j;
-                    targetPoint.z += radius * Mathf.Sin(2 * Mathf.PI * i / circumferenceInterval);
+                    targetPoint.z += radius * Mathf.Sin(2 * Mathf.PI * i / (float)circumferenceInterval);
                     RaycastHit hit;
                     if (RaycastBuildings(targetLandmark, targetPoint, out hit))
                     {
@@ -184,9 +188,9 @@ namespace Landscape2.Runtime
                 for (int j = 0; j < rangeDown; j++)
                 {
                     targetPoint = targetLandmark.transform.position;
-                    targetPoint.x += radius * Mathf.Cos(2 * Mathf.PI * i / circumferenceInterval);
+                    targetPoint.x += radius * Mathf.Cos(2 * Mathf.PI * i / (float)circumferenceInterval);
                     targetPoint.y -= j;
-                    targetPoint.z += radius * Mathf.Sin(2 * Mathf.PI * i / circumferenceInterval);
+                    targetPoint.z += radius * Mathf.Sin(2 * Mathf.PI * i / (float)circumferenceInterval);
                     RaycastHit hit;
                     if (RaycastBuildings(targetLandmark, targetPoint, out hit))
                     {
@@ -323,6 +327,16 @@ namespace Landscape2.Runtime
             downSlider.RegisterValueChangedCallback(evt =>
             {
                 analyzeLandmarkData.rangeDown = evt.newValue;
+                CreateLineOfSight();
+            });
+
+            var raySpanSlider = slider_Landmark.Q<SliderInt>("RaySpanSlider");
+            raySpanSlider.lowValue = 1;
+            raySpanSlider.highValue = 10;
+            raySpanSlider.value = analyzeLandmarkData.raySpan;
+            raySpanSlider.RegisterValueChangedCallback(evt =>
+            {
+                analyzeLandmarkData.raySpan = evt.newValue;
                 CreateLineOfSight();
             });
         }

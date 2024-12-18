@@ -16,6 +16,7 @@ using RuntimeHandle;
 using UnityEngine.InputSystem;
 using System.Linq;
 using PlateauToolkit.Sandbox;
+using ProceduralToolkit;
 
 namespace Landscape2.Runtime
 {
@@ -128,6 +129,8 @@ namespace Landscape2.Runtime
             else if (mode == ArrangeModeName.Normal)
             {
                 currentMode = null;
+
+                editTarget = null;
             }
             arrangementAssetUIClass.DisplayEditPanel(false);
         }
@@ -164,16 +167,27 @@ namespace Landscape2.Runtime
         {
             cam = Camera.main;
             ray = cam.ScreenPointToRay(Input.mousePosition);
+
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity))
             {
                 if (CheckParentName(hit.transform, "CreatedAssets"))
                 {
-                    editTarget = FindAssetComponent(hit.transform);
+                    var selectTarget = FindAssetComponent(hit.transform);
+                    if (selectTarget == editTarget)
+                    {
+                        // 再度同じtargetを選択しない様にする
+                        return;
+                    }
+                    editTarget = selectTarget;
                     arrangementAssetUIClass.SetEditTarget(editTarget);
                     SetMode(ArrangeModeName.Edit);
                     editMode.CreateRuntimeHandle(editTarget, TransformType.Position);
+
+                    return;
                 }
             }
+
+            editTarget = null;
         }
 
         private bool CheckParentName(Transform hitTransform, string parentName)

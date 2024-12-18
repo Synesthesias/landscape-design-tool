@@ -24,6 +24,9 @@ namespace Landscape2.Runtime
         private RaycastHit rotateHit, parallelHit;
         private float translationFactor = 1f;
 
+        private static GameObject focusTarget;
+        private static bool isFocusTriggered = false;
+
         private static bool isKeyboardActive = true;
         private static bool isMouseActive = true;
 
@@ -225,6 +228,12 @@ namespace Landscape2.Runtime
             parallelMoveByMouse = Mouse.current.delta.ReadValue();
             rotateByMouse = Mouse.current.delta.ReadValue();
 
+            if (isFocusTriggered)
+            {
+                FocusOnObjectInternal(trans);
+                isFocusTriggered = false;
+            }
+
             MoveCameraHorizontal(cameraMoveSpeedData.horizontalMoveSpeed * deltaTime * horizontalMoveByKeyboard, trans);
             MoveCameraVertical(cameraMoveSpeedData.verticalMoveSpeed * deltaTime * verticalMoveByKeyboard, trans);
             MoveCameraParallel(parallelMoveByMouse, trans);
@@ -294,7 +303,6 @@ namespace Landscape2.Runtime
             }
         }
 
-
         /// <summary>
         /// カメラ回転
         /// </summary>
@@ -311,6 +319,81 @@ namespace Landscape2.Runtime
             float newPitch = Mathf.Clamp(pitch - moveDelta.y, 0, 85);
             float pitchDelta = pitch - newPitch;
             cameraTrans.RotateAround(rotateHit.point, camera.transform.right, -pitchDelta);
+        }
+
+        public static void FocusOnObject(GameObject target)
+        {
+            focusTarget = target;
+            isFocusTriggered = true;
+        }
+
+        private void FocusOnObjectInternal(Transform cameraTrans)
+        {
+            if (focusTarget == null)
+            {
+                Debug.LogError("ターゲットオブジェクトが指定されていません。");
+                return;
+            }
+
+            // オブジェクトのバウンディングボックスを計算
+            Bounds bounds = CalculateBounds(focusTarget);
+
+            // オブジェクトの中心位置
+            Vector3 targetPosition = bounds.center;
+
+            // カメラの角度を設定（上から45度見下ろす）
+            float angle = 45f;
+            Quaternion rotation = Quaternion.Euler(angle, 0, 0);
+            cameraTrans.rotation = rotation;
+
+            // カメラからオブジェクトまでの距離を計算
+            var mainCamera = Camera.main;
+            float distance = CalculateCameraDistance(mainCamera, bounds, angle);
+
+            // カメラの位置を設定
+            Vector3 direction = rotation * Vector3.back;
+            cameraTrans.transform.position = targetPosition + direction * distance;
+
+            // カメラがオブジェクトを注視するように設定
+            cameraTrans.transform.LookAt(targetPosition);
+        }
+
+        private Bounds CalculateBounds(GameObject obj)
+        {
+            Renderer[] renderers = obj.GetComponentsInChildren<Renderer>();
+            if (renderers.Length == 0)
+            {
+                Debug.LogError("指定されたオブジェクトにRendererが存在しません。");
+                return new Bounds(obj.transform.position, Vector3.zero);
+            }
+
+            Bounds bounds = renderers[0].bounds;
+            foreach (Renderer renderer in renderers)
+            {
+                bounds.Encapsulate(renderer.bounds);
+            }
+            return bounds;
+        }
+
+        private float CalculateCameraDistance(Camera camera, Bounds bounds, float angle)
+        {
+            // オブジェクトの最大サイズを取得
+            float objectSize = Mathf.Max(bounds.size.x, bounds.size.y, bounds.size.z);
+
+            // カメラの視野角をラジアンに変換
+            float fov = camera.fieldOfView;
+            float fovRad = fov * Mathf.Deg2Rad;
+
+            // アスペクト比を取得
+            float aspect = camera.aspect;
+
+            // カメラの垂直視野角を計算
+            float cameraHeightAtDistance = objectSize / (2f * Mathf.Tan(fovRad / 2f));
+
+            // カメラの距離を計算（角度を考慮）
+            float distance = cameraHeightAtDistance / Mathf.Cos(angle * Mathf.Deg2Rad);
+
+            return distance;
         }
     }
 }
