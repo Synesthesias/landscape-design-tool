@@ -1,5 +1,7 @@
+using UnityEngine;
 using UnityEngine.UIElements;
 using System;
+using System.Collections.Generic;
 
 namespace Landscape2.Runtime.LandscapePlanLoader
 {
@@ -18,13 +20,15 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         private readonly VisualElement panel_AreaPlanningRegister;
         private readonly VisualElement panel_AreaPlanningEdit;
 
+        private Color? pickedColor = null;
+
 
         // 選択中のエリアのindex番号
         public int currentFocusedAreaIndex { get; private set; }    // -1: エリア未選択時
 
         public event Action<int> OnFocusedAreaChanged = delegate { };   // リストからエリアが選択されたときのイベント
         public event Action OnChangeConfirmed = delegate { };   // エリア編集が確定されたときのイベント
-        
+
 
         /// <summary>
         /// パネル表示のステータス
@@ -45,7 +49,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
             // 各UIパネル制御クラスのインスタンス生成
             new Panel_AreaPlanningListUI(planning, this);
-            new Panel_AreaPlanningMenuUI(planning,this);
+            new Panel_AreaPlanningMenuUI(planning, this);
             new Panel_AreaPlanningSubMenuUI(planning, this);
             new Panel_AreaPlanningInfoUI(planning, this);
             new Panel_AreaPlanningRegister(planning, this);
@@ -94,7 +98,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     panel_AreaPlanningRegister.style.display = DisplayStyle.None;
                     panel_AreaPlanningEdit.style.display = DisplayStyle.None;
                     break;
-                
+
                 // リストからエリアが選択された状態
                 case PlanningPanelStatus.ListForcused:
                     title_AreaPlanningInfo.style.display = DisplayStyle.Flex;
@@ -162,6 +166,24 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 default:
                     break;
             }
+        }
+
+        /// <summary>
+        /// colorを保持する
+        /// </summary>
+        /// <param name="col"></param>
+        public void PushColorStack(Color col)
+        {
+            pickedColor = col;
+        }
+
+        /// <summary>
+        /// 保持したcolorの値を返す
+        /// </summary>
+        /// <returns></returns>
+        public Color? PopColorStack()
+        {
+            return pickedColor;
         }
 
         /// <summary>

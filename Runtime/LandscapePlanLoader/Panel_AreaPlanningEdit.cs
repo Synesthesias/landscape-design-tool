@@ -15,14 +15,14 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
         private Button heightApplyButton;
         private Button heightResetButton;
-        
+
         public Panel_AreaPlanningEdit(VisualElement planning, PlanningUI planningUI) : base(planning, planningUI)
         {
             // 親のパネルを取得
             panel_AreaPlanningEdit = planning.Q<VisualElement>("Panel_AreaPlanningEdit");
 
             areaEditManager = new AreaEditManager();
-            areaPlanningEdit = new AreaPlanningEdit(areaEditManager,displayPinLine);
+            areaPlanningEdit = new AreaPlanningEdit(areaEditManager, displayPinLine);
 
             // リスト要素クリック時に編集対象を更新
             planningUI.OnFocusedAreaChanged += RefreshEditor;
@@ -45,7 +45,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             heightApplyButton.clicked += ApplyHeight;
             heightResetButton = panel_AreaPlanningEdit.Q<Button>("HeightResetButton");
             heightResetButton.clicked += ResetHeight;
-            
+
             base.InitializeUI();
             base.RegisterCommonCallbacks();
         }
@@ -56,16 +56,19 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         protected override void OnDisplayPanel()
         {
             if (panel_AreaPlanningEdit.style.display == DisplayStyle.Flex)
-            {   
+            {
                 displayPinLine.InitializePinLineSize();
                 panel_PointEditor.style.display = DisplayStyle.Flex;
                 panel_ViewFix.style.display = DisplayStyle.Flex;
                 areaPlanningEdit.CreatePinline();
-                
+
                 // 高さ適用ボタンの活性化
                 heightApplyButton.SetEnabled(!areaEditManager.IsApplyingBuildingHeight());
                 heightResetButton.SetEnabled(areaEditManager.IsApplyingBuildingHeight());
-                
+
+                var color = planningUI.PopColorStack();
+                pasteButton.SetEnabled(color != null);  // pasteボタンは色を取ってきて存在していたら最初から有効
+
                 base.DisplaySnackbar("頂点ピンをドラッグすると形状を編集できます");
             }
             else
@@ -82,10 +85,10 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// </summary>
         protected override void IncrementHeight()
         {
-            if(areaEditManager.GetLimitHeight() == null) return;
+            if (areaEditManager.GetLimitHeight() == null) return;
             areaEditManager.ChangeHeight((float)areaEditManager.GetLimitHeight() + 1);  //インクリメント
             areaPlanningHeight.value = areaEditManager.GetLimitHeight().ToString(); //テキストフィールドに反映
-            
+
             // 高さ適用ボタンの活性化
             heightApplyButton.SetEnabled(true);
         }
@@ -95,10 +98,10 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// </summary>
         protected override void DecrementHeight()
         {
-            if(areaEditManager.GetLimitHeight() == null) return;
+            if (areaEditManager.GetLimitHeight() == null) return;
             areaEditManager.ChangeHeight((float)areaEditManager.GetLimitHeight() - 1);  //デクリメント
             areaPlanningHeight.value = areaEditManager.GetLimitHeight().ToString(); //テキストフィールドに反映
-            
+
             // 高さ適用ボタンの活性化
             heightApplyButton.SetEnabled(true);
         }
@@ -110,17 +113,17 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         protected override void InputHeight(ChangeEvent<string> evt)
         {
             // 入力値が数値で最大高さ以下の値の場合のみデータを更新
-            if(float.TryParse(evt.newValue, out float value) && value <= areaEditManager.GetMaxHeight())
+            if (float.TryParse(evt.newValue, out float value) && value <= areaEditManager.GetMaxHeight())
             {
                 areaEditManager.ChangeHeight(value);
-                
+
                 // 高さ適用ボタンの活性化
                 heightApplyButton.SetEnabled(true);
             }
             else
             {
                 // 空欄以外の文字入力があった場合は元の値に戻す
-                if(evt.newValue != "")  areaPlanningHeight.value = evt.previousValue;
+                if (evt.newValue != "") areaPlanningHeight.value = evt.previousValue;
             }
         }
 
@@ -138,7 +141,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// </summary>
         protected override void EditColor()
         {
-            if(isColorEditing)
+            if (isColorEditing)
             {
                 base.EditColor();
 
@@ -158,7 +161,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             else
             {
                 // 色彩変更画面を閉じる
-                if(colorEditorClone != null) colorEditorClone.RemoveFromHierarchy();
+                if (colorEditorClone != null) colorEditorClone.RemoveFromHierarchy();
             }
         }
 
@@ -176,21 +179,21 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// </summary>
         protected override void OnOKButtonClicked()
         {
-           // 色彩変更画面を閉じる
+            // 色彩変更画面を閉じる
             isColorEditing = false;
             EditColor();
 
-           // 頂点の編集を適用
+            // 頂点の編集を適用
             areaPlanningEdit.ConfirmEditData();
             //データベースに変更確定を反映
-            areaEditManager.ConfirmUpdatedProperty();   
-           planningUI.InvokeOnChangeConfirmed();
-           
-           // 高さを反映し直す
-           if (areaEditManager.IsApplyingBuildingHeight())
-           {
-               areaEditManager.ApplyBuildingHeight(true);
-           }
+            areaEditManager.ConfirmUpdatedProperty();
+            planningUI.InvokeOnChangeConfirmed();
+
+            // 高さを反映し直す
+            if (areaEditManager.IsApplyingBuildingHeight())
+            {
+                areaEditManager.ApplyBuildingHeight(true);
+            }
         }
 
         /// <summary>
@@ -199,17 +202,17 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         private void OnClickPanel()
         {
             if (areaPlanningEdit.IsClickPin()) // ピンをクリック 
-            {              
-                if(Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) // ctrlキーを押しながらクリックした場合は頂点を削除
+            {
+                if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) // ctrlキーを押しながらクリックした場合は頂点を削除
                 {
                     areaPlanningEdit.DeleteVertex();
                 }
                 else // 通常クリックの場合は頂点を移動
                 {
                     panel_ViewFix.style.display = DisplayStyle.Flex;
-                }   
+                }
             }
-            else if(areaPlanningEdit.IsClickLine()) // ラインをクリック
+            else if (areaPlanningEdit.IsClickLine()) // ラインをクリック
             {
                 panel_ViewFix.style.display = DisplayStyle.Flex;
                 // 中点に頂点を追加
@@ -248,7 +251,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             areaEditManager.ResetProperty();
 
             // 色彩変更画面を閉じる
-           isColorEditing = false;
+            isColorEditing = false;
             EditColor();
             //isVertexEditing = false;
             // 頂点編集の内容を破棄
@@ -271,12 +274,32 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             heightApplyButton.SetEnabled(false);
             heightResetButton.SetEnabled(true);
         }
-        
+
         private void ResetHeight()
         {
             areaEditManager.ApplyBuildingHeight(false);
             heightApplyButton.SetEnabled(true);
             heightResetButton.SetEnabled(false);
         }
+
+        protected override void OnCopyButtonClicked()
+        {
+            var color = areaPlanningColor.resolvedStyle.backgroundColor;
+            planningUI.PushColorStack(color);
+
+            pasteButton.SetEnabled(true);
+        }
+
+        protected override void OnPasteButtonClicked()
+        {
+            var newColor = planningUI.PopColorStack();
+            if (newColor != null)
+            {
+                areaPlanningColor.style.backgroundColor = newColor.Value;
+                areaEditManager.ChangeColor(newColor.Value);
+            }
+
+        }
+
     }
 }

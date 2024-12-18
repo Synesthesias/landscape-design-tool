@@ -20,6 +20,9 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         protected VisualTreeAsset colorEditor;    // 色彩編集用のテンプレート
         protected VisualElement colorEditorClone; // 色彩編集用クローン
         protected VisualElement snackBarClone; // Snackbarのクローン
+
+        protected Button copyButton;
+        protected Button pasteButton;
         protected bool isColorEditing = false;
 
         public Panel_AreaPlanningEditBaseUI(VisualElement planning, PlanningUI planningUI)
@@ -52,6 +55,17 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             panel_AreaPlanningEdit.Q<Button>("DownButton").clicked += DecrementHeight;
             panel_AreaPlanningEdit.Q<Button>("CancelButton").RegisterCallback<ClickEvent>(ev => planningUI.InvokeOnFocusedAreaChanged(-1)); // エリアフォーカスを外す
             panel_AreaPlanningEdit.Q<Button>("CancelButton").RegisterCallback<ClickEvent>(ev => OnCancelButtonClicked());
+
+            copyButton = panel_AreaPlanningEdit.Q<Button>("ColorCopyButton");
+            copyButton.SetEnabled(true);
+            pasteButton = panel_AreaPlanningEdit.Q<Button>("ColorPasteButton");
+            var color = planningUI.PopColorStack();
+            pasteButton.SetEnabled(color != null);  // pasteボタンは色を取ってきて存在していたら最初から有効
+
+            copyButton.RegisterCallback<ClickEvent>(ev => OnCopyButtonClicked());
+            pasteButton.RegisterCallback<ClickEvent>(ev => OnPasteButtonClicked());
+
+
             panel_AreaPlanningEdit.RegisterCallback<GeometryChangedEvent>(ev => OnDisplayPanel());
             okButton = panel_AreaPlanningEdit.Q<Button>("OKButton");
             okButton.RegisterCallback<ClickEvent>(ev => OnOKButtonClicked());
@@ -117,6 +131,17 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// OKボタンが押されたときの処理
         /// </summary>
         protected abstract void OnOKButtonClicked();
+
+
+        /// <summary>
+        /// copyボタンが押された時の処理
+        /// </summary>
+        protected abstract void OnCopyButtonClicked();
+
+        /// <summary>
+        /// pasteボタンが押された時の処理
+        /// </summary>
+        protected abstract void OnPasteButtonClicked();
 
         /// <summary>
         /// Snackbarを新しく生成する関数

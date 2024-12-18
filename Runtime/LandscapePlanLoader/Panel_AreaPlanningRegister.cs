@@ -47,6 +47,10 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 displayPinLine.InitializePinLineSize();
                 panel_PointEditor.style.display = DisplayStyle.Flex;
                 okButton.visible = false;
+
+                var color = planningUI.PopColorStack();
+                pasteButton.SetEnabled(color != null);  // pasteボタンは色を取ってきて存在していたら最初から有効
+
                 base.DisplaySnackbar("地形をクリックして領域を作成してください");
             }
             else
@@ -142,11 +146,11 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// </summary>
         protected override void OnOKButtonClicked()
         {
-            if(!areaPlanningRegister.IsCreateArea())return;
+            if (!areaPlanningRegister.IsCreateArea()) return;
 
             // 新規景観区画データを作成
             areaPlanningRegister.CreateAreaData(
-                areaPlanningName.value, 
+                areaPlanningName.value,
                 float.Parse(areaPlanningHeight.value),
                 wallMaxHeight,
                 areaPlanningColor.resolvedStyle.backgroundColor);
@@ -166,11 +170,30 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 areaPlanningRegister.AddVertexIfClicked();
             }
 
-            if(areaPlanningRegister.IsClosed())
+            if (areaPlanningRegister.IsClosed())
             {
                 okButton.visible = true;
             }
             isDragging = false;
         }
+
+        protected override void OnCopyButtonClicked()
+        {
+            var color = areaPlanningColor.resolvedStyle.backgroundColor;
+            planningUI.PushColorStack(color);
+
+            pasteButton.SetEnabled(true);
+        }
+
+        protected override void OnPasteButtonClicked()
+        {
+            var newColor = planningUI.PopColorStack();
+            Debug.Log($"newColor: {newColor}");
+            if (newColor != null)
+            {
+                areaPlanningColor.style.backgroundColor = new StyleColor(newColor.Value);
+            }
+        }
+
     }
 }
