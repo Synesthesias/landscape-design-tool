@@ -32,10 +32,10 @@ namespace Landscape2.Runtime
             saveButton.clicked += SaveProject;
             loadButton.clicked += LoadProject;
         }
-        
+
         void SaveProject()
         {
-            var path = StandaloneFileBrowser.SaveFilePanel("Create File","","","data");
+            var path = StandaloneFileBrowser.SaveFilePanel("Create File", "", "", "data");
             DataSerializer._savePath = path;
 
             SaveEvent();
@@ -46,11 +46,11 @@ namespace Landscape2.Runtime
 
         void LoadProject()
         {
-            var paths = StandaloneFileBrowser.OpenFilePanel("Open File", "","data", false);
+            var paths = StandaloneFileBrowser.OpenFilePanel("Open File", "", "data", false);
             string path = "";
-            if(paths.Length > 0)
+            if (paths.Length > 0)
             {
-                path =  paths[0];
+                path = paths[0];
             }
             DataSerializer._savePath = path;
 
@@ -77,5 +77,10 @@ namespace Landscape2.Runtime
         public void OnDisable()
         {
         }
+
+        public void LateUpdate(float deltaTime)
+        {
+        }
+
     }
 }

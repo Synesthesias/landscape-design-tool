@@ -47,7 +47,7 @@ namespace Landscape2.Runtime.BuildingEditor
         // 建築物のRGB値を変更
         public void EditMaterialColor(Color color, float smoothness)
         {
-            if(targetObject != null)
+            if (targetObject != null)
             {
                 // Renderer.materialにアクセスすることでマテリアルを複製し，元のMaterialを変更せずに色を変更する
                 // 選択中のマテリアルの色を変更
@@ -66,7 +66,7 @@ namespace Landscape2.Runtime.BuildingEditor
                 }
             }
         }
-     
+
         // 建物が選択されたときに呼び出される
         // 選択中のオブジェクトのマテリアルを編集中リストに設定
         public int SetMaterialList(GameObject targetObject)
@@ -111,7 +111,7 @@ namespace Landscape2.Runtime.BuildingEditor
             {
                 editingMaterials.AddRange(buildingFieldMaterials);
             }
-            else if(id > 0)
+            else if (id > 0)
             {
                 // 選択された要素のみを編集対象にする
                 editingMaterials.Add(buildingFieldMaterials[id - 1]);
@@ -128,9 +128,9 @@ namespace Landscape2.Runtime.BuildingEditor
                 {
                     mat.SetFloat("_Smoothness", value);
                 }
-            }            
+            }
         }
-        
+
         // 選択された要素の色を取得
         public Color GetMaterialColor()
         {
@@ -141,7 +141,7 @@ namespace Landscape2.Runtime.BuildingEditor
                     return editingMaterials[0].color;
                 }
             }
-            else if(editingMaterials.Count == 1) // 壁面，屋根面
+            else if (editingMaterials.Count == 1) // 壁面，屋根面
             {
                 return editingMaterials[0].color;
             }
@@ -203,7 +203,7 @@ namespace Landscape2.Runtime.BuildingEditor
 
             // データ数を取得
             int dataCount = BuildingsDataComponent.GetPropertyCount();
-            for(int i = 0; i < dataCount; i ++)
+            for (int i = 0; i < dataCount; i++)
             {
                 var property = BuildingsDataComponent.GetProperty(i);
                 string gmlID = property.GmlID;
@@ -246,7 +246,7 @@ namespace Landscape2.Runtime.BuildingEditor
                     mats[j].SetFloat("_Smoothness", smoothness[j]);
                 }
                 editedBuildingObjects.Add(targetBuilding.gameObject);
-            }                  
+            }
         }
 
         // 色彩編集内容を記録する
@@ -316,5 +316,10 @@ namespace Landscape2.Runtime.BuildingEditor
             copiedMaterials.Clear();
             targetObject = null;
         }
+
+        public void LateUpdate(float deltaTime)
+        {
+        }
+
     }
 }

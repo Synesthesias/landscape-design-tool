@@ -52,7 +52,7 @@ namespace Landscape2.Runtime.BuildingEditor
         // Smoothnessスライダーの初期値
         private float initialSmoothness;
 
-        public BuildingColorEditorUI(BuildingColorEditor buildingColorEditor,EditBuilding editBuilding,VisualElement uiRoot)
+        public BuildingColorEditorUI(BuildingColorEditor buildingColorEditor, EditBuilding editBuilding, VisualElement uiRoot)
         {
             this.buildingColorEditor = buildingColorEditor;
             initialColor = buildingColorEditor.InitialColor;
@@ -200,5 +200,10 @@ namespace Landscape2.Runtime.BuildingEditor
             // 色彩編集パネルを非表示
             colorEditorClone.style.display = DisplayStyle.None;
         }
+
+        public void LateUpdate(float deltaTime)
+        {
+        }
+
     }
 }

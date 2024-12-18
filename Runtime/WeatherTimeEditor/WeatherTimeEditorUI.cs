@@ -49,11 +49,11 @@ namespace Landscape2.Runtime.WeatherTimeEditor
                 button.RegisterValueChangedCallback(evt =>
                 {
                     if (button.value == true)
-                    { 
+                    {
                         // 天候を変更
                         this.weatherTimeEditor.SwitchWeather(button.tabIndex);
                         // 時間帯を更新
-                        this.weatherTimeEditor.EditTime(timeSlider.value);                  
+                        this.weatherTimeEditor.EditTime(timeSlider.value);
                     }
                 });
             });
@@ -80,5 +80,10 @@ namespace Landscape2.Runtime.WeatherTimeEditor
         public void Start()
         {
         }
+
+        public void LateUpdate(float deltaTime)
+        {
+        }
+
     }
 }

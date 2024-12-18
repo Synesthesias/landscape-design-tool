@@ -142,5 +142,10 @@ namespace Landscape2.Runtime
                 highlightBox = null;
             }
         }
+
+        public void LateUpdate(float deltaTime)
+        {
+        }
+
     }
 }

@@ -21,7 +21,7 @@ namespace Landscape2.Runtime
                 foreach (var buildingObj in cityModelObj.GetAllCityObjects())
                 {
                     // 建物の高さが取得できるか確認
-                    if(buildingObj.AttributesMap.TryGetValue("bldg:measuredheight", out var height))
+                    if (buildingObj.AttributesMap.TryGetValue("bldg:measuredheight", out var height))
                     {
                         // 建物オブジェクトをリストに格納
                         buildingList.Add(cityModelObj);
@@ -63,5 +63,10 @@ namespace Landscape2.Runtime
         public void OnDisable()
         {
         }
+
+        public void LateUpdate(float deltaTime)
+        {
+        }
+
     }
 }

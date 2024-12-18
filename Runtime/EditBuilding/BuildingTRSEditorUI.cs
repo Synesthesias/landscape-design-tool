@@ -169,5 +169,9 @@ namespace Landscape2.Runtime
 
             trsVisualElement.style.display = state ? DisplayStyle.Flex : DisplayStyle.None;
         }
+
+        public void LateUpdate(float deltaTime)
+        {
+        }
     }
 }

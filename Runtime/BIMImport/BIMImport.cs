@@ -341,6 +341,10 @@ namespace Landscape2.Runtime
             uiStatus = currentUIStatus;
         }
 
+        public void LateUpdate(float deltaTime)
+        {
+        }
+
         void SetupLoadMode()
         {
             ui.Show(true);

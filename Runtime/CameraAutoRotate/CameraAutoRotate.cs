@@ -131,5 +131,9 @@ namespace Landscape2.Runtime
         public void Start()
         {
         }
+
+        public void LateUpdate(float deltaTime)
+        {
+        }
     }
 }

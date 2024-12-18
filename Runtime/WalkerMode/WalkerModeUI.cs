@@ -12,16 +12,16 @@ namespace Landscape2.Runtime.WalkerMode
         private WalkerModeOrientationUI orientationUI;
         private WalkerModeInclinationUI inclinationUI;
         private LandscapeCamera landscapeCamera;
-        
+
         public WalkerModeUI(VisualElement root, LandscapeCamera landscapeCamera, WalkerMoveByUserInput walkerMoveByUserInput)
         {
             this.landscapeCamera = landscapeCamera;
-            
+
             var walkerMode = new WalkerMode(this.landscapeCamera, walkerMoveByUserInput);
             coordinateUI = new(root, walkerMode);
             orientationUI = new(root, walkerMode);
             inclinationUI = new(root, walkerMode);
-            
+
             this.landscapeCamera.OnSetCameraCalled += OnSetCameraCalled;
         }
 
@@ -54,6 +54,10 @@ namespace Landscape2.Runtime.WalkerMode
         }
 
         public void Start()
+        {
+        }
+
+        public void LateUpdate(float deltaTime)
         {
         }
     }

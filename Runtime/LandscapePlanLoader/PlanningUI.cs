@@ -216,5 +216,10 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         public void OnDisable()
         {
         }
+
+        public void LateUpdate(float deltaTime)
+        {
+        }
+
     }
 }

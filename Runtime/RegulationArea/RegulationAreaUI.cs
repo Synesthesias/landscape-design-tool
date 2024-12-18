@@ -12,7 +12,7 @@ namespace Landscape2.Runtime
     {
         /// <summary> 景観計画エリアを新規作成するボタンです。 </summary>
         public Button AreaCreateButton { get; }
-        
+
         /// <summary> エリアの新規作成モード中に表示すべきUIです。 </summary>
         public VisualElement AreaCreateModeUI { get; }
 
@@ -41,7 +41,7 @@ namespace Landscape2.Runtime
             visualTree.CloneTree(rootVisualElement);
             return new RegulationAreaUI(rootVisualElement, new EditModePositionClickedAction());
         }
-        
+
         private RegulationAreaUI(VisualElement uiRoot, PositionClickedAction clickedAction)
         {
             AreaCreateButton = uiRoot.Q<Button>("AreaCreateButton");
@@ -87,6 +87,11 @@ namespace Landscape2.Runtime
                 Debug.LogError("景観エリアの作成モードでないのに、エリア選択完了が通知されました。");
             }
         }
+
+        public void LateUpdate(float deltaTime)
+        {
+        }
+
     }
 
     /// <summary>
@@ -118,7 +123,7 @@ namespace Landscape2.Runtime
         public RANormalMode(RegulationAreaUI ui) : base(ui)
         {
         }
-        
+
         public override void OnModeSwitch()
         {
             ui.AreaCreateButton.style.display = DisplayStyle.Flex;
@@ -127,7 +132,7 @@ namespace Landscape2.Runtime
 
         public override void Update()
         {
-            
+
         }
     }
 
@@ -138,11 +143,11 @@ namespace Landscape2.Runtime
         public RACreateMode(RegulationAreaUI ui) : base(ui)
         {
             regulationArea = RegulationArea.Create(null);
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
             Selection.activeObject = regulationArea.gameObject;
-            #endif
+#endif
         }
-        
+
         public override void OnModeSwitch()
         {
             ui.AreaCreateButton.style.display = DisplayStyle.None;
@@ -173,7 +178,7 @@ namespace Landscape2.Runtime
 
         private void DrawCurrentArea()
         {
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
             for (int i = 0; i < regulationArea.Vertices.Count; ++i)
             {
                 Handles.color = Color.blue;
@@ -189,7 +194,7 @@ namespace Landscape2.Runtime
                 //         regulationArea.GenMesh();
                 // }
             }
-            #endif
+#endif
         }
 
         public void CompleteContourSelect()
@@ -198,8 +203,8 @@ namespace Landscape2.Runtime
             {
                 regulationArea.GenMesh();
             }
-            
-            
+
+
             ui.SwitchMode(new RANormalMode(ui));
         }
     }

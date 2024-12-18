@@ -19,7 +19,7 @@ namespace Landscape2.Runtime
         private Action<float> onUpdateAction;
 
 
-        public LandscapeCameraUI(LandscapeCamera landscapeCamera,VisualElement uiRoot, VisualElement[] subMenuUxmls)
+        public LandscapeCameraUI(LandscapeCamera landscapeCamera, VisualElement uiRoot, VisualElement[] subMenuUxmls)
         {
             this.landscapeCamera = landscapeCamera;
             this.uiRoot = uiRoot;
@@ -95,7 +95,7 @@ namespace Landscape2.Runtime
             }
             landscapeCamera.OnSetCameraCalled -= HandleSetCameraCalled;
         }
-        
+
         /// <summary>
         /// InputActionsから左クリックを受け取り、歩行者モードに切り替える。
         /// </summary>
@@ -103,7 +103,7 @@ namespace Landscape2.Runtime
         public void OnSelectPosByInput(InputAction.CallbackContext context)
         {
 
-            if(context.started && LandscapeCameraState.SelectWalkPoint == landscapeCamera.GetCameraState() && !isMouseOverUI)
+            if (context.started && LandscapeCameraState.SelectWalkPoint == landscapeCamera.GetCameraState() && !isMouseOverUI)
             {
                 landscapeCamera.SwitchWalkerView();
             }
@@ -139,12 +139,12 @@ namespace Landscape2.Runtime
             var cameraState = landscapeCamera.GetCameraState();
             if (cameraState == LandscapeCameraState.PointOfView)
             {
-                if(toggleWalkMode.value != false)
+                if (toggleWalkMode.value != false)
                 {
                     toggleWalkMode.value = false;
                     isNotNoticeToggleWalkCallback = true;
                 }
-                   
+
             }
             else
             {
@@ -154,7 +154,7 @@ namespace Landscape2.Runtime
                     isNotNoticeToggleWalkCallback = true;
                 }
 
-                if(cameraState == LandscapeCameraState.Walker)
+                if (cameraState == LandscapeCameraState.Walker)
                 {
                     uiRoot.Q<RadioButton>("MenuCamera").value = true;
                     uiRoot.Q<RadioButton>("SubMenuCameraList").value = true;
@@ -199,5 +199,10 @@ namespace Landscape2.Runtime
                 }
             };
         }
+
+        public void LateUpdate(float deltaTime)
+        {
+        }
+
     }
 }

@@ -181,6 +181,14 @@ namespace Landscape2.Runtime
             }
         }
 
+        private void LateUpdate()
+        {
+            foreach (var c in subComponents)
+            {
+                c.LateUpdate(Time.deltaTime);
+            }
+        }
+
         private void OnDisable()
         {
             foreach (var c in subComponents)

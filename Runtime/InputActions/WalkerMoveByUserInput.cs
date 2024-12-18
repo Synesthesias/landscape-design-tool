@@ -57,7 +57,7 @@ namespace Landscape2.Runtime
                 MoveWASD(cameraMoveSpeedData.walkerMoveSpeed * deltaTime * deltaWASD);
                 MoveForward(cameraMoveSpeedData.walkerMoveSpeed * 0.01f * deltaWheel);
 
-                var deltaMouseXY= Mouse.current.delta.ReadValue();
+                var deltaMouseXY = Mouse.current.delta.ReadValue();
                 RotateCamera(cameraMoveSpeedData.rotateSpeed * deltaMouseXY);
             }
         }
@@ -208,13 +208,13 @@ namespace Landscape2.Runtime
         public async void AddRotateWithDuration(Vector2 rotationDelta)
         {
             const float duration = 0.2f; // 移動時間
-            
+
             var startAngles = camera.transform.eulerAngles;
             var newAngles = camera.transform.eulerAngles;
             newAngles.x -= rotationDelta.y;
             newAngles.y += rotationDelta.x;
             newAngles.z = 0f;
-            
+
             var elapsedTime = 0f;
             while (elapsedTime < duration)
             {
@@ -224,10 +224,15 @@ namespace Landscape2.Runtime
             }
             camera.transform.eulerAngles = newAngles;
         }
-        
+
         public Transform GetWalkerCameraTransform()
         {
             return camera.transform;
         }
+
+        public void LateUpdate(float deltaTime)
+        {
+        }
+
     }
 }

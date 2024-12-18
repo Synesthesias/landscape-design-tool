@@ -7,6 +7,9 @@
     public interface ISubComponent
     {
         public void Update(float deltaTime);
+
+        public void LateUpdate(float deltaTime);
+
         public void OnEnable();
         public void OnDisable();
 

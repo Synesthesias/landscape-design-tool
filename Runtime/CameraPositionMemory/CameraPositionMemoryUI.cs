@@ -48,7 +48,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
         private bool isListSelected = false, isWalkEditorOffsetYFieldFocused = false;
         private int selectedSlotData;
         private TextField registerTextField, editorTextField, walkRegisterNameField, walkEditorNameField, walkRegisterOffsetYField, walkEditorOffsetYField;
-        private Button registerOKButton, editorOKButton, walkRegisterOKButton, walkEditorOKButton, walkControllerW, walkControllerS, walkControllerA, walkControllerD,　walkModeQuit;
+        private Button registerOKButton, editorOKButton, walkRegisterOKButton, walkEditorOKButton, walkControllerW, walkControllerS, walkControllerA, walkControllerD, walkModeQuit;
         private Label walkControllerHeightText;
         private GroupBox walkSpeedGroup;
         private RadioButton walkSpeed1RadioButton, walkSpeed2RadioButton, walkSpeed3RadioButton;
@@ -97,11 +97,11 @@ namespace Landscape2.Runtime.CameraPositionMemory
             uiRootWalkMode.Q<TemplateContainer>(WalkEditor).Q<Button>("DownButton").clicked += () => OnClickedOffsetYDOWNButton();
 
             walkControllerHeightText = uiRootWalkMode.Q<Label>("HeightText");
-            var walkControllerHeightUp  = uiRootWalkMode.Q<TemplateContainer>("Panel_WalkController").Q<Button>("UpButton");
-            var walkControllerHeightDown  = uiRootWalkMode.Q<TemplateContainer>("Panel_WalkController").Q<Button>("DownButton");
+            var walkControllerHeightUp = uiRootWalkMode.Q<TemplateContainer>("Panel_WalkController").Q<Button>("UpButton");
+            var walkControllerHeightDown = uiRootWalkMode.Q<TemplateContainer>("Panel_WalkController").Q<Button>("DownButton");
             walkControllerHeightUp.clicked += () => OnClickedOffsetYUPButton();
             walkControllerHeightDown.clicked += () => OnClickedOffsetYDOWNButton();
-            
+
             walkControllerW = uiRootWalkMode.Q<Button>("FPSForwardButton");
             walkControllerS = uiRootWalkMode.Q<Button>("FpsBackButton");
             walkControllerA = uiRootWalkMode.Q<Button>("FpsLeftButton");
@@ -129,7 +129,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
             walkControllerS.clicked += () =>
             {
                 walkerMoveByUserInput.MoveWASD(cameraMoveSpeedData.walkerMoveSpeed * 0.5f * new Vector2(0.0f, 1.0f));
-   
+
             };
             walkControllerA.clicked += () =>
             {
@@ -210,7 +210,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
 
         public void Update(float deltaTime)
         {
-            
+
             if (registerTextField.value == "")
             {
                 registerOKButton.SetEnabled(false);
@@ -220,7 +220,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
                 registerOKButton.SetEnabled(true);
             }
 
-            if(editorTextField.value == "")
+            if (editorTextField.value == "")
             {
                 editorOKButton.SetEnabled(false);
             }
@@ -229,7 +229,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
                 editorOKButton.SetEnabled(true);
             }
 
-            if(walkRegisterNameField.value == "" || walkRegisterOffsetYField.value == "")
+            if (walkRegisterNameField.value == "" || walkRegisterOffsetYField.value == "")
             {
                 walkRegisterOKButton.SetEnabled(false);
             }
@@ -238,7 +238,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
                 walkRegisterOKButton.SetEnabled(true);
             }
 
-            if(walkEditorNameField.value == "" || walkEditorOffsetYField.value == "")
+            if (walkEditorNameField.value == "" || walkEditorOffsetYField.value == "")
             {
                 walkEditorOKButton.SetEnabled(false);
             }
@@ -247,10 +247,10 @@ namespace Landscape2.Runtime.CameraPositionMemory
                 walkEditorOKButton.SetEnabled(true);
             }
 
-            if((Input.GetMouseButton(0) || Input.GetMouseButton(1)) && !EventSystem.current.IsPointerOverGameObject() && isListSelected)
+            if ((Input.GetMouseButton(0) || Input.GetMouseButton(1)) && !EventSystem.current.IsPointerOverGameObject() && isListSelected)
             {
-                    isListSelected = false;
-                    UpdateButtonState();
+                isListSelected = false;
+                UpdateButtonState();
             }
             UpdateOffsetY();
             onUpdateAction?.Invoke(deltaTime);
@@ -262,7 +262,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
 
         public void OnDisable()
         {
-           cameraMoveSpeedData.walkerMoveSpeed = defaultWalkSpeed;
+            cameraMoveSpeedData.walkerMoveSpeed = defaultWalkSpeed;
         }
 
         /// <summary>
@@ -359,7 +359,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
         /// </summary>
         private void OnClickedOffsetYDOWNButton()
         {
-            if(cameraPositionMemory.GetOffsetY() - 0.1f > 0)
+            if (cameraPositionMemory.GetOffsetY() - 0.1f > 0)
                 cameraPositionMemory.SetOffsetY(cameraPositionMemory.GetOffsetY() - 0.1f);
             UpdateOffsetY();
         }
@@ -376,7 +376,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
                 walkEditorOffsetYField.value = cameraPositionMemory.GetOffsetY().ToString();
                 walkControllerHeightText.text = cameraPositionMemory.GetOffsetY().ToString();
             }
-                
+
         }
 
         /// <summary>
@@ -403,9 +403,9 @@ namespace Landscape2.Runtime.CameraPositionMemory
         /// <param name="evt"></param>
         private void OnChangedOffsetYValue(ChangeEvent<string> evt)
         {
-            if(float.TryParse(evt.newValue,out float value))
+            if (float.TryParse(evt.newValue, out float value))
             {
-                if(value >= 0)
+                if (value >= 0)
                 {
                     cameraPositionMemory.SetOffsetY(value);
                 }
@@ -425,7 +425,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
         private void UpdateButtonState()
         {
             uiRootWalkMode.Q<VisualElement>("Title_CameraRegist").style.display = DisplayStyle.Flex;
-            if(isListSelected)
+            if (isListSelected)
             {
                 uiRootCameraEdit.Q<TemplateContainer>(CameraRegister).style.display = DisplayStyle.None;
                 uiRootCameraEdit.Q<TemplateContainer>(CameraEditor).style.display = DisplayStyle.Flex;
@@ -465,7 +465,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
 
             //UI構築
             int slotCount = cameraPositionMemory.GetSlotDatas().Count;
-            if(slotCount < 1)
+            if (slotCount < 1)
             {
                 uiRootCameraList.Q<Label>("Dialogue").style.display = DisplayStyle.Flex;
                 uiRootCameraEdit.Q<Label>("Dialogue").style.display = DisplayStyle.Flex;
@@ -564,7 +564,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
         private void CreateSnackbar(string text)
         {
             GameObject.Destroy(GameObject.Find("Snackbar"));
-            var snackBar =  new UIDocumentFactory().CreateWithUxmlName("Snackbar");
+            var snackBar = new UIDocumentFactory().CreateWithUxmlName("Snackbar");
             snackBar.Q<Label>("SnackbarText").text = text;
             snackBar.Q<Button>("CloseButton").clicked += () =>
             {
@@ -608,5 +608,10 @@ namespace Landscape2.Runtime.CameraPositionMemory
                 GameObject.Destroy(GameObject.Find("Modal"));
             };
         }
+
+        public void LateUpdate(float deltaTime)
+        {
+        }
+
     }
 }

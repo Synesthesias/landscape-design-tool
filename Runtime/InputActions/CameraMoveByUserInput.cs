@@ -222,7 +222,7 @@ namespace Landscape2.Runtime
             cameraParent.transform.SetPositionAndRotation(new Vector3(0, 215, 0), Quaternion.Euler(new Vector3(45, 0, 0)));
         }
 
-        public void Update(float deltaTime)
+        public void LateUpdate(float deltaTime)
         {
             var trans = cameraParent.transform;
             parallelMoveByMouse = Mouse.current.delta.ReadValue();
@@ -319,6 +319,10 @@ namespace Landscape2.Runtime
             float newPitch = Mathf.Clamp(pitch - moveDelta.y, 0, 85);
             float pitchDelta = pitch - newPitch;
             cameraTrans.RotateAround(rotateHit.point, camera.transform.right, -pitchDelta);
+        }
+
+        public void Update(float deltaTime)
+        {
         }
 
         public static void FocusOnObject(GameObject target)
