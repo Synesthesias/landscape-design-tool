@@ -94,6 +94,12 @@ namespace Landscape2.Runtime
         {
             if (selectObject.TryGetComponent<PlateauSandboxBuilding>(out var building))
             {
+                // 特定の建物はパネルを表示しない
+                if (!CanShowPanel(building.name))
+                {
+                    return;
+                }
+                
                 // 共通パラメータの表示
                 arrangementBuildingEditor.SetTarget(building);
                 InitializeSliders();
@@ -135,7 +141,13 @@ namespace Landscape2.Runtime
             }
             ShowPanel(false);
         }
-        
+
+        private bool CanShowPanel(String buildingName)
+        {
+            // TODO: 名前ではなく特定のパラメータで判定したい
+            return !buildingName.Contains("KotoHouse");
+        }
+
         private void InitializeSliders()
         {
             if (arrangementBuildingEditor.CanSlideHeight())
