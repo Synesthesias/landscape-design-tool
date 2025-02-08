@@ -22,8 +22,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             panel_AreaPlanningEdit = planning.Q<VisualElement>("Panel_AreaPlanningRegister");
 
             // 頂点データ作成パネルを生成
-            panel_PointEditor = new UIDocumentFactory().CreateWithUxmlName("Panel_RegulationArea");
-            GameObject.Find("Panel_RegulationArea").GetComponent<UIDocument>().sortingOrder = -1;
+            panel_PointEditor = new UIDocumentFactory().CreateWithUxmlName("Panel_AreaRegistering");
+            GameObject.Find("Panel_AreaRegistering").GetComponent<UIDocument>().sortingOrder = -1;
             panel_PointEditor.style.display = DisplayStyle.None;
 
             panel_PointEditor.RegisterCallback<MouseUpEvent>(ev => OnPointEditorClicked());

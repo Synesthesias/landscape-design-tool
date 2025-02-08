@@ -11,8 +11,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
     {
         private readonly AreaEditManager areaEditManager;
         private AreaPlanningEdit areaPlanningEdit;
-        private VisualElement panel_ViewFix; // 視点固定用パネル
-
         private Button heightApplyButton;
         private Button heightResetButton;
 
@@ -28,17 +26,12 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             planningUI.OnFocusedAreaChanged += RefreshEditor;
 
             // 頂点データ編集用Panelを生成
-            panel_PointEditor = new UIDocumentFactory().CreateWithUxmlName("Panel_EditVertices");
-            GameObject.Find("Panel_EditVertices").GetComponent<UIDocument>().sortingOrder = -1;
+            panel_PointEditor = new UIDocumentFactory().CreateWithUxmlName("Panel_AreaEditing");
+            GameObject.Find("Panel_AreaEditing").GetComponent<UIDocument>().sortingOrder = -1;
+            panel_PointEditor.RegisterCallback<MouseDownEvent>(ev => OnClickPanel(ev));
+            panel_PointEditor.RegisterCallback<MouseMoveEvent>(ev => OnDragPanel());
+            panel_PointEditor.RegisterCallback<MouseUpEvent>(ev => OnReleasePanel());
             panel_PointEditor.style.display = DisplayStyle.None;
-
-            // 頂点編集中に視点が動かないようにするためのパネル
-            panel_ViewFix = planning.Q<VisualElement>("Panel_EditPoint");
-            panel_ViewFix.RegisterCallback<MouseDownEvent>(ev => OnClickPanel());
-            panel_ViewFix.RegisterCallback<MouseMoveEvent>(ev => OnDragPanel());
-            panel_ViewFix.RegisterCallback<MouseUpEvent>(ev => OnReleasePanel());
-            panel_ViewFix.style.display = DisplayStyle.None;
-            panel_PointEditor.RegisterCallback<MouseUpEvent>(ev => panel_ViewFix.style.display = DisplayStyle.Flex);
 
             // 高さ反映/元に戻す
             heightApplyButton = panel_AreaPlanningEdit.Q<Button>("HeightApplyButton");
@@ -59,7 +52,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             {
                 displayPinLine.InitializePinLineSize();
                 panel_PointEditor.style.display = DisplayStyle.Flex;
-                panel_ViewFix.style.display = DisplayStyle.Flex;
+                CameraMoveByUserInput.IsCameraMoveActive = true;
                 areaPlanningEdit.CreatePinline();
 
                 // 高さ適用ボタンの活性化
@@ -75,7 +68,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             {
                 areaPlanningEdit.ClearVertexEdit();
                 panel_PointEditor.style.display = DisplayStyle.None;
-                panel_ViewFix.style.display = DisplayStyle.None;
                 base.HideSnackbar();
             }
         }
@@ -171,7 +163,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         protected override void OnCancelButtonClicked()
         {
             areaPlanningEdit.ClearVertexEdit();
-            //areaPlanningEdit.CreatePinline();
         }
 
         /// <summary>
@@ -199,28 +190,28 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// <summary>
         /// 頂点編集パネルをクリックしたときの処理
         /// </summary>
-        private void OnClickPanel()
+        private void OnClickPanel(MouseDownEvent e)
         {
             if (areaPlanningEdit.IsClickPin()) // ピンをクリック 
             {
-                if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) // ctrlキーを押しながらクリックした場合は頂点を削除
+                if (e.clickCount == 2) // ダブルクリックした場合は頂点を削除
                 {
                     areaPlanningEdit.DeleteVertex();
                 }
                 else // 通常クリックの場合は頂点を移動
                 {
-                    panel_ViewFix.style.display = DisplayStyle.Flex;
+                    CameraMoveByUserInput.IsCameraMoveActive = false;
                 }
             }
             else if (areaPlanningEdit.IsClickLine()) // ラインをクリック
             {
-                panel_ViewFix.style.display = DisplayStyle.Flex;
+                CameraMoveByUserInput.IsCameraMoveActive = false;
                 // 中点に頂点を追加
                 areaPlanningEdit.AddVertexToLine();
             }
             else
             {
-                panel_ViewFix.style.display = DisplayStyle.None;
+                CameraMoveByUserInput.IsCameraMoveActive = true;
             }
         }
 
@@ -238,7 +229,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         private void OnReleasePanel()
         {
             areaPlanningEdit.OnReleasePin();
-            panel_ViewFix.style.display = DisplayStyle.Flex;
+            CameraMoveByUserInput.IsCameraMoveActive = true;
         }
 
         /// <summary>
@@ -298,7 +289,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 areaPlanningColor.style.backgroundColor = newColor.Value;
                 areaEditManager.ChangeColor(newColor.Value);
             }
-
         }
 
     }

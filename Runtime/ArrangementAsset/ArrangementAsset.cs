@@ -136,16 +136,19 @@ namespace Landscape2.Runtime
         }
         public void Update(float deltaTime)
         {
-            if (currentMode != null)
+            if (arrangementAssetUI.style.display == DisplayStyle.Flex)
             {
-                currentMode.Update();
-            }
+                if (currentMode != null)
+                {
+                    currentMode.Update();
+                }
 
-            var isEditMode = currentMode == editMode;
-            var isEditingAssetTRS = isEditMode &&
-                editMode.RuntimeTransformHandleScript != null &&
-                editMode.RuntimeTransformHandleScript.isDragging;
-            CameraMoveByUserInput.IsCameraMoveActive = !isEditingAssetTRS;
+                var isEditMode = currentMode == editMode;
+                var isEditingAssetTRS = isEditMode &&
+                    editMode.RuntimeTransformHandleScript != null &&
+                    editMode.RuntimeTransformHandleScript.isDragging;
+                CameraMoveByUserInput.IsCameraMoveActive = !isEditingAssetTRS;
+            }
         }
 
         public void OnSelect(InputAction.CallbackContext context)
