@@ -32,6 +32,7 @@ namespace Landscape2.Runtime
         GameObject currentLoadIfcObject;
 
         List<GameObject> importedIFCList = new();
+        List<Mesh> importedColliderMeshes = new();
 
         // uiの表示状態
         bool uiStatus = false;
@@ -75,6 +76,8 @@ namespace Landscape2.Runtime
                     return;
                 }
 
+                ifcObj.layer = LayerMask.NameToLayer("Default");
+
                 // 配置用情報作成
                 var lat = ui.LatitudeValue;
                 var lon = ui.LongitudeValue;
@@ -83,17 +86,15 @@ namespace Landscape2.Runtime
 
 
                 SetInstanceTransformFromInputState(ifcObj, lat, lon, height, yRot);
+                var mesh = CombineIFCMesh(ifcObj);
 
-                var bounds = GetLargestBounds(ifcObj);
-                if (bounds != null)
-                {
-                    var collider = ifcObj.AddComponent<BoxCollider>();
-                    collider.size = bounds.Value.size;
-                    collider.center = bounds.Value.center - ifcObj.transform.position;
-                }
+                var mc = ifcObj.AddComponent<MeshCollider>();
+                mc.sharedMesh = mesh;
 
-                // TODO: 配置できたGameObjectは
-                // persistentdatapathへcopyする
+                importedColliderMeshes.Add(mesh);
+
+                // TODO: 配置できたIFCファイルは
+                // bytearrayとしてProjectに保存できる様にする
                 // copy先のpathとlatlon,height,yawを保持する
 
                 SetupEditMode(ifcObj);
@@ -261,6 +262,12 @@ namespace Landscape2.Runtime
         public void OnDisable()
         {
             BIMLoader.Instance.Dispose();
+
+            foreach (var mesh in importedColliderMeshes)
+            {
+                GameObject.DestroyImmediate(mesh);
+            }
+            importedColliderMeshes.Clear();
         }
 
         public void OnEnable()
@@ -421,5 +428,50 @@ namespace Landscape2.Runtime
 
             return combinedBounds;
         }
+
+        private Mesh CombineIFCMesh(GameObject ifc)
+        {
+            // 子オブジェクトから MeshFilter を取得
+            MeshFilter[] meshFilters = ifc.GetComponentsInChildren<MeshFilter>();
+
+            if (meshFilters.Length == 0)
+            {
+                Debug.LogWarning("結合する MeshFilter が見つかりません");
+                return null;
+            }
+
+            // `parent` の Transform 情報を取得
+            Transform parentTransform = ifc.transform;
+            Matrix4x4 parentMatrix = parentTransform.worldToLocalMatrix; // ワールドからローカルへの変換
+
+            // CombineInstance 配列を作成
+            CombineInstance[] combineInstances = new CombineInstance[meshFilters.Length];
+
+            for (int i = 0; i < meshFilters.Length; i++)
+            {
+                if (meshFilters[i].sharedMesh == null)
+                {
+                    continue;
+                }
+
+                Transform t = meshFilters[i].transform;
+
+                // 各子オブジェクトの `TRS` を `parent` のローカル空間に変換
+                Matrix4x4 localMatrix = parentMatrix * Matrix4x4.TRS(t.position, t.rotation, t.lossyScale);
+
+                combineInstances[i] = new CombineInstance
+                {
+                    mesh = meshFilters[i].sharedMesh,
+                    transform = localMatrix
+                };
+            }
+
+            Mesh combinedMesh = new Mesh();
+            combinedMesh.CombineMeshes(combineInstances, true, true);
+
+            return combinedMesh;
+        }
     }
+
+
 }
