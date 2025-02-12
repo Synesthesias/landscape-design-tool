@@ -24,7 +24,7 @@ namespace Landscape2.Runtime
         const string YawSliderName = "Slider_Yaw";
         const string HeightSliderName = "Slider_Height";
 
-        VisualElement uiRoot;
+        TemplateContainer uiRoot;
 
         private TextField latitudeField;
         private TextField longitudeField;
@@ -127,21 +127,26 @@ namespace Landscape2.Runtime
         /// <param name="uiElement"></param>
         private void UIInitialize(VisualElement uiElement)
         {
-            uiRoot = uiElement;
+            uiRoot = uiElement.Q<TemplateContainer>(PanelResourceName);
 
             // openFile
             var fileLoadButton = uiElement.Q<Button>(FileLoadButtonName);
             fileLoadButton.clicked += () =>
             {
                 var path = StandaloneFileBrowser.OpenFilePanel("IFC File Path", "", "ifc", false);
+                if (path.Length < 1)
+                {
+                    Debug.LogWarning($"filePanel selection is canceled");
+                    return;
+                }
                 openFileAction?.Invoke(path[0]);
             };
 
-            var fileNameLabel = uiElement.Q<Label>(FileNameLabelName);
+            var fileNameLabel = uiRoot.Q<Label>(FileNameLabelName);
             this.fileNameLabel = fileNameLabel;
 
             // 緯度
-            var lat = uiElement.Q<TextField>(LatitudeInputFieldName);
+            var lat = uiRoot.Q<TextField>(LatitudeInputFieldName);
             latitudeField = lat;
             lat.RegisterCallback<ChangeEvent<string>>(input =>
             {
@@ -153,7 +158,7 @@ namespace Landscape2.Runtime
             });
 
             // 経度
-            var lon = uiElement.Q<TextField>(LongitudeInputFieldName);
+            var lon = uiRoot.Q<TextField>(LongitudeInputFieldName);
             longitudeField = lon;
             lon.RegisterCallback<ChangeEvent<string>>(input =>
             {
@@ -165,17 +170,17 @@ namespace Landscape2.Runtime
 
 
             // Yaw回転 => Y軸回転
-            var yawSlider = uiElement.Q<SliderInt>(YawSliderName);
+            var yawSlider = uiRoot.Q<SliderInt>(YawSliderName);
             yawSliderField = yawSlider;
             yawSlider.RegisterValueChangedCallback(evt => yawSliderValueChanged?.Invoke(evt.newValue));
 
             // 高さ => Y軸移動
-            var heightSlider = uiElement.Q<SliderInt>(HeightSliderName);
+            var heightSlider = uiRoot.Q<SliderInt>(HeightSliderName);
             heightSliderField = heightSlider;
             heightSlider.RegisterValueChangedCallback(evt => heightSliderValueChanged?.Invoke(evt.newValue));
 
             // 配置する
-            var okButton = uiElement.Q<Button>(ImportButtonName);
+            var okButton = uiRoot.Q<Button>(ImportButtonName);
             okButton.clicked += () =>
             {
                 importButtonOnClickAction?.Invoke();

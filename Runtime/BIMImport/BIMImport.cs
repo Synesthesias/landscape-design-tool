@@ -20,6 +20,7 @@ namespace Landscape2.Runtime
         };
         private const float K_GroundCheckLength = 10000.0f;
 
+        VisualElement uiRoot;
 
         BIMImportUI ui;
 
@@ -41,8 +42,11 @@ namespace Landscape2.Runtime
 
         PLATEAUInstancedCityModel instancedCityModel;
 
+        bool IsRootUIVisible => uiRoot.style.display == DisplayStyle.Flex;
+
         public BIMImport(VisualElement uiRoot)
         {
+            this.uiRoot = uiRoot;
             ui = new(uiRoot);
 
             ui.openFileAction += (path) =>
@@ -281,10 +285,11 @@ namespace Landscape2.Runtime
 
         public void Update(float deltaTime)
         {
-            var currentUIStatus = ui.IsShow();
+            var currentUIStatus = IsRootUIVisible;
             if (!uiStatus && currentUIStatus)
             {
                 // 非表示 -> 表示
+                ui.Show(true);
                 var hitPos = UpdateCameraRayTargetPosition();
                 UpdateUILatLon(hitPos);
             }
@@ -338,13 +343,27 @@ namespace Landscape2.Runtime
                 {
                     layoutUI.Update(deltaTime);
                 }
-                if (uiStatus && !currentUIStatus)
-                {
-                    // 表示 -> 非表示
-                    CameraMoveByUserInput.IsCameraMoveActive = true;
-                }
 
             }
+
+            if (uiStatus && !currentUIStatus)
+            {
+                // 表示 -> 非表示
+
+                if (layoutUI.IsShow)
+                {
+                    CameraMoveByUserInput.IsCameraMoveActive = true;
+                    SetupLoadMode();
+                }
+                if (ui.IsShow())
+                {
+                    ui.Show(false);
+                }
+                // 読み込んだobjectは開放
+                currentLoadIfcObject = null;
+            }
+
+
             uiStatus = currentUIStatus;
         }
 
@@ -355,6 +374,7 @@ namespace Landscape2.Runtime
         void SetupLoadMode()
         {
             ui.Show(true);
+            ChangeEditMode(LayoutMode.None);
             layoutUI.ReleaseTarget();
             layoutUI.Show(false);
         }
