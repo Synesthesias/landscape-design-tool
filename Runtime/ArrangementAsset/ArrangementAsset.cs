@@ -40,12 +40,17 @@ namespace Landscape2.Runtime
         private Ray ray;
         private VisualElement arrangementAssetUI;
         private ArrangementAssetUI arrangementAssetUIClass;
+
+        private ArrangementAssetSizeUI sizeUI;
         private VisualElement editPanel;
         private LandscapeInputActions.ArrangeAssetActions input;
         private GameObject editTarget;
+        private GameObject lastEditTarget;
         private ArrangeMode currentMode;
         private CreateMode createMode;
         private EditMode editMode;
+
+        private GameObject activeTarget; // editTargetはactiveTargetにしてもいいかも知れない
 
         public ArrangementAsset(VisualElement element, SaveSystem saveSystemInstance, LandscapeCamera landscapeCamera)
         {
@@ -61,6 +66,10 @@ namespace Landscape2.Runtime
                 editMode,
                 new AdvertisementRenderer(),
                 landscapeCamera);
+
+
+            sizeUI = new();
+            sizeUI.Show(false);
         }
 
         public async void OnEnable()
@@ -95,6 +104,8 @@ namespace Landscape2.Runtime
 
             // インポートボタンの登録
             arrangementAssetUIClass.RegisterImportButtonAction();
+
+            sizeUI.Show(false);
         }
 
         private async void SetPlateauAssets(string keyName, string buttonName)
@@ -131,6 +142,7 @@ namespace Landscape2.Runtime
                 currentMode = null;
 
                 editTarget = null;
+                lastEditTarget = null;
             }
             arrangementAssetUIClass.DisplayEditPanel(false);
         }
@@ -148,6 +160,13 @@ namespace Landscape2.Runtime
                     editMode.RuntimeTransformHandleScript != null &&
                     editMode.RuntimeTransformHandleScript.isDragging;
                 CameraMoveByUserInput.IsCameraMoveActive = !isEditingAssetTRS;
+
+                if (activeTarget != null)
+                {
+                    sizeUI.SetTarget(activeTarget);
+                }
+                sizeUI.Show(activeTarget != null);
+                sizeUI.Update(deltaTime);
             }
         }
 
@@ -158,10 +177,12 @@ namespace Landscape2.Runtime
                 if (currentMode == createMode)
                 {
                     createMode.OnSelect();
+                    activeTarget = createMode.selectedAsset;
                 }
                 else
                 {
                     SelectAsset();
+                    activeTarget = editTarget;
                 }
             }
         }
@@ -176,12 +197,15 @@ namespace Landscape2.Runtime
                 if (CheckParentName(hit.transform, "CreatedAssets"))
                 {
                     var selectTarget = FindAssetComponent(hit.transform);
-                    if (selectTarget == editTarget)
+
+                    if (selectTarget == lastEditTarget)
                     {
                         // 再度同じtargetを選択しない様にする
                         return;
                     }
+
                     editTarget = selectTarget;
+                    lastEditTarget = editTarget;
                     arrangementAssetUIClass.SetEditTarget(editTarget);
                     SetMode(ArrangeModeName.Edit);
                     editMode.CreateRuntimeHandle(editTarget, TransformType.Position);
@@ -232,6 +256,7 @@ namespace Landscape2.Runtime
                         arrangementAssetUIClass.ResetEditButton();
                     }
                     currentMode.OnCancel();
+                    activeTarget = null;
                 }
                 SetMode(ArrangeModeName.Normal);
             }

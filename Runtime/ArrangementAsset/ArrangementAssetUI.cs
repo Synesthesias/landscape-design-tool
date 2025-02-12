@@ -17,24 +17,24 @@ namespace Landscape2.Runtime
         private GameObject editTarget;
         private VisualElement editPanel;
         private VisualElement assetListScrollView;
-        
+
         // 一括配置
         private BulkArrangementAssetUI bulkArrangementAssetUI;
-        
+
         // 広告
         private AdvertisementRenderer advertisementRenderer;
-        
+
         // 建物UI
         private ArrangementBuildingEditorUI arrangementBuildingEditorUI;
-        
+
         // アセット一覧
         private ArrangementAssetListUI arrangementAssetListUI;
-        
+
         public ArrangementAssetUI(
             VisualElement element,
             ArrangementAsset arrangementAssetInstance,
             CreateMode createModeInstance,
-            EditMode  editModeInstance,
+            EditMode editModeInstance,
             AdvertisementRenderer advertisementRendererInstance,
             LandscapeCamera landscapeCamera)
         {
@@ -58,9 +58,9 @@ namespace Landscape2.Runtime
                 }
                 DeleteAsset();
             });
-            
+
             RegisterEditButtonAction();
-            
+
             // デフォルトでは非表示
             editPanel.style.display = DisplayStyle.None;
         }
@@ -72,20 +72,20 @@ namespace Landscape2.Runtime
         {
             var moveButton = editPanel.Q<RadioButton>("MoveButton");
             moveButton.RegisterCallback<ClickEvent>(evt =>
-            {    
-                editMode.CreateRuntimeHandle(editTarget,TransformType.Position);
+            {
+                editMode.CreateRuntimeHandle(editTarget, TransformType.Position);
             });
             var rotateButton = editPanel.Q<RadioButton>("RotateButton");
             rotateButton.RegisterCallback<ClickEvent>(evt =>
-            {    
-                editMode.CreateRuntimeHandle(editTarget,TransformType.Rotation);
+            {
+                editMode.CreateRuntimeHandle(editTarget, TransformType.Rotation);
             });
             var scaleButton = editPanel.Q<RadioButton>("ScaleButton");
             scaleButton.RegisterCallback<ClickEvent>(evt =>
-            {    
-                editMode.CreateRuntimeHandle(editTarget,TransformType.Scale);
+            {
+                editMode.CreateRuntimeHandle(editTarget, TransformType.Scale);
             });
-            
+
             // 画像読み込み
             var fileButton = editPanel.Q<Button>("FileButton");
             fileButton.clicked += () =>
@@ -98,7 +98,7 @@ namespace Landscape2.Runtime
             };
             var fileContainer = editPanel.Q<VisualElement>("FileContainer");
             fileContainer.style.display = DisplayStyle.None; // デフォルトでは非表示
-            
+
             // 動画読み込み
             var movieButton = editPanel.Q<Button>("MovieButton");
             movieButton.clicked += () =>
@@ -111,7 +111,7 @@ namespace Landscape2.Runtime
             };
             var movieContainer = editPanel.Q<VisualElement>("MovieContainer");
             movieContainer.style.display = DisplayStyle.None; // デフォルトでは非表示
-            
+
             var deleteButton = editPanel.Q<Button>("ContextButton");
             deleteButton.clicked += DeleteAsset;
         }
@@ -121,10 +121,10 @@ namespace Landscape2.Runtime
             editMode.DeleteAsset(editTarget);
             editPanel.style.display = DisplayStyle.None;
             ResetEditButton();
-            
+
             // 建物UIを非表示
             arrangementBuildingEditorUI.ShowPanel(false);
-            
+
             // リストから削除
             arrangementAssetListUI.RemoveAsset(editTarget.GetInstanceID());
         }
@@ -141,26 +141,26 @@ namespace Landscape2.Runtime
                 radioButton.value = false;
             }
             var moveButton = editPanel.Q<RadioButton>("MoveButton");
-            moveButton.value  = true;
+            moveButton.value = true;
         }
 
-        
+
         /// <summary>
         /// アセットのカテゴリーの切り替えの登録
         /// </summary>
-        public void RegisterCategoryPanelAction(string buttonName,IList<GameObject> assetsList,IList<Texture2D> assetsPicture)
+        public void RegisterCategoryPanelAction(string buttonName, IList<GameObject> assetsList, IList<Texture2D> assetsPicture)
         {
             var assetCategory = UIElement.Q<RadioButton>(buttonName);
             assetCategory.RegisterCallback<ClickEvent>(evt =>
-            {    
-                CreateButton(assetsList,assetsPicture);
+            {
+                CreateButton(assetsList, assetsPicture);
             });
         }
 
         /// <summary>
         /// アセットのボタンの作製
         /// </summary>
-        public void CreateButton(IList<GameObject> assetList,IList<Texture2D> assetPictureList)
+        public void CreateButton(IList<GameObject> assetList, IList<Texture2D> assetPictureList)
         {
             assetListScrollView.style.display = DisplayStyle.Flex;
             assetListScrollView.Clear();
@@ -171,16 +171,16 @@ namespace Landscape2.Runtime
             flexContainer.style.flexWrap = Wrap.Wrap;
             flexContainer.style.justifyContent = Justify.SpaceBetween;
             flexContainer.style.justifyContent = Justify.FlexStart;
-            
-        
-            foreach(GameObject asset in assetList)
+
+
+            foreach (GameObject asset in assetList)
             {
                 var assetPicture = assetPictureList[0];
                 // 写真を見つける
-                foreach(var picture in assetPictureList)
+                foreach (var picture in assetPictureList)
                 {
                     Debug.Log(picture.name);
-                    if(picture.name == asset.name)
+                    if (picture.name == asset.name)
                     {
                         assetPicture = picture;
                         break;
@@ -191,15 +191,15 @@ namespace Landscape2.Runtime
                 {
                     name = "Thumbnail_Asset" // ussにスタイルが指定してある
                 };
-                
+
                 newButton.style.width = Length.Percent(30f);
-                
+
                 newButton.style.backgroundImage = new StyleBackground(assetPicture);
                 newButton.style.backgroundSize = new BackgroundSize(Length.Percent(100), Length.Percent(100));
                 newButton.style.backgroundColor = Color.clear;
 
                 newButton.AddToClassList("AssetButton");
-                newButton.clicked += () => 
+                newButton.clicked += () =>
                 {
                     arrangementAsset.SetMode(ArrangeModeName.Create);
                     createMode.SetAsset(asset.name, assetList);
@@ -207,7 +207,7 @@ namespace Landscape2.Runtime
                 flexContainer.Add(newButton);
             }
             assetListScrollView.Add(flexContainer);
-            
+
             bulkArrangementAssetUI.Show(false);
         }
 
@@ -221,7 +221,7 @@ namespace Landscape2.Runtime
             {
                 // アセットリストは非表示
                 assetListScrollView.style.display = DisplayStyle.None;
-                
+
                 // 一括配置用のUIを表示
                 bulkArrangementAssetUI.Show(true);
             });
@@ -232,7 +232,7 @@ namespace Landscape2.Runtime
         /// </summary>
         public void DisplayEditPanel(bool isDisplay)
         {
-            if(isDisplay)
+            if (isDisplay)
             {
                 editPanel.style.display = DisplayStyle.Flex;
                 arrangementBuildingEditorUI.TryShowPanel(editTarget);
@@ -248,8 +248,9 @@ namespace Landscape2.Runtime
         public void SetEditTarget(GameObject target)
         {
             editTarget = target;
+            ResetEditButton();
         }
-        
+
         /// <summary>
         /// ファイルボタンの表示・非表示を管理
         /// </summary>
@@ -257,7 +258,7 @@ namespace Landscape2.Runtime
         {
             var fileContainer = editPanel.Q<VisualElement>("FileContainer");
             var movieContainer = editPanel.Q<VisualElement>("MovieContainer");
-            
+
             // 広告のアセットのみファイルボタンを表示
             var isShow = editTarget != null && editTarget.GetComponent<PlateauSandboxAdvertisement>() != null;
             fileContainer.style.display = isShow ? DisplayStyle.Flex : DisplayStyle.None;

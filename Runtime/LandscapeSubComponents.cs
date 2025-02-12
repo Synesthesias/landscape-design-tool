@@ -37,7 +37,7 @@ namespace Landscape2.Runtime
     public class LandscapeSubComponents : MonoBehaviour
     {
 
-        const int CAMERA_FARCLIP_VALUE = 2000;
+        const int CAMERA_FARCLIP_VALUE = 4000;
 
         private List<ISubComponent> subComponents;
         // 現在開かれているサブメニュー機能
