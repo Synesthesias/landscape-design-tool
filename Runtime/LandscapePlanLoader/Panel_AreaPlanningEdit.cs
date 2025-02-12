@@ -11,7 +11,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
     {
         private readonly AreaEditManager areaEditManager;
         private AreaPlanningEdit areaPlanningEdit;
-        private Button heightApplyButton;
         private Button heightResetButton;
 
         public Panel_AreaPlanningEdit(VisualElement planning, PlanningUI planningUI) : base(planning, planningUI)
@@ -33,9 +32,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             panel_PointEditor.RegisterCallback<MouseUpEvent>(ev => OnReleasePanel());
             panel_PointEditor.style.display = DisplayStyle.None;
 
-            // 高さ反映/元に戻す
-            heightApplyButton = panel_AreaPlanningEdit.Q<Button>("HeightApplyButton");
-            heightApplyButton.clicked += ApplyHeight;
+            // 高さ 元に戻す
             heightResetButton = panel_AreaPlanningEdit.Q<Button>("HeightResetButton");
             heightResetButton.clicked += ResetHeight;
 
@@ -55,8 +52,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 CameraMoveByUserInput.IsCameraMoveActive = true;
                 areaPlanningEdit.CreatePinline();
 
-                // 高さ適用ボタンの活性化
-                heightApplyButton.SetEnabled(!areaEditManager.IsApplyingBuildingHeight());
+                // 高さボタンの活性化
                 heightResetButton.SetEnabled(areaEditManager.IsApplyingBuildingHeight());
 
                 var color = planningUI.PopColorStack();
@@ -81,8 +77,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             areaEditManager.ChangeHeight((float)areaEditManager.GetLimitHeight() + 1);  //インクリメント
             areaPlanningHeight.value = areaEditManager.GetLimitHeight().ToString(); //テキストフィールドに反映
 
-            // 高さ適用ボタンの活性化
-            heightApplyButton.SetEnabled(true);
         }
 
         /// <summary>
@@ -94,8 +88,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             areaEditManager.ChangeHeight((float)areaEditManager.GetLimitHeight() - 1);  //デクリメント
             areaPlanningHeight.value = areaEditManager.GetLimitHeight().ToString(); //テキストフィールドに反映
 
-            // 高さ適用ボタンの活性化
-            heightApplyButton.SetEnabled(true);
         }
 
         /// <summary>
@@ -109,8 +101,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             {
                 areaEditManager.ChangeHeight(value);
 
-                // 高さ適用ボタンの活性化
-                heightApplyButton.SetEnabled(true);
             }
             else
             {
@@ -262,14 +252,12 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         private void ApplyHeight()
         {
             areaEditManager.ApplyBuildingHeight(true);
-            heightApplyButton.SetEnabled(false);
             heightResetButton.SetEnabled(true);
         }
 
         private void ResetHeight()
         {
             areaEditManager.ApplyBuildingHeight(false);
-            heightApplyButton.SetEnabled(true);
             heightResetButton.SetEnabled(false);
         }
 

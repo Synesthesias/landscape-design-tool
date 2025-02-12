@@ -51,8 +51,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// </summary>
         protected virtual void RegisterCommonCallbacks()
         {
-            panel_AreaPlanningEdit.Q<Button>("UpButton").clicked += IncrementHeight;
-            panel_AreaPlanningEdit.Q<Button>("DownButton").clicked += DecrementHeight;
+            //panel_AreaPlanningEdit.Q<Button>("UpButton").clicked += IncrementHeight;
+            //panel_AreaPlanningEdit.Q<Button>("DownButton").clicked += DecrementHeight;
             panel_AreaPlanningEdit.Q<Button>("CancelButton").RegisterCallback<ClickEvent>(ev => planningUI.InvokeOnFocusedAreaChanged(-1)); // エリアフォーカスを外す
             panel_AreaPlanningEdit.Q<Button>("CancelButton").RegisterCallback<ClickEvent>(ev => OnCancelButtonClicked());
 
