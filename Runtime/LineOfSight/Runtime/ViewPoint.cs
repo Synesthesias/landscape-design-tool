@@ -10,6 +10,8 @@ using ToolBox.Serialization;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using System.Threading.Tasks;
+using System.Linq.Expressions;
+using UnityEngine.PlayerLoop;
 
 namespace Landscape2.Runtime
 {
@@ -31,6 +33,12 @@ namespace Landscape2.Runtime
         private bool isMouseOverUI;
         private LineOfSightDataComponent lineOfSightDataComponent;
 
+        private float offsetYValue;
+        private Vector3 markerPosition;
+
+        private Dictionary<string, float> heightValueIndex = new();
+
+
         public ViewPoint(LineOfSightDataComponent lineOfSightDataComponentInstance)
         {
             viewPointMarkers = new GameObject("ViewPointMarkers");
@@ -46,6 +54,25 @@ namespace Landscape2.Runtime
             new_Viewpoint.RegisterCallback<MouseLeaveEvent>(OnMouseLeave);
             edit_ViewPoint.RegisterCallback<MouseEnterEvent>(OnMouseEnter);
             edit_ViewPoint.RegisterCallback<MouseLeaveEvent>(OnMouseLeave);
+
+            var fieldName = "heightValueTextField";
+
+            foreach (var elem in new List<VisualElement>() { new_Viewpoint, edit_ViewPoint })
+            {
+                var heightInputField = elem.Q<TextField>(fieldName);
+                heightInputField.RegisterCallback<ChangeEvent<string>>(input =>
+                {
+                    if (input.newValue != input.previousValue)
+                    {
+                        if (float.TryParse(input.newValue, out var heightValue))
+                        {
+                            offsetYValue = heightValue;
+                            UpdateMarkerPos();
+                        }
+                    }
+                });
+
+            }
         }
 
         private void OnMouseEnter(MouseEnterEvent evt)
@@ -56,6 +83,16 @@ namespace Landscape2.Runtime
         private void OnMouseLeave(MouseLeaveEvent evt)
         {
             isMouseOverUI = false;
+        }
+
+        private void UpdateMarkerPos()
+        {
+            if (setPointMarker == null)
+            {
+                return;
+            }
+
+            setPointMarker.transform.position = markerPosition + new Vector3(0f, offsetYValue, 0f);
         }
 
         /// <summary>
@@ -91,7 +128,9 @@ namespace Landscape2.Runtime
                 }
                 // アイコンが埋め込まれないように2.5f高くしている
                 setPoint.y += float.Parse(heightValue) * 0.01f + 2.5f;
-                setPointMarker.transform.position = setPoint;
+                markerPosition = setPoint;
+
+                UpdateMarkerPos();
             }
             else
             {
@@ -119,11 +158,17 @@ namespace Landscape2.Runtime
                 setPointMarker = null;
                 return "";
             }
+
+            new_Viewpoint.Q<TextField>();
+
+
             // ゲームオブジェクトの追加
             createPointMarker = GameObject.Instantiate(setPointMarker);
             GameObject.Destroy(setPointMarker);
             setPointMarker = null;
             createPointMarker.name = registerName;
+
+            heightValueIndex[registerName] = offsetYValue;
             createPointMarker.transform.parent = viewPointMarkers.transform;
             // データの追加
             var isAdded = lineOfSightDataComponent.AddPointDict(LineOfSightType.viewPoint, registerName, createPointMarker.transform.position);
@@ -141,6 +186,23 @@ namespace Landscape2.Runtime
         }
 
         /// <summary>
+        /// uiに値を入れる。
+        /// ButtonAction()の後に呼び出されるのを想定
+        /// </summary>
+        public void InitializeEditPoint()
+        {
+            if (setPointMarker == null)
+            {
+                Debug.LogWarning($"setPointMarker is null");
+                return;
+            }
+            edit_ViewPoint.Q<TextField>("EditViewpointName").value = setPointMarker.name;
+
+            edit_ViewPoint.Q<TextField>("heightValueTextField").value = offsetYValue.ToString();
+
+        }
+
+        /// <summary>
         /// 視点場を編集する
         /// </summary>
         public (string beforeName, string afterName) EditPoint()
@@ -154,6 +216,7 @@ namespace Landscape2.Runtime
             // 編集後のポイントを生成
             createPointMarker = GameObject.Instantiate(setPointMarker);
             createPointMarker.name = registerName;
+            heightValueIndex[registerName] = offsetYValue;
             createPointMarker.transform.parent = viewPointMarkers.transform;
             // 既存のポイントを削除
             var deleteData = DeletePoint();
@@ -211,8 +274,19 @@ namespace Landscape2.Runtime
                     break;
                 }
             }
+
+            // キャンセルした際の為編集前座標を保持しておく
             editPointMarkerPos = setPointMarker.transform.position;
             editPointName = setPointMarker.name;
+
+            // 編集座標を修正
+            markerPosition = editPointMarkerPos;
+            offsetYValue = 0f;
+            if (heightValueIndex.TryGetValue(setPointMarker.name, out var offsetY))
+            {
+                markerPosition -= new Vector3(0f, offsetY, 0f);
+                offsetYValue = offsetY;
+            }
         }
 
         /// <summary>

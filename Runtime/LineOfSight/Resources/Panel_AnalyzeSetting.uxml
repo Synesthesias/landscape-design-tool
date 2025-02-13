@@ -1,14 +1,14 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Packages/com.synesthesias.landscape-design-tool-2/Runtime/UICommon/UIStyleCommon.uss?fileID=7433441132597879392&amp;guid=5003ef441f4ce7e4881f663b95f4df1d&amp;type=3#UIStyleCommon" />
     <ui:VisualElement name="Panel" style="flex-grow: 0; justify-content: center; height: 380px; position: relative; right: auto;">
-        <ui:VisualElement name="New_PointMenu" style="flex-grow: 1; display: none;">
+        <ui:VisualElement name="New_PointMenu" style="flex-grow: 1; display: flex;">
             <ui:VisualElement name="VisualElement" style="flex-grow: 1; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-left-color: rgb(136, 147, 146); border-right-color: rgb(136, 147, 146); border-top-color: rgb(136, 147, 146); border-bottom-color: rgb(136, 147, 146); border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; height: 100%; padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px;">
                 <ui:Label tabindex="-1" text="解析したい地点/対象物を登録できます" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Title" style="font-size: 18px; -unity-text-align: upper-center;" />
                 <ui:VisualElement style="flex-grow: 0; flex-direction: row; align-items: center; justify-content: space-between;">
                     <ui:Label tabindex="-1" text="新しくピンを作成" parse-escape-sequences="true" display-tooltip-when-elided="true" style="flex-shrink: 1; width: 100%; font-size: 16px;" />
                     <ui:VisualElement name="ActionContainer" style="flex-grow: 0; flex-direction: column; align-items: center; width: auto; flex-shrink: 0;">
-                        <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="NewViewpoint_Button" text="視点場ピン作成" class="ActionButton" />
-                        <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="NewLandmark_Button" text="眺望対象ピン作成" class="ActionButton" style="margin-top: 10px; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
+                        <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="NewViewpoint_Button" text="視点場ピン作成" class="ActionButton" style="width: 120px;" />
+                        <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="NewLandmark_Button" text="眺望対象ピン作成" class="ActionButton" style="margin-top: 10px; margin-right: 0; margin-bottom: 0; margin-left: 0; width: 120px;" />
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
@@ -17,7 +17,7 @@
                 <ui:VisualElement style="flex-grow: 1; flex-direction: row; align-items: center; justify-content: space-between;">
                     <ui:Label tabindex="-1" text="見通し解析登録" parse-escape-sequences="true" display-tooltip-when-elided="true" style="flex-shrink: 1; width: 100%; font-size: 16px;" />
                     <ui:VisualElement name="ActionContainer" style="flex-grow: 0; flex-direction: column; align-items: center; width: auto; flex-shrink: 0;">
-                        <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="NewAnalyze_Button" text="新規解析" class="ActionButton" />
+                        <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="NewAnalyze_Button" text="新規解析" class="ActionButton" style="height: 40px; width: 120px;" />
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
@@ -39,7 +39,8 @@
                 </ui:VisualElement>
                 <ui:VisualElement style="flex-grow: 1; flex-direction: row; align-items: center;">
                     <ui:Label tabindex="-1" text="視点の高さ" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
-                    <ui:TextField picking-mode="Ignore" label="Text Field" name="heightValueTextField" style="flex-shrink: 1;" />
+                    <ui:TextField picking-mode="Ignore" label="Text Field" name="heightValueTextField" style="flex-shrink: 1; -unity-text-align: upper-right;" />
+                    <ui:Label tabindex="-1" text="&#10;m" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="Footer" style="flex-grow: 0; flex-direction: row; justify-content: center;">
@@ -64,7 +65,8 @@
                 </ui:VisualElement>
                 <ui:VisualElement style="flex-grow: 1; flex-direction: row; align-items: center;">
                     <ui:Label tabindex="-1" text="視点の高さ" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
-                    <ui:TextField picking-mode="Ignore" label="Text Field" name="heightValueTextField" style="flex-shrink: 1;" />
+                    <ui:TextField picking-mode="Ignore" label="Text Field" name="heightValueTextField" style="flex-shrink: 1; -unity-text-align: upper-right;" />
+                    <ui:Label tabindex="-1" text="&#10;m" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; -unity-text-align: upper-left;" />
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="Footer" style="flex-grow: 0; flex-direction: row; justify-content: center;">
@@ -159,7 +161,7 @@
                 <ui:Button text="作成" parse-escape-sequences="true" display-tooltip-when-elided="true" name="OKButton" />
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="New_Analyze_Landmark" style="flex-grow: 1; display: none;">
+        <ui:VisualElement name="New_Analyze_Landmark" style="flex-grow: 1; display: none; visibility: visible;">
             <ui:VisualElement name="Header" style="flex-grow: 0;">
                 <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="BackButton" class="CircleButton" style="align-items: center; justify-content: center;">
                     <ui:VisualElement name="Icon_Back" style="flex-grow: 0; flex-shrink: 0; width: 24px; height: 24px;" />
@@ -224,14 +226,17 @@
                     <ui:VisualElement name="row" style="flex-grow: 0; flex-direction: row; align-items: center; width: 100%;">
                         <ui:Label tabindex="-1" text="上下" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
                         <ui:SliderInt label="SliderInt" high-value="100" show-input-field="true" name="VerticalSlider" style="flex-shrink: 1; width: 100%;" />
+                        <ui:Label tabindex="-1" text="°&#10;" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
                     </ui:VisualElement>
                     <ui:VisualElement name="row" style="flex-grow: 0; flex-direction: row; align-items: center; margin-top: 24px; width: 100%;">
                         <ui:Label tabindex="-1" text="左右" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
                         <ui:SliderInt label="SliderInt" high-value="100" show-input-field="true" name="HorizontalSlider" style="flex-shrink: 1; width: 100%;" />
+                        <ui:Label tabindex="-1" text="°&#10;" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
                     </ui:VisualElement>
                     <ui:VisualElement name="row" style="flex-grow: 0; flex-direction: row; align-items: center; margin-top: 24px; width: 100%;">
                         <ui:Label tabindex="-1" text="間隔" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
                         <ui:SliderInt label="SliderInt" high-value="100" show-input-field="true" name="RaySpanSlider" style="flex-shrink: 1; width: 100%;" />
+                        <ui:Label tabindex="-1" text="°&#10;" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
@@ -239,7 +244,7 @@
                 <ui:Button text="決定" parse-escape-sequences="true" display-tooltip-when-elided="true" name="OKButton" />
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="Slider_Landmark" style="flex-grow: 1; display: flex;">
+        <ui:VisualElement name="Slider_Landmark" style="flex-grow: 1; display: none;">
             <ui:VisualElement name="Header" style="flex-grow: 0;">
                 <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="BackButton" class="CircleButton" style="align-items: center; justify-content: center;">
                     <ui:VisualElement name="Icon_Back" style="flex-grow: 0; flex-shrink: 0; width: 24px; height: 24px;" />
@@ -254,18 +259,22 @@
                     <ui:VisualElement name="row" style="flex-grow: 0; flex-direction: row; align-items: center; margin-top: 24px; width: 100%;">
                         <ui:Label tabindex="-1" text="上方向" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
                         <ui:SliderInt label="SliderInt" high-value="100" show-input-field="true" name="UpperSlider" style="flex-shrink: 1; width: 100%;" />
+                        <ui:Label tabindex="-1" text="°" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; transform-origin: center; translate: 0 -10px;" />
                     </ui:VisualElement>
                     <ui:VisualElement name="row" style="flex-grow: 0; flex-direction: row; align-items: center; margin-top: 12px; width: 100%;">
                         <ui:Label tabindex="-1" text="下方向" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
                         <ui:SliderInt label="SliderInt" high-value="100" show-input-field="true" name="DownSlider" style="flex-shrink: 1; width: 100%;" />
+                        <ui:Label tabindex="-1" text="°" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; -unity-text-align: upper-left; translate: 0 -10px;" />
                     </ui:VisualElement>
                     <ui:VisualElement name="row" style="flex-grow: 0; flex-direction: row; align-items: center; width: 100%; margin-top: 12px;">
                         <ui:Label tabindex="-1" text="距離" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
                         <ui:SliderInt label="SliderInt" high-value="100" show-input-field="true" name="DistanceSlider" style="flex-shrink: 1; width: 100%;" />
+                        <ui:Label tabindex="-1" text="m" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; translate: 0 10px;" />
                     </ui:VisualElement>
                     <ui:VisualElement name="row" style="flex-grow: 0; flex-direction: row; align-items: center; margin-top: 12px; width: 100%;">
                         <ui:Label tabindex="-1" text="間隔" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
                         <ui:SliderInt label="SliderInt" high-value="100" show-input-field="true" name="RaySpanSlider" style="flex-shrink: 1; width: 100%;" />
+                        <ui:Label tabindex="-1" text="°" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; translate: 0 -10px;" />
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
@@ -282,11 +291,16 @@
             <ui:VisualElement name="Body" style="flex-grow: 1;">
                 <ui:VisualElement style="flex-grow: 0;">
                     <ui:Label tabindex="-1" text="視点場編集" parse-escape-sequences="true" display-tooltip-when-elided="true" style="font-size: 22px; -unity-text-align: upper-center;" />
-                    <ui:Label tabindex="-1" text="名前の変更が行えます" parse-escape-sequences="true" display-tooltip-when-elided="true" style="font-size: 14px; -unity-text-align: upper-center; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+                    <ui:Label tabindex="-1" text="視点場の変更が行えます" parse-escape-sequences="true" display-tooltip-when-elided="true" style="font-size: 14px; -unity-text-align: upper-center; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
                 </ui:VisualElement>
                 <ui:VisualElement style="flex-grow: 1; flex-direction: row; align-items: center;">
                     <ui:Label tabindex="-1" text="登録名" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
                     <ui:TextField picking-mode="Ignore" label="Text Field" name="EditViewpointName" style="flex-shrink: 1;" />
+                </ui:VisualElement>
+                <ui:VisualElement style="flex-grow: 1; flex-direction: row; align-items: center;">
+                    <ui:Label tabindex="-1" text="視点の高さ" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
+                    <ui:TextField picking-mode="Ignore" label="Text Field" name="heightValueTextField" style="flex-shrink: 1; -unity-text-align: upper-right;" />
+                    <ui:Label tabindex="-1" text="&#10;m" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; -unity-text-align: upper-left;" />
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="Footer" style="flex-grow: 0; flex-direction: row; justify-content: center;">
@@ -306,11 +320,16 @@
             <ui:VisualElement name="Body" style="flex-grow: 1;">
                 <ui:VisualElement style="flex-grow: 0;">
                     <ui:Label tabindex="-1" text="眺望対象編集" parse-escape-sequences="true" display-tooltip-when-elided="true" style="font-size: 22px; -unity-text-align: upper-center;" />
-                    <ui:Label tabindex="-1" text="名前の変更が行えます" parse-escape-sequences="true" display-tooltip-when-elided="true" style="font-size: 14px; -unity-text-align: upper-center; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+                    <ui:Label tabindex="-1" text="眺望対象の変更が行えます" parse-escape-sequences="true" display-tooltip-when-elided="true" style="font-size: 14px; -unity-text-align: upper-center; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
                 </ui:VisualElement>
                 <ui:VisualElement style="flex-grow: 1; flex-direction: row; align-items: center;">
                     <ui:Label tabindex="-1" text="登録名" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
                     <ui:TextField picking-mode="Ignore" label="Text Field" name="EditLandmarkName" style="flex-shrink: 1;" />
+                </ui:VisualElement>
+                <ui:VisualElement style="flex-grow: 1; flex-direction: row; align-items: center;">
+                    <ui:Label tabindex="-1" text="視点の高さ" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
+                    <ui:TextField picking-mode="Ignore" label="Text Field" name="heightValueTextField" style="flex-shrink: 1; -unity-text-align: upper-right;" />
+                    <ui:Label tabindex="-1" text="&#10;m" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; -unity-text-align: upper-left;" />
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="Footer" style="flex-grow: 0; flex-direction: row; justify-content: center;">

@@ -173,6 +173,13 @@ namespace Landscape2.Runtime
 
             InitializeAnalyzeSettingPanel();
         }
+
+        public void HideSnackbar()
+        {
+            snackbar.Hide();
+        }
+
+
         private void InitializeAnalyzeSettingPanel()
         {
             ShowAnalyzeSettingPanel(true);
@@ -789,6 +796,9 @@ namespace Landscape2.Runtime
                 edit_Viewpoint.style.display = DisplayStyle.None;
                 ViewDefaultPanels();
             };
+
+
+
         }
         private void InitializeEdit_Landmark()
         {
@@ -1027,6 +1037,8 @@ namespace Landscape2.Runtime
                     lineOfSight.SetMode(LineOfSightType.viewPoint);
                     viewPoint.ButtonAction(buttonName);
 
+                    viewPoint.InitializeEditPoint();
+
                     SetCurrentAnalyzeSettingPanel("Edit_Viewpoint");
                 }
                 else
@@ -1067,6 +1079,7 @@ namespace Landscape2.Runtime
                 {
                     lineOfSight.SetMode(LineOfSightType.landmark);
                     landmark.ButtonAction(buttonName);
+                    landmark.InitializeEditPoint();
                     SetCurrentAnalyzeSettingPanel("Edit_Landmark");
                 }
                 else if (beforeElement.name.Contains("Landmark"))

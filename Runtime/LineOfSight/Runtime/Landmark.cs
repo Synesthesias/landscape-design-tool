@@ -27,6 +27,12 @@ namespace Landscape2.Runtime
         private bool isMouseOverUI;
         private LineOfSightDataComponent lineOfSightDataComponent;
 
+
+        private float offsetYValue = 0f;
+        private Vector3 markerPosition;
+
+        private Dictionary<string, float> heightValueIndex = new();
+
         public Landmark(LineOfSightDataComponent lineOfSightDataComponentInstance)
         {
             landmarkMarkers = new GameObject("LandmarkMarkers");
@@ -43,6 +49,23 @@ namespace Landscape2.Runtime
             new_Landmark.RegisterCallback<MouseLeaveEvent>(OnMouseLeave);
             edit_Landmark.RegisterCallback<MouseEnterEvent>(OnMouseEnter);
             edit_Landmark.RegisterCallback<MouseLeaveEvent>(OnMouseLeave);
+
+            var fieldName = "heightValueTextField";
+            foreach (var elem in new List<VisualElement>() { new_Landmark, edit_Landmark })
+            {
+                var heightInputField = elem.Q<TextField>(fieldName);
+                heightInputField.RegisterCallback<ChangeEvent<string>>(input =>
+                {
+                    if (input.newValue != input.previousValue)
+                    {
+                        if (float.TryParse(input.newValue, out var heightValue))
+                        {
+                            offsetYValue = heightValue;
+                            UpdateMarkerPos();
+                        }
+                    }
+                });
+            }
         }
 
         private void OnMouseEnter(MouseEnterEvent evt)
@@ -54,6 +77,22 @@ namespace Landscape2.Runtime
         {
             isMouseOverUI = false;
         }
+
+        void UpdateMarkerPos()
+        {
+            if (!setPointMarker)
+            {
+                return;
+            }
+            setPointMarker.transform.position = markerPosition + new Vector3(0f, offsetYValue, 0f);
+        }
+
+        public void InitializeEditPoint()
+        {
+            edit_Landmark.Q<TextField>("EditViewpointName").value = setPointMarker.name;
+            edit_Landmark.Q<TextField>("heightValueTextField").value = offsetYValue.ToString();
+        }
+
 
         /// <summary>
         /// クリックされた場所にポイントを配置する
@@ -86,7 +125,9 @@ namespace Landscape2.Runtime
                 }
                 // アイコンが埋め込まれないように2.5f高くしている
                 setPoint.y += float.Parse(heightValue) * 0.01f + 2.5f;
-                setPointMarker.transform.position = setPoint;
+
+                markerPosition = setPoint;
+                UpdateMarkerPos();
             }
         }
 
@@ -114,6 +155,7 @@ namespace Landscape2.Runtime
             GameObject.Destroy(setPointMarker);
             setPointMarker = null;
             createPointMarker.name = registerName;
+            heightValueIndex[registerName] = offsetYValue;
             createPointMarker.transform.parent = landmarkMarkers.transform;
             // データの追加
             var isAdded = lineOfSightDataComponent.AddPointDict(LineOfSightType.landmark, registerName, createPointMarker.transform.position);
@@ -144,6 +186,7 @@ namespace Landscape2.Runtime
             // 編集後のポイントを追加
             createPointMarker = GameObject.Instantiate(setPointMarker);
             createPointMarker.name = registerName;
+            heightValueIndex[registerName] = offsetYValue;
             createPointMarker.transform.parent = landmarkMarkers.transform;
             // 既存のボタンの削除
             var deleteData = DeletePoint();
@@ -201,8 +244,18 @@ namespace Landscape2.Runtime
                     break;
                 }
             }
+
+            // キャンセルした際の為編集前座標を保持しておく
             editPointMarkerPos = setPointMarker.transform.position;
             editPointName = setPointMarker.name;
+
+            // 編集座標を修正
+            markerPosition = editPointMarkerPos;
+            offsetYValue = 0f;
+            if (heightValueIndex.TryGetValue(setPointMarker.name, out var offsetY))
+            {
+                offsetYValue = offsetY;
+            }
         }
 
         /// <summary>

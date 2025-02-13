@@ -11,6 +11,8 @@ namespace Landscape2.Runtime
 
         protected VisualElement snackBarClone; // Snackbarのクローン
 
+        protected Button closeButton;
+
 
 
         public SnackBar(VisualElement rootElement, string target = "CenterUpper")
@@ -21,16 +23,23 @@ namespace Landscape2.Runtime
                 snackBarClone = snackBar.CloneTree();
                 rootElement.Q<VisualElement>(target).Add(snackBarClone);
             }
+
             snackBarClone = rootElement.Q<VisualElement>("Snackbar");
-            snackBarClone.visible = false;
-            snackBarClone.Q<Button>("CloseButton").visible = false;
+            closeButton = snackBarClone.Q<Button>("CloseButton");
+
+            closeButton.clicked += () =>
+            {
+                Hide();
+            };
+
+            Hide();
         }
 
         public void ShowMessage(string message)
         {
             snackBarClone.Q<Label>("SnackbarText").text = message;
             snackBarClone.visible = true;
-            snackBarClone.Q<Button>("CloseButton").visible = true;
+            closeButton.visible = true;
         }
 
         public void Hide()
@@ -41,7 +50,8 @@ namespace Landscape2.Runtime
         private void HideCore()
         {
             snackBarClone.visible = false;
-            snackBarClone.Q<Button>("CloseButton").visible = false;
+            closeButton.visible = false;
+            // snackBarClone.Q<Button>("CloseButton").visible = false;
         }
     }
 }
