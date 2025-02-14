@@ -218,6 +218,10 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// </summary>
         private void OnReleasePanel()
         {
+            if (areaPlanningEdit.IsIntersectedByLine())
+            {
+                base.DisplaySnackbar("頂点が交差したエリアは作成できません");
+            }
             areaPlanningEdit.OnReleasePin();
             CameraMoveByUserInput.IsCameraMoveActive = true;
         }

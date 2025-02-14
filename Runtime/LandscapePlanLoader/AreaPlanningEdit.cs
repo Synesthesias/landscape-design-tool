@@ -251,8 +251,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         {
             if(editingPin == null)return;
 
-            // ラインが交差しているかを判定
-            if (displayPinLine.IsIntersectedByPin(editingPin))
+            // 頂点が交差しているかを判定
+            if (IsIntersectedByLine())
             {
                 Debug.LogWarning("Vertices are crossing");
                 // 頂点，ピン，ラインを元の位置に戻す
@@ -262,6 +262,14 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             }
             editingPin = null;
             editingLine = null;           
+        }
+
+        /// <summary>
+        /// 頂点が交差しているかを判定
+        /// </summary>
+        public bool IsIntersectedByLine()
+        {
+            return displayPinLine.IsIntersectedByPin(editingPin);
         }
 
         /// <summary>
