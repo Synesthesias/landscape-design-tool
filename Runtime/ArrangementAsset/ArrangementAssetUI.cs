@@ -71,6 +71,8 @@ namespace Landscape2.Runtime
         private void RegisterEditButtonAction()
         {
             var moveButton = editPanel.Q<RadioButton>("MoveButton");
+            moveButton.parent.style.display = DisplayStyle.None;
+
             moveButton.RegisterCallback<ClickEvent>(evt =>
             {
                 editMode.CreateRuntimeHandle(editTarget, TransformType.Position);
