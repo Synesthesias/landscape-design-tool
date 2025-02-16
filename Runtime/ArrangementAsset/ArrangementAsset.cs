@@ -269,8 +269,11 @@ namespace Landscape2.Runtime
                 }
             }
 
-            editTarget.layer = LayerMask.NameToLayer("Default");
-            editTarget = null;
+            if (editTarget != null)
+            {
+                editTarget.layer = LayerMask.NameToLayer("Default");
+                editTarget = null;
+            }
         }
 
         private bool CheckParentName(Transform hitTransform, string parentName)
