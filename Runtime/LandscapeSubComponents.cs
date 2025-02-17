@@ -153,6 +153,7 @@ namespace Landscape2.Runtime
                 new LineOfSight(saveSystem,subMenuUxmls[(int)SubMenuUxmlType.Analytics]),
                 new TextureSwitch(uiRoot),
                 new WalkerModeUI(subMenuUxmls[(int)SubMenuUxmlType.WalkMode], landscapeCamera, walkerMoveByUserInput),
+                new VisualSettingConfig(uiRoot,new VisualSettingConfigUI(uiRoot)),
             };
 
         }

@@ -61,7 +61,7 @@
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:VisualElement name="SettingPanel" style="flex-grow: 1;">
+    <ui:VisualElement name="SettingPanel" style="flex-grow: 1; height: auto;">
         <ui:VisualElement name="PanelArrow" style="flex-grow: 1; width: 22px; height: 16px;" />
         <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="SaveButton" style="align-items: center;">
             <ui:VisualElement name="IconSave" style="flex-grow: 1;" />
@@ -70,6 +70,10 @@
         <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="LoadButton" style="align-items: center;">
             <ui:VisualElement name="IconReplace" style="flex-grow: 1;" />
             <ui:Label tabindex="-1" text="プロジェクトを切り替え" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+        </ui:Button>
+        <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="VisualSettingButton" style="align-items: center;">
+            <ui:VisualElement name="IconSlider" style="flex-grow: 1;" />
+            <ui:Label tabindex="-1" text="明るさ調整" parse-escape-sequences="true" display-tooltip-when-elided="true" />
         </ui:Button>
     </ui:VisualElement>
 </ui:UXML>

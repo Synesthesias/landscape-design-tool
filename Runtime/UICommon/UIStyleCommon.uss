@@ -1362,6 +1362,12 @@ Scroller #unity-drag-container {
     height: 24px;
     border-radius: 50%;
 }
+#IconSlider {
+    background-image: resource('Icon_Slider');
+    max-width: 24px;
+    height: 24px;
+    border-radius: 50%;
+}
 
 #IconDelete {
     background-image: resource('Icon_Trash');
@@ -1461,6 +1467,9 @@ Scroller #unity-drag-container {
 }
 #Icon_Viewpoint {
     background-image: resource('Icon_Viewpoint');
+}
+#Icon_Slider {
+    background-image: resource('Icon_Slider');
 }
 
 #AssetCategory_Tree {
