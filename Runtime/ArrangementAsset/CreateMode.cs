@@ -74,6 +74,9 @@ namespace Landscape2.Runtime
             generatedAsset.name = obj.name;
             int generateLayer = LayerMask.NameToLayer("Ignore Raycast");
             SetLayerRecursively(generatedAsset, generateLayer);
+            
+            // アセット生成時に必要コンポーネント付与
+            AssetPlacedDirectionComponent.TryAdd(generatedAsset);
         }
 
         public void SetAsset(string assetName, IList<GameObject> plateauAssets)
@@ -166,6 +169,11 @@ namespace Landscape2.Runtime
             {
                 // アセット作成通知
                 ArrangementAssetListUI.OnCreatedAsset.Invoke(generatedAsset);
+                if (generatedAsset.TryGetComponent<AssetPlacedDirectionComponent>(out var component))
+                {
+                    // 配置完了
+                    component.SetPlaced();
+                }
 
                 SetLayerRecursively(generatedAsset, 0);
                 generateAssets(selectedAsset);
