@@ -13,18 +13,18 @@ namespace Landscape2.Runtime
     {
         private VisualTreeAsset itemVisualTree;
         private List<ArrangementAssetListItemUI> itemUIs = new();
-        
+
         private VisualElement noAssets;
         private VisualElement listContent;
-        
+
         private ArrangementAssetFocus focus;
-        
+
         public UnityEvent<GameObject> OnDeleteAsset = new();
-        
+
         // 外から通知を受け取るようにstaticに
         public static UnityEvent<GameObject> OnCreatedAsset = new();
         public static UnityEvent<GameObject> OnCancelAsset = new();
-        
+
         public ArrangementAssetListUI(VisualElement element, LandscapeCamera landscapeCamera)
         {
             var assetLeftList = element.Q<VisualElement>("Panel_AssetLeftList");
@@ -33,11 +33,11 @@ namespace Landscape2.Runtime
             noAssets.style.display = DisplayStyle.Flex;
             itemVisualTree = Resources.Load<VisualTreeAsset>("List_Asset");
             focus = new ArrangementAssetFocus(landscapeCamera);
-            
+
             OnCreatedAsset.AddListener(AddAsset);
             OnCancelAsset.AddListener((go) => RemoveAsset(go.GetInstanceID()));
         }
-        
+
         private void AddAsset(GameObject target)
         {
             if (itemUIs.Any(item => item.Model.PrefabID == target.GetInstanceID()))
@@ -45,42 +45,42 @@ namespace Landscape2.Runtime
                 Debug.LogWarning("すでに追加されているアセットです");
                 return;
             }
-            
+
             var placeObject = GetAsset(target.GetInstanceID());
             if (placeObject == null)
             {
                 Debug.LogWarning("配置対象のオブジェクトが見つかりませんでした");
                 return;
             }
-            
+
             Debug.Log($"アセットを追加しました。{target.name}");
 
             var type = ArrangementAssetTypeExtensions.GetArrangementAssetType(target);
             var typeCount = itemUIs.Count(item => item.Model.Type == type);
             typeCount++;
-            
+
             var item = itemVisualTree.CloneTree();
             var itemUI = new ArrangementAssetListItemUI(target.GetInstanceID(), item, type, typeCount);
-            
+
             // 削除コールバック
             itemUI.OnDeleteAsset.AddListener(() =>
             {
                 RemoveAsset(target.GetInstanceID());
             });
-            
+
             // フォーカスコールバック
             itemUI.OnFocusAsset.AddListener(() =>
             {
                 // フォーカス処理
                 OnFocusAsset(target.GetInstanceID());
             });
-            
+
             listContent.Add(itemUI.Model.Element);
             itemUIs.Add(itemUI);
 
             TryShowNoAssets();
         }
-        
+
         public void RemoveAsset(int prefabID)
         {
             if (itemUIs.Count == 0)
@@ -111,7 +111,7 @@ namespace Landscape2.Runtime
             }
             OnDeleteAsset.Invoke(asset);
         }
-        
+
         private void OnFocusAsset(int prefabID)
         {
             // フォーカス処理
@@ -121,9 +121,9 @@ namespace Landscape2.Runtime
                 Debug.LogWarning("削除対象のアセットが見つかりませんでした");
                 return;
             }
-            focus.Focus(asset);
+            focus.Focus(asset.transform);
         }
-        
+
         private GameObject GetAsset(int prefabID)
         {
             var createdAssets = GameObject.Find("CreatedAssets");
@@ -132,7 +132,7 @@ namespace Landscape2.Runtime
                 Debug.LogWarning("CreatedAssetsが見つかりませんでした");
                 return null;
             }
-            
+
             // CreatedAssetsの子オブジェクトから取得
             foreach (Transform child in createdAssets.transform)
             {

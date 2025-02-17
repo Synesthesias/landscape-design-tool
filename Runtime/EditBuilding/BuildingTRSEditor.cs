@@ -8,6 +8,7 @@ namespace Landscape2.Runtime
 {
     public class BuildingTRSEditor : ISubComponent
     {
+        const float focusDistanceMultiplyer = 16f;
         private EditMode editMode = new();
 
         BuildingTRSEditorUI trsUI;
@@ -17,20 +18,36 @@ namespace Landscape2.Runtime
 
         List<Renderer> disableList = new();
 
+        GameObjectFocus assetFocus;
+
+        GameObject targetViewObject;
 
 
-        public BuildingTRSEditor(EditBuilding editBuilding, VisualElement element)
+
+
+
+        public BuildingTRSEditor(EditBuilding editBuilding, VisualElement element, LandscapeCamera landscapeCamera)
         {
             editMode.OnCancel();
             trsUI = new(editBuilding, element);
             deleteListUI = new(element, this);
 
+            assetFocus = new(landscapeCamera);
+            assetFocus.focusFinishCallback += _ => assetFocus.FocusFinish();
+
+            targetViewObject = new();
+            targetViewObject.name = "TargetViewObject";
+
             editBuilding.OnBuildingSelected += OnSelectBuilding;
 
             deleteListUI.OnClickShowButton += (go) =>
             {
+                Debug.Log($"go => {go.name} : {go.transform.position} : {go.transform.localPosition}", go);
                 editBuilding.SetTargetObject(go);
-                CameraMoveByUserInput.FocusOnObject(go);
+                var bounds = CalculateBounds(go);
+                targetViewObject.transform.position = bounds.center;
+                assetFocus.Focus(targetViewObject.transform, focusDistanceMultiplyer);
+
                 var r = disableList.Where(r => r.gameObject == go).FirstOrDefault();
                 if (!r)
                 {
@@ -45,7 +62,9 @@ namespace Landscape2.Runtime
             deleteListUI.OnClickListElement += (go) =>
             {
                 editBuilding.SetTargetObject(go);
-                CameraMoveByUserInput.FocusOnObject(go);
+                var bounds = CalculateBounds(go);
+                targetViewObject.transform.position = bounds.center;
+                assetFocus.Focus(targetViewObject.transform, focusDistanceMultiplyer);
             };
 
             trsUI.OnClickDeleteButton += () =>
@@ -144,5 +163,29 @@ namespace Landscape2.Runtime
         public void LateUpdate(float deltaTime)
         {
         }
+
+
+        /// <summary>
+        /// 手抜きですがCameraMoveByUserInputsから取ってきた
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        private Bounds CalculateBounds(GameObject obj)
+        {
+            Renderer[] renderers = obj.GetComponentsInChildren<Renderer>();
+            if (renderers.Length == 0)
+            {
+                Debug.LogError("指定されたオブジェクトにRendererが存在しません。");
+                return new Bounds(obj.transform.position, Vector3.zero);
+            }
+
+            Bounds bounds = renderers[0].bounds;
+            foreach (Renderer renderer in renderers)
+            {
+                bounds.Encapsulate(renderer.bounds);
+            }
+            return bounds;
+        }
+
     }
 }

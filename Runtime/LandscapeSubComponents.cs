@@ -145,7 +145,7 @@ namespace Landscape2.Runtime
                 saveSystem,
                 editBuilding,
                 new BuildingColorEditorUI(new BuildingColorEditor(),editBuilding,subMenuUxmls[(int)SubMenuUxmlType.EditBuilding]),
-                new BuildingTRSEditor(editBuilding,subMenuUxmls[(int)SubMenuUxmlType.EditBuilding]),
+                new BuildingTRSEditor(editBuilding,subMenuUxmls[(int)SubMenuUxmlType.EditBuilding],landscapeCamera),
                 new VisualizeHeightUI(new VisualizeHeight(),uiRoot,landscapeCamera),
                 cameraAutoRotate,
                 new CameraAutoRotateUI(cameraAutoRotate,uiRoot),

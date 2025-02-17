@@ -47,7 +47,7 @@ namespace Landscape2.Runtime
             walker.transform.position = pos;
             cc.enabled = true;
         }
-        
+
         /// <summary>
         /// 歩行者視点カメラのPositionを取得する
         /// </summary>
@@ -64,7 +64,7 @@ namespace Landscape2.Runtime
         public void SetCameraState(LandscapeCameraState camState)
         {
             cameraState = camState;
-            
+
             if (camState != LandscapeCameraState.Walker)
             {
                 CameraMoveByUserInput.IsKeyboardActive = true;
@@ -123,7 +123,7 @@ namespace Landscape2.Runtime
         /// <param name="onUi"></param>
         public void OnUserInputTrigger(bool onUi)
         {
-            if(onUi)
+            if (onUi)
             {
                 CameraMoveByUserInput.IsKeyboardActive = false;
                 CameraMoveByUserInput.IsMouseActive = false;
@@ -137,7 +137,7 @@ namespace Landscape2.Runtime
                     CameraMoveByUserInput.IsMouseActive = true;
                     WalkerMoveByUserInput.IsActive = false;
                 }
-                else if(cameraState == LandscapeCameraState.SelectWalkPoint)
+                else if (cameraState == LandscapeCameraState.SelectWalkPoint)
                 {
                     CameraMoveByUserInput.IsKeyboardActive = false;
                     CameraMoveByUserInput.IsMouseActive = false;
@@ -185,31 +185,31 @@ namespace Landscape2.Runtime
         /// </summary>
         /// <param name="target"></param>
         /// <param name="endCallback"></param>
-        public void FocusPoint(GameObject target, UnityAction endCallback = null)
+        /// <param name="distanceMultiplier">距離の倍率</param>
+        public void FocusPoint(Transform target, UnityAction endCallback = null, float distanceMultiplier = 4f)
         {
             if (cameraState != LandscapeCameraState.PointOfView)
             {
                 return;
             }
-            FocusPointAsync(target, endCallback);
+            FocusPointAsync(target, distanceMultiplier, endCallback);
         }
 
-        private async void FocusPointAsync(GameObject target, UnityAction endCallback = null)
+        private async void FocusPointAsync(Transform target, float distanceMultiplier, UnityAction endCallback = null)
         {
             const float upAngle = 45f; // 斜めから見下ろす
-            const float distanceMultiplier = 4f; // 距離の倍率
             const float duration = 0.5f; // 移動時間
-            
+
             var startRotation = vcam1.transform.rotation;
             var startPosition = vcam1.transform.position;
-            
+
             // カメラの回転
             var endRotation = Quaternion.LookRotation(target.transform.position - vcam1.transform.position);
             endRotation = Quaternion.Euler(new Vector3(upAngle, endRotation.eulerAngles.y, endRotation.eulerAngles.z));
 
             // カメラの距離
-            var distance = 50f;
-            var renderer = GetTargetMesh(target);
+            var distance = 12.5f * distanceMultiplier; // 元は50f。meshを持っていなくてもdistanceMultiplierを設定したかったので修正
+            var renderer = GetTargetMesh(target.gameObject);
             if (renderer != null)
             {
                 // メッシュのサイズからカメラの距離を決定
@@ -217,8 +217,8 @@ namespace Landscape2.Runtime
             }
 
             // カメラの位置
-            var endPosition = target.transform.position -  endRotation * Vector3.forward * distance; // 一定の距離を保つ
-            
+            var endPosition = target.transform.position - endRotation * Vector3.forward * distance; // 一定の距離を保つ
+
             // カメラの移動
             var elapsedTime = 0f;
             while (elapsedTime < duration)
@@ -230,7 +230,7 @@ namespace Landscape2.Runtime
             }
             vcam1.transform.rotation = endRotation;
             vcam1.transform.position = endPosition;
-            
+
             endCallback?.Invoke();
         }
 
@@ -241,7 +241,7 @@ namespace Landscape2.Runtime
             {
                 return renderer as MeshRenderer;
             }
-            
+
             if (target.TryGetComponent<LODGroup>(out var meshLod))
             {
                 var lods = meshLod.GetLODs();

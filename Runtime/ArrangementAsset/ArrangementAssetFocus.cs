@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.HighDefinition;
 using PlateauSandboxBuilding = PlateauToolkit.Sandbox.Runtime.PlateauSandboxBuildings.Runtime.PlateauSandboxBuilding;
 
 namespace Landscape2.Runtime
@@ -10,38 +11,22 @@ namespace Landscape2.Runtime
     /// <summary>
     /// 配置したアセットにフォーカスするクラス
     /// </summary>
-    public class ArrangementAssetFocus
+    public class ArrangementAssetFocus : GameObjectFocus
     {
-        private LandscapeCamera landscapeCamera;
-        
-        private Color focusColor = new Color32(255,195,195,255);
+
+
+        private Color focusColor = new Color32(255, 195, 195, 255);
         private const float focusDuration = 1.0f;
         private bool isFocusing = false;
-        
-        public ArrangementAssetFocus(LandscapeCamera landscapeCamera)
+
+        public ArrangementAssetFocus(LandscapeCamera landscapeCamera) : base(landscapeCamera)
         {
-            this.landscapeCamera = landscapeCamera;
+            focusFinishCallback += target =>
+            {
+                SetEmissive(target);
+            };
         }
 
-        public void Focus(GameObject target)
-        {
-            if (isFocusing)
-            {
-                return;
-            }
-            
-            if (landscapeCamera.cameraState != LandscapeCameraState.PointOfView)
-            {
-                return;
-            }
-            isFocusing = true;
-            landscapeCamera.FocusPoint(target, () =>
-            {
-                // 完了後アセットのカラー変更
-                SetEmissive(target);
-            });
-        }
-        
         private void SetEmissive(GameObject target)
         {
             var materials = GetMaterials(target);
@@ -50,7 +35,7 @@ namespace Landscape2.Runtime
                 SetMaterialEmissiveAsync(material);
             }
         }
-        
+
         private List<Material> GetMaterials(GameObject target)
         {
             List<Material> materials = new List<Material>();
@@ -69,13 +54,13 @@ namespace Landscape2.Runtime
         {
             var initColor = material.GetColor("_BaseColor");
             material.SetColor("_BaseColor", focusColor);
-            
+
             await Task.Delay((int)(focusDuration * 1000));
-            
+
             // 元に戻す
             material.SetColor("_BaseColor", initColor);
-            
-            isFocusing = false;
+
+            FocusFinish();
         }
     }
 }
