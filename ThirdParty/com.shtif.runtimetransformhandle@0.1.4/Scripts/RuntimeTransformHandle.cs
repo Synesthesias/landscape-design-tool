@@ -23,7 +23,7 @@ namespace RuntimeHandle
 
         private Vector3 _previousMousePosition;
         private HandleBase _previousAxis;
-        
+
         private HandleBase _draggingHandle;
 
         private HandleType _previousType;
@@ -35,6 +35,8 @@ namespace RuntimeHandle
 
         public Transform target;
         public bool isDragging;
+
+        public bool isMouseOverHandle;
 
         void Start()
         {
@@ -68,7 +70,7 @@ namespace RuntimeHandle
         void Clear()
         {
             _draggingHandle = null;
-            
+
             if (_positionHandle) _positionHandle.Destroy();
             if (_rotationHandle) _rotationHandle.Destroy();
             if (_scaleHandle) _scaleHandle.Destroy();
@@ -79,7 +81,7 @@ namespace RuntimeHandle
             if (autoScale)
                 transform.localScale =
                     Vector3.one * (Vector3.Distance(handleCamera.transform.position, transform.position) * autoScaleFactor) / 15;
-            
+
             if (_previousType != type || _previousAxes != axes)
             {
                 Clear();
@@ -130,11 +132,13 @@ namespace RuntimeHandle
         {
             if (_draggingHandle == null && _previousAxis != null && (_previousAxis != p_axis || !_previousAxis.CanInteract(p_hitPoint)))
             {
+                isMouseOverHandle = false;
                 _previousAxis.SetDefaultColor();
             }
 
             if (p_axis != null && _draggingHandle == null && p_axis.CanInteract(p_hitPoint))
             {
+                isMouseOverHandle = true;
                 p_axis.SetColor(Color.yellow);
             }
 
