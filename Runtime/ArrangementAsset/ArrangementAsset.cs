@@ -5,13 +5,8 @@ using UnityEngine.EventSystems;
 // Build時にAssetをimportする
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
-using System.Threading.Tasks;  // Taskを使用するために必要
 // UI
-using UnityEditor;
 using UnityEngine.UIElements;
-using Landscape2.Runtime.UiCommon;
-
-using RuntimeHandle;
 
 using UnityEngine.InputSystem;
 using System.Linq;
@@ -35,6 +30,7 @@ namespace Landscape2.Runtime
 
     public class ArrangementAsset : ISubComponent, LandscapeInputActions.IArrangeAssetActions
     {
+        const float MouseDragMagnitudeThreashold = 10f;
         private Camera cam;
         private Ray ray;
         private VisualElement arrangementAssetUI;
@@ -50,6 +46,10 @@ namespace Landscape2.Runtime
         private EditMode editMode;
 
         private GameObject activeTarget; // editTargetはactiveTargetにしてもいいかも知れない
+
+        Vector2? mousePosition;
+
+
 
         public ArrangementAsset(VisualElement element, SaveSystem saveSystemInstance, LandscapeCamera landscapeCamera)
         {
@@ -118,6 +118,62 @@ namespace Landscape2.Runtime
             arrangementAssetUIClass.RegisterCategoryPanelAction(buttonName, assetsList, assetsPicture);
         }
 
+        private bool UpdateTargetDrag()
+        {
+            bool isMouseDragging = false;
+            var mouse = Mouse.current;
+            if (editTarget == null)
+            {
+                mousePosition = null;
+                return false;
+            }
+
+            // 本来であればInputActionsのselectを使用して押下状態を取ってくるのが適切の筈。
+            // しかし、InputActionではDragを取るのにhackeyな事を行わなければならない為直接入力状態を取得する
+            if (mouse.leftButton.isPressed)
+            {
+                if (mousePosition == null)
+                {
+                    mousePosition = mouse.position.ReadValue();
+                }
+                ray = cam.ScreenPointToRay(Input.mousePosition);
+
+                if (
+                    editMode.RuntimeTransformHandleScript == null ||
+                    (editMode.RuntimeTransformHandleScript != null && !editMode.RuntimeTransformHandleScript.isMouseOverHandle)
+                )
+                {
+                    if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, ~LayerMask.GetMask(LayerMask.LayerToName(editTarget.layer))))
+                    {
+                        var mouseDelta = mouse.position.ReadValue() - mousePosition.Value;
+                        var targetDelta = editTarget.transform.position - hit.point;
+
+                        // クリックした場所とtargetの位置がずれている
+                        if (0 < targetDelta.magnitude)
+                        {
+                            // 移動したら反映
+                            if (MouseDragMagnitudeThreashold < mouseDelta.magnitude)
+                            {
+                                editTarget.transform.position = hit.point;
+                            }
+                        }
+                        else
+                        {
+                            editTarget.transform.position = hit.point;
+                        }
+
+                    }
+                }
+                isMouseDragging = true;
+            }
+            else
+            {
+                mousePosition = null;
+            }
+
+            return isMouseDragging;
+        }
+
         public void SetMode(ArrangeModeName mode)
         {
             if (currentMode != null)
@@ -154,36 +210,15 @@ namespace Landscape2.Runtime
 
             bool isMouseDragging = false;
 
-            if (currentMode == editMode)
-            {
-                var mouse = Mouse.current;
-                if (editTarget != null)
-                {
-                    if (mouse.leftButton.isPressed)
-                    {
-                        ray = cam.ScreenPointToRay(Input.mousePosition);
 
-                        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, ~LayerMask.GetMask("Ignore Raycast")))
-                        {
-                            if (hit.collider.gameObject == editTarget)
-                            {
-                                Debug.Log($"hit self...");
-                            }
-                            editTarget.transform.position = hit.point;
-                        }
-                        isMouseDragging = true;
-                    }
-                    // else
-                    // {
-                    //     // 選択がキャンセルされる訳ではないのでこれは不要かもしれない
-                    //     editTarget = null;
-                    //     activeTarget = null;
-                    // }
-                }
-            }
             if (currentMode != null)
             {
                 currentMode.Update();
+            }
+
+            if (currentMode == editMode)
+            {
+                isMouseDragging = UpdateTargetDrag();
             }
 
             var isEditMode = currentMode == editMode;
@@ -192,11 +227,7 @@ namespace Landscape2.Runtime
             {
                 var handleDragging = editMode.RuntimeTransformHandleScript != null && editMode.RuntimeTransformHandleScript.isDragging;
                 isEditingAssetTRS = isEditMode & handleDragging;
-
             }
-            // var isEditingAssetTRS = isEditMode &&
-            //     editMode.RuntimeTransformHandleScript != null &&
-            //     editMode.RuntimeTransformHandleScript.isDragging;
             CameraMoveByUserInput.IsCameraMoveActive = !isEditingAssetTRS;
 
             if (activeTarget != null)
@@ -231,7 +262,6 @@ namespace Landscape2.Runtime
             {
                 if (editTarget != null)
                 {
-                    editTarget.layer = LayerMask.NameToLayer("Default");
                     editTarget = null;
                 }
                 if (activeTarget != null)
@@ -252,18 +282,11 @@ namespace Landscape2.Runtime
                 {
                     var selectTarget = FindAssetComponent(hit.transform);
 
-                    if (selectTarget == lastEditTarget)
-                    {
-                        // 再度同じtargetを選択しない様にする
-                        return;
-                    }
-
                     editTarget = selectTarget;
-                    editTarget.layer = LayerMask.NameToLayer("Ignore Raycast");
                     lastEditTarget = editTarget;
                     arrangementAssetUIClass.SetEditTarget(editTarget);
                     SetMode(ArrangeModeName.Edit);
-                    // editMode.CreateRuntimeHandle(editTarget, TransformType.Position);
+                    editMode.CreateRuntimeHandle(editTarget, TransformType.None);
 
                     return;
                 }
@@ -271,7 +294,6 @@ namespace Landscape2.Runtime
 
             if (editTarget != null)
             {
-                editTarget.layer = LayerMask.NameToLayer("Default");
                 editTarget = null;
             }
         }
@@ -345,5 +367,7 @@ namespace Landscape2.Runtime
         public void LateUpdate(float deltaTime)
         {
         }
+
+
     }
 }
