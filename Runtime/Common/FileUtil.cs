@@ -10,10 +10,9 @@ namespace Landscape2.Runtime.Common
         // プロジェクト保存時に取得するためにファイルの名前とパスを保持
         private static Dictionary<string, string> PersistentPaths { get; } = new();
 
-        private static Texture2D tmpTexture;
         public static Texture2D LoadTexture(string path)
         {
-            tmpTexture ??= new Texture2D(2, 2);
+            var tmpTexture = new Texture2D(2, 2);
             var bytes = File.ReadAllBytes(path);
             tmpTexture.LoadImage(bytes);
             tmpTexture.Apply();
