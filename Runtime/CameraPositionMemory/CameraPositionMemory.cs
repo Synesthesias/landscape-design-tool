@@ -15,8 +15,8 @@ namespace Landscape2.Runtime.CameraPositionMemory
         private int slotsCount = 0;
         private List<SlotData> slots;
         private LandscapeCamera landscapeCamera;
-        
-        public CameraPositionMemory(CinemachineVirtualCamera vcam1, CinemachineVirtualCamera vcam2,LandscapeCamera landscapeCamera)
+
+        public CameraPositionMemory(CinemachineVirtualCamera vcam1, CinemachineVirtualCamera vcam2, LandscapeCamera landscapeCamera)
         {
             this.vcam1 = vcam1;
             this.vcam2 = vcam2;
@@ -58,7 +58,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
         {
             slotsCount--;
         }
-        
+
         /// <summary>
         /// 現在のカメラ位置を保存する関数
         /// </summary>
@@ -69,11 +69,11 @@ namespace Landscape2.Runtime.CameraPositionMemory
             var trans = Camera.main.transform;
             var cameraState = landscapeCamera.GetCameraState();
 
-            if(cameraState == LandscapeCameraState.SelectWalkPoint)
+            if (cameraState == LandscapeCameraState.SelectWalkPoint)
             {
-                cameraState = LandscapeCameraState.PointOfView; 
+                cameraState = LandscapeCameraState.PointOfView;
             }
-            var slotData = new SlotData(trans.position, trans.rotation, true, name, cameraState,vcam2.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset.y);
+            var slotData = new SlotData(trans.position, trans.rotation, true, name, cameraState, vcam2.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset.y);
             slots.Add(slotData);
             AddSlotCount();
             Debug.Log(GetSlotCount());
@@ -81,7 +81,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
             Debug.Log($"pos:{trans.position} rot:{trans.rotation.eulerAngles}");
             Debug.Log($"SlotData pos:{slotData.position} rot:{slotData.rotation.eulerAngles}");
         }
-        
+
         /// <summary>
         /// 保存したカメラ位置を復元する関数
         /// </summary>
@@ -90,21 +90,21 @@ namespace Landscape2.Runtime.CameraPositionMemory
         {
             var slotData = slots[slotId];
             landscapeCamera.SetCameraState(slotData.cameraState);
-            if(slotData.cameraState == LandscapeCameraState.PointOfView)
+            if (slotData.cameraState == LandscapeCameraState.PointOfView)
             {
                 vcam1.transform.SetPositionAndRotation(slotData.position, slotData.rotation);
             }
-            else if(slotData.cameraState == LandscapeCameraState.Walker)
+            else if (slotData.cameraState == LandscapeCameraState.Walker)
             {
                 landscapeCamera.SetWalkerPos(slotData.position);
                 vcam2.transform.position = slotData.position;
-                var pov = vcam2.GetCinemachineComponent<CinemachinePOV>();
                 var vcam1Euler = slotData.rotation.eulerAngles;
-                pov.m_VerticalAxis.Value = vcam1Euler.x > 270 ? vcam1Euler.x - 360 : vcam1Euler.x;
-                pov.m_HorizontalAxis.Value = vcam1Euler.y;
+                float xRotation = vcam1Euler.x > 270 ? vcam1Euler.x - 360 : vcam1Euler.x;
+                float yRotation = vcam1Euler.y;
+                vcam2.transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
                 CinemachineTransposer trans = vcam2.GetCinemachineComponent<CinemachineTransposer>();
                 Vector3 currentOffset = new Vector3(0.0f, slotData.offSetY, 0.0f);
-                if(currentOffset.y < 0.5f)
+                if (currentOffset.y < 0.5f)
                 {
                     currentOffset.y = 0.5f;
                 }
@@ -207,10 +207,11 @@ namespace Landscape2.Runtime.CameraPositionMemory
         /// <returns></returns>
         public static LandscapeCameraState CameraStateStringToEnum(string camState)
         {
-            if(camState == "PointOfView")
+            if (camState == "PointOfView")
             {
-                return LandscapeCameraState.PointOfView; 
-            }else if (camState == "Walker")
+                return LandscapeCameraState.PointOfView;
+            }
+            else if (camState == "Walker")
             {
                 return LandscapeCameraState.Walker;
             }
