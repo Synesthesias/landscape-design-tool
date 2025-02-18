@@ -52,6 +52,8 @@ namespace Landscape2.Runtime
     /// </summary>
     public class AnalyzeViewPoint : LineOfSightModeClass
     {
+        const float visibleAlpha = 0.2f;
+        const float invisibleAlpha = 0f;
         private Camera cam;
         private Ray ray;
         private ViewPointSetMode viewPointSetMode;
@@ -74,8 +76,12 @@ namespace Landscape2.Runtime
         private LineOfSightDataComponent lineOfSightDataComponent;
         private const string ObjNameLineOfSight = "LineOfSight";
 
-        private readonly Color lineColorValid = new(0, 191f / 255f, 1f, 0f);
+        private readonly Color lineColorValid = new(0, 191f / 255f, 1f, 0.2f);
         private readonly Color lineColorInvalid = new(1f, 140f / 255f, 0f, 0.2f);
+
+
+        bool visibleValid = false;
+        bool visibleInvalid = true;
 
         public AnalyzeViewPoint(LineOfSightDataComponent lineOfSightDataComponentInstance)
         {
@@ -96,14 +102,13 @@ namespace Landscape2.Runtime
             landmarkList_View = new(landMarkListPanelTitle, landMarkListPanel);
             analyzeSettingPanel_View = new(analyzeSettingPanelTitle, analyzeSettingPanel);
 
-
             targetViewPoint = null;
             targetLandmark = null;
             analyzeViewPointData.rangeWidth = 80;
             analyzeViewPointData.rangeHeight = 50;
             analyzeViewPointData.raySpan = 1;
-            analyzeViewPointData.lineColorValid = lineColorValid;
-            analyzeViewPointData.lineColorInvalid = lineColorInvalid;
+            SetValidAreaColor(visibleValid);
+            SetInvalidAreaColor(visibleInvalid);
         }
 
         public void ClearSetMode()
@@ -120,6 +125,30 @@ namespace Landscape2.Runtime
         {
             viewPointSetMode = ViewPointSetMode.viewPoint;
         }
+
+        void SetValidAreaColor(bool state)
+        {
+            analyzeViewPointData.lineColorValid =
+            new Color(
+                lineColorValid.r,
+                lineColorValid.g,
+                lineColorValid.b,
+                state ? visibleAlpha : invisibleAlpha
+            );
+
+        }
+
+        void SetInvalidAreaColor(bool state)
+        {
+            analyzeViewPointData.lineColorInvalid =
+            new Color(
+                lineColorInvalid.r,
+                lineColorInvalid.g,
+                lineColorInvalid.b,
+                state ? visibleAlpha : invisibleAlpha
+            );
+        }
+
 
         /// <summary>
         /// クリックされたポイントを登録する
@@ -157,8 +186,6 @@ namespace Landscape2.Runtime
                         new_Analyze_Viewpoint.Q<Label>("LandmarkName").text = hitObject.name;
                         landmarkList_View.Show(false);
                         analyzeSettingPanel_View.Show(true);
-                        // landMarkListPanel.style.display = DisplayStyle.None;
-                        // analyzeSettingPanel.style.display = DisplayStyle.Flex;
                         ClearSetMode();
                     }
                 }
@@ -198,6 +225,13 @@ namespace Landscape2.Runtime
 
         }
 
+        private Vector3 GetTargetPos(GameObject target)
+        {
+            // WARNING: 行儀が悪い。ViewPoint#GeneratePointMarkerの構成通りでないと動かない
+            return target.transform.GetChild(0).position;
+
+        }
+
         /// <summary>
         /// 見通し解析のラインを生成する(解析を行う)
         /// </summary>
@@ -209,9 +243,10 @@ namespace Landscape2.Runtime
             {
                 UpdateTargets();
             }
-            analyzeViewPointData.startPos = targetViewPoint.transform.position;
+
+            analyzeViewPointData.startPos = GetTargetPos(targetViewPoint); // targetViewPoint.transform.position;
             analyzeViewPointData.startPosName = targetViewPoint.name;
-            analyzeViewPointData.endPos = targetLandmark.transform.position;
+            analyzeViewPointData.endPos = GetTargetPos(targetLandmark); // targetLandmark.transform.position;
             analyzeViewPointData.endPosName = targetLandmark.name;
 
             var obj = new GameObject(ObjNameLineOfSight);
@@ -247,12 +282,12 @@ namespace Landscape2.Runtime
                     RaycastHit hit;
                     if (RaycastBuildings(targetViewPoint, targetPoint, out hit))
                     {
-                        DrawLine(targetViewPoint.transform.position, hit.point, obj, analyzeViewPointData.lineColorValid);
+                        DrawLine(analyzeViewPointData.startPos, hit.point, obj, analyzeViewPointData.lineColorValid);
                         DrawLine(hit.point, targetPoint, obj, analyzeViewPointData.lineColorInvalid);
                     }
                     else
                     {
-                        DrawLine(targetViewPoint.transform.position, targetPoint, obj, analyzeViewPointData.lineColorValid);
+                        DrawLine(analyzeViewPointData.startPos, targetPoint, obj, analyzeViewPointData.lineColorValid);
                     }
                 }
             }
@@ -314,11 +349,13 @@ namespace Landscape2.Runtime
 
             hitInfo = new RaycastHit();
 
-            Vector3 direction = (destination - startPoint.transform.position).normalized;
-            float distance = Vector3.Distance(startPoint.transform.position, destination);
+            var startPos = GetTargetPos(startPoint);
+
+            Vector3 direction = (destination - startPos).normalized;
+            float distance = Vector3.Distance(startPos, destination);
 
             RaycastHit[] hits;
-            hits = Physics.RaycastAll(startPoint.transform.position, direction, distance);
+            hits = Physics.RaycastAll(startPos, direction, distance);
 
             float minDistance = float.MaxValue;
             if (hits.Length <= 0)
@@ -442,6 +479,28 @@ namespace Landscape2.Runtime
                 analyzeViewPointData.raySpan = evt.newValue;
                 CreateLineOfSight();
             });
+
+            var visibleCheckbox = slider_Viewpoint.Q<Toggle>("validVisibleCheck");
+            visibleCheckbox.value = visibleValid;
+            visibleCheckbox.RegisterValueChangedCallback(evt =>
+            {
+                visibleValid = evt.newValue;
+                SetValidAreaColor(visibleValid);
+                CreateLineOfSight();
+            });
+
+            var invisibleCheckbox = slider_Viewpoint.Q<Toggle>("invalidVisibleCheck");
+            invisibleCheckbox.value = visibleInvalid;
+            invisibleCheckbox.RegisterValueChangedCallback(evt =>
+            {
+                visibleInvalid = evt.newValue;
+
+                SetInvalidAreaColor(visibleInvalid);
+                CreateLineOfSight();
+            });
+
+
+
         }
 
         /// <summary>

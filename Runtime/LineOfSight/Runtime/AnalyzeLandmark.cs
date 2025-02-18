@@ -46,6 +46,8 @@ namespace Landscape2.Runtime
     /// </summary>
     public class AnalyzeLandmark : LineOfSightModeClass
     {
+        const float visibleAlpha = 0.2f;
+        const float invisibleAlpha = 0f;
 
         /// <summary>
         /// 可視化範囲最低距離(m)
@@ -77,6 +79,9 @@ namespace Landscape2.Runtime
 
         LineOfSightUI.ViewStateControl landmarkListPanel_View;
         LineOfSightUI.ViewStateControl analyzeSettingPanel_View;
+
+        bool visibleValid = false;
+        bool visibleInvalid = true;
 
         public AnalyzeLandmark(LineOfSightDataComponent lineOfSightDataComponentInstance)
         {
@@ -113,6 +118,31 @@ namespace Landscape2.Runtime
             landmarkSetMode = LandmarkSetMode.landmark;
         }
 
+        void SetValidAreaColor(bool state)
+        {
+            analyzeLandmarkData.lineColorValid =
+            new Color(
+                lineColorValid.r,
+                lineColorValid.g,
+                lineColorValid.b,
+                state ? visibleAlpha : invisibleAlpha
+            );
+
+        }
+
+        void SetInvalidAreaColor(bool state)
+        {
+            analyzeLandmarkData.lineColorInvalid =
+            new Color(
+                lineColorInvalid.r,
+                lineColorInvalid.g,
+                lineColorInvalid.b,
+                state ? visibleAlpha : invisibleAlpha
+            );
+        }
+
+
+
         /// <summary>
         /// クリックされたポイントを登録する
         /// </summary>
@@ -131,8 +161,8 @@ namespace Landscape2.Runtime
                     {
                         targetLandmark = hitObject;
                         new_Analyze_Landmark.Q<Label>("LandmarkName").text = hitObject.name;
-                        landmarkListPanel_View.Show(false);// landMarkListPanel.style.display = DisplayStyle.None;
-                        analyzeSettingPanel_View.Show(true);// analyzeSettingPanel.style.display = DisplayStyle.Flex;
+                        landmarkListPanel_View.Show(false);
+                        analyzeSettingPanel_View.Show(true);
 
                         ClearSetMode();
                     }
@@ -144,14 +174,21 @@ namespace Landscape2.Runtime
             }
         }
 
+        private Vector3 GetTargetPos(GameObject target)
+        {
+            // WARNING: 行儀が悪い。Landmark#GeneratePointMarkerの構成通りでないと動かない            
+            return target.transform.GetChild(0).transform.position;
+        }
+
         /// <summary>
         /// 見通し解析のラインを生成する(解析を行う)
         /// </summary>
         float CreateLineOfSight()
         {
             ClearLineOfSight();
+            var landMarkPoint = GetTargetPos(targetLandmark);
             analyzeLandmarkData.startPosName = targetLandmark.name;
-            analyzeLandmarkData.startPos = targetLandmark.transform.position;
+            analyzeLandmarkData.startPos = landMarkPoint;
 
             var obj = new GameObject(ObjNameLineOfSight);
             obj.transform.parent = targetLandmark.transform;
@@ -169,37 +206,37 @@ namespace Landscape2.Runtime
                 // 上方向のラインの生成
                 for (int j = 0; j < rangeUp; j++)
                 {
-                    targetPoint = targetLandmark.transform.position;
+                    targetPoint = landMarkPoint;
                     targetPoint.x += radius * Mathf.Cos(2 * Mathf.PI * i / (float)circumferenceInterval);
                     targetPoint.y += j;
                     targetPoint.z += radius * Mathf.Sin(2 * Mathf.PI * i / (float)circumferenceInterval);
                     RaycastHit hit;
                     if (RaycastBuildings(targetLandmark, targetPoint, out hit))
                     {
-                        DrawLine(targetLandmark.transform.position, hit.point, obj, analyzeLandmarkData.lineColorValid);
+                        DrawLine(landMarkPoint, hit.point, obj, analyzeLandmarkData.lineColorValid);
                         DrawLine(hit.point, targetPoint, obj, analyzeLandmarkData.lineColorInvalid);
                     }
                     else
                     {
-                        DrawLine(targetLandmark.transform.position, targetPoint, obj, analyzeLandmarkData.lineColorValid);
+                        DrawLine(landMarkPoint, targetPoint, obj, analyzeLandmarkData.lineColorValid);
                     }
                 }
                 // 下方向のラインの生成
                 for (int j = 0; j < rangeDown; j++)
                 {
-                    targetPoint = targetLandmark.transform.position;
+                    targetPoint = landMarkPoint;
                     targetPoint.x += radius * Mathf.Cos(2 * Mathf.PI * i / (float)circumferenceInterval);
                     targetPoint.y -= j;
                     targetPoint.z += radius * Mathf.Sin(2 * Mathf.PI * i / (float)circumferenceInterval);
                     RaycastHit hit;
                     if (RaycastBuildings(targetLandmark, targetPoint, out hit))
                     {
-                        DrawLine(targetLandmark.transform.position, hit.point, obj, analyzeLandmarkData.lineColorValid);
+                        DrawLine(landMarkPoint, hit.point, obj, analyzeLandmarkData.lineColorValid);
                         DrawLine(hit.point, targetPoint, obj, analyzeLandmarkData.lineColorInvalid);
                     }
                     else
                     {
-                        DrawLine(targetLandmark.transform.position, targetPoint, obj, analyzeLandmarkData.lineColorValid);
+                        DrawLine(landMarkPoint, targetPoint, obj, analyzeLandmarkData.lineColorValid);
                     }
                 }
             }
@@ -259,12 +296,14 @@ namespace Landscape2.Runtime
         {
             bool result = false;
 
+            var startPos = GetTargetPos(startPoint);
+
             hitInfo = new RaycastHit();
 
-            Vector3 direction = (destination - startPoint.transform.position).normalized;
+            Vector3 direction = (destination - startPos).normalized;
 
             RaycastHit[] hits;
-            hits = Physics.RaycastAll(startPoint.transform.position, direction, analyzeLandmarkData.rangeRadius);
+            hits = Physics.RaycastAll(startPos, direction, analyzeLandmarkData.rangeRadius);
 
             float minDistance = float.MaxValue;
             if (hits.Length <= 0)
@@ -339,6 +378,27 @@ namespace Landscape2.Runtime
                 analyzeLandmarkData.raySpan = evt.newValue;
                 CreateLineOfSight();
             });
+
+            var visibleCheckbox = slider_Landmark.Q<Toggle>("validVisibleCheck");
+            visibleCheckbox.value = visibleValid;
+            visibleCheckbox.RegisterValueChangedCallback(evt =>
+            {
+                visibleValid = evt.newValue;
+                SetValidAreaColor(visibleValid);
+                CreateLineOfSight();
+            });
+
+            var invisibleCheckbox = slider_Landmark.Q<Toggle>("invalidVisibleCheck");
+            invisibleCheckbox.value = visibleInvalid;
+            invisibleCheckbox.RegisterValueChangedCallback(evt =>
+            {
+                visibleInvalid = evt.newValue;
+
+                SetInvalidAreaColor(visibleInvalid);
+                CreateLineOfSight();
+            });
+
+
         }
 
         /// <summary>

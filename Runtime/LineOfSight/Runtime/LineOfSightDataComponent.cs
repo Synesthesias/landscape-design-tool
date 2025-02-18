@@ -1,5 +1,6 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using UnityEngine;
 
 namespace Landscape2.Runtime
@@ -9,45 +10,88 @@ namespace Landscape2.Runtime
     /// </summary>
     public class LineOfSightDataComponent
     {
-        private Dictionary<string, Vector3> viewPointDict;
-        private Dictionary<string, Vector3> landmarkDict;
+        [Serializable]
+        public class PointData
+        {
+            public Vector3 pointPos;
+            public float yOffset;
+        }
+
+        private Dictionary<string, PointData> viewPointDict;
+        private Dictionary<string, PointData> landmarkDict;
+
+        //private Dictionary<string, Vector3> viewPointDict;
+        //private Dictionary<string, Vector3> landmarkDict;
         private Dictionary<string, AnalyzeViewPointElements> analyzeViewPointDataDict;
         private Dictionary<string, AnalyzeLandmarkElements> analyzeLandmarkDataDict;
         private LineOfSightUI lineOfSightUI;
 
         public LineOfSightDataComponent()
         {
-            viewPointDict = new Dictionary<string, Vector3>();
-            landmarkDict = new Dictionary<string, Vector3>();
+            viewPointDict = new();
+            landmarkDict = new();
+
             analyzeViewPointDataDict = new Dictionary<string, AnalyzeViewPointElements>();
             analyzeLandmarkDataDict = new Dictionary<string, AnalyzeLandmarkElements>();
         }
 
         /// <summary>
         /// 視点場、眺望対象を辞書に追加する
+        /// offset高さも保持する様にした
         /// </summary>
-        public bool AddPointDict(LineOfSightType lineOfSightType, string pointName, Vector3 pointPos)
+        /// <param name="type"></param>
+        /// <param name="pointName"></param>
+        /// <param name="pointData"></param>
+        /// <returns></returns>
+        public bool AddPointDict(LineOfSightType type, string pointName, PointData pointData)
         {
-            if (lineOfSightType == LineOfSightType.viewPoint)
+            if (type == LineOfSightType.viewPoint)
             {
                 if (viewPointDict.ContainsKey(pointName))
                 {
                     return false;
                 }
-                viewPointDict.Add(pointName, pointPos);
+                viewPointDict.Add(pointName, pointData);
                 return true;
             }
-            else if (lineOfSightType == LineOfSightType.landmark)
+            else if (type == LineOfSightType.landmark)
             {
                 if (landmarkDict.ContainsKey(pointName))
                 {
                     return false;
                 }
-                landmarkDict.Add(pointName, pointPos);
+                landmarkDict.Add(pointName, pointData);
                 return true;
             }
             return false;
+
         }
+
+        /// <summary>
+        /// 視点場、眺望対象を辞書に追加する
+        /// </summary>
+        // public bool AddPointDict(LineOfSightType lineOfSightType, string pointName, Vector3 pointPos)
+        // {
+        //     if (lineOfSightType == LineOfSightType.viewPoint)
+        //     {
+        //         if (viewPointDict.ContainsKey(pointName))
+        //         {
+        //             return false;
+        //         }
+        //         viewPointDict.Add(pointName, pointPos);
+        //         return true;
+        //     }
+        //     else if (lineOfSightType == LineOfSightType.landmark)
+        //     {
+        //         if (landmarkDict.ContainsKey(pointName))
+        //         {
+        //             return false;
+        //         }
+        //         landmarkDict.Add(pointName, pointPos);
+        //         return true;
+        //     }
+        //     return false;
+        // }
 
         /// <summary>
         /// 視点場解析結果を辞書に追加する
@@ -86,18 +130,35 @@ namespace Landscape2.Runtime
         /// <summary>
         /// 視点場、眺望対象の辞書を取得する
         /// </summary>
-        public Dictionary<string, Vector3> GetPointDict(LineOfSightType lineOfSightType)
+        public Dictionary<string, PointData> GetPointDict(LineOfSightType type)
         {
-            if (lineOfSightType == LineOfSightType.viewPoint)
+            if (type == LineOfSightType.viewPoint)
             {
                 return viewPointDict;
             }
-            else if (lineOfSightType == LineOfSightType.landmark)
+            else if (type == LineOfSightType.landmark)
             {
                 return landmarkDict;
             }
             return null;
+
         }
+
+        /// <summary>
+        /// 視点場、眺望対象の辞書を取得する
+        /// </summary>
+        // public Dictionary<string, Vector3> GetPointDict(LineOfSightType lineOfSightType)
+        // {
+        //     if (lineOfSightType == LineOfSightType.viewPoint)
+        //     {
+        //         return viewPointDict;
+        //     }
+        //     else if (lineOfSightType == LineOfSightType.landmark)
+        //     {
+        //         return landmarkDict;
+        //     }
+        //     return null;
+        // }
 
         /// <summary>
         /// 視点場解析結果の辞書を取得する

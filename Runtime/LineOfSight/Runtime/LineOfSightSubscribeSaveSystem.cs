@@ -85,8 +85,8 @@ namespace Landscape2.Runtime
             }
 
             // 辞書をロード
-            var viewPointDict = DataSerializer.Load<Dictionary<string, Vector3>>("ViewPointDict");
-            foreach (KeyValuePair<string, Vector3> point in viewPointDict)
+            var viewPointDict = DataSerializer.Load<Dictionary<string, LineOfSightDataComponent.PointData>>("ViewPointDict");
+            foreach (KeyValuePair<string, LineOfSightDataComponent.PointData> point in viewPointDict)
             {
                 // 辞書に登録
                 lineOfSightDataComponent.AddPointDict(LineOfSightType.viewPoint, point.Key, point.Value);
@@ -98,12 +98,20 @@ namespace Landscape2.Runtime
                 spriteRenderer.sprite = viewPointIconSprite;
                 var boxCollider = loadPoint.AddComponent<BoxCollider>();
                 boxCollider.size = spriteRenderer.sprite.bounds.size;
-                loadPoint.transform.position = point.Value;
+                loadPoint.transform.position = point.Value.pointPos;
                 loadPoint.transform.parent = viewPointMarkers.transform;
+
+                var go = new GameObject
+                {
+                    name = "yOffset"
+                };
+                go.transform.parent = loadPoint.transform;
+                go.transform.localPosition = new Vector3(0f, point.Value.yOffset, 0f);
+
                 loadPoint.name = point.Key;
             }
-            var landmarkDict = DataSerializer.Load<Dictionary<string, Vector3>>("LandmarktDict");
-            foreach (KeyValuePair<string, Vector3> point in landmarkDict)
+            var landmarkDict = DataSerializer.Load<Dictionary<string, LineOfSightDataComponent.PointData>>("LandmarktDict");
+            foreach (KeyValuePair<string, LineOfSightDataComponent.PointData> point in landmarkDict)
             {
                 // 辞書に登録
                 lineOfSightDataComponent.AddPointDict(LineOfSightType.landmark, point.Key, point.Value);
@@ -115,7 +123,15 @@ namespace Landscape2.Runtime
                 spriteRenderer.sprite = landmarkIconSprite;
                 var boxCollider = loadPoint.AddComponent<BoxCollider>();
                 boxCollider.size = spriteRenderer.sprite.bounds.size;
-                loadPoint.transform.position = point.Value;
+                loadPoint.transform.position = point.Value.pointPos;
+
+                var go = new GameObject
+                {
+                    name = "yOffset"
+                };
+                go.transform.parent = loadPoint.transform;
+                go.transform.localPosition = new Vector3(0f, point.Value.yOffset, 0f);
+
                 loadPoint.transform.parent = landamrkMarkers.transform;
                 loadPoint.name = point.Key;
             }
