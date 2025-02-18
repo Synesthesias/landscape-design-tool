@@ -68,7 +68,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             } 
             
             MeshFilter gisObjMeshFilter = gisObject.GetComponent<MeshFilter>();
-            tessellatedMeshCreator.CreateTessellatedMesh(listOfVertices, gisObjMeshFilter, 30, 40);
+            tessellatedMeshCreator.CreateTessellatedMesh(listOfVertices, gisObjMeshFilter, 30, 10);
             Mesh mesh = gisObjMeshFilter.sharedMesh;
             AreaProperty areaProperty = AreasDataComponent.GetProperty(areaEditManager.GetAreaID());
 
@@ -306,6 +306,10 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// </summary>
         public void EditVertexIfClicked()
         {
+            if (!IsClockwise())
+            {
+                vertices.Reverse();
+            }
             areaEditManager.EditPointData(new List<Vector3>(vertices));
         }
 
@@ -318,6 +322,25 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             displayPinLine.ClearPins();
             displayPinLine.ClearLines();
             isVertexEditing = false;
+        }
+
+        /// <summary>
+        /// 頂点が時計回りかどうかを判定するメソッド
+        /// </summary>
+        private bool IsClockwise()
+        {
+            if (vertices.Count < 3)
+            {
+                Debug.LogWarning("頂点数が3未満です。");
+            }
+            float sum = 0;
+            for (int i = 0; i < vertices.Count; i++)
+            {
+                Vector3 vec1 = vertices[i];
+                Vector3 vec2 = vertices[(i + 1) % vertices.Count];
+                sum += (vec2.x - vec1.x) * (vec2.z + vec1.z);
+            }
+            return sum > 0;
         }
     }
 }
