@@ -89,7 +89,7 @@ namespace Landscape2.Runtime
 
         public void InitializeEditPoint()
         {
-            edit_Landmark.Q<TextField>("EditViewpointName").value = setPointMarker.name;
+            edit_Landmark.Q<TextField>("EditLandmarkName").value = setPointMarker.name;
             edit_Landmark.Q<TextField>("heightValueTextField").value = offsetYValue.ToString();
         }
 
