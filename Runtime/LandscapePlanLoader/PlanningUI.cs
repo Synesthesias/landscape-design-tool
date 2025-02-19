@@ -21,6 +21,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         private readonly VisualElement panel_AreaPlanningEdit;
 
         private Color? pickedColor = null;
+        private VisualElement uiRoot;
 
 
         // 選択中のエリアのindex番号
@@ -28,7 +29,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
         public event Action<int> OnFocusedAreaChanged = delegate { };   // リストからエリアが選択されたときのイベント
         public event Action OnChangeConfirmed = delegate { };   // エリア編集が確定されたときのイベント
-
+        public event Action<PlanningPanelStatus> OnChangePlanningPanelDisplay = delegate { };   // 景観区画編集画面のパネル表示を切り替えたときのイベント
 
         /// <summary>
         /// パネル表示のステータス
@@ -38,14 +39,13 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             Default,
             ListForcused,
             RegisterAreaMain,
-            RegisterAreaColor,
             EditAreaMain,
-            EditAreaColor
         }
 
-        public PlanningUI(VisualElement planning)
+        public PlanningUI(VisualElement planning, VisualElement uiRoot)
         {
             currentFocusedAreaIndex = -1;   // エリアが選択されていない状態に設定
+            this.uiRoot = uiRoot;
 
             // 各UIパネル制御クラスのインスタンス生成
             new Panel_AreaPlanningListUI(planning, this);
@@ -76,6 +76,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             OnChangeConfirmed += () => ChangePlanningPanelDisplay(PlanningUI.PlanningPanelStatus.ListForcused);
 
             InvokeOnFocusedAreaChanged(-1); // エリア未選択の状態でUIを初期化
+
+            planning.RegisterCallback<GeometryChangedEvent>(ev => ChangePlanningPanelDisplay(PlanningPanelStatus.Default));
         }
 
         /// <summary>
@@ -84,6 +86,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// <param name="status"> 表示するパネルステータス </param>
         public void ChangePlanningPanelDisplay(PlanningPanelStatus status)
         {
+            // パネル表示切り替えイベントを発火
+            OnChangePlanningPanelDisplay(status);
             switch (status)
             {
                 // 初期状態
@@ -97,6 +101,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     panel_AreaPlanningSubMenu.style.display = DisplayStyle.None;
                     panel_AreaPlanningRegister.style.display = DisplayStyle.None;
                     panel_AreaPlanningEdit.style.display = DisplayStyle.None;
+                    uiRoot.style.display = DisplayStyle.Flex;
                     break;
 
                 // リストからエリアが選択された状態
@@ -110,6 +115,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     panel_AreaPlanningSubMenu.style.display = DisplayStyle.Flex;
                     panel_AreaPlanningRegister.style.display = DisplayStyle.None;
                     panel_AreaPlanningEdit.style.display = DisplayStyle.None;
+                    uiRoot.style.display = DisplayStyle.Flex;
                     break;
 
                 // エリア作成時の状態
@@ -123,20 +129,9 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     panel_AreaPlanningSubMenu.style.display = DisplayStyle.None;
                     panel_AreaPlanningRegister.style.display = DisplayStyle.Flex;
                     panel_AreaPlanningEdit.style.display = DisplayStyle.None;
+                    uiRoot.style.display = DisplayStyle.None;
                     break;
 
-                // エリア作成時の色彩変更時の状態
-                case PlanningPanelStatus.RegisterAreaColor:
-                    title_AreaPlanningInfo.style.display = DisplayStyle.None;
-                    title_AreaPlanningList.style.display = DisplayStyle.None;
-                    title_AreaPlanningEditMenu.style.display = DisplayStyle.Flex;
-                    panel_AreaPlanningInfo.style.display = DisplayStyle.None;
-                    panel_AreaPlanningList.style.display = DisplayStyle.None;
-                    panel_AreaPlanningMenu.style.display = DisplayStyle.None;
-                    panel_AreaPlanningSubMenu.style.display = DisplayStyle.None;
-                    panel_AreaPlanningRegister.style.display = DisplayStyle.Flex;
-                    panel_AreaPlanningEdit.style.display = DisplayStyle.None;
-                    break;
                 // エリア編集時の状態
                 case PlanningPanelStatus.EditAreaMain:
                     title_AreaPlanningInfo.style.display = DisplayStyle.Flex;
@@ -148,19 +143,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     panel_AreaPlanningSubMenu.style.display = DisplayStyle.None;
                     panel_AreaPlanningRegister.style.display = DisplayStyle.None;
                     panel_AreaPlanningEdit.style.display = DisplayStyle.Flex;
-                    break;
-
-                // エリア編集時の色彩変更時の状態
-                case PlanningPanelStatus.EditAreaColor:
-                    title_AreaPlanningInfo.style.display = DisplayStyle.None;
-                    title_AreaPlanningList.style.display = DisplayStyle.None;
-                    title_AreaPlanningEditMenu.style.display = DisplayStyle.Flex;
-                    panel_AreaPlanningInfo.style.display = DisplayStyle.None;
-                    panel_AreaPlanningList.style.display = DisplayStyle.None;
-                    panel_AreaPlanningMenu.style.display = DisplayStyle.None;
-                    panel_AreaPlanningSubMenu.style.display = DisplayStyle.None;
-                    panel_AreaPlanningRegister.style.display = DisplayStyle.None;
-                    panel_AreaPlanningEdit.style.display = DisplayStyle.Flex;
+                    uiRoot.style.display = DisplayStyle.None;
                     break;
 
                 default:

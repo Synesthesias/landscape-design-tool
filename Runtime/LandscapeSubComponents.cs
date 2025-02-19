@@ -138,7 +138,7 @@ namespace Landscape2.Runtime
                 new LandscapeCameraUI(landscapeCamera, uiRoot,subMenuUxmls),
                 walkerMoveByUserInput,
                 new CameraPositionMemoryUI(cameraPositionMemory, subMenuUxmls, walkerMoveByUserInput,saveSystem, uiRoot),
-                new PlanningUI(subMenuUxmls[(int)SubMenuUxmlType.Planning]),
+                new PlanningUI(subMenuUxmls[(int)SubMenuUxmlType.Planning],uiRoot),
                 new ArrangementAsset(subMenuUxmls[(int)SubMenuUxmlType.Asset],saveSystem, landscapeCamera),
                 //RegulationAreaUI.CreateForScene(),
                 new WeatherTimeEditorUI(new WeatherTimeEditor.WeatherTimeEditor(),uiRoot),

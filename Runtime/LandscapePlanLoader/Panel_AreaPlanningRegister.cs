@@ -1,6 +1,7 @@
 using Landscape2.Runtime.UiCommon;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static Landscape2.Runtime.LandscapePlanLoader.PlanningUI;
 
 namespace Landscape2.Runtime.LandscapePlanLoader
 {
@@ -40,9 +41,9 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// <summary>
         /// 景観計画区域作成パネルが開かれたときの処理
         /// </summary>
-        protected override void OnDisplayPanel()
+        protected override void OnDisplayPanel(PlanningPanelStatus status)
         {
-            if (panel_AreaPlanningEdit.style.display == DisplayStyle.Flex)
+            if (status == PlanningPanelStatus.RegisterAreaMain)
             {
                 displayPinLine.InitializePinLineSize();
                 panel_PointEditor.style.display = DisplayStyle.Flex;
@@ -53,7 +54,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
                 base.DisplaySnackbar("地形をクリックして領域を作成してください");
             }
-            else
+            else if(panel_PointEditor.style.display == DisplayStyle.Flex)
             {
                 panel_PointEditor.style.display = DisplayStyle.None;
                 areaPlanningRegister.ClearVertexEdit();

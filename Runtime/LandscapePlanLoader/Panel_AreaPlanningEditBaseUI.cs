@@ -51,8 +51,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// </summary>
         protected virtual void RegisterCommonCallbacks()
         {
-            //panel_AreaPlanningEdit.Q<Button>("UpButton").clicked += IncrementHeight;
-            //panel_AreaPlanningEdit.Q<Button>("DownButton").clicked += DecrementHeight;
             panel_AreaPlanningEdit.Q<Button>("CancelButton").RegisterCallback<ClickEvent>(ev => planningUI.InvokeOnFocusedAreaChanged(-1)); // エリアフォーカスを外す
             panel_AreaPlanningEdit.Q<Button>("CancelButton").RegisterCallback<ClickEvent>(ev => OnCancelButtonClicked());
 
@@ -65,8 +63,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             copyButton.RegisterCallback<ClickEvent>(ev => OnCopyButtonClicked());
             pasteButton.RegisterCallback<ClickEvent>(ev => OnPasteButtonClicked());
 
-
-            panel_AreaPlanningEdit.RegisterCallback<GeometryChangedEvent>(ev => OnDisplayPanel());
             okButton = panel_AreaPlanningEdit.Q<Button>("OKButton");
             okButton.RegisterCallback<ClickEvent>(ev => OnOKButtonClicked());
             areaPlanningHeight.RegisterValueChangedCallback(InputHeight);
@@ -74,6 +70,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             areaPlanningName.RegisterValueChangedCallback(InputAreaName);
 
             panel_PointEditor.RegisterCallback<WheelEvent>(ev => OnPointEditorWheeled(ev));
+            planningUI.OnChangePlanningPanelDisplay += OnDisplayPanel;
         }
 
         /// <summary>
@@ -88,7 +85,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// <summary>
         /// 景観計画区域編集（登録）パネルが開かれたときの処理
         /// </summary>
-        protected abstract void OnDisplayPanel();
+        protected abstract void OnDisplayPanel(PlanningUI.PlanningPanelStatus status);
 
         /// <summary>
         /// 制限高さの数値を増やすボタンの処理

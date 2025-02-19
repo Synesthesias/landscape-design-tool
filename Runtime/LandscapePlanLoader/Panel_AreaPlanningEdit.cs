@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 using Landscape2.Runtime.UiCommon;
+using static Landscape2.Runtime.LandscapePlanLoader.PlanningUI;
 
 namespace Landscape2.Runtime.LandscapePlanLoader
 {
@@ -43,9 +44,9 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// <summary>
         /// 景観計画区域編集パネルが開かれたときの処理
         /// </summary>
-        protected override void OnDisplayPanel()
+        protected override void OnDisplayPanel(PlanningPanelStatus status)
         {
-            if (panel_AreaPlanningEdit.style.display == DisplayStyle.Flex)
+            if (status == PlanningPanelStatus.EditAreaMain)
             {
                 displayPinLine.InitializePinLineSize();
                 panel_PointEditor.style.display = DisplayStyle.Flex;
@@ -54,13 +55,11 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
                 // 高さボタンの活性化
                 heightResetButton.SetEnabled(areaEditManager.IsApplyingBuildingHeight());
-
                 var color = planningUI.PopColorStack();
                 pasteButton.SetEnabled(color != null);  // pasteボタンは色を取ってきて存在していたら最初から有効
-
                 base.DisplaySnackbar("頂点ピンをドラッグすると形状を編集できます");
             }
-            else
+            else if(panel_PointEditor.style.display == DisplayStyle.Flex)
             {
                 areaPlanningEdit.ClearVertexEdit();
                 panel_PointEditor.style.display = DisplayStyle.None;
