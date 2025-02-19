@@ -3,6 +3,7 @@ using PLATEAU.Native;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
@@ -11,6 +12,13 @@ namespace Landscape2.Runtime
 {
     public class BIMImport : ISubComponent
     {
+        protected class LoadIfcData
+        {
+            public GameObject obj;
+            public byte[] glbData;
+
+            public Mesh combinedMesh;
+        };
         enum LayoutMode
         {
             Trans,
@@ -32,8 +40,10 @@ namespace Landscape2.Runtime
 
         GameObject currentLoadIfcObject;
 
-        List<GameObject> importedIFCList = new();
-        List<Mesh> importedColliderMeshes = new();
+        Dictionary<string, LoadIfcData> loadIfcDataDict = new();
+
+        BIMImportSaveLoadSystem saveLoadSystem;
+
 
         // uiの表示状態
         bool uiStatus = false;
@@ -44,8 +54,9 @@ namespace Landscape2.Runtime
 
         bool IsRootUIVisible => uiRoot.style.display == DisplayStyle.Flex;
 
-        public BIMImport(VisualElement uiRoot)
+        public BIMImport(VisualElement uiRoot, SaveSystem saveSystem)
         {
+
             this.uiRoot = uiRoot;
             ui = new(uiRoot);
 
@@ -63,49 +74,43 @@ namespace Landscape2.Runtime
             };
 
             // import開始
-            ui.importButtonOnClickAction += async () =>
-            {
-                if (string.IsNullOrEmpty(filePath))
-                {
-                    Debug.LogWarning($"filePathがnull or emptyです");
-                    return;
+            ui.importButtonOnClickAction += async () => await ImportButtonOnClickAction();
 
-                }
-
-                var ifcObj = await BIMLoader.Instance.LoadBIM(filePath);
-
-                if (ifcObj == null)
-                {
-                    Debug.LogWarning($"ifc:[{filePath}] is null!!!");
-                    return;
-                }
-
-                ifcObj.layer = LayerMask.NameToLayer("Default");
-
-                // 配置用情報作成
-                var lat = ui.LatitudeValue;
-                var lon = ui.LongitudeValue;
-                var height = ui.HeightSliderValue;
-                var yRot = ui.YawSliderValue;
-
-
-                SetInstanceTransformFromInputState(ifcObj, lat, lon, height, yRot);
-                var mesh = CombineIFCMesh(ifcObj);
-
-                var mc = ifcObj.AddComponent<MeshCollider>();
-                mc.sharedMesh = mesh;
-
-                importedColliderMeshes.Add(mesh);
-
-                // TODO: 配置できたIFCファイルは
-                // bytearrayとしてProjectに保存できる様にする
-                // copy先のpathとlatlon,height,yawを保持する
-
-                SetupEditMode(ifcObj);
-            };
 
             InitializeLayoutUI(uiRoot);
             ChangeEditMode(LayoutMode.None);
+
+            saveLoadSystem = new(saveSystem);
+
+            saveLoadSystem.loadCallback += async list =>
+            {
+                foreach (var ifc in list)
+                {
+                    var go = await BIMLoader.Instance.CreateBIM(ifc.GlbArray);
+                    go.name = ifc.Name;
+
+                    go.transform.position = ifc.Position;
+                    go.transform.rotation = Quaternion.Euler(ifc.Angle);
+                    go.transform.localScale = ifc.Scale;
+
+                    var mesh = CombineIFCMesh(go);
+
+                    var mc = go.AddComponent<MeshCollider>();
+                    mc.sharedMesh = mesh;
+
+                    loadIfcDataDict.TryAdd(
+                        go.name,
+                        new()
+                        {
+                            obj = go,
+                            glbData = ifc.GlbArray,
+                            combinedMesh = mesh
+                        }
+                    );
+
+
+                }
+            };
         }
 
         void InitializeLayoutUI(VisualElement uiRoot)
@@ -129,31 +134,107 @@ namespace Landscape2.Runtime
 
             layoutUI.OnClickDeleteButton += () =>
             {
+
+                saveLoadSystem.RemoveSaveData(currentLoadIfcObject.name);
+
                 ChangeEditMode(LayoutMode.None);
                 layoutUI.ReleaseTarget();
                 layoutUI.Show(false);
 
-                if (importedIFCList.Contains(currentLoadIfcObject))
+                if (loadIfcDataDict.ContainsKey(currentLoadIfcObject.name))
                 {
-                    importedIFCList.Remove(currentLoadIfcObject);
+                    loadIfcDataDict.Remove(currentLoadIfcObject.name);
                 }
+
                 GameObject.DestroyImmediate(currentLoadIfcObject, true);
                 currentLoadIfcObject = null;
+
                 ui.Show(true);
             };
 
             layoutUI.OnClickOKButton += () =>
             {
+                saveLoadSystem.AddSaveData(
+                    new BIMImportSaveData(
+                        currentLoadIfcObject,
+                        loadIfcDataDict[currentLoadIfcObject.name].glbData
+                    )
+                );
+
                 ChangeEditMode(LayoutMode.None);
                 layoutUI.ReleaseTarget();
                 layoutUI.Show(false);
-                importedIFCList.Add(currentLoadIfcObject);
+
                 currentLoadIfcObject = null;
+
                 ui.Show(true);
             };
         }
 
+        async Task ImportButtonOnClickAction()
+        {
+            if (string.IsNullOrEmpty(filePath))
+            {
+                Debug.LogWarning($"filePathがnull or emptyです");
+                return;
+            }
 
+            var loadedBIM = await BIMLoader.Instance.LoadBIM(filePath);
+            var ifcObj = loadedBIM.Item1;
+
+            if (ifcObj == null)
+            {
+                Debug.LogWarning($"ifc:[{filePath}] is null!!!");
+                return;
+            }
+
+            ifcObj.layer = LayerMask.NameToLayer("Default");
+
+            // 配置用情報作成
+            var lat = ui.LatitudeValue;
+            var lon = ui.LongitudeValue;
+            var height = ui.HeightSliderValue;
+            var yRot = ui.YawSliderValue;
+
+            SetInstanceTransformFromInputState(ifcObj, lat, lon, height, yRot);
+            var mesh = CombineIFCMesh(ifcObj);
+
+            var mc = ifcObj.AddComponent<MeshCollider>();
+            mc.sharedMesh = mesh;
+
+            // TODO: 配置できたIFCファイルは
+            // bytearrayとしてProjectに保存できる様にする
+            // copy先のpathとlatlon,height,yawを保持する
+
+            loadIfcDataDict.Add(
+                ifcObj.name,
+                new()
+                {
+                    obj = ifcObj,
+                    glbData = loadedBIM.Item2,
+                    combinedMesh = mesh
+                }
+            );
+
+            saveLoadSystem.AddSaveData(
+                new BIMImportSaveData(
+                    ifcObj,
+                    loadedBIM.Item2
+                )
+            );
+
+            SetupEditMode(ifcObj);
+        }
+
+
+        /// <summary>
+        /// instanceのTRSをlat,lon,height,yRotから設定する
+        /// </summary>
+        /// <param name="instance"></param>
+        /// <param name="lat"></param>
+        /// <param name="lon"></param>
+        /// <param name="height"></param>
+        /// <param name="yRot"></param>
         private void SetInstanceTransformFromInputState(GameObject instance, float lat, float lon, int height, int yRot)
         {
             // latlon,heightからunity座標系を取得する
@@ -267,11 +348,12 @@ namespace Landscape2.Runtime
         {
             BIMLoader.Instance.Dispose();
 
-            foreach (var mesh in importedColliderMeshes)
+            var meshList = loadIfcDataDict.Values.Select(x => x.combinedMesh).ToList();
+
+            foreach (var mesh in meshList)
             {
                 GameObject.DestroyImmediate(mesh);
             }
-            importedColliderMeshes.Clear();
         }
 
         public void OnEnable()
@@ -309,7 +391,7 @@ namespace Landscape2.Runtime
                         foreach (var hit in result)
                         {
                             var go = hit.collider.gameObject;
-                            if (importedIFCList.Contains(go))
+                            if (loadIfcDataDict.ContainsKey(go.name))
                             {
                                 if (currentLoadIfcObject != go)
                                 {

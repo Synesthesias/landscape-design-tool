@@ -139,7 +139,7 @@ namespace Landscape2.Runtime
 
         private BIMLoader() { }
 
-        public async Task<GameObject> LoadBIM(string ifcFilePath)
+        public async Task<(GameObject, byte[])> LoadBIM(string ifcFilePath)
         {
             // 実行ファイルのpathを取る
             var exePath = GetIfcConverterPath();
@@ -148,7 +148,8 @@ namespace Landscape2.Runtime
             var result = ConvertIfc2gltf(ifcFilePath, exePath);
 
             // gltfファイルを開いて読み込む
-            var importer = await LoadGlbBinary(result.Item1.FullPath);
+            var loadResult = await LoadGlbBinary(result.Item1.FullPath);
+            var importer = loadResult.Item1;
 
             // meshを作成して
             var go = new GameObject
@@ -161,12 +162,33 @@ namespace Landscape2.Runtime
             result.Item2.Dispose();
             result.Item1.Dispose();
 
+            return (go, loadResult.Item2);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public async Task<GameObject> CreateBIM(byte[] data)
+        {
+            var importer = await CreateGlbBinary(data);
+            // meshを作成して
+            var go = new GameObject();
+            await importer.InstantiateMainSceneAsync(go.transform);
+            loadGLTFList.Add(importer);
+
             return go;
         }
 
-        private async Task<GltfImport> LoadGlbBinary(string filePath)
+        private async Task<(GltfImport, byte[])> LoadGlbBinary(string filePath)
         {
             byte[] data = File.ReadAllBytes(filePath);
+#if true
+            Debug.Log($"{filePath} : {data.Length}");
+            var result = await CreateGlbBinary(data, new System.Uri(filePath));
+            return (result, data);
+#else
             var gltf = new GltfImport(null, null, new CustomHDRPMaterialGenerator());
             bool success = await gltf.LoadGltfBinary(
                 data,
@@ -178,6 +200,21 @@ namespace Landscape2.Runtime
                 return gltf;
             }
             return null;
+#endif
+        }
+
+        private async Task<GltfImport> CreateGlbBinary(byte[] data, Uri uri = null)
+        {
+            var gltf = new GltfImport(null, null, new CustomHDRPMaterialGenerator());
+            bool success = await gltf.LoadGltfBinary(
+                data, uri
+                );
+            if (success)
+            {
+                return gltf;
+            }
+            return null;
+
         }
 
         /// <summary>

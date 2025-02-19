@@ -149,7 +149,7 @@ namespace Landscape2.Runtime
                 new VisualizeHeightUI(new VisualizeHeight(),uiRoot,landscapeCamera),
                 cameraAutoRotate,
                 new CameraAutoRotateUI(cameraAutoRotate,uiRoot),
-                new BIMImport(subMenuUxmls[(int)SubMenuUxmlType.Bim]),
+                new BIMImport(subMenuUxmls[(int)SubMenuUxmlType.Bim],saveSystem),
                 new LineOfSight(saveSystem,subMenuUxmls[(int)SubMenuUxmlType.Analytics]),
                 new TextureSwitch(uiRoot),
                 new WalkerModeUI(subMenuUxmls[(int)SubMenuUxmlType.WalkMode], landscapeCamera, walkerMoveByUserInput),
