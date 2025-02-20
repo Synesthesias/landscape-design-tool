@@ -498,7 +498,7 @@ namespace Landscape2.Runtime
             layoutMode = mode;
             if (currentLoadIfcObject != null)
             {
-                editMode?.CreateRuntimeHandle(currentLoadIfcObject, type);
+                editMode?.CreateRuntimeHandle(currentLoadIfcObject, type, false);
             }
         }
 

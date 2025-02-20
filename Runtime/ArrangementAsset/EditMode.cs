@@ -20,61 +20,67 @@ namespace Landscape2.Runtime
         private RuntimeTransformHandle runtimeTransformHandleScript;
         private GameObject editAsset;
 
+        int editAssetLayer;
+
         public RuntimeTransformHandle RuntimeTransformHandleScript => runtimeTransformHandleScript;
 
-        public void CreateRuntimeHandle(GameObject obj,TransformType transformType)
+        public void CreateRuntimeHandle(GameObject obj, TransformType transformType, bool assetHighlight = true)
         {
             ClearHandleObject();
-            CreateHandleObject(obj,transformType);
+            CreateHandleObject(obj, transformType);
             SetTransformType(transformType);
             editAsset = obj;
-            ChangeEditAssetLayer(editAsset,LayerMask.NameToLayer("UI"));
-        } 
+            editAssetLayer = editAsset.layer;
+            if (assetHighlight)
+            {
+                ChangeEditAssetLayer(editAsset, LayerMask.NameToLayer("UI"));
+            }
+        }
         private void ClearHandleObject()
         {
-            ChangeEditAssetLayer(editAsset, LayerMask.NameToLayer("Default"));
+            ChangeEditAssetLayer(editAsset, editAssetLayer);
             var obj = GameObject.Find("RuntimeTransformHandle");
-            if(obj != null)
+            if (obj != null)
             {
                 GameObject.Destroy(obj);
             }
         }
-        
-        private void ChangeEditAssetLayer(GameObject parent,int layerIndex)
+
+        private void ChangeEditAssetLayer(GameObject parent, int layerIndex)
         {
-            if(parent == null)
+            if (parent == null)
             {
                 return;
             }
             parent.layer = layerIndex;
-            foreach(Transform child in parent.transform)
+            foreach (Transform child in parent.transform)
             {
-                ChangeEditAssetLayer(child.gameObject,layerIndex);
+                ChangeEditAssetLayer(child.gameObject, layerIndex);
             }
         }
 
-        private void CreateHandleObject(GameObject obj,TransformType transformType)
+        private void CreateHandleObject(GameObject obj, TransformType transformType)
         {
-            runtimeTransformHandleScript = RuntimeTransformHandle.Create(null,HandleType.POSITION);
+            runtimeTransformHandleScript = RuntimeTransformHandle.Create(null, HandleType.POSITION);
             runtimeTransformHandleScript.autoScale = true;
             runtimeTransformHandleScript.target = obj.transform;
         }
 
         private void SetTransformType(TransformType transformType)
         {
-            if(runtimeTransformHandleScript != null)
+            if (runtimeTransformHandleScript != null)
             {
-                if(transformType == TransformType.Position)
+                if (transformType == TransformType.Position)
                 {
                     runtimeTransformHandleScript.type = HandleType.POSITION;
                     runtimeTransformHandleScript.axes = HandleAxes.XYZ;
                 }
-                if(transformType == TransformType.Rotation)
+                if (transformType == TransformType.Rotation)
                 {
                     runtimeTransformHandleScript.type = HandleType.ROTATION;
                     runtimeTransformHandleScript.axes = HandleAxes.Y;
                 }
-                if(transformType == TransformType.Scale)
+                if (transformType == TransformType.Scale)
                 {
                     runtimeTransformHandleScript.type = HandleType.SCALE;
                     runtimeTransformHandleScript.axes = HandleAxes.XYZ;
@@ -82,7 +88,7 @@ namespace Landscape2.Runtime
             }
         }
 
-        
+
         public void DeleteAsset(GameObject obj)
         {
             ClearHandleObject();
