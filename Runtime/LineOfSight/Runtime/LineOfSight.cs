@@ -41,13 +41,17 @@ namespace Landscape2.Runtime
         {
             lineOfSightDataComponent = new LineOfSightDataComponent();
             lineOfSightUI = new LineOfSightUI();
-            lineOfSightSubscribeSaveSystem = new LineOfSightSubscribeSaveSystem(saveSystemInstance, lineOfSightDataComponent, lineOfSightUI);
             viewPoint = new ViewPoint(lineOfSightDataComponent);
             landmark = new Landmark(lineOfSightDataComponent);
             analyzeViewPoint = new AnalyzeViewPoint(lineOfSightDataComponent);
             analyzeLandmark = new AnalyzeLandmark(lineOfSightDataComponent);
-            //lineOfSightUIElement = new UIDocumentFactory().CreateWithUxmlName("LineOfSightUI");
             lineOfSightUIElement = uiRootElement;
+            lineOfSightSubscribeSaveSystem = new LineOfSightSubscribeSaveSystem(
+                saveSystemInstance,
+                lineOfSightDataComponent,
+                lineOfSightUI,
+                viewPoint,
+                landmark);
         }
         public void OnEnable()
         {

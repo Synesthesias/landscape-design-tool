@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Landscape2.Runtime.UiCommon;
+using System;
 using System.Linq;
 
 namespace Landscape2.Runtime
@@ -96,9 +97,11 @@ namespace Landscape2.Runtime
             public void RemoveButton(string name)
             {
                 // var scrollView = rootElement.Q<ScrollView>("Panel");
-
-                RemoveButton(buttonIndex[name]);
-                buttonIndex.Remove(name);
+                if (buttonIndex.TryGetValue(name, out var button))
+                {
+                    RemoveButton(button);
+                    buttonIndex.Remove(name);
+                }
             }
 
             public void ClearList()
@@ -751,26 +754,7 @@ namespace Landscape2.Runtime
             var deleteButton = edit_Viewpoint.Q<Button>("deleteButton");
             deleteButton.clicked += () =>
             {
-                // ポイントの削除
-                var deleteData = viewPoint.DeletePoint();
-                var deleteButtonName = deleteData.deleteButtonName;
-                var removedAnalyzeKeyNameList = deleteData.removedAnalyzeKeyNameList;
-
-                // ボタンの削除
-                viewPointList_View.RemoveButton(deleteButtonName);
-                var removeButton = entryViewpointButton.FirstOrDefault(x => x.Value == deleteButtonName).Key;
-                if (removeButton != null)
-                {
-                    entryViewpointButton.Remove(removeButton);
-                }
-                foreach (string keyName in removedAnalyzeKeyNameList)
-                {
-                    RemoveAnalyzeListButton(keyName);
-                }
-                // UIの変更
-                edit_Viewpoint.style.display = DisplayStyle.None;
-                snackbar.ShowMessage("削除しました");
-                ViewDefaultPanels();
+                DeletePoint(LineOfSightType.viewPoint);
             };
             var okButton = edit_Viewpoint.Q<Button>("OKButton");
             okButton.clicked += () =>
@@ -823,26 +807,7 @@ namespace Landscape2.Runtime
             var deleteButton = edit_Landmark.Q<Button>("deleteButton");
             deleteButton.clicked += () =>
             {
-                // ポイントの削除
-                var deleteData = landmark.DeletePoint();
-                var deleteButtonName = deleteData.deleteButtonName;
-                var removedAnalyzeKeyNameList = deleteData.removedAnalyzeKeyNameList;
-                // ボタンの削除
-                landmarkList_View.RemoveButton(deleteButtonName);
-                var removeButton = entryViewpointButton.FirstOrDefault(x => x.Value == deleteButtonName).Key;
-                if (removeButton != null)
-                {
-                    entryViewpointButton.Remove(removeButton);
-                }
-                foreach (string keyName in removedAnalyzeKeyNameList)
-                {
-                    // Debug.Log(keyName);
-                    RemoveAnalyzeListButton(keyName);
-                }
-                // UIの変更
-                snackbar.ShowMessage("削除しました");
-                edit_Landmark.style.display = DisplayStyle.None;
-                ViewDefaultPanels();
+                DeletePoint(LineOfSightType.landmark);
             };
             var okButton = edit_Landmark.Q<Button>("OKButton");
             okButton.clicked += () =>
@@ -909,11 +874,7 @@ namespace Landscape2.Runtime
             var deleteButton = edit_Analyze_Viewpoint.Q<Button>("deleteButton");
             deleteButton.clicked += () =>
             {
-                var buttonName = analyzeViewPoint.DeleteAnalyzeData();
-                RemoveAnalyzeListButton(buttonName);
-                snackbar.ShowMessage("削除しました");
-                edit_Analyze_Viewpoint.style.display = DisplayStyle.None;
-                ViewDefaultPanels();
+                DeleteAnalyzeViewPoint();
             };
             var cancelButton = edit_Analyze_Viewpoint.Q<Button>("CancelButton");
             cancelButton.clicked += () =>
@@ -980,10 +941,7 @@ namespace Landscape2.Runtime
             var deleteButton = edit_Analyze_Landmark.Q<Button>("deleteButton");
             deleteButton.clicked += () =>
             {
-                var buttonName = analyzeLandmark.DeleteAnalyzeData();
-                RemoveAnalyzeListButton(buttonName);
-                snackbar.ShowMessage("削除しました");
-                ViewDefaultPanels();
+                DeleteAnalyzeLandmark();
             };
             var cancelButton = edit_Analyze_Landmark.Q<Button>("CancelButton");
             cancelButton.clicked += () =>
@@ -1022,7 +980,6 @@ namespace Landscape2.Runtime
             label.text = buttonName;
             newButton.clicked += () =>
             {
-
                 Debug.Log($"viewpoint {buttonName} clicked");
                 snackbar.Hide();
                 // 選択する場面に応じて処理を分ける
@@ -1033,10 +990,15 @@ namespace Landscape2.Runtime
                 //  - New_Analyze_ViewPointの時
                 if (analyzeSettingPanel.style.display == DisplayStyle.Flex)
                 {
+                    if (!viewPoint.CanEdit(buttonName))
+                    {
+                        snackbar.ShowMessage(SnackBar.NotEditWarning);
+                        return;
+                    }
+                    
                     //  - New_PointMenuの時
                     lineOfSight.SetMode(LineOfSightType.viewPoint);
                     viewPoint.ButtonAction(buttonName);
-
                     viewPoint.InitializeEditPoint();
 
                     SetCurrentAnalyzeSettingPanel("Edit_Viewpoint");
@@ -1077,6 +1039,11 @@ namespace Landscape2.Runtime
                 Debug.Log($"landmark {buttonName} clicked");
                 if (analyzeSettingPanel.style.display == DisplayStyle.Flex)
                 {
+                    if (!landmark.CanEdit(buttonName))
+                    {
+                        snackbar.ShowMessage(SnackBar.NotEditWarning);
+                        return;
+                    }
                     lineOfSight.SetMode(LineOfSightType.landmark);
                     landmark.ButtonAction(buttonName);
                     landmark.InitializeEditPoint();
@@ -1130,6 +1097,12 @@ namespace Landscape2.Runtime
             var buttonName = elements.startPosName + elements.endPosName + elements.rangeWidth + elements.rangeHeight;
             newButton.clicked += () =>
             {
+                if (!analyzeViewPoint.CanEdit(buttonName))
+                {
+                    snackbar.ShowMessage(SnackBar.NotEditWarning);
+                    return;
+                }
+                
                 lineOfSight.SetMode(LineOfSightType.analyzeViewPoint);
                 analyzeViewPoint.ButtonAction(elements);
                 // UI
@@ -1171,6 +1144,12 @@ namespace Landscape2.Runtime
             landmarkNameLabel.text = elements.startPosName;
             newButton.clicked += () =>
             {
+                if (!analyzeLandmark.CanEdit(buttonName))
+                {
+                    snackbar.ShowMessage(SnackBar.NotEditWarning);
+                    return;
+                }
+                
                 lineOfSight.SetMode(LineOfSightType.analyzeLandmark);
                 analyzeLandmark.ButtonAction(elements);
                 // UI
@@ -1238,6 +1217,137 @@ namespace Landscape2.Runtime
             landmarkList_View.Show(true);
             analyzeList_View.Show(true);
             lineOfSight.SetMode(LineOfSightType.main);
+        }
+
+        /// <summary>
+        /// 視点場 / 眺望対象の削除
+        /// </summary>
+        public void DeletePoint(LineOfSightType type, string pointName = "")
+        {
+            VisualElement viewpoint = null;
+            (string deleteButtonName, List<string> removedAnalyzeKeyNameList) deleteData = (null, new List<string>() {});
+            switch (type)
+            {
+                case LineOfSightType.viewPoint:
+                    deleteData = string.IsNullOrEmpty(pointName) ? viewPoint.DeletePoint() : viewPoint.DeletePoint(pointName);
+                    viewPointList_View.RemoveButton(deleteData.deleteButtonName);
+                    viewpoint = analyzeSettingPanel.Q<VisualElement>("Edit_Viewpoint");
+                    break;
+                case LineOfSightType.landmark:
+                    deleteData = string.IsNullOrEmpty(pointName) ? landmark.DeletePoint() : landmark.DeletePoint(pointName); 
+                    landmarkList_View.RemoveButton(deleteData.deleteButtonName);
+                    viewpoint = analyzeSettingPanel.Q<VisualElement>("Edit_Landmark");
+                    break;
+                case LineOfSightType.main:
+                case LineOfSightType.analyzeViewPoint:
+                case LineOfSightType.analyzeLandmark:
+                    return;
+            }
+
+            // ボタンの削除
+            var removeButton = entryViewpointButton.FirstOrDefault(x => x.Value == deleteData.deleteButtonName).Key;
+            if (removeButton != null)
+            {
+                entryViewpointButton.Remove(removeButton);
+            }
+            foreach (string keyName in deleteData.removedAnalyzeKeyNameList)
+            {
+                RemoveAnalyzeListButton(keyName);
+            }
+            // UIの変更
+            viewpoint.style.display = DisplayStyle.None;
+            snackbar.ShowMessage("削除しました");
+            ViewDefaultPanels();
+        }
+
+        /// <summary>
+        /// 解析視点の削除
+        /// </summary>
+        public void DeleteAnalyzeViewPoint(string keyName = "")
+        {
+            var edit_Analyze_Viewpoint = analyzeSettingPanel.Q<VisualElement>("Edit_Analyze_Viewpoint");
+
+            if (string.IsNullOrEmpty(keyName))
+            {
+                keyName = analyzeViewPoint.DeleteAnalyzeData();
+            }
+            RemoveAnalyzeListButton(keyName);
+            snackbar.ShowMessage("削除しました");
+            edit_Analyze_Viewpoint.style.display = DisplayStyle.None;
+            ViewDefaultPanels();
+        }
+        
+        /// <summary>
+        /// 解析眺望対象の削除
+        /// </summary>
+        public void DeleteAnalyzeLandmark(string keyName = "")
+        {
+            if (string.IsNullOrEmpty(keyName))
+            {
+                keyName = analyzeLandmark.DeleteAnalyzeData();
+            }
+            RemoveAnalyzeListButton(keyName);
+            snackbar.ShowMessage("削除しました");
+            ViewDefaultPanels();
+        }
+
+        /// <summary>
+        /// 編集画面が表示されていたら、閉じる
+        /// </summary>
+        public bool TryCloseEditView(LineOfSightType type)
+        {
+            switch(type)
+            {
+                case LineOfSightType.viewPoint:
+                    {
+                        var editViewpoint = analyzeSettingPanel.Q<VisualElement>("Edit_Viewpoint");
+                        if (editViewpoint.style.display == DisplayStyle.Flex)
+                        {
+                            viewPoint.RestorePoint();
+                            editViewpoint.style.display = DisplayStyle.None;
+                            ViewDefaultPanels();
+                            return true;
+                        }
+                        break;
+                    }
+                case LineOfSightType.landmark:
+                    {
+                        var editLandmark = analyzeSettingPanel.Q<VisualElement>("Edit_Landmark");
+                        if (editLandmark.style.display == DisplayStyle.Flex)
+                        {
+                            landmark.RestorePoint();
+                            editLandmark.style.display = DisplayStyle.None;
+                            ViewDefaultPanels();
+                            return true;
+                        }
+                    }
+                    break;
+                case LineOfSightType.analyzeViewPoint:
+                    {
+                        var editAnalyzeViewpoint = analyzeSettingPanel.Q<VisualElement>("Edit_Analyze_Viewpoint");
+                        if (editAnalyzeViewpoint.style.display == DisplayStyle.Flex)
+                        {
+                            analyzeViewPoint.ClearLineOfSight();
+                            editAnalyzeViewpoint.style.display = DisplayStyle.None;
+                            ViewDefaultPanels();
+                            return true;
+                        }
+                    }
+                    break;
+                case LineOfSightType.analyzeLandmark:
+                    {
+                        var editAnalyzeLandmark = analyzeSettingPanel.Q<VisualElement>("Edit_Analyze_Landmark");
+                        if (editAnalyzeLandmark.style.display == DisplayStyle.Flex)
+                        {
+                            analyzeLandmark.ClearLineOfSight();
+                            editAnalyzeLandmark.style.display = DisplayStyle.None;
+                            ViewDefaultPanels();
+                            return true;
+                        }
+                    }
+                    break;
+            }
+            return false;
         }
     }
 }

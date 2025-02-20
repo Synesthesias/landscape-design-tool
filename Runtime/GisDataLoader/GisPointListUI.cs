@@ -28,30 +28,35 @@ namespace Landscape2.Runtime.GisDataLoader
             itemVisualTreeAsset = Resources.Load<VisualTreeAsset>("List_Gis");
             
             RegisterEvents();
-            DeleteAll();
         }
         
         public void RegisterEvents()
         {
             gisPointInfos.OnDeleteAll.AddListener(DeleteAll);
-            gisPointInfos.OnCreate.AddListener((int attributeIndex) =>
+            gisPointInfos.OnCreate.AddListener((attributeID) =>
             {
-                var info = gisPointInfos.GetByAttribute(attributeIndex);
+                var info = gisPointInfos.GetByAttributeFirst(attributeID);
                 if (info != null)
                 {
-                    CreateItem(attributeIndex, info);
+                    CreateItem(info);
                 }
+            });
+            gisPointInfos.OnUpdateEditable.AddListener(SetEditable);
+            gisPointInfos.OnDelete.AddListener((attributeID) =>
+            {
+                Delete(attributeID, false);
             });
         }
         
-        private string GetItemName(int attributeIndex) => "GIS_" + attributeIndex;
+        private string GetItemName(string attributeID) => $"GIS_{attributeID}";
+        private string GetAttributeID(string itemName) => itemName.Replace("GIS_", "");
 
-        private void CreateItem(int attributeIndex, GisPointInfo info)
+        private void CreateItem(GisPointInfo info)
         {
             var item = itemVisualTreeAsset.CloneTree();
             
             // IDを使って名前を決定
-            item.name = GetItemName(attributeIndex);
+            item.name = GetItemName(info.AttributeID);
             
             // 属性タイトルセット
             var gisName = item.Q<Label>("GisName");
@@ -66,14 +71,23 @@ namespace Landscape2.Runtime.GisDataLoader
             toggleButton.RegisterValueChangedCallback((evt) =>
             {
                 // 地図上のピン表示切り替え
-                gisPointInfos.SetShow(attributeIndex, !evt.newValue);
+                gisPointInfos.SetShow(info.AttributeID, !evt.newValue);
+                
+                // プロジェクトに通知
+                ProjectSaveDataManager.Edit(ProjectSaveDataType.GisData, info.ID.ToString());
             });
             
             // 削除ボタン
             var deleteButton = item.Q<Button>("DeleteButton");
             deleteButton.RegisterCallback<ClickEvent>((evt) =>
             {
-                Delete(attributeIndex);
+                // 確認ポップアップ表示
+                ModalUI.ShowSelectModal("データ削除します", "本当によろしいですか？", ModalUI.SelectModalType.Info, null, () =>
+                {
+                    // データ削除
+                    gisPointInfos.Delete(info.AttributeID);
+                    Delete(info.AttributeID);
+                });
             });
             
             gisPointList.Add(item);
@@ -85,46 +99,41 @@ namespace Landscape2.Runtime.GisDataLoader
             ShowNoData(false);
         }
 
-        private void Show(int index, bool isShow)
+        private void SetEditable(string attributeID, bool isEditable)
         {
-            var item = gisPointList.Find(i => i.name == GetItemName(index));
-            item.style.display = isShow ? DisplayStyle.Flex : DisplayStyle.None;
+            var item = gisPointList.Find(i => i.name == GetItemName(attributeID));
+            
+            // 削除できないように
+            item.Q<Button>("DeleteButton").style.display = isEditable ? DisplayStyle.Flex : DisplayStyle.None;
         }
 
-        private void Delete(int ID)
+        private void Delete(string attributeID, bool isShowCompletePopup = true)
         {
-            // 確認ポップアップ表示
-            ModalUI.ShowSelectModal("データ削除します", "本当によろしいですか？", ModalUI.SelectModalType.Info, null, () =>
+            // Indexからアイテムを削除
+            var item = gisPointList.Find(i => i.name == GetItemName(attributeID));
+            
+            scrollPanel.Remove(item);
+            gisPointList.Remove(item);
+            
+            // データがない場合はNoData表示
+            if (gisPointList.Count == 0)
             {
-                // Indexからアイテムを削除
-                var item = gisPointList.Find(i => i.name == GetItemName(ID));
-                
-                // データ削除
-                gisPointInfos.Delete(ID);
-                
-                gisPointList.Remove(item);
-                scrollPanel.Remove(item);
-                
-                // データがない場合はNoData表示
-                if (gisPointList.Count == 0)
-                {
-                    ShowNoData(true);
-                }
-                
+                ShowNoData(true);
+            }
+
+            if (isShowCompletePopup)
+            {
                 // ポップアップ表示
                 ModalUI.ShowModal("削除しました", "データを削除しました", true, false);
-            });
+            }
         }
 
-        private void DeleteAll()
+        private void DeleteAll(List<string> deleteAttributeIDs)
         {
-            foreach (var item in gisPointList)
+            foreach (var deleteAttributeID in deleteAttributeIDs)
             {
-                scrollPanel.Remove(item);
+                Delete(deleteAttributeID, false);
             }
-            gisPointList.Clear();
-            
-            ShowNoData(true);
         }
         
         private void ShowNoData(bool isShow)

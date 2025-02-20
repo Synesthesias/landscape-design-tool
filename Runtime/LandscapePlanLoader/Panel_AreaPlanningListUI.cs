@@ -74,9 +74,16 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 newAreaListInstance.Q<Label>("AreaPlanningName").text = areaProperty.Name;
 
                 int currentIndex = index;
-                newAreaListInstance.Q<VisualElement>("DeleteButton").AddManipulator(new Clickable(() => OnClickAreaDataDelete(currentIndex)));
+                if (!areaProperty.IsEditable)
+                {
+                    newAreaListInstance.Q<VisualElement>("DeleteButton").style.display = DisplayStyle.None;
+                }
+                else
+                {
+                    newAreaListInstance.Q<VisualElement>("DeleteButton").AddManipulator(new Clickable(() => OnClickAreaDataDelete(currentIndex)));
+                }
                 newAreaListInstance.Q<Toggle>("Toggle_HideList").RegisterValueChangedCallback(ev => OnClickAreaDataVisibility(!ev.newValue, currentIndex));
-                newAreaListInstance.Q<Button>("List").RegisterCallback<ClickEvent>(ev => planningUI.InvokeOnFocusedAreaChanged(currentIndex));
+                newAreaListInstance.Q<Button>("List").RegisterCallback<ClickEvent>(ev => planningUI.InvokeOnFocusedAreaChanged(currentIndex, areaProperty.IsEditable));
             }
         }
 
@@ -107,7 +114,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// リスト要素の選択状態の見た目を変更するメソッド
         /// </summary>
         /// <param name="index">リストの要素番号</param>
-        void SetAreaListSelected(int index)
+        /// <param name="canEdit"></param>
+        void SetAreaListSelected(int index, bool canEdit)
         {
             if (lastFocusedAreaIndex == index) return;
             // 最後にフォーカスされていたエリアデータの見た目をリセット

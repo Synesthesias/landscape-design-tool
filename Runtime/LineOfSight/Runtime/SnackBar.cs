@@ -7,6 +7,8 @@ namespace Landscape2.Runtime
 {
     public class SnackBar
     {
+        public static readonly string NotEditWarning = "編集できません。プロジェクトを切り替えてください。";
+        
         private VisualElement center;
 
         protected VisualElement snackBarClone; // Snackbarのクローン

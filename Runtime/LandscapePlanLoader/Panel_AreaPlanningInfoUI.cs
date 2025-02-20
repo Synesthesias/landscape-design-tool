@@ -25,7 +25,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// エリアの情報を表示するメソッド
         /// </summary>
         /// <param name="index"> 表示対象エリアのデータリスト番号 </param>
-        void SetAreaInfo(int index)
+        /// <param name="isEditable"></param>
+        void SetAreaInfo(int index, bool isEditable = true)
         {
             // エリアが選択されていない場合の表記
             if(index == -1)

@@ -133,7 +133,7 @@ namespace Landscape2.Runtime
             // 必要な機能をここに追加します
             subComponents = new List<ISubComponent>
             {
-                new GlobalNaviHeader(uiRoot, subMenuUxmls),
+                new GlobalNaviHeader(uiRoot, subMenuUxmls, saveSystem),
                 new CameraMoveByUserInput(mainCamVC),
                 new LandscapeCameraUI(landscapeCamera, uiRoot,subMenuUxmls),
                 walkerMoveByUserInput,

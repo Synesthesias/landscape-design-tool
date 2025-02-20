@@ -1,3 +1,4 @@
+using Landscape2.Runtime.Common;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -54,7 +55,7 @@ namespace Landscape2.Runtime
 
         public ArrangementAsset(VisualElement element, SaveSystem saveSystemInstance, LandscapeCamera landscapeCamera)
         {
-            new AssetsSubscribeSaveSystem(saveSystemInstance);
+            var subscribeSaveSystem = new AssetsSubscribeSaveSystem(saveSystemInstance);
             createMode = new CreateMode();
             editMode = new EditMode();
             // ボタンの登録
@@ -65,11 +66,15 @@ namespace Landscape2.Runtime
                 this, createMode,
                 editMode,
                 new AdvertisementRenderer(),
-                landscapeCamera);
-
+                landscapeCamera,
+                subscribeSaveSystem);
 
             sizeUI = new();
             sizeUI.Show(false);
+            
+            // プロジェクトからの通知イベント
+            subscribeSaveSystem.SaveLoadHandler.OnDeleteAssets.AddListener(OnDeleteAssets);
+            subscribeSaveSystem.SaveLoadHandler.OnChangeEditableState.AddListener(OnChangeEditableState);
         }
 
         public async void OnEnable()
@@ -197,19 +202,30 @@ namespace Landscape2.Runtime
                 if (CheckParentName(hit.transform, "CreatedAssets"))
                 {
                     var selectTarget = FindAssetComponent(hit.transform);
-
                     if (selectTarget == lastEditTarget)
                     {
                         // 再度同じtargetを選択しない様にする
                         return;
                     }
-
+                    
+                    if (!ProjectSaveDataManager.TryCheckData(
+                            ProjectSaveDataType.Asset,
+                            ProjectSaveDataManager.ProjectSetting.CurrentProject.projectID,
+                            selectTarget?.GetInstanceID().ToString()))
+                    {
+                        // プロジェクト外であれば、抜ける
+                        return;
+                    }
+                    
                     editTarget = selectTarget;
                     lastEditTarget = editTarget;
                     arrangementAssetUIClass.SetEditTarget(editTarget);
                     SetMode(ArrangeModeName.Edit);
                     editMode.CreateRuntimeHandle(editTarget, TransformType.Position);
-
+                    
+                    // ハンドルが表示されたらプロジェクトが編集中として扱う
+                    ProjectSaveDataManager.Edit(ProjectSaveDataType.Asset, editTarget.GetInstanceID().ToString());
+                    
                     return;
                 }
             }
@@ -249,18 +265,24 @@ namespace Landscape2.Runtime
         {
             if (context.performed)
             {
-                if (currentMode != null)
-                {
-                    if (currentMode == editMode)
-                    {
-                        arrangementAssetUIClass.ResetEditButton();
-                    }
-                    currentMode.OnCancel();
-                    activeTarget = null;
-                }
-                SetMode(ArrangeModeName.Normal);
+                ResetCurrentMode();
             }
         }
+
+        private void ResetCurrentMode()
+        {
+            if (currentMode != null)
+            {
+                if (currentMode == editMode)
+                {
+                    arrangementAssetUIClass.ResetEditButton();
+                }
+                currentMode.OnCancel();
+                activeTarget = null;
+            } 
+            SetMode(ArrangeModeName.Normal);
+        }
+
         private void OnGeometryChanged(GeometryChangedEvent evt)
         {
             if (arrangementAssetUI.resolvedStyle.display == DisplayStyle.None)
@@ -283,5 +305,28 @@ namespace Landscape2.Runtime
         {
         }
 
+        
+        private void OnDeleteAssets(List<GameObject> deleteAssets)
+        {
+            foreach (var asset in deleteAssets)
+            {
+                GameObject.Destroy(asset);
+            }
+        }
+        
+        private void OnChangeEditableState(List<GameObject> editableAssets, List<GameObject> nonEditableAssets)
+        {
+            ResetCurrentMode();
+            
+            // 操作可能なアセットと操作不可能なアセットのレイヤーを変更
+            foreach (var asset in editableAssets)
+            {
+                LayerMaskUtil.SetIgnore(asset.gameObject, false);
+            }
+            foreach (var asset in nonEditableAssets)
+            {
+                LayerMaskUtil.SetIgnore(asset.gameObject, true);
+            }
+        }
     }
 }

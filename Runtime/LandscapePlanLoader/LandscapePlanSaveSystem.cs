@@ -13,12 +13,14 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         {
             saveSystem.SaveEvent += SaveInfo;
             saveSystem.LoadEvent += LoadInfo;
+            saveSystem.DeleteEvent += DeleteInfo;
+            saveSystem.ProjectChangedEvent += SetProjectInfo;
         }
 
         /// <summary>
         /// 景観計画のデータセーブの処理
         /// </summary>
-        static void SaveInfo()
+        static void SaveInfo(string projectID)
         {
             // セーブデータ用クラスに現在の区画データをコピー
             List<PlanAreaSaveData> planAreaSaveDatas = new List<PlanAreaSaveData>();
@@ -26,6 +28,16 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             for (int i = 0; i < areaDataCount; i++)
             {
                 AreaProperty areaProperty = AreasDataComponent.GetProperty(i);
+
+                if (!string.IsNullOrEmpty(projectID))
+                {
+                    if (!ProjectSaveDataManager.TryCheckData(ProjectSaveDataType.LandscapePlan, projectID, areaProperty.ID.ToString()))
+                    {
+                        // プロジェクトに該当しなければ保存しない
+                        continue;
+                    }
+                }
+
                 PlanAreaSaveData saveData = new PlanAreaSaveData(
                     areaProperty.ID,
                     areaProperty.Name,
@@ -47,7 +59,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// <summary>
         /// 景観計画のデータロードと生成の処理
         /// </summary>
-        static void LoadInfo()
+        static void LoadInfo(string projectID)
         {
             AreasDataComponent.ClearAllProperties();
 
@@ -58,12 +70,60 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             {
                 // ロードした頂点座標データからMeshを生成
                 LandscapePlanLoadManager landscapePlanLoadManager = new LandscapePlanLoadManager();
-                landscapePlanLoadManager.LoadFromSaveData(loadedPlanAreaDatas);
+                var loadedProperties = landscapePlanLoadManager.LoadFromSaveData(loadedPlanAreaDatas);
+                
+                foreach (var loadedProperty in loadedProperties)
+                {
+                    // プロジェクトへ保存
+                    ProjectSaveDataManager.Add(ProjectSaveDataType.LandscapePlan, loadedProperty.ID.ToString(), projectID, false);
+                }
             }
             else
             {
                 Debug.LogError("No saved project data found.");
             }
+        }
+        
+        /// <summary>
+        /// 削除通知
+        /// </summary>
+        /// <param name="projectID"></param>
+        static void DeleteInfo(string projectID)
+        {
+            int areaDataCount = AreasDataComponent.GetPropertyCount();
+            for (int i = 0; i < areaDataCount; i++)
+            {
+                var areaProperty = AreasDataComponent.GetProperty(i);
+                if (ProjectSaveDataManager.TryCheckData(ProjectSaveDataType.LandscapePlan, projectID, areaProperty.ID.ToString()))
+                {
+                    AreasDataComponent.TryRemoveProperty(areaProperty);
+                }
+            }
+        }
+        
+        
+        /// <summary>
+        /// プロジェクト更新通知
+        /// </summary>
+        /// <param name="projectID"></param>
+        static void SetProjectInfo(string projectID)
+        {
+            int areaDataCount = AreasDataComponent.GetPropertyCount();
+            for (int i = 0; i < areaDataCount; i++)
+            {
+                var areaProperty = AreasDataComponent.GetProperty(i);
+                if (ProjectSaveDataManager.TryCheckData(ProjectSaveDataType.LandscapePlan, projectID, areaProperty.ID.ToString()))
+                {
+                    areaProperty.SetIsEditable(true);
+                }
+                else
+                {
+                    areaProperty.SetIsEditable(false);
+                }
+            }
+
+            // エリア数の変更を通知して画面を更新する
+            AreasDataComponent.InvokeAreaCountChanged();
         }
     }
 }

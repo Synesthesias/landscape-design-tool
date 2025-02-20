@@ -1,3 +1,5 @@
+using Landscape2.Runtime.Common;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -160,7 +162,7 @@ namespace Landscape2.Runtime
             edit_Landmark.Q<TextField>("heightValueTextField").value = (yOffsetObj.localPosition.y).ToString();
         }
 
-        GameObject GeneratePointMarker(Vector3 pos, float yOffset)
+        public GameObject GeneratePointMarker(Vector3 pos, float yOffset)
         {
             var go = new GameObject();
             go.name = "Landmark_Root";
@@ -182,11 +184,23 @@ namespace Landscape2.Runtime
             var setPointMarkerSpriteRenderer = marker.AddComponent<SpriteRenderer>();
             setPointMarkerSpriteRenderer.sprite = landmarkIconSprite;
             var boxCollider = go.AddComponent<BoxCollider>();
-            boxCollider.size = setPointMarkerSpriteRenderer.sprite.bounds.size;
-
+            
+            if (setPointMarkerSpriteRenderer.sprite == null)
+            {
+                Debug.LogWarning("Landmark Icon Sprite is null");
+                SpriteUtil.LoadAsset("LandmarkIcon", sprite =>
+                {
+                    setPointMarkerSpriteRenderer.sprite = sprite;
+                    boxCollider.size = sprite.bounds.size;
+                });
+            }
+            else
+            {
+                boxCollider.size = setPointMarkerSpriteRenderer.sprite.bounds.size;
+            }
             return go;
         }
-
+        
         /// <summary>
         /// クリックされた場所にポイントを配置する
         /// </summary>
@@ -255,7 +269,7 @@ namespace Landscape2.Runtime
             var yOffsetObj = createPointMarker.transform.GetChild(0);
 
             // データの追加
-            var isAdded = lineOfSightDataComponent.AddPointDict(
+            var isAdded = lineOfSightDataComponent.AddPointData(
                 LineOfSightType.landmark,
                 registerName,
                 new()
@@ -296,7 +310,7 @@ namespace Landscape2.Runtime
             var deleteData = DeletePoint();
             var deleteButtonName = deleteData.deleteButtonName;
             // FIXME: yOffsetの値はダミーなので修正する事
-            var isAdded = lineOfSightDataComponent.AddPointDict(
+            var isAdded = lineOfSightDataComponent.AddPointData(
                 LineOfSightType.landmark,
                 registerName,
                 new()
@@ -323,7 +337,7 @@ namespace Landscape2.Runtime
         /// </summary>
         public (string deleteButtonName, List<string> removedAnalyzeKeyNameList) DeletePoint()
         {
-            var pointName = setPointMarker.name;
+            var pointMakerName = setPointMarker?.name;
             // ゲームオブジェクトの削除
             if (setPointMarker != null)
             {
@@ -331,17 +345,40 @@ namespace Landscape2.Runtime
                 setPointMarker = null;
             }
             // データの削除
-            var removeData = lineOfSightDataComponent.RemovePointElement(LineOfSightType.landmark, pointName);
+            var removeData = lineOfSightDataComponent.RemovePointElement(LineOfSightType.landmark, pointMakerName);
             var isRemoved = removeData.isRemoved;
             var removedAnalyzeKeyNameList = removeData.removedAnalyzeKeyNameList;
             if (isRemoved)
             {
-                return (pointName, removedAnalyzeKeyNameList);
+                return (pointMakerName, removedAnalyzeKeyNameList);
             }
             else
             {
                 return ("", removedAnalyzeKeyNameList);
             }
+        }
+
+        public (string deleteButtonName, List<string> removedAnalyzeKeyNameList) DeletePoint(string pointName)
+        {
+            TryDeletePoint(pointName);
+            return (pointName, new List<string>()
+                       {
+                           pointName
+                       });
+        }
+
+        private bool TryDeletePoint(string pointName)
+        {
+            foreach (Transform child in landmarkMarkers.transform)
+            {
+                if (child.gameObject.name == pointName)
+                {
+                    GameObject.Destroy(child.gameObject);
+                    lineOfSightDataComponent.RemovePointElement(LineOfSightType.landmark, pointName);
+                    return true;
+                }
+            }
+            return false;
         }
 
         /// <summary>
@@ -376,6 +413,18 @@ namespace Landscape2.Runtime
             createPointMarker = GameObject.Instantiate(setPointMarker);
             createPointMarker.name = editPointName;
             createPointMarker.transform.parent = landmarkMarkers.transform;
+        }
+        
+        /// <summary>
+        /// 編集可能か
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public bool CanEdit(string name)
+        {
+            var data = lineOfSightDataComponent
+                .LandmarkDatas.Find(point => point.Name == name);
+            return data.IsProject(ProjectSaveDataManager.ProjectSetting.CurrentProject.projectID);
         }
 
         public override void OnSelect()

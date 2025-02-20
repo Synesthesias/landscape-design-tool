@@ -1,3 +1,4 @@
+using Landscape2.Runtime.BuildingEditor;
 using Landscape2.Runtime.UiCommon;
 using System;
 using System.Collections;
@@ -109,12 +110,15 @@ namespace Landscape2.Runtime
                     OnEnable();
                 }
             });
-
+            
+            // ビルディングデータのロード完了時
+            BuildingsDataComponent.BuildingDataLoaded += CreateBuildings;
+            
             Show(false);
         }
 
 
-        public void AppendList(GameObject obj)
+        public void AppendList(GameObject obj, bool isVisible)
         {
             if (listRootElement == null)
             {
@@ -123,19 +127,47 @@ namespace Landscape2.Runtime
             }
 
             var elem = ListElementFactory(obj);
-            elem.OnButtonClick += (go) =>
+            if (isVisible)
             {
-                var parentName = elem.Element.parent != null ? elem.Element.parent.name : "null";
+                elem.OnButtonClick += (go) =>
+                {
+                    var parentName = elem.Element.parent != null ? elem.Element.parent.name : "null";
 
-                listRootElement.Remove(elem.Element);
-                OnClickShowButton?.Invoke(go);
-            };
+                    listRootElement.Remove(elem.Element);
+                    OnClickShowButton?.Invoke(go);
+                };
+            }
+            else
+            {
+                elem.Element.Q<Toggle>("Toggle_HideList").style.display = DisplayStyle.None;
+            }
+
             elem.OnListClick += (go) =>
             {
                 OnClickListElement?.Invoke(go);
             };
 
             listRootElement.Add(elem.Element);
+        }
+
+        private void CreateBuildings()
+        {
+            listRootElement.Clear();
+            for (int i = 0; i < BuildingsDataComponent.GetPropertyCount(); i++)
+            {
+                var property = BuildingsDataComponent.GetProperty(i);
+                if (!property.IsDeleted)
+                {
+                    continue;
+                }
+
+                var cityObjectGroup = CityModelHandler.GetCityObjectGroup(property.GmlID);
+                if (cityObjectGroup == null)
+                {
+                    continue;
+                }
+                AppendList(cityObjectGroup.gameObject, property.IsEditable);
+            }
         }
 
         public void RemoveList(int index)

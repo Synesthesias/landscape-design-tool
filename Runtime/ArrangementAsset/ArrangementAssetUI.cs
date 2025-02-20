@@ -36,7 +36,8 @@ namespace Landscape2.Runtime
             CreateMode createModeInstance,
             EditMode editModeInstance,
             AdvertisementRenderer advertisementRendererInstance,
-            LandscapeCamera landscapeCamera)
+            LandscapeCamera landscapeCamera,
+            AssetsSubscribeSaveSystem subscribeSaveSystem)
         {
             UIElement = element;
             arrangementAsset = arrangementAssetInstance;
@@ -58,7 +59,11 @@ namespace Landscape2.Runtime
                 }
                 DeleteAsset();
             });
-
+            
+            // プロジェクトからの通知イベント
+            subscribeSaveSystem.SaveLoadHandler.OnDeleteAssets.AddListener(OnDeleteAssets);
+            subscribeSaveSystem.SaveLoadHandler.OnChangeEditableState.AddListener(OnChangeEditableState);
+      
             RegisterEditButtonAction();
 
             // デフォルトでは非表示
@@ -127,6 +132,9 @@ namespace Landscape2.Runtime
 
             // リストから削除
             arrangementAssetListUI.RemoveAsset(editTarget.GetInstanceID());
+            
+            // プロジェクトへ追加
+            ProjectSaveDataManager.Delete(ProjectSaveDataType.Asset, editTarget.GetInstanceID().ToString());
         }
 
         /// <summary>
@@ -263,6 +271,33 @@ namespace Landscape2.Runtime
             var isShow = editTarget != null && editTarget.GetComponent<PlateauSandboxAdvertisement>() != null;
             fileContainer.style.display = isShow ? DisplayStyle.Flex : DisplayStyle.None;
             movieContainer.style.display = isShow ? DisplayStyle.Flex : DisplayStyle.None;
+        }
+        
+        private void OnDeleteAssets(List<GameObject> deleteAssets)
+        {
+            foreach (var target in deleteAssets)
+            {
+                if (editTarget == target)
+                {
+                    DeleteAsset();
+                }
+                ArrangementAssetListUI.OnCancelAsset.Invoke(target);
+            }
+        }
+        
+        private void OnChangeEditableState(
+            List<GameObject> editableAssets,
+            List<GameObject> notEditableAssets)
+        {
+            foreach (var asset in editableAssets)
+            {
+                arrangementAssetListUI.SetEditable(true, asset.GetInstanceID());
+            }
+            
+            foreach (var asset in notEditableAssets)
+            {
+                arrangementAssetListUI.SetEditable(false, asset.GetInstanceID());
+            }
         }
     }
 }

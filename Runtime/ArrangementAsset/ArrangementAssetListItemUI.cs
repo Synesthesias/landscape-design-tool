@@ -15,6 +15,9 @@ namespace Landscape2.Runtime
         public UnityEvent OnDeleteAsset = new();
         public UnityEvent OnFocusAsset = new();
         
+        private bool isShow = true;
+        public bool IsShow => isShow;
+        
         public ArrangementAssetListItemUI(
             int prefabID,
             VisualElement element,
@@ -46,5 +49,16 @@ namespace Landscape2.Runtime
             };
         }
         
+        public void Show(bool isShow)
+        {
+            Model.Element.style.display = isShow ? DisplayStyle.Flex : DisplayStyle.None;
+            this.isShow = isShow;
+        }
+        
+        public void SetEditable(bool isEditable)
+        {
+            Model.Element.Q<Button>("DeleteButton").style.display = 
+                isEditable ? DisplayStyle.Flex : DisplayStyle.None;
+        }
     }
 }

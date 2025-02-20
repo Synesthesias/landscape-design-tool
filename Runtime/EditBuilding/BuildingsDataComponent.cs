@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System;
+using System.Linq;
 using UnityEngine;
 
 namespace Landscape2.Runtime.BuildingEditor
@@ -20,6 +21,9 @@ namespace Landscape2.Runtime.BuildingEditor
         public static void AddNewProperty(BuildingProperty newProperty)
         {
             properties.Add(newProperty);
+            
+            // プロジェクトに通知
+            ProjectSaveDataManager.Add(ProjectSaveDataType.EditBuilding, newProperty.ID);
         }
 
         /// <summary>
@@ -65,7 +69,7 @@ namespace Landscape2.Runtime.BuildingEditor
         /// </summary>
         public static bool IsContainsProperty(string gmlID)
         {
-            return properties.Exists(x => x.GmlID == gmlID);
+            return properties.Exists(x => x.GmlID == gmlID && x.IsEditable);
         }
 
         /// <summary>
@@ -73,7 +77,7 @@ namespace Landscape2.Runtime.BuildingEditor
         /// </summary>
         public static bool TryApplyBuildingEdit(string gmlID, List<Color> colors, List<float> smoothness)
         {
-            var index = properties.FindIndex(x => x.GmlID == gmlID);
+            var index = properties.FindIndex(x => x.GmlID == gmlID && x.IsEditable);
             if (index < 0 || index >= properties.Count) return false;
             
             var property = properties[index];
@@ -81,7 +85,42 @@ namespace Landscape2.Runtime.BuildingEditor
             // 建物の色とSmoothnessを保存
             property.ColorData = colors;
             property.SmoothnessData = smoothness;
+            
+            ProjectSaveDataManager.Edit(ProjectSaveDataType.EditBuilding, property.ID);
+            
             return true;
+        }
+        
+        public static void SetBuildingEditable(string id, bool isEditable)
+        {
+            var index = properties.FindIndex(x => x.ID == id);
+            if (index < 0 || index >= properties.Count) return;
+            
+            properties[index].IsEditable = isEditable;
+        }
+        
+        public static void SetBuildingDelete(string gmlID, bool isDelete)
+        {
+            if (!properties.Any(p => p.GmlID == gmlID && p.IsEditable))
+            {
+                // 追加
+                var newProperty = new BuildingProperty(gmlID, new List<Color>(), new List<float>(), isDelete);
+                AddNewProperty(newProperty);
+                
+                ProjectSaveDataManager.Add(ProjectSaveDataType.EditBuilding, newProperty.ID);
+            }
+            else
+            {
+                var property = properties.Find(p => p.GmlID == gmlID && p.IsEditable);
+                property.IsDeleted = isDelete;
+                
+                ProjectSaveDataManager.Edit(ProjectSaveDataType.EditBuilding, property.ID);
+            }
+        }
+        
+        public static void LoadProject()
+        {
+            BuildingDataLoaded();
         }
     }
 
@@ -90,15 +129,21 @@ namespace Landscape2.Runtime.BuildingEditor
     /// </summary>
     public class BuildingProperty
     {
+        public string ID { get; private set; }
         public string GmlID { get; private set; }
         public List<Color> ColorData { get; set; }
         public List<float> SmoothnessData { get; set; }
+        public bool IsDeleted { get; set; }
+        public bool IsEditable { get; set; }
 
-        public BuildingProperty(string gmlID, List<Color> colorData, List<float> smoothnessData)
+        public BuildingProperty(string gmlID, List<Color> colorData, List<float> smoothnessData, bool isDeleted)
         {
+            ID = System.Guid.NewGuid().ToString();
             GmlID = gmlID;
             ColorData = colorData;
             SmoothnessData = smoothnessData;
+            IsDeleted = isDeleted;
+            IsEditable = true;
         }
     }
 }

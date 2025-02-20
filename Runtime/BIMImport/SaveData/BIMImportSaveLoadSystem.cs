@@ -42,7 +42,7 @@ namespace Landscape2.Runtime
         }
 
 
-        public void Save()
+        public void Save(string projectID)
         {
             DataSerializer.Save("BIM", saveDatas);
         }
@@ -50,7 +50,7 @@ namespace Landscape2.Runtime
         /// <summary>
         /// Load -> BIMIMportSaveLoadSystem.SaveDataListの読み出しの順で呼び出す
         /// </summary>
-        public void Load()
+        public void Load(string projectID)
         {
             var data = DataSerializer.Load<List<BIMImportSaveData>>("BIM");
             saveDatas = new(data);

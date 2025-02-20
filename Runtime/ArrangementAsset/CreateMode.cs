@@ -192,6 +192,11 @@ namespace Landscape2.Runtime
                     // 配置完了
                     component.SetPlaced();
                 }
+                
+                // プロジェクトに通知
+                ProjectSaveDataManager.Add(ProjectSaveDataType.Asset, generatedAsset.gameObject.GetInstanceID().ToString());
+                
+                SetLayerRecursively(generatedAsset,0);
 
                 SetLayerRecursively(generatedAsset, 0);
                 generateAssets(selectedAsset);

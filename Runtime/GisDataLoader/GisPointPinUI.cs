@@ -20,9 +20,9 @@ namespace Landscape2.Runtime.GisDataLoader
         // テキストを表示するカメラ位置
         private const int textDisplayCameraDepth = 800;
 
-        public GisPointPinUI(GisPointInfo info, int attributeIndex, VisualElement element)
+        public GisPointPinUI(GisPointInfo info, string attributeID, VisualElement element)
         {
-            pin = new GisPointPin(info.ID, attributeIndex, element);
+            pin = new GisPointPin(info.ID, attributeID, element);
             
             // ピンをabsoluteに設定して被っても問題ないようにする
             element.style.position = Position.Absolute;
@@ -48,9 +48,9 @@ namespace Landscape2.Runtime.GisDataLoader
             return pin.Element;
         }
 
-        public bool IsSameAttribute(int attributeIndex)
+        public bool IsSameAttribute(string attributeID)
         {
-            return pin.AttributeIndex == attributeIndex;
+            return pin.AttributeID == attributeID;
         }
 
         public void Show(bool isShow)

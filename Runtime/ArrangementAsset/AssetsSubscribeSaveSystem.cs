@@ -14,7 +14,8 @@ namespace Landscape2.Runtime
     public class AssetsSubscribeSaveSystem
     {
         private SaveSystem saveSystem;
-        private SaveLoadHandler saveLoadHandler;
+        private SaveLoadHandler saveLoadHandler = new();
+        public SaveLoadHandler SaveLoadHandler => saveLoadHandler;
 
         public AssetsSubscribeSaveSystem(SaveSystem saveSystemInstance)
         {
@@ -25,19 +26,16 @@ namespace Landscape2.Runtime
         {
             AsyncOperationHandle<IList<GameObject>> plateauAssetHandle = Addressables.LoadAssetsAsync<GameObject>("Plateau_Assets", null);
             IList<GameObject> plateauAssetsList = await plateauAssetHandle.Task;
-            saveLoadHandler = new SaveLoadHandler(plateauAssetsList);
-            SetSaveMode();
-            SetLoadMode();
+            saveLoadHandler.AddAsset(plateauAssetsList);
+            SetEvents();
         }
 
-        public void SetSaveMode()
+        private void SetEvents()
         {
             saveSystem.SaveEvent += saveLoadHandler.SaveInfo;
-        }
-        
-        public void SetLoadMode() 
-        {
             saveSystem.LoadEvent += saveLoadHandler.LoadInfo;
+            saveSystem.DeleteEvent += saveLoadHandler.DeleteInfo;
+            saveSystem.ProjectChangedEvent += saveLoadHandler.SetProjectInfo;
         }
     }
 }

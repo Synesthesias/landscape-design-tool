@@ -1,3 +1,5 @@
+using Landscape2.Runtime.BuildingEditor;
+using Landscape2.Runtime.Common;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,6 +59,9 @@ namespace Landscape2.Runtime
                 editComponent.ShowBuilding(true);
 
                 disableList.Remove(r);
+                
+                var gml = CityObjectUtil.GetGmlID(r.gameObject);
+                BuildingsDataComponent.SetBuildingDelete(gml, false);
             };
 
             deleteListUI.OnClickListElement += (go) =>
@@ -86,11 +91,11 @@ namespace Landscape2.Runtime
                 if (!disableList.Contains(r))
                 {
                     disableList.Add(r);
+                    deleteListUI?.AppendList(r.gameObject, true);
 
-                    deleteListUI?.AppendList(r.gameObject);
+                    var gml = CityObjectUtil.GetGmlID(r.gameObject);
+                    BuildingsDataComponent.SetBuildingDelete(gml, true);
                 }
-
-
             };
             trsUI.OnClickTransButton += () =>
             {

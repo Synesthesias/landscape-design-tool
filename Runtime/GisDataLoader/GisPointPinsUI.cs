@@ -43,15 +43,15 @@ namespace Landscape2.Runtime.GisDataLoader
             gisPointInfos.OnDeleteAll.AddListener(DeleteAll);
         }
         
-        private void CreatePin(int attributeIndex)
+        private void CreatePin(string attributeID)
         {
             // GISのデータを取得
-            var pointInfos = gisPointInfos.GetAttributeAll(attributeIndex);
+            var pointInfos = gisPointInfos.GetAttributeAll(attributeID);
             
             foreach (var gisPointInfo in pointInfos)
             {
                 var pinElement = pinVisualTreeAsset.CloneTree();
-                var pin = new GisPointPinUI(gisPointInfo, attributeIndex, pinElement);
+                var pin = new GisPointPinUI(gisPointInfo, attributeID, pinElement);
 
                 // ピンの位置更新
                 var screenPos = GetPinScreenPosition(gisPointInfo.FacilityPosition);
@@ -65,9 +65,9 @@ namespace Landscape2.Runtime.GisDataLoader
             }
         }
         
-        private void UpdateDisplayPin(int attributeIndex, bool isShow)
+        private void UpdateDisplayPin(string attributeID, bool isShow)
         {
-            var pinList = pins.FindAll(pin => pin.IsSameAttribute(attributeIndex));
+            var pinList = pins.FindAll(pin => pin.IsSameAttribute(attributeID));
             if (pinList.Count <= 0)
             {
                 Debug.LogWarning("ピンが見つかりません");
@@ -86,9 +86,9 @@ namespace Landscape2.Runtime.GisDataLoader
             }
         }
         
-        private void DeletePin(int attributeIndex)
+        private void DeletePin(string attributeID)
         {
-            var pinList = pins.FindAll(pin => pin.IsSameAttribute(attributeIndex));
+            var pinList = pins.FindAll(pin => pin.IsSameAttribute(attributeID));
             if (pinList.Count < 0)
             {
                 Debug.LogWarning("ピンが見つかりません");
@@ -103,13 +103,12 @@ namespace Landscape2.Runtime.GisDataLoader
             }
         }
         
-        private void DeleteAll()
+        private void DeleteAll(List<string> deleteAttributeIDs)
         {
-            foreach (var pin in pins)
+            foreach (var deleteAttributeID in deleteAttributeIDs)
             {
-                pinPanel.Remove(pin.GetElement());
+                DeletePin(deleteAttributeID);
             }
-            pins.Clear();
         }
         
         private Vector2 GetPinScreenPosition(Vector3 position)
@@ -137,6 +136,10 @@ namespace Landscape2.Runtime.GisDataLoader
             foreach (var pin in pins)
             {
                 var info = gisPointInfos.Get(pin.GetID());
+                if (info == null)
+                {
+                    continue;
+                }
                 var screenPos = GetPinScreenPosition(info.FacilityPosition);
                 pin.SetScreen(screenPos, info.IsShow);
             }
