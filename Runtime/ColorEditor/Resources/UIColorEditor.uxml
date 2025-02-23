@@ -4,14 +4,8 @@
         <ui:VisualElement name="Panel" picking-mode="Ignore" style="flex-grow: 1; width: auto; margin-top: 0; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px;">
             <ui:VisualElement name="VisualElement" style="flex-grow: 0; flex-direction: row; justify-content: space-between; align-items: center; flex-shrink: 0; margin-bottom: 6px;">
                 <ui:VisualElement style="flex-grow: 1; flex-direction: row; height: 40px;">
-                    <ui:Label tabindex="-1" text="色相" parse-escape-sequences="true" display-tooltip-when-elided="true" />
-                    <ui:FloatField label="Float Field" value="2" name="Hue_Float" style="height: 40px; width: 50px; justify-content: center; flex-grow: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
-                    <ui:Label tabindex="-1" text="/" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" style="margin-top: 0; margin-right: 6px; margin-bottom: 0; margin-left: 6px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-size: 18px; -unity-text-align: middle-left;" />
-                    <ui:DropdownField label="Dropdown" choices="R,Y,G,B,P,YR,GY,BG,PB,RP" index="0" />
-                    <ui:Label tabindex="-1" text="明度" parse-escape-sequences="true" display-tooltip-when-elided="true" />
-                    <ui:FloatField label="Float Field" value="2" name="Hue_Float" style="height: 40px; width: 50px; justify-content: center; flex-grow: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
-                    <ui:Label tabindex="-1" text="彩度" parse-escape-sequences="true" display-tooltip-when-elided="true" />
-                    <ui:FloatField label="Float Field" value="2" name="Hue_Float" style="height: 40px; width: 50px; justify-content: center; flex-grow: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
+                    <ui:Label tabindex="-1" text="マンセル値:" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+                    <ui:Label tabindex="-1" text="5Y 7/1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="MunsellValue" style="width: 50%; height: auto; -unity-text-align: upper-left; font-size: 14px; margin-top: 4px; align-self: auto;" />
                 </ui:VisualElement>
                 <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="CloseButton" style="background-color: rgba(188, 188, 188, 0); border-left-color: rgba(149, 149, 149, 0); border-right-color: rgba(149, 149, 149, 0); border-top-color: rgba(149, 149, 149, 0); border-bottom-color: rgba(149, 149, 149, 0); margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; align-self: auto;">
                     <ui:VisualElement name="Icon_Close" style="flex-grow: 1; width: 32px; height: 32px;" />

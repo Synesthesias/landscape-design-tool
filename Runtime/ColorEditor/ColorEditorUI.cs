@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 using System;
+using PLATEAU.Util;
 
 namespace Landscape2.Runtime
 {
@@ -13,6 +14,14 @@ namespace Landscape2.Runtime
     /// </summary>
     public class ColorEditorUI : ISubComponent
     {
+        struct MunselValue
+        {
+            public string hueValue; // "2.5,5,7.5,10"
+            public string hueName; // "R","YR"等
+            public int value; // 9〜1?
+            public string chroma;   // 2〜18で2刻み
+        }
+
         // 色が変更されたときのイベント関数
         public event Action<Color> OnColorEdited = color => { };
         // 閉じるボタンが押されたときのイベント関数
@@ -31,6 +40,9 @@ namespace Landscape2.Runtime
         // マンセル表パネル
         private readonly VisualElement munsellPanel;
 
+        private Label munsellValueLabel;
+
+
         // 色相変更スライダー名前
         private const string UIHueSlider = "HueSlider";
         // RGB変更スライダー名前：R
@@ -44,6 +56,12 @@ namespace Landscape2.Runtime
         // マンセル表パネル名前
         private const string UIMunsellPanel = "MunsellPanel";
 
+
+
+        // マンセル値
+        private const string UIHVC_MunsellValueLabel = "MunsellValue";
+
+
         // マンセル表の色セット
         private List<List<string>> codemap = new List<List<string>>();
         MunsellData munsellData = new MunsellData();
@@ -55,6 +73,8 @@ namespace Landscape2.Runtime
         private Color munselColor;
         // 初期化時の色
         private Color initialColor;
+
+        Dictionary<string, MunselValue> munselValueDict = new();
 
         public ColorEditorUI(VisualElement uiRoot, Color initialColor = default)
         {
@@ -68,16 +88,27 @@ namespace Landscape2.Runtime
             closeButton = uiRoot.Q<Button>(UICloseButton);
             munsellPanel = uiRoot.Q<VisualElement>(UIMunsellPanel);
 
+            munsellValueLabel = uiRoot.Q<Label>(UIHVC_MunsellValueLabel);
+
             // 色相の初期値の設定
             hueSlider.lowValue = 0;
             hueSlider.highValue = 39;
             hueSlider.value = 0;
+
+            // RGB値からマンセル値のテーブルを作る
+            CreateHV_CTable();
+
 
             // RGBの初期値の設定
             SetColorSlider(initialColor);
 
             // 色相を初期化
             EditHue(hueSlider.value);
+
+            var rgb = UnityEngine.ColorUtility.ToHtmlStringRGB(munselColor);
+            SetMunsellValueLabel(rgb);
+
+
 
             // 色相変更スライダーの値が変更されたとき
             hueSlider.RegisterValueChangedCallback(evt =>
@@ -132,6 +163,9 @@ namespace Landscape2.Runtime
                         lastFocusButton = button;
                         //　色彩スライダーの値を更新
                         SetColorSlider(munselColor);
+
+                        // munsel値に反映
+                        SetMunsellValueLabel(UnityEngine.ColorUtility.ToHtmlStringRGB(munselColor));
                     };
                 });
             });
@@ -142,6 +176,7 @@ namespace Landscape2.Runtime
                 // 閉じるボタンが押されたときのイベントを発火
                 OnCloseButtonClicked();
             };
+
         }
 
         // 色相を変更する
@@ -298,6 +333,21 @@ namespace Landscape2.Runtime
             bSlider.value = (int)(color.b * 255f);
         }
 
+        private void SetMunsellValueLabel(string rgb)
+        {
+            if (munselValueDict.TryGetValue(rgb, out var munselValue))
+            {
+                munsellValueLabel.text = $"{munselValue.hueValue}{munselValue.hueName} {munselValue.value.ToString()}/{munselValue.chroma}";
+            }
+            else
+            {
+                munsellValueLabel.text = "-";
+
+            }
+
+
+        }
+
         // UIをリセットする
         public void ResetColorEditorUI(Color color)
         {
@@ -312,6 +362,8 @@ namespace Landscape2.Runtime
 
             // 色相スライダーの値をリセット
             hueSlider.value = 0;
+
+            munsellValueLabel.text = "-";
         }
 
         // 初期化時の色をセットする
@@ -336,6 +388,58 @@ namespace Landscape2.Runtime
         public void LateUpdate(float deltaTime)
         {
         }
+
+        void CreateHV_CTable()
+        {
+            List<List<List<List<string>>>> table = new()
+            {
+                new() { munsellData.codemap25R, munsellData.codemap5R,munsellData.codemap75R,munsellData.codemap10R},
+                new() { munsellData.codemap25YR, munsellData.codemap5YR,munsellData.codemap75YR,munsellData.codemap10YR},
+                new() { munsellData.codemap25Y, munsellData.codemap5Y,munsellData.codemap75Y,munsellData.codemap10Y},
+                new() { munsellData.codemap25GY, munsellData.codemap5GY,munsellData.codemap75GY,munsellData.codemap10GY},
+                new() { munsellData.codemap25G, munsellData.codemap5G,munsellData.codemap75G,munsellData.codemap10G},
+                new() { munsellData.codemap25BG, munsellData.codemap5BG,munsellData.codemap75BG,munsellData.codemap10BG},
+                new() { munsellData.codemap25B, munsellData.codemap5B,munsellData.codemap75B,munsellData.codemap10B},
+                new() { munsellData.codemap25PB, munsellData.codemap5PB,munsellData.codemap75PB,munsellData.codemap10PB},
+                new() { munsellData.codemap25P, munsellData.codemap5P,munsellData.codemap75P,munsellData.codemap10P},
+                new() { munsellData.codemap25RP, munsellData.codemap5RP,munsellData.codemap75RP,munsellData.codemap10RP},
+            };
+
+            List<string> colorNameTable = new() { "R", "YR", "Y", "GY", "G", "BG", "B", "PB", "P", "RP" };
+
+            int colorNameTableIndex = 0;
+            foreach (var colorTable in table)
+            {
+                int hueCount = 1;
+                foreach (var munselTable in colorTable)
+                {
+                    int value = 9; // カウントダウンしていく
+                    foreach (var colTbl in munselTable)
+                    {
+                        int chroma = 0;
+                        foreach (var col in colTbl)
+                        {
+                            chroma += 2;
+                            float hue = 2.5f * (float)hueCount;
+
+                            string hueString = $"{(int)hue}";
+                            if ((hueCount & 0x01) != 0)
+                            {
+                                // 奇数の時は2.5,7.5の筈
+                                hueString = $"{hue:F1}";
+                            }
+
+                            munselValueDict.Add(col, new MunselValue() { hueValue = hueString, hueName = colorNameTable[colorNameTableIndex], value = value, chroma = $"{chroma}" });
+                        }
+                        value--;
+
+                    }
+                    hueCount++;
+                }
+                colorNameTableIndex++;
+            }
+        }
+
 
     }
 }
