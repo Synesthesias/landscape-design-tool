@@ -94,7 +94,11 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             for (int i = 0; i < areaDataCount; i++)
             {
                 var areaProperty = AreasDataComponent.GetProperty(i);
-                if (ProjectSaveDataManager.TryCheckData(ProjectSaveDataType.LandscapePlan, projectID, areaProperty.ID.ToString()))
+                if (ProjectSaveDataManager.TryCheckData(
+                        ProjectSaveDataType.LandscapePlan,
+                        projectID,
+                        areaProperty.ID.ToString(),
+                        false))
                 {
                     AreasDataComponent.TryRemoveProperty(areaProperty);
                 }

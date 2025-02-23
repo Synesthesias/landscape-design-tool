@@ -34,7 +34,7 @@ namespace Landscape2.Runtime.BuildingEditor
 
                 if (!string.IsNullOrEmpty(projectID))
                 {
-                    if (!ProjectSaveDataManager.TryCheckData(ProjectSaveDataType.EditBuilding, buildingProperty.ID, projectID))
+                    if (!ProjectSaveDataManager.TryCheckData(ProjectSaveDataType.EditBuilding, projectID, buildingProperty.ID))
                     {
                         continue;
                     }
@@ -89,16 +89,21 @@ namespace Landscape2.Runtime.BuildingEditor
         private void DeleteInfo(string projectID)
         {
             int buildingDataCount = BuildingsDataComponent.GetPropertyCount();
-            var addBuildingProperty = new List<BuildingProperty>();
+            var deleteBuildingProperty = new List<BuildingProperty>();
             for (int i = 0; i < buildingDataCount; i++)
             {
                 var buildingProperty = BuildingsDataComponent.GetProperty(i);
-                if (!ProjectSaveDataManager.TryCheckData(ProjectSaveDataType.EditBuilding, projectID, buildingProperty.ID))
+                if (ProjectSaveDataManager.TryCheckData(
+                        ProjectSaveDataType.EditBuilding,
+                        projectID,
+                        buildingProperty.ID,
+                        false))
                 {
-                    addBuildingProperty.Add(buildingProperty);
+                    deleteBuildingProperty.Add(buildingProperty);
                 }
             }
-            BuildingsDataComponent.AddAllNewProperty(addBuildingProperty);
+            
+            BuildingsDataComponent.DeleteProperty(deleteBuildingProperty);
         }
         
         private void SetProjectInfo(string projectID)

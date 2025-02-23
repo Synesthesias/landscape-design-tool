@@ -95,7 +95,8 @@ namespace Landscape2.Runtime
                 if (ProjectSaveDataManager.TryCheckData(
                         ProjectSaveDataType.Asset,
                         projectID,
-                        asset.gameObject.GetInstanceID().ToString()))
+                        asset.gameObject.GetInstanceID().ToString(),
+                        false))
                 {
                     deleteAssets.Add(asset.gameObject);
                 }

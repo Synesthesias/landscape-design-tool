@@ -45,6 +45,11 @@ namespace Landscape2.Runtime
 #else
              path = StandaloneFileBrowser.SaveFilePanel("Create File", "", projectName, "data");
 #endif
+            if (string.IsNullOrEmpty(path))
+            {
+                return;
+            }
+
             DataSerializer._savePath = path;
 
             SaveEvent(projectID);
@@ -72,6 +77,12 @@ namespace Landscape2.Runtime
             {
                 path = paths[0];
             }
+            
+            if (string.IsNullOrEmpty(path))
+            {
+                return;
+            }
+            
             DataSerializer._savePath = path;
 
             DataSerializer.LoadFile();

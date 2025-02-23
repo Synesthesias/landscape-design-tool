@@ -3,6 +3,7 @@ using Landscape2.Runtime.UiCommon;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -112,7 +113,10 @@ namespace Landscape2.Runtime
             });
             
             // ビルディングデータのロード完了時
-            BuildingsDataComponent.BuildingDataLoaded += CreateBuildings;
+            BuildingsDataComponent.BuildingDataLoaded += UpdateBuildings;
+            
+            // ビルディングデータの削除時
+            BuildingsDataComponent.BuildingDataDeleted += DeleteBuildings;
             
             Show(false);
         }
@@ -150,23 +154,42 @@ namespace Landscape2.Runtime
             listRootElement.Add(elem.Element);
         }
 
-        private void CreateBuildings()
+        private void UpdateBuildings()
         {
             listRootElement.Clear();
             for (int i = 0; i < BuildingsDataComponent.GetPropertyCount(); i++)
             {
                 var property = BuildingsDataComponent.GetProperty(i);
-                if (!property.IsDeleted)
-                {
-                    continue;
-                }
+                AppendBuilding(property);
+            }
+        }
 
-                var cityObjectGroup = CityModelHandler.GetCityObjectGroup(property.GmlID);
-                if (cityObjectGroup == null)
+        private void AppendBuilding(BuildingProperty property)
+        {
+            if (!property.IsDeleted)
+            {
+                return;
+            }
+
+            var cityObjectGroup = CityModelHandler.GetCityObjectGroup(property.GmlID);
+            if (cityObjectGroup == null)
+            {
+                return;
+            }
+            AppendList(cityObjectGroup.gameObject, property.IsEditable);
+        }
+
+        private void DeleteBuildings(List<BuildingProperty> deleteBuildings)
+        {
+            listRootElement.Clear();
+            for (int i = 0; i < BuildingsDataComponent.GetPropertyCount(); i++)
+            {
+                var property = BuildingsDataComponent.GetProperty(i);
+                if (deleteBuildings.Any(n => n.ID == property.ID))
                 {
                     continue;
                 }
-                AppendList(cityObjectGroup.gameObject, property.IsEditable);
+                AppendBuilding(property);
             }
         }
 

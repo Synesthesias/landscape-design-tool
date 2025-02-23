@@ -1,6 +1,7 @@
 using UnityEngine;
 using Cinemachine;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Landscape2.Runtime.CameraPositionMemory
 {
@@ -121,14 +122,21 @@ namespace Landscape2.Runtime.CameraPositionMemory
         /// 保存したカメラ位置を削除する関数
         /// </summary>
         /// <param name="slotId"></param>
-        public void Delete(int slotId)
+        public void Delete(string slotId)
         {
-            var id = slots[slotId].id;
-            slots.Remove(slots[slotId]);
+            if (slots.All(s => s.id != slotId))
+            {
+                return;
+            }
+
+            var slot = slots.Find(x => x.id == slotId);
+            var slotIndex = slots.FindIndex(x => x.id == slotId);
+            slots.RemoveAt(slotIndex);
+            
             SubtractSlotCout();
             
             // プロジェクトへ通知
-            ProjectSaveDataManager.Delete(ProjectSaveDataType.CameraPosition, id);
+            ProjectSaveDataManager.Delete(ProjectSaveDataType.CameraPosition, slot.id);
         }
 
         /// <summary>

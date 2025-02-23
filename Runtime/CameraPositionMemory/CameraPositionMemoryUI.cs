@@ -221,15 +221,25 @@ namespace Landscape2.Runtime.CameraPositionMemory
         
         private void DeleteInfo(string projectID)
         {
+            var deleteIds = new List<string>();
             for (int i = 0; i <  cameraPositionMemory.GetSlotDatas().Count; i++)
             {
                 var slotData = cameraPositionMemory.GetSlotDatas()[i];
-                if (ProjectSaveDataManager.TryCheckData(ProjectSaveDataType.CameraPosition, projectID, slotData.id))
+                if (ProjectSaveDataManager.TryCheckData(
+                        ProjectSaveDataType.CameraPosition,
+                        projectID,
+                        slotData.id,
+                        false))
                 {
-                    cameraPositionMemory.Delete(i);
-                    UpdateButtonState();
+                    deleteIds.Add(slotData.id);
                 }
             }
+            
+            foreach (var deleteId in deleteIds)
+            {
+                cameraPositionMemory.Delete(deleteId);
+            }
+            UpdateButtonState();
         }
         
         private void SetProjectInfo(string projectID)
@@ -579,7 +589,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
                 }
                 buttonUi.Q<Label>().text = cameraPositionMemory.GetName(i);
                 buttonUi.Q<Button>().clicked += () => OnClickedRestoreButton(slotIndex, isEditable); // ここに i を渡してはいけないことに注意
-                buttonUi.Q<Button>("DeleteButton").clicked += () => OnClickedDeleteButton(slotIndex);
+                buttonUi.Q<Button>("DeleteButton").clicked += () => OnClickedDeleteButton(slotData.id);
             }
 
             //WalkListのボタン構築
@@ -600,7 +610,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
                     buttonUi.Q<VisualElement>("Circle_Icon_Walk").style.display = DisplayStyle.Flex;
                     buttonUi.Q<Label>().text = cameraPositionMemory.GetName(i);
                     buttonUi.Q<Button>().clicked += () => OnClickedWalkRestoreButton(slotIndex, isEditable); // ここに i を渡してはいけないことに注意
-                    buttonUi.Q<Button>("DeleteButton").clicked += () => OnClickedDeleteButton(slotIndex);
+                    buttonUi.Q<Button>("DeleteButton").clicked += () => OnClickedDeleteButton(slotData.id);
                 }
             }
         }
@@ -616,10 +626,10 @@ namespace Landscape2.Runtime.CameraPositionMemory
         /// <summary>
         /// 保存したカメラ視点を削除する関数
         /// </summary>
-        /// <param name="slotIndex"></param>
-        private void OnClickedDeleteButton(int slotIndex)
+        /// <param name="slotID"></param>
+        private void OnClickedDeleteButton(string slotID)
         {
-            cameraPositionMemory.Delete(slotIndex);
+            cameraPositionMemory.Delete(slotID);
             UpdateButtonState();
             CreateSnackbar("視点を削除しました");
         }

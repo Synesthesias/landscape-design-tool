@@ -181,7 +181,7 @@ namespace Landscape2.Runtime
         private void OnDelete(string projectID)
         {
             lineOfSightDataComponent.ViewPointDatas
-                .Where(data => data.IsProject(projectID))
+                .Where(data => data.IsProject(projectID, false))
                 .ToList()
                 .ForEach(data =>
                 {
@@ -190,7 +190,7 @@ namespace Landscape2.Runtime
                 });
             
             lineOfSightDataComponent.LandmarkDatas
-                .Where(data => data.IsProject(projectID))
+                .Where(data => data.IsProject(projectID, false))
                 .ToList()
                 .ForEach(data =>
                 {
@@ -199,7 +199,7 @@ namespace Landscape2.Runtime
                 });
             
             lineOfSightDataComponent.AnalyzeViewPointDatas
-                .Where(data => data.IsProject(projectID))
+                .Where(data => data.IsProject(projectID, false))
                 .ToList()
                 .ForEach(data =>
                 {
@@ -208,7 +208,7 @@ namespace Landscape2.Runtime
                 });
             
             lineOfSightDataComponent.AnalyzeLandmarkDatas
-                .Where(data => data.IsProject(projectID))
+                .Where(data => data.IsProject(projectID, false))
                 .ToList()
                 .ForEach(data =>
                 {

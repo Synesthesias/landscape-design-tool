@@ -1394,6 +1394,20 @@ Scroller #unity-drag-container {
     display: none;
 }
 
+#Toggle_EditMode {
+    background-image: resource('Icon_EditMode_Off');
+    width: 52px;
+    height: 32px;
+}
+
+#Toggle_EditMode:checked {
+    background-image: resource('Icon_EditMode_On');
+}
+
+#Toggle_EditMode .unity-toggle__checkmark {
+    display: none;
+}
+
 #Button_Capture {
     background-image: resource('Icon_Capture');
 }

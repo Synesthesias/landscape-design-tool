@@ -90,5 +90,9 @@
         </ui:Button>
     </ui:VisualElement>
     <ui:ScrollView name="Project_List" style="flex-grow: 1; position: absolute; padding-top: 16px; padding-right: 16px; padding-bottom: 16px; padding-left: 16px; top: 62px; left: 1481px; width: 420px;">
+        <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: flex-end; padding-top: 12px; padding-right: 12px; padding-bottom: 6px; padding-left: 12px; background-color: rgba(14, 21, 20, 0.75);">
+            <ui:Label text="編集モード" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+            <ui:Toggle label="Toggle" name="Toggle_EditMode" tooltip="編集モード" usage-hints="-1" value="true" />
+        </ui:VisualElement>
     </ui:ScrollView>
 </ui:UXML>

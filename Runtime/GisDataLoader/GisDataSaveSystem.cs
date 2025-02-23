@@ -54,7 +54,11 @@ namespace Landscape2.Runtime.GisDataLoader
             var deleteIds = new List<string>();
             foreach (var gisPointInfo in gisPointInfos.Points)
             {
-                if (ProjectSaveDataManager.TryCheckData(ProjectSaveDataType.GisData, projectID, gisPointInfo.ID.ToString()))
+                if (ProjectSaveDataManager.TryCheckData(
+                        ProjectSaveDataType.GisData,
+                        projectID,
+                        gisPointInfo.ID.ToString(),
+                        false))
                 {
                     deleteIds.Add(gisPointInfo.AttributeID);
                 }

@@ -10,6 +10,7 @@ namespace Landscape2.Runtime
     {
         private ProjectRegistModalUI projectRegistModalUI;
         private ProjectSettingListUI projectSettingListUI;
+        private ProjectSettingEditModeUI projectSettingEditModeUI;
         private Label currentProjectName;
         private Button selectProjectButton;
         private Button addProjectButton;
@@ -19,6 +20,7 @@ namespace Landscape2.Runtime
         {
             projectRegistModalUI = new (element);
             projectSettingListUI = new (element);
+            projectSettingEditModeUI = new (element);
             currentProjectName = element.Q<Label>("SelectProject_Name");
             selectProjectButton = element.Q<Button>("Btn_SelectProject");
             addProjectButton = element.Q<Button>("Btn_AddProject");
@@ -141,6 +143,14 @@ namespace Landscape2.Runtime
             {
                 Show(!projectSettingListUI.IsShow);
             };
+            
+            // EditMode
+            projectSettingEditModeUI.OnEditModeChanged.AddListener((isEdit) =>
+            {
+                // プロジェクト切り替え通知をして、モードを切り変える
+                saveSystem.SetProject(
+                    ProjectSaveDataManager.ProjectSetting.CurrentProject.projectID);
+            });
         }
         
         private void Add(string projectID)

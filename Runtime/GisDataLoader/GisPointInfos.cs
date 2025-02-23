@@ -117,7 +117,8 @@ namespace Landscape2.Runtime.GisDataLoader
                 if (ProjectSaveDataManager.TryCheckData(
                         ProjectSaveDataType.GisData,
                         ProjectSaveDataManager.ProjectSetting.CurrentProject.projectID,
-                        gisPointInfo.ID.ToString()))
+                        gisPointInfo.ID.ToString(),
+                        false))
                 {
                     deleteAttributeIDs.Add(gisPointInfo.AttributeID);
                     ProjectSaveDataManager.Delete(ProjectSaveDataType.GisData, gisPointInfo.ID.ToString());

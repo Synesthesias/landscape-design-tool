@@ -97,6 +97,9 @@ namespace Landscape2.Runtime.GisDataLoader
             
             // データがある場合はNoData非表示
             ShowNoData(false);
+            
+            // 編集不可設定
+            SetEditable(info.AttributeID, ProjectSaveDataManager.ProjectSetting.IsEditMode);
         }
 
         private void SetEditable(string attributeID, bool isEditable)
@@ -111,9 +114,11 @@ namespace Landscape2.Runtime.GisDataLoader
         {
             // Indexからアイテムを削除
             var item = gisPointList.Find(i => i.name == GetItemName(attributeID));
-            
-            scrollPanel.Remove(item);
-            gisPointList.Remove(item);
+            if (item != null)
+            {
+                scrollPanel.Remove(item);
+                gisPointList.Remove(item);
+            }
             
             // データがない場合はNoData表示
             if (gisPointList.Count == 0)

@@ -31,6 +31,8 @@ namespace Landscape2.Runtime
             
             Model = new ArrangementAssetListItem(prefabID, element, type);
             
+            SetEditable(ProjectSaveDataManager.ProjectSetting.IsEditMode);
+            
             RegisterButtons();
         }
 

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Landscape2.Runtime.Common;
+using Landscape2.Runtime.UiCommon;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -12,7 +14,7 @@ namespace Landscape2.Runtime
     public class EditBuilding : ISubComponent
     {
         // 建物が選択されたときのイベント関数
-        public event Action<GameObject> OnBuildingSelected = targetObject => { };
+        public event Action<GameObject, bool> OnBuildingSelected = (targetObject, canEdit) => { };
 
         private GameObject targetObject;
         private GameObject highlightBox = null;
@@ -79,12 +81,7 @@ namespace Landscape2.Runtime
                         // 建築物をクリックした場合
                         if (hit.collider.gameObject.name.Contains("bldg_"))
                         {
-                            targetObject = hit.collider.gameObject;
-
-                            // 建物選択時のハイライトボックスを生成する
-                            CreateHighlightBox();
-
-                            OnBuildingSelected(targetObject);
+                            SetTargetObject(hit.collider.gameObject);
                         }
                     }
                     else
@@ -121,9 +118,17 @@ namespace Landscape2.Runtime
 
         public void SetTargetObject(GameObject obj)
         {
+            // layerがIgnoreであればプロジェクト外なので、編集不可
+            bool canEdit = !LayerMaskUtil.IsIgnore(obj);
+            if (!canEdit)
+            {
+                SnackBarUI.Show(SnackBarUI.NotEditWarning, 
+                    uiRoot.Q<VisualElement>("CenterContainer"));
+            }
             targetObject = obj;
             CreateHighlightBox();
-            OnBuildingSelected(targetObject);
+            
+            OnBuildingSelected(targetObject, canEdit);
         }
 
         public void Start()

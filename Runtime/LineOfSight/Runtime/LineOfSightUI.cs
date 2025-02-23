@@ -992,7 +992,7 @@ namespace Landscape2.Runtime
                 {
                     if (!viewPoint.CanEdit(buttonName))
                     {
-                        snackbar.ShowMessage(SnackBar.NotEditWarning);
+                        snackbar.ShowMessage(SnackBarUI.NotEditWarning);
                         return;
                     }
                     
@@ -1041,7 +1041,7 @@ namespace Landscape2.Runtime
                 {
                     if (!landmark.CanEdit(buttonName))
                     {
-                        snackbar.ShowMessage(SnackBar.NotEditWarning);
+                        snackbar.ShowMessage(SnackBarUI.NotEditWarning);
                         return;
                     }
                     lineOfSight.SetMode(LineOfSightType.landmark);
@@ -1099,7 +1099,7 @@ namespace Landscape2.Runtime
             {
                 if (!analyzeViewPoint.CanEdit(buttonName))
                 {
-                    snackbar.ShowMessage(SnackBar.NotEditWarning);
+                    snackbar.ShowMessage(SnackBarUI.NotEditWarning);
                     return;
                 }
                 
@@ -1146,7 +1146,7 @@ namespace Landscape2.Runtime
             {
                 if (!analyzeLandmark.CanEdit(buttonName))
                 {
-                    snackbar.ShowMessage(SnackBar.NotEditWarning);
+                    snackbar.ShowMessage(SnackBarUI.NotEditWarning);
                     return;
                 }
                 

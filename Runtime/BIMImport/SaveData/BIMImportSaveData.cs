@@ -9,6 +9,10 @@ namespace Landscape2.Runtime
     public class BIMImportSaveData
     {
         [SerializeField]
+        private string id;
+        public string ID => id;
+        
+        [SerializeField]
         Vector3 position;
         [SerializeField]
         Vector3 angle;
@@ -30,6 +34,7 @@ namespace Landscape2.Runtime
 
         public BIMImportSaveData(GameObject obj, byte[] data)
         {
+            id = obj.GetInstanceID().ToString();
             position = obj.transform.position;
             angle = obj.transform.eulerAngles;
             scale = obj.transform.localScale;
@@ -37,6 +42,10 @@ namespace Landscape2.Runtime
             name = obj.name;
             glbArray = data;
         }
-
+        
+        public void SetID(string id)
+        {
+            this.id = id;
+        }
     }
 }

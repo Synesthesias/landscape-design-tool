@@ -21,6 +21,10 @@ namespace Landscape2.Runtime
         
         private List<ProjectData> projectList = new();
         public List<ProjectData> ProjectList => projectList;
+
+        // 編集モード / 閲覧モード
+        private bool isEditMode = true;
+        public bool IsEditMode => isEditMode;
         
         public ProjectSetting()
         {
@@ -78,6 +82,11 @@ namespace Landscape2.Runtime
             
             var project = projectList.First(x => x.projectID == projectID);
             project.projectName = newName;
+        }
+
+        public void SetEditMode(bool isEdit)
+        {
+            isEditMode = isEdit;
         }
     }
 }

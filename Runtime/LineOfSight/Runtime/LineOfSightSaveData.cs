@@ -37,9 +37,13 @@ namespace Landscape2.Runtime
             return this.Name == name;
         }
 
-        public bool IsProject(string projectID)
+        public bool IsProject(string projectID, bool isCheckEditMode = true)
         {
-            return ProjectSaveDataManager.TryCheckData(ProjectSaveDataType.LineOfSight, projectID, ID);
+            return ProjectSaveDataManager.TryCheckData(
+                ProjectSaveDataType.LineOfSight,
+                projectID,
+                ID,
+                isCheckEditMode);
         }
 
         public void Rename(List<string> names, int index = 0)

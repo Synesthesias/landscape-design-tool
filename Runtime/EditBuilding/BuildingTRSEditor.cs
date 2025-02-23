@@ -15,18 +15,7 @@ namespace Landscape2.Runtime
 
         BuildingTRSEditorUI trsUI;
         BuildingDeleteListUI deleteListUI;
-
         GameObject target;
-
-        List<Renderer> disableList = new();
-
-        GameObjectFocus assetFocus;
-
-        GameObject targetViewObject;
-
-
-
-
 
         public BuildingTRSEditor(EditBuilding editBuilding, VisualElement element, LandscapeCamera landscapeCamera)
         {
@@ -34,40 +23,37 @@ namespace Landscape2.Runtime
             trsUI = new(editBuilding, element);
             deleteListUI = new(element, this);
 
-            assetFocus = new(landscapeCamera);
+            var assetFocus = new GameObjectFocus(landscapeCamera);
             assetFocus.focusFinishCallback += _ => assetFocus.FocusFinish();
 
-            targetViewObject = new();
-            targetViewObject.name = "TargetViewObject";
-
+            GameObject targetViewObject = new()
+            {
+                name = "TargetViewObject"
+            };
             editBuilding.OnBuildingSelected += OnSelectBuilding;
 
             deleteListUI.OnClickShowButton += (go) =>
             {
-                Debug.Log($"go => {go.name} : {go.transform.position} : {go.transform.localPosition}", go);
+                // Debug.Log($"go => {go.name} : {go.transform.position} : {go.transform.localPosition}", go);
                 editBuilding.SetTargetObject(go);
-                var bounds = CalculateBounds(go);
+                var bounds = RendererUtil.CalculateBounds(go);
                 targetViewObject.transform.position = bounds.center;
                 assetFocus.Focus(targetViewObject.transform, focusDistanceMultiplyer);
 
-                var r = disableList.Where(r => r.gameObject == go).FirstOrDefault();
-                if (!r)
+                var gml = CityObjectUtil.GetGmlID(go);
+                if (BuildingsDataComponent.GetDeleteBuildingsCount(gml) == 1)
                 {
-                    return;
+                    // １つだけならば表示
+                    var editComponent = BuildingTRSEditingComponent.TryGetOrCreate(go);
+                    editComponent.ShowBuilding(true);
                 }
-                var editComponent = BuildingTRSEditingComponent.TryGetOrCreate(r.gameObject);
-                editComponent.ShowBuilding(true);
-
-                disableList.Remove(r);
-                
-                var gml = CityObjectUtil.GetGmlID(r.gameObject);
                 BuildingsDataComponent.SetBuildingDelete(gml, false);
             };
 
             deleteListUI.OnClickListElement += (go) =>
             {
                 editBuilding.SetTargetObject(go);
-                var bounds = CalculateBounds(go);
+                var bounds = RendererUtil.CalculateBounds(go);
                 targetViewObject.transform.position = bounds.center;
                 assetFocus.Focus(targetViewObject.transform, focusDistanceMultiplyer);
             };
@@ -88,14 +74,15 @@ namespace Landscape2.Runtime
                 var editComponent = BuildingTRSEditingComponent.TryGetOrCreate(r.gameObject);
                 editComponent.ShowBuilding(false);
 
-                if (!disableList.Contains(r))
+                var gml = CityObjectUtil.GetGmlID(target);
+                if (BuildingsDataComponent.GetDeleteBuildingsCount(gml) > 0)
                 {
-                    disableList.Add(r);
-                    deleteListUI?.AppendList(r.gameObject, true);
-
-                    var gml = CityObjectUtil.GetGmlID(r.gameObject);
-                    BuildingsDataComponent.SetBuildingDelete(gml, true);
+                    return;
                 }
+
+                deleteListUI?.AppendList(r.gameObject, true);
+
+                BuildingsDataComponent.SetBuildingDelete(gml, true);
             };
             trsUI.OnClickTransButton += () =>
             {
@@ -109,8 +96,9 @@ namespace Landscape2.Runtime
             {
                 ChangeEditMode(target, TransformType.Scale);
             };
-
-
+            
+            BuildingsDataComponent.BuildingDataLoaded += OnLoadBuildings;
+            BuildingsDataComponent.BuildingDataDeleted += OnDeleteBuildings;
         }
 
         void ChangeEditMode(GameObject target, TransformType type)
@@ -120,15 +108,19 @@ namespace Landscape2.Runtime
             // editMode.CreateRuntimeHandle(target, type);
         }
 
-        public void OnSelectBuilding(GameObject select)
+        public void OnSelectBuilding(GameObject select, bool canEdit)
         {
+            if (!canEdit)
+            {
+                return;
+            }
+
             if (select != target)
             {
                 if (select != null)
                 {
                     ChangeEditMode(select, TransformType.Scale);
                 }
-
             }
             target = select;
         }
@@ -148,16 +140,11 @@ namespace Landscape2.Runtime
 
         public void Update(float deltaTime)
         {
-
             trsUI?.Update(deltaTime);
-
-            deleteListUI?.ShowListEmpty(disableList.Count < 1);
-            deleteListUI?.Update(deltaTime);
-
-
-            editMode.Update();
+            
+            deleteListUI?.ShowListEmpty(
+                BuildingsDataComponent.GetDeleteBuildings().Count <= 0);
         }
-
 
         public void Start()
         {
@@ -169,28 +156,49 @@ namespace Landscape2.Runtime
         {
         }
 
-
-        /// <summary>
-        /// 手抜きですがCameraMoveByUserInputsから取ってきた
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        private Bounds CalculateBounds(GameObject obj)
+        private void OnLoadBuildings()
         {
-            Renderer[] renderers = obj.GetComponentsInChildren<Renderer>();
-            if (renderers.Length == 0)
+            var count = BuildingsDataComponent.GetPropertyCount();
+            
+            // 全てセットし直す
+            for (int i = 0; i < count; i++)
             {
-                Debug.LogError("指定されたオブジェクトにRendererが存在しません。");
-                return new Bounds(obj.transform.position, Vector3.zero);
+                var buildingProperty = BuildingsDataComponent.GetProperty(i);
+                ShowBuilding(!buildingProperty.IsDeleted, buildingProperty);
             }
-
-            Bounds bounds = renderers[0].bounds;
-            foreach (Renderer renderer in renderers)
-            {
-                bounds.Encapsulate(renderer.bounds);
-            }
-            return bounds;
         }
 
+        private void OnDeleteBuildings(List<BuildingProperty> deleteBuildings)
+        {
+            foreach (var deleteBuilding in deleteBuildings)
+            {
+                if (BuildingsDataComponent.GetDeletePropertyCount(deleteBuilding.GmlID) > 1)
+                {
+                    // 他にも同じGmlIDの建物がある場合はスキップ
+                    continue;
+                }
+
+                ShowBuilding(true, deleteBuilding);
+                
+                var cityObjectGroup = CityModelHandler.GetCityObjectGroup(deleteBuilding.GmlID);
+                if (cityObjectGroup == null)
+                {
+                    continue;
+                }
+                // レイヤーを戻しておく
+                LayerMaskUtil.SetIgnore(cityObjectGroup.gameObject, false);
+            }
+        }
+        
+        private void ShowBuilding(bool isVisible, BuildingProperty property)
+        {
+            var building = CityModelHandler.GetCityObjectGroup(property.GmlID);
+            if (!building)
+            {
+                return;
+            }
+            var editComponent = BuildingTRSEditingComponent.TryGetOrCreate(building.gameObject);
+            editComponent.ShowBuilding(isVisible);
+        }
     }
 }

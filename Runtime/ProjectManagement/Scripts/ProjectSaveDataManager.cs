@@ -139,8 +139,14 @@ namespace Landscape2.Runtime
         /// <summary>
         /// IDが存在するか確認
         /// </summary>
-        public static bool TryCheckData(ProjectSaveDataType dataType, string projectID, string id)
+        public static bool TryCheckData(ProjectSaveDataType dataType, string projectID, string id, bool isCheckEditMode = true)
         {
+            if (isCheckEditMode && !ProjectSetting.IsEditMode)
+            {
+                // 閲覧モードであればチェックを通さない
+                return false;
+            }
+
             return dataType switch
             {
                 ProjectSaveDataType.Asset => SaveDataAsset.TryCheckData(projectID, id),
