@@ -55,6 +55,12 @@ namespace Landscape2.Runtime
 
             Debug.Log($"アセットを追加しました。{target.name}");
 
+            // LODGroupが付いているAssetは全てdisableにする
+            if (target.TryGetComponent<LODGroup>(out var lodGroup))
+            {
+                lodGroup.enabled = false;
+            }
+
             var type = ArrangementAssetTypeExtensions.GetArrangementAssetType(target);
             var typeCount = itemUIs.Count(item => item.Model.Type == type);
             typeCount++;
@@ -97,7 +103,7 @@ namespace Landscape2.Runtime
             RemoveFromScene(prefabID);
 
             TryShowNoAssets();
-            
+
             // プロジェクトへ通知
             ProjectSaveDataManager.Delete(ProjectSaveDataType.Asset, prefabID.ToString());
         }
@@ -151,7 +157,7 @@ namespace Landscape2.Runtime
             var isNoAssets = itemUIs.Count == 0 || itemUIs.All(item => !item.IsShow);
             noAssets.style.display = isNoAssets ? DisplayStyle.Flex : DisplayStyle.None;
         }
-        
+
         public void Show(bool isShow, int prefabID)
         {
             if (itemUIs.Count == 0)
@@ -164,7 +170,7 @@ namespace Landscape2.Runtime
 
             TryShowNoAssets();
         }
-        
+
         public void SetEditable(bool isEditable, int prefabID)
         {
             if (itemUIs.Count == 0)
@@ -175,7 +181,7 @@ namespace Landscape2.Runtime
             var ui = GetItemUI(prefabID);
             ui?.SetEditable(isEditable);
         }
-        
+
         private ArrangementAssetListItemUI GetItemUI(int prefabID)
         {
             var ui = itemUIs.Find(item => item.Model.PrefabID == prefabID);

@@ -25,7 +25,7 @@ namespace Landscape2.Runtime
 
         private Vector3? assetSize = null;
         private float buriedHeight = 0.0f; // 地面に埋まっている高さ
-        
+
         public void OnEnable(VisualElement element)
         {
             arrangeAssetsUI = element.Q<VisualElement>("CreatePanel");
@@ -49,7 +49,7 @@ namespace Landscape2.Runtime
                 }
             }
         }
-        
+
         public void generateAssets(GameObject obj)
         {
             cam = Camera.main;
@@ -65,7 +65,7 @@ namespace Landscape2.Runtime
             {
                 GameObject parent = GameObject.Find("CreatedAssets");
                 generatedAsset = GameObject.Instantiate(obj, hit.point, Quaternion.identity, parent.transform) as GameObject;
-                
+
                 SetBuriedHeight(hit.point, generatedAsset);
             }
             else
@@ -74,16 +74,22 @@ namespace Landscape2.Runtime
                 generatedAsset = GameObject.Instantiate(obj, Vector3.zero, Quaternion.identity, parent.transform) as GameObject;
             }
 
+            var lod = generatedAsset.GetComponent<LODGroup>();
+            if (lod != null)
+            {
+                lod.enabled = false;
+            }
+
             assetSize = GetGameObjectSize(generatedAsset);
 
             generatedAsset.name = obj.name;
             int generateLayer = LayerMask.NameToLayer("Ignore Raycast");
             SetLayerRecursively(generatedAsset, generateLayer);
-            
+
             // アセット生成時に必要コンポーネント付与
             AssetPlacedDirectionComponent.TryAdd(generatedAsset);
         }
-        
+
         /// <summary>
         /// 配置時の埋まっている部分の高さを設定
         /// </summary>
@@ -192,11 +198,11 @@ namespace Landscape2.Runtime
                     // 配置完了
                     component.SetPlaced();
                 }
-                
+
                 // プロジェクトに通知
                 ProjectSaveDataManager.Add(ProjectSaveDataType.Asset, generatedAsset.gameObject.GetInstanceID().ToString());
-                
-                SetLayerRecursively(generatedAsset,0);
+
+                SetLayerRecursively(generatedAsset, 0);
 
                 SetLayerRecursively(generatedAsset, 0);
                 generateAssets(selectedAsset);
