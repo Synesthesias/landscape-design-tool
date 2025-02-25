@@ -348,7 +348,7 @@ namespace Landscape2.Runtime
             new List<string> { "C1CBD5", "B3CDE5", "A2CFF5" },
             new List<string> { "A6B1BB", "99B2C9", "8BB4D8", "78B5E7", "5EB7F8" },
             new List<string> { "8B96A1", "8098AE", "7099BD", "5F9ACC", "459BDA" },
-            new List<string> { "717C88", "8098AE", "7099BD", "5F9ACC", "1C81BF" },
+            new List<string> { "717C88", "657E95", "557FA3", "4180B1", "1C81BF" },
             new List<string> { "57626F", "4A647C", "3A6489", "1C6597" },
             new List<string> { "3D4A57", "2F4B65", "184B72" },
             new List<string> { "28323F", "19334B" },

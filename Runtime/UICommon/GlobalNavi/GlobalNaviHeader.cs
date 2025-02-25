@@ -21,8 +21,6 @@ namespace Landscape2.Runtime
         private readonly Button settingButton;
         // 設定パネル
         private readonly VisualElement settingElement;
-        //機能変更トグルボタン
-        private readonly VisualElement functionContainer;
         // メニューボタングループ名前
         private const string UImenuGroup = "Menu";
         // サブメニューパネル名前
@@ -40,14 +38,19 @@ namespace Landscape2.Runtime
         // 最後に開いたサブメニューuxml
         private VisualElement lastSubMenuUxml;
 
-        public GlobalNaviHeader(VisualElement uiRoot, VisualElement[] subMenuUxmls)
+        private GlobalNaviFunctionsUI globalNaviFunctionsUI;
+        private ProjectSettingUI projectChangerUI;
+        
+        public GlobalNaviHeader(VisualElement uiRoot, VisualElement[] subMenuUxmls, SaveSystem saveSystem)
         {
             this.subMenuUxmls = subMenuUxmls;
             menuGroup = uiRoot.Q<GroupBox>(UImenuGroup);
             subMenuElement = uiRoot.Q<VisualElement>(UISubMenuElement);
             settingButton = uiRoot.Q<Button>(UISettingButton);
             settingElement = uiRoot.Q<VisualElement>(UISettingElement);
-            functionContainer = uiRoot.Q<VisualElement>(UIFunctionContainer);
+            globalNaviFunctionsUI = new GlobalNaviFunctionsUI(uiRoot);
+            projectChangerUI = new ProjectSettingUI(uiRoot, saveSystem);
+
             this.subMenuUxmls = subMenuUxmls;
 
             // サブメニューを非表示
@@ -96,7 +99,7 @@ namespace Landscape2.Runtime
                         if (button.value)
                         {
                             // tabIndexに該当するuxmlを表示
-                            if (functionContainer.Q<Toggle>("Toggle_WalkMode").value && button.tabIndex == (int)SubMenuUxmlType.CameraList)
+                            if (globalNaviFunctionsUI.IsOnWalkMode && button.tabIndex == (int)SubMenuUxmlType.CameraList)
                             {
                                 SetSubMenuUxml((int)SubMenuUxmlType.WalkMode);
                                 subMenuUxmls[(int)SubMenuUxmlType.WalkMode].style.display = DisplayStyle.Flex;
@@ -107,7 +110,7 @@ namespace Landscape2.Runtime
                                 subMenuUxmls[(int)SubMenuUxmlType.WalkMode].Q<TemplateContainer>("Panel_WalkController").style.display = DisplayStyle.Flex;
                                 lastSubMenuUxml = subMenuUxmls[(int)SubMenuUxmlType.WalkMode];
                             }
-                            else if (functionContainer.Q<Toggle>("Toggle_WalkMode").value && button.tabIndex == (int)SubMenuUxmlType.CameraEdit)
+                            else if (globalNaviFunctionsUI.IsOnWalkMode && button.tabIndex == (int)SubMenuUxmlType.CameraEdit)
                             {
                                 SetSubMenuUxml((int)SubMenuUxmlType.WalkMode);
                                 subMenuUxmls[(int)SubMenuUxmlType.WalkMode].style.display = DisplayStyle.Flex;
@@ -127,12 +130,6 @@ namespace Landscape2.Runtime
                 });
             });
 
-            // ScreenCaptureボタンを押下された時
-            functionContainer.Q<Button>("Button_Capture").clicked += () =>
-            {
-                ScreenCapture.Instance.OnClickCaptureButton();
-            };
-
             // 設定ボタンがクリックされたとき
             settingButton.clicked += () =>
             {
@@ -148,19 +145,21 @@ namespace Landscape2.Runtime
             };
 
             //歩行者モードトグルボタンが押されたら変更する
-            functionContainer.Q<Toggle>("Toggle_WalkMode").RegisterValueChangedCallback(OnToggleWalkModeValueChanged);
+            globalNaviFunctionsUI.OnToggleWalkMode.AddListener(OnToggleWalkModeValueChanged);
 
             //保存、ロードした時にセッティングパネルを閉じる処理(新見)
-            var saveButton = settingElement.Q<Button>("SaveButton");
+            var saveButton = settingElement.Q<Button>("ProjectSaveButton");
             saveButton.clicked += () =>
             {
                 settingElement.style.display = DisplayStyle.None;
             };
-            var loadButton = settingElement.Q<Button>("LoadButton");
+            var loadButton = settingElement.Q<Button>("ProjectLoadButton");
             loadButton.clicked += () =>
             {
                 settingElement.style.display = DisplayStyle.None;
             };
+
+            SetRightNaviView(uiRoot);
         }
 
         // サブメニューを選択するパネルを表示する
@@ -214,9 +213,9 @@ namespace Landscape2.Runtime
             lastSubMenuUxml = subMenuUxmls[id];
         }
 
-        private void OnToggleWalkModeValueChanged(ChangeEvent<bool> evt)
+        private void OnToggleWalkModeValueChanged(bool value)
         {
-            if (evt.newValue)
+            if (value)
             {
                 ShowSubMenuPanel(2);
                 SetSubMenuUxml((int)SubMenuUxmlType.WalkMode);
@@ -234,6 +233,28 @@ namespace Landscape2.Runtime
                 menuGroup.Q<RadioButton>("MenuMain").value = true;
                 ShowSubMenuPanel(-1);
             }
+        }
+
+        private void SetRightNaviView(VisualElement uiRoot)
+        {
+            // グローバルナビ設定まわりの表示が被らないように制御
+            var functionButton = uiRoot.Q<Button>("Btn_Humberger");
+            var selectProjectButton = uiRoot.Q<Button>("Btn_SelectProject");
+            functionButton.clicked += () =>
+            {
+                projectChangerUI.Show(false);
+                settingElement.style.display = DisplayStyle.None;
+            };
+            settingButton.clicked += () =>
+            {
+                globalNaviFunctionsUI.ShowFunctions(false);
+                projectChangerUI.Show(false);
+            };
+            selectProjectButton.clicked += () =>
+            {
+                globalNaviFunctionsUI.ShowFunctions(false);
+                settingElement.style.display = DisplayStyle.None;
+            };
         }
 
         public void Update(float deltaTime)

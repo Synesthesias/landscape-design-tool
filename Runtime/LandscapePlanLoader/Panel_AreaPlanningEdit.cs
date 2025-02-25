@@ -229,7 +229,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// 編集用UXMLのパラメータ情報を更新
         /// </summary>
         /// <param name = "newIndex" > 新規に表示する地区データのリスト番号 </ param >
-        void RefreshEditor(int newIndex)
+        /// <param name="isEditable"></param>
+        void RefreshEditor(int newIndex, bool isEditable)
         {
             // 編集中の内容を破棄
             areaEditManager.ResetProperty();

@@ -15,22 +15,20 @@ namespace Landscape2.Runtime.GisDataLoader
     {
         public List<GisPointInfo> Points { get; private set; } = new();
         
-        public UnityEvent<int> OnCreate = new();
-        public UnityEvent<int, bool> OnUpdateDisplay = new();
-        public UnityEvent<int> OnDelete = new();
-        public UnityEvent OnDeleteAll = new();
+        public UnityEvent<string> OnCreate = new();
+        public UnityEvent<string, bool> OnUpdateDisplay = new();
+        public UnityEvent<string> OnDelete = new();
+        public UnityEvent<List<string>> OnDeleteAll = new();
+        public UnityEvent<string, bool> OnUpdateEditable = new();
         
         private const string ErrorTitle = "GISデータ登録";
         private int pointIndex = 0;
         
         public void Regist(string name, List<GisData> gisDataList, int selectAttributeIndex, Color color)
         {
-            if (Points.Any(p => p.AttributeIndex == selectAttributeIndex))
-            {
-                ModalUI.ShowModal("GISデータ登録", $"選択された属性はすでに登録されています。", false, true);
-                return;
-            }
-
+            // 属性ごとのユニークなIDを生成
+            var attributeID = System.Guid.NewGuid().ToString();
+            
             foreach (var gisData in gisDataList)
             {
                 var facilityName = gisData.Attributes[selectAttributeIndex].Value;
@@ -43,10 +41,13 @@ namespace Landscape2.Runtime.GisDataLoader
                     continue;
                 }
 
+                // プロジェクトに通知
+                ProjectSaveDataManager.Add(ProjectSaveDataType.GisData, pointIndex.ToString());
+                
                 // ポイント情報を登録
                 Points.Add(new GisPointInfo(
                     pointIndex,
-                    selectAttributeIndex,
+                    attributeID,
                     facilityName,
                     name,
                     facilityPosition,
@@ -56,7 +57,7 @@ namespace Landscape2.Runtime.GisDataLoader
                 pointIndex++;
             }
 
-            OnCreate.Invoke(selectAttributeIndex);
+            OnCreate.Invoke(attributeID);
             
             // 完了
             ModalUI.ShowModal("データ読み込み完了", "GISデータを登録しました", true, false, () =>
@@ -69,49 +70,94 @@ namespace Landscape2.Runtime.GisDataLoader
             return Points.FirstOrDefault(p => p.ID == ID);
         }
 
-        public GisPointInfo GetByAttribute(int attributeIndex)
+        public GisPointInfo GetByAttributeFirst(string attributeID)
         {
-            return Points.FirstOrDefault(p => p.AttributeIndex == attributeIndex);
+            return Points.FirstOrDefault(p => p.AttributeID == attributeID);
         }
 
-        public List<GisPointInfo> GetAttributeAll(int attributeIndex)
+        public List<GisPointInfo> GetAttributeAll(string attributeID)
         {
-            return Points.FindAll(p => p.AttributeIndex == attributeIndex);
+            return Points.FindAll(p => p.AttributeID == attributeID);
         }
 
-        public void SetShow(int attributeIndex, bool isShow)
+        public void SetShow(string attributeID, bool isVisible, bool isListView = false)
         {
-            var points = Points.FindAll(p => p.AttributeIndex == attributeIndex);
+            var points = Points.FindAll(p => p.AttributeID == attributeID);
             foreach (var point in points)
             {
-                point.SetShow(isShow);
+                point.SetShow(isVisible);
             }
-
-            OnUpdateDisplay.Invoke(attributeIndex, isShow);
+            
+            OnUpdateDisplay.Invoke(attributeID, isVisible);
+        }
+        
+        public void SetEditable(string attributeID, bool isEditable)
+        {
+            OnUpdateEditable.Invoke(attributeID, isEditable);
         }
 
-        public void Delete(int attributeIndex)
+        public void Delete(string attributeID)
         {
-            Points.RemoveAll(p => p.AttributeIndex == attributeIndex);
+            // プロジェクトに通知
+            foreach (var gisPointInfo in Points.FindAll(p => p.AttributeID == attributeID))
+            {
+                ProjectSaveDataManager.Delete(ProjectSaveDataType.GisData, gisPointInfo.ID.ToString());
+            }
             
-            OnDelete.Invoke(attributeIndex);
+            Points.RemoveAll(p => p.AttributeID == attributeID);
+            
+            OnDelete.Invoke(attributeID);
         }
         
         public void DeleteAll()
         {
-            Points.Clear();
+            var deleteAttributeIDs = new List<string>();
+            foreach (var gisPointInfo in Points)
+            {
+                if (ProjectSaveDataManager.TryCheckData(
+                        ProjectSaveDataType.GisData,
+                        ProjectSaveDataManager.ProjectSetting.CurrentProject.projectID,
+                        gisPointInfo.ID.ToString(),
+                        false))
+                {
+                    deleteAttributeIDs.Add(gisPointInfo.AttributeID);
+                    ProjectSaveDataManager.Delete(ProjectSaveDataType.GisData, gisPointInfo.ID.ToString());
+                }
+            }
+
+            // 重複チェック
+            deleteAttributeIDs = deleteAttributeIDs.Distinct().ToList();
             
-            OnDeleteAll.Invoke();
+            // 削除
+            Points.RemoveAll(point => deleteAttributeIDs.Contains(point.AttributeID));
+            OnDeleteAll.Invoke(deleteAttributeIDs);
         }
         
-        public void SetPoints(List<GisPointInfo> points)
+        public void AddPoints(List<GisPointInfo> points, string projectID)
         {
-            Points = points;
-            
-            // 属性インデックスでフィルターして更新
-            foreach (var attributeIndex in Points.Select(p => p.AttributeIndex).Distinct())
+            foreach (var gisPointInfo in points)
             {
-                OnCreate.Invoke(attributeIndex);
+                // プロジェクトに通知
+                ProjectSaveDataManager.Add(ProjectSaveDataType.GisData, pointIndex.ToString(), projectID, false);
+                
+                // ポイント情報を登録
+                Points.Add(new GisPointInfo(
+                    pointIndex,
+                    gisPointInfo.AttributeID,
+                    gisPointInfo.FacilityName,
+                    gisPointInfo.DisplayName,
+                    gisPointInfo.FacilityPosition,
+                    gisPointInfo.Color,
+                    true
+                ));
+                pointIndex++; 
+                
+            }
+            
+            var addAttributeIDs = points.Select(point => point.AttributeID).Distinct();
+            foreach (var addAttributeID in addAttributeIDs)
+            {
+                OnCreate.Invoke(addAttributeID);
             }
         }
         

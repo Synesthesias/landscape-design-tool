@@ -1,3 +1,4 @@
+using Landscape2.Runtime.Common;
 using Landscape2.Runtime.UiCommon;
 using System.Collections;
 using System.Collections.Generic;
@@ -78,13 +79,18 @@ namespace Landscape2.Runtime
             var succeedButton = uiElement.Q<Button>("");
             succeedButton.style.display = DisplayStyle.None;
 
-            editBuilding.OnBuildingSelected += (go) =>
+            editBuilding.OnBuildingSelected += (go, canEdit) =>
             {
-
+                if (!canEdit)
+                {
+                    Show(false);
+                    return;
+                }
                 CalcUIDisplayPosition(go);
 
                 currentSelect = go;
-                Show(true);
+
+                Show(true);   
             };
 
 

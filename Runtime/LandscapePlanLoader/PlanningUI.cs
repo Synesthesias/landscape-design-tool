@@ -27,7 +27,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         // 選択中のエリアのindex番号
         public int currentFocusedAreaIndex { get; private set; }    // -1: エリア未選択時
 
-        public event Action<int> OnFocusedAreaChanged = delegate { };   // リストからエリアが選択されたときのイベント
+        public event Action<int, bool> OnFocusedAreaChanged = delegate { };   // リストからエリアが選択されたときのイベント
         public event Action OnChangeConfirmed = delegate { };   // エリア編集が確定されたときのイベント
         public event Action<PlanningPanelStatus> OnChangePlanningPanelDisplay = delegate { };   // 景観区画編集画面のパネル表示を切り替えたときのイベント
 
@@ -67,10 +67,16 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             panel_AreaPlanningEdit = planning.Q<VisualElement>("Panel_AreaPlanningEdit");
 
             // 選択中のエリアが変更されたときにUIを切り替え
-            OnFocusedAreaChanged += index =>
+            OnFocusedAreaChanged += (index, isEditable) =>
             {
-                if (index == -1) ChangePlanningPanelDisplay(PlanningPanelStatus.Default);   //エリア未選択時
-                else ChangePlanningPanelDisplay(PlanningPanelStatus.ListForcused);  //エリア選択時
+                if (index == -1 || !isEditable)
+                {
+                    ChangePlanningPanelDisplay(PlanningPanelStatus.Default); //エリア未選択時
+                }
+                else
+                {
+                    ChangePlanningPanelDisplay(PlanningPanelStatus.ListForcused);  //エリア選択時
+                }
             };
             // エリア編集が確定されたときに、UIをリスト選択時の画面に戻す
             OnChangeConfirmed += () => ChangePlanningPanelDisplay(PlanningUI.PlanningPanelStatus.ListForcused);
@@ -173,10 +179,11 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// エリアが選択されたときの処理を発火するメソッド
         /// </summary>
         /// <param name="index">選択されたエリアのindex番号</param>
-        public void InvokeOnFocusedAreaChanged(int index)
+        /// <param name="isInteractable"></param>
+        public void InvokeOnFocusedAreaChanged(int index, bool isInteractable = true)
         {
             currentFocusedAreaIndex = index;
-            OnFocusedAreaChanged(index);
+            OnFocusedAreaChanged(index, isInteractable);
         }
 
         /// <summary>

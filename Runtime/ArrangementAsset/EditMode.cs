@@ -1,3 +1,4 @@
+using PlateauToolkit.Sandbox.Runtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,19 +22,25 @@ namespace Landscape2.Runtime
         private RuntimeTransformHandle runtimeTransformHandleScript;
         private GameObject editAsset;
 
+        int editAssetLayer;
+
         public RuntimeTransformHandle RuntimeTransformHandleScript => runtimeTransformHandleScript;
 
-        public void CreateRuntimeHandle(GameObject obj, TransformType transformType)
+        public void CreateRuntimeHandle(GameObject obj, TransformType transformType, bool assetHighlight = true)
         {
             ClearHandleObject();
             CreateHandleObject(obj, transformType);
             SetTransformType(transformType);
             editAsset = obj;
-            ChangeEditAssetLayer(editAsset, LayerMask.NameToLayer("UI"));
+            editAssetLayer = editAsset.layer;
+            if (assetHighlight)
+            {
+                ChangeEditAssetLayer(editAsset, LayerMask.NameToLayer("UI"));
+            }
         }
         private void ClearHandleObject()
         {
-            ChangeEditAssetLayer(editAsset, LayerMask.NameToLayer("Default"));
+            ChangeEditAssetLayer(editAsset, editAssetLayer);
             var obj = GameObject.Find("RuntimeTransformHandle");
             if (obj != null)
             {

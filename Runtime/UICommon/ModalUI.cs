@@ -36,8 +36,9 @@ namespace Landscape2.Runtime.UiCommon
                 // イベント登録
                 modalElement.Q<Button>("OKButton").clicked += () =>
                 {
-                    modalElement.style.display = DisplayStyle.None;
                     onCloseModal?.Invoke();
+                    modalElement?.RemoveFromHierarchy();
+                    modalElement = null;
                 };
             }
 
@@ -46,9 +47,6 @@ namespace Landscape2.Runtime.UiCommon
 
             modalElement.Q<Label>("ModalTitle").text = title;
             modalElement.Q<Label>("ModalText").text = context;
-            
-            // 表示
-            modalElement.style.display = DisplayStyle.Flex;
         }
         
         public enum SelectModalType

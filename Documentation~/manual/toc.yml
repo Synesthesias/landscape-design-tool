@@ -30,3 +30,9 @@
               href: ViewpointList.md
             - name: 視点編集
               href: ViewpointEdit.md
+        - name: グローバルナビゲーション
+          items:
+            - name: プロジェクト関連
+              href: project.md
+            - name: ヘルプ機能
+              href: navigation.md

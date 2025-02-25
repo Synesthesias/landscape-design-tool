@@ -29,10 +29,11 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// 指定されたフォルダパスからGISデータを読み込み、メッシュオブジェクトを生成するメソッド
         /// </summary>
         /// <param name="gisTargetFolderPath"> .shp、.dbfファイルを含むフォルダのパス </param>
-        public void LoadShapefile(string gisTargetFolderPath)
+        public List<AreaProperty> LoadShapefile(string gisTargetFolderPath)
         {
             List<GameObject> listOfGISObjects;
             List<List<List<Vector3>>> listOfAreaPointDatas;
+            var loadedAreaProperties = new List<AreaProperty>();
 
             // エンコーディングの判定
             var encoding = DetectEncoding(gisTargetFolderPath);
@@ -47,14 +48,14 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 else
                 {
                     Debug.LogError("Loading GIS data failed.");
-                    return;
+                    return loadedAreaProperties;
                 }
             }
 
             if (listOfGISObjects == null || listOfGISObjects.Count == 0)
             {
                 Debug.LogError("No GIS data was included");
-                return;
+                return loadedAreaProperties;
             }
 
             LandscapePlanMeshModifier landscapePlanMeshModifier = new LandscapePlanMeshModifier();
@@ -71,7 +72,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 if (dbf == null)
                 {
                     Debug.LogError("GisObject have no DbfComponent");
-                    return;
+                    return loadedAreaProperties;
                 }
 
                 MeshFilter gisObjMeshFilter = gisObject.GetComponent<MeshFilter>();
@@ -79,12 +80,12 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 if (gisObjMeshFilter == null)
                 {
                     Debug.LogError($"{gisObject.name} have no MeshFilter Component");
-                    return;
+                    return loadedAreaProperties;
                 }
                 if (gisObjMeshRenderer == null)
                 {
                     Debug.LogError($"{gisObject.name} have no MeshRenderer Component");
-                    return;
+                    return loadedAreaProperties;
                 }
 
                 Mesh mesh = gisObjMeshFilter.sharedMesh;
@@ -154,19 +155,25 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
                 //区画データリストにAreaPropertyを追加登録
                 AreasDataComponent.AddNewProperty(areaProperty);
+                
+                loadedAreaProperties.Add(areaProperty);
             }
             Debug.Log("Mesh modification and wall generation completed");
+
+            return loadedAreaProperties;
         }
 
         /// <summary>
         /// セーブデータからGISデータを読み込み、メッシュオブジェクトを生成するメソッド
         /// </summary>
         /// <param name="saveDatas"> ロードした区画セーブデータ </param>
-        public void LoadFromSaveData(List<PlanAreaSaveData> saveDatas)
+        public List<AreaProperty> LoadFromSaveData(List<PlanAreaSaveData> saveDatas)
         {
             List<GameObject> listOfGISObjects;
             List<List<List<Vector3>>> listOfAreaPointDatas;
 
+            var loadedAreaProperties = new List<AreaProperty>();
+            
             // 景観区画の頂点データを取得
             listOfAreaPointDatas = new List<List<List<Vector3>>>();
             foreach (PlanAreaSaveData saveData in saveDatas)
@@ -183,13 +190,13 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             else
             {
                 Debug.LogError("Loading GIS data failed.");
-                return;
+                return loadedAreaProperties;
             }
 
             if (listOfGISObjects == null || listOfGISObjects.Count == 0)
             {
                 Debug.LogError("No GIS data was saved");
-                return;
+                return loadedAreaProperties;
             }
 
             LandscapePlanMeshModifier landscapePlanMeshModifier = new LandscapePlanMeshModifier();
@@ -207,26 +214,26 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 if (gisObjMeshFilter == null)
                 {
                     Debug.LogError($"{gisObject.name} have no MeshFilter Component");
-                    return;
+                    return loadedAreaProperties;
                 }
                 if (gisObjMeshRenderer == null)
                 {
                     Debug.LogError($"{gisObject.name} have no MeshRenderer Component");
-                    return;
+                    return loadedAreaProperties;
                 }
 
                 Mesh mesh = gisObjMeshFilter.sharedMesh;
                 if (mesh == null)
                 {
                     Debug.LogError($"Mesh in MeshFilter of {gisObject.name} is null");
-                    return;
+                    return loadedAreaProperties;
                 }
 
                 // Meshを変形
                 if (!landscapePlanMeshModifier.TryModifyMeshToTargetHeight(mesh, 0, gisObject.transform.position))
                 {
                     Debug.LogError($"{gisObject.name} is out of range of the loaded map");
-                    return;
+                    return loadedAreaProperties;
                 }
                 
                 // コライダー判定用のMeshColliderを追加
@@ -280,8 +287,12 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 // 区画データリストにAreaPropertyを追加登録
                 AreasDataComponent.AddNewProperty(areaProperty);
                 
+                // ロードしたAreaPropertyをリストに追加
+                loadedAreaProperties.Add(areaProperty);
             }
             Debug.Log("Mesh modification and wall generation completed");
+
+            return loadedAreaProperties;
         }
 
 

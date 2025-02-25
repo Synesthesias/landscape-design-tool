@@ -823,15 +823,15 @@ Scroller #unity-drag-container {
 .CircleButton {
     width: 40px;
     height: 40px;
-    background-color:#2F3636;
+    background-color: rgb(47, 54, 54);
     border-radius: 20px;
-    margin:0;
-    padding:0;
-}
-.CircleButton:hover {
-    background-color:#2F3636;
+    margin: 0;
+    padding: 0;
 }
 
+.CircleButton:hover {
+    background-color: rgb(47, 54, 54);
+}
 
 .OutlineButton {
     height: 40px;
@@ -932,6 +932,56 @@ Scroller #unity-drag-container {
 #DeleteButton:active {
     background-color: rgba(128, 213, 212, 0.3);
 }
+#RenameButton {
+    background-color: rgba(255, 255, 255, 0);
+    border-width: 0;
+    border-radius: 4px;
+    padding: 0;
+    margin: 0;
+    z-index: 10;
+}
+
+#RenameButton:hover {
+    background-color: rgba(50, 75, 75, 0.2);
+}
+
+#RenameButton:active {
+    background-color: rgba(128, 213, 212, 0.3);
+}
+
+#SaveButton {
+    background-color: rgba(255, 255, 255, 0);
+    border-width: 0;
+    border-radius: 4px;
+    padding: 0;
+    margin: 0;
+    z-index: 10;
+}
+
+#SaveButton:hover {
+    background-color: rgba(50, 75, 75, 0.2);
+}
+
+#SaveButton:active {
+    background-color: rgba(128, 213, 212, 0.3);
+}
+
+#EditButton {
+    background-color: rgba(255, 255, 255, 0);
+    border-width: 0;
+    border-radius: 4px;
+    padding: 0;
+    margin: 0;
+    z-index: 10;
+}
+
+#EditButton:hover {
+    background-color: rgba(50, 75, 75, 0.2);
+}
+
+#EditButton:active {
+    background-color: rgba(128, 213, 212, 0.3);
+}
 
 #CloseButton {
     height: 40px;
@@ -960,7 +1010,6 @@ Scroller #unity-drag-container {
 .PanelIconButton:active {
     background-color: rgb(65, 71, 72);
 }
-
 
 #List {
     width: 100%;
@@ -1257,8 +1306,9 @@ Scroller #unity-drag-container {
     font-size: 24px;
     padding-left: 24px;
 }
+
 .Title_Left {
-        width: 490px;
+    width: 490px;
     height: 50px;
     background-image: resource('Info_Title_Left');
     font-size: 24px;
@@ -1266,13 +1316,15 @@ Scroller #unity-drag-container {
     text-align: end;
     -unity-text-align: upper-right;
 }
+
 .Title_Right {
-        width: 490px;
+    width: 490px;
     height: 50px;
     background-image: resource('Info_Title_Right');
     font-size: 24px;
     padding-left: 24px;
 }
+
 #MainContainer {
     width: 100%;
     height: 100%;
@@ -1304,11 +1356,11 @@ Scroller #unity-drag-container {
     border-width: 1px;
     margin: 5px;
 }
+
 #Thumbnail_Asset:focus {
     border-width: 5px;
-    border-color: rgba(0, 106, 106, 1);
+    border-color: rgb(0, 106, 106);
 }
-
 
 #Toggle_AutoRotate {
     background-image: resource('Icon_CameraRotate');
@@ -1325,6 +1377,7 @@ Scroller #unity-drag-container {
 #Toggle_HeightDisplay {
     background-image: resource('Icon_HeightDisplay');
 }
+
 #Toggle_Material {
     background-image: resource('Icon_Material');
 }
@@ -1338,6 +1391,20 @@ Scroller #unity-drag-container {
 }
 
 #Toggle_HideList .unity-toggle__checkmark {
+    display: none;
+}
+
+#Toggle_EditMode {
+    background-image: resource('Icon_EditMode_Off');
+    width: 52px;
+    height: 32px;
+}
+
+#Toggle_EditMode:checked {
+    background-image: resource('Icon_EditMode_On');
+}
+
+#Toggle_EditMode .unity-toggle__checkmark {
     display: none;
 }
 
@@ -1399,7 +1466,6 @@ Scroller #unity-drag-container {
     background-image: resource('Circle_Icon_Walk');
 }
 
-
 #Circle_Icon_View {
     width: 40px;
     height: 40px;
@@ -1417,11 +1483,13 @@ Scroller #unity-drag-container {
     max-width: 24px;
     height: 24px;
 }
+
 #Icon_Back {
     background-image: resource('Icon_Back');
     max-width: 24px;
     height: 24px;
 }
+
 #Icon_Building {
     background-image: resource('Icon_Building');
     max-width: 24px;
@@ -1465,6 +1533,7 @@ Scroller #unity-drag-container {
 #Icon_Import {
     background-image: resource('Icon_Import');
 }
+
 #Icon_Viewpoint {
     background-image: resource('Icon_Viewpoint');
 }
@@ -1571,33 +1640,34 @@ Scroller #unity-drag-container {
     margin: 5px 0;
 }
 
-/* バッジ */
 .badge_Landmark {
     width: 70px;
-    height:16px;
-    background-color:#FFC700;
-    border-width:1px;
-    border-color:white;
+    height: 16px;
+    background-color: rgb(255, 199, 0);
+    border-width: 1px;
+    border-color: white;
     border-radius: 8px;
-    margin-right:4px;
+    margin-right: 4px;
 }
+
 .badge_ViewPoint {
     width: 70px;
-    height:16px;
-    background-color:#BA1A1A;
-    border-width:1px;
-    border-color:white;
+    height: 16px;
+    background-color: rgb(186, 26, 26);
+    border-width: 1px;
+    border-color: white;
     border-radius: 8px;
-    margin-right:4px;
+    margin-right: 4px;
 }
+
 .badge_ViewSetting {
     width: 70px;
-    height:16px;
-    background-color:#006A6A;
-    border-width:1px;
-    border-color:white;
+    height: 16px;
+    background-color: rgb(0, 106, 106);
+    border-width: 1px;
+    border-color: white;
     border-radius: 8px;
-    margin-right:4px;
+    margin-right: 4px;
 }
 
 .unity-base-dropdown .unity-text-element {
@@ -1607,12 +1677,15 @@ Scroller #unity-drag-container {
 #Tiparrow_Up {
     background-image: resource('Tiparrow_Up');
 }
+
 #Tiparrow_Down {
     background-image: resource('Tiparrow_Down');
 }
+
 #Tiparrow_Right {
     background-image: resource('Tiparrow_Right');
 }
+
 #Tiparrow_Left {
     background-image: resource('Tiparrow_Left');
 }
@@ -1620,13 +1693,59 @@ Scroller #unity-drag-container {
 #Rotate_Up {
     background-image: resource('Rotate_Up');
 }
+
 #Rotate_Down {
     background-image: resource('Rotate_Down');
-}#Rotate_Left {
+}
+
+#Rotate_Left {
     background-image: resource('Rotate_Left');
-}#Rotate_Right {
+}
+
+#Rotate_Right {
     background-image: resource('Rotate_Right');
 }
+
 #Icon_View {
     background-image: resource('Icon_View');
+}
+#Icon_Pencil {
+    background-image: resource('Icon_pencil');
+}
+.Btn_AddProject {
+    height: 40px;
+    border-radius: 20px;
+    border-color: rgb(128, 213, 212);
+    background-color: rgb(128, 213, 212);
+    color: rgb(0, 55, 55);
+    width: 100px;
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    visibility: visible;
+}
+
+.ActionButton > Label {
+    color: rgb(0, 55, 55);
+}
+
+.ActionButton:hover {
+    background-color: rgb(107, 186, 193);
+}
+
+.ActionButton:active {
+    background-color: rgb(85, 163, 173);
+}
+
+.ActionButton:disabled {
+    background-color: rgb(221, 228, 227);
+}
+
+#DropdownArrow {
+    background-image: resource('Icon_DropdownArrow');
+}
+
+#Btn_Humberger {
+    background-image: resource('Icon_Menu');
 }

@@ -1,3 +1,4 @@
+using Landscape2.Runtime.Common;
 using PLATEAU.CityInfo;
 using PLATEAU.Native;
 using System.Collections.Generic;
@@ -88,7 +89,8 @@ namespace Landscape2.Runtime
                 {
                     var go = await BIMLoader.Instance.CreateBIM(ifc.GlbArray);
                     go.name = ifc.Name;
-
+                    ifc.SetID(go.GetInstanceID().ToString());
+                    
                     go.transform.position = ifc.Position;
                     go.transform.rotation = Quaternion.Euler(ifc.Angle);
                     go.transform.localScale = ifc.Scale;
@@ -97,9 +99,10 @@ namespace Landscape2.Runtime
 
                     var mc = go.AddComponent<MeshCollider>();
                     mc.sharedMesh = mesh;
-
+                    
+                    saveLoadSystem.AddSaveData(ifc);
                     loadIfcDataDict.TryAdd(
-                        go.name,
+                        go.GetInstanceID().ToString(),
                         new()
                         {
                             obj = go,
@@ -107,10 +110,67 @@ namespace Landscape2.Runtime
                             combinedMesh = mesh
                         }
                     );
-
-
                 }
             };
+            
+            saveLoadSystem.deleteCallback += list =>
+            {
+                
+                foreach (var ifc in list)
+                {
+                    var gameObjectID = ifc.ID;
+                    if (gameObjectID == currentLoadIfcObject?.GetInstanceID().ToString())
+                    {
+                        ResetSelect();
+                    }
+                    
+                    if (loadIfcDataDict.ContainsKey(gameObjectID))
+                    {
+                        var obj = loadIfcDataDict[gameObjectID].obj;
+                        GameObject.DestroyImmediate(obj, true);
+                        loadIfcDataDict.Remove(gameObjectID);
+                    }
+                }
+            };
+            
+            saveLoadSystem.projectChangeCallback += (editList, noEditList) =>
+            {
+                // 選択状態解除
+                ResetSelect();
+                
+                foreach (var bimImportSaveData in editList)
+                {
+                    if (!loadIfcDataDict.TryGetValue(bimImportSaveData.ID, out var value))
+                    {
+                        continue;
+                    }
+                    var ifc = value.obj;
+                    LayerMaskUtil.SetIgnore(ifc, false);
+                }
+                
+                foreach (var bimImportSaveData in noEditList)
+                {
+                    if (!loadIfcDataDict.TryGetValue(bimImportSaveData.ID, out var value))
+                    {
+                        continue;
+                    }
+                    var ifc = value.obj;
+                    
+                    // 押せないようにする
+                    LayerMaskUtil.SetIgnore(ifc, true);
+                }
+            };
+        }
+
+        private void ResetSelect()
+        {
+            ChangeEditMode(LayoutMode.None);
+            layoutUI.ReleaseTarget();
+            layoutUI.Show(false);
+
+            currentLoadIfcObject = null;
+
+            ui.Show(true);
         }
 
         void InitializeLayoutUI(VisualElement uiRoot)
@@ -141,9 +201,10 @@ namespace Landscape2.Runtime
                 layoutUI.ReleaseTarget();
                 layoutUI.Show(false);
 
-                if (loadIfcDataDict.ContainsKey(currentLoadIfcObject.name))
+                var gameObjectID = currentLoadIfcObject.GetInstanceID().ToString();
+                if (loadIfcDataDict.ContainsKey(gameObjectID))
                 {
-                    loadIfcDataDict.Remove(currentLoadIfcObject.name);
+                    loadIfcDataDict.Remove(gameObjectID);
                 }
 
                 GameObject.DestroyImmediate(currentLoadIfcObject, true);
@@ -157,7 +218,8 @@ namespace Landscape2.Runtime
                 saveLoadSystem.AddSaveData(
                     new BIMImportSaveData(
                         currentLoadIfcObject,
-                        loadIfcDataDict[currentLoadIfcObject.name].glbData
+                        loadIfcDataDict[currentLoadIfcObject.GetInstanceID().ToString()]
+                            .glbData
                     )
                 );
 
@@ -187,7 +249,7 @@ namespace Landscape2.Runtime
                 Debug.LogWarning($"ifc:[{filePath}] is null!!!");
                 return;
             }
-
+            
             ifcObj.layer = LayerMask.NameToLayer("Default");
 
             // 配置用情報作成
@@ -207,7 +269,7 @@ namespace Landscape2.Runtime
             // copy先のpathとlatlon,height,yawを保持する
 
             loadIfcDataDict.Add(
-                ifcObj.name,
+                ifcObj.gameObject.GetInstanceID().ToString(),
                 new()
                 {
                     obj = ifcObj,
@@ -391,7 +453,7 @@ namespace Landscape2.Runtime
                         foreach (var hit in result)
                         {
                             var go = hit.collider.gameObject;
-                            if (loadIfcDataDict.ContainsKey(go.name))
+                            if (loadIfcDataDict.ContainsKey(go.GetInstanceID().ToString()))
                             {
                                 if (currentLoadIfcObject != go)
                                 {
@@ -498,7 +560,7 @@ namespace Landscape2.Runtime
             layoutMode = mode;
             if (currentLoadIfcObject != null)
             {
-                editMode?.CreateRuntimeHandle(currentLoadIfcObject, type);
+                editMode?.CreateRuntimeHandle(currentLoadIfcObject, type, false);
             }
         }
 

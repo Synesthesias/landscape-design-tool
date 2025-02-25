@@ -1,6 +1,7 @@
 using UnityEngine;
 using Cinemachine;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Landscape2.Runtime.CameraPositionMemory
 {
@@ -80,6 +81,9 @@ namespace Landscape2.Runtime.CameraPositionMemory
             //slotData.Persist(slotId);
             Debug.Log($"pos:{trans.position} rot:{trans.rotation.eulerAngles}");
             Debug.Log($"SlotData pos:{slotData.position} rot:{slotData.rotation.eulerAngles}");
+            
+            // プロジェクトへ通知
+            ProjectSaveDataManager.Add(ProjectSaveDataType.CameraPosition, slotData.id);
         }
 
         /// <summary>
@@ -118,10 +122,21 @@ namespace Landscape2.Runtime.CameraPositionMemory
         /// 保存したカメラ位置を削除する関数
         /// </summary>
         /// <param name="slotId"></param>
-        public void Delete(int slotId)
+        public void Delete(string slotId)
         {
-            slots.Remove(slots[slotId]);
+            if (slots.All(s => s.id != slotId))
+            {
+                return;
+            }
+
+            var slot = slots.Find(x => x.id == slotId);
+            var slotIndex = slots.FindIndex(x => x.id == slotId);
+            slots.RemoveAt(slotIndex);
+            
             SubtractSlotCout();
+            
+            // プロジェクトへ通知
+            ProjectSaveDataManager.Delete(ProjectSaveDataType.CameraPosition, slot.id);
         }
 
         /// <summary>
@@ -142,6 +157,9 @@ namespace Landscape2.Runtime.CameraPositionMemory
         public void SetSlotData(int slotId, SlotData slotData)
         {
             slots[slotId] = slotData;
+            
+            // プロジェクトへ通知
+            ProjectSaveDataManager.Edit(ProjectSaveDataType.CameraPosition, slotData.id);
         }
 
         /// <summary>
@@ -178,6 +196,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
     /// </summary>
     public struct SlotData
     {
+        public string id;
         public Vector3 position;
         public Quaternion rotation;
         public bool isSaved;
@@ -186,6 +205,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
         public float offSetY;
         public SlotData(Vector3 position, Quaternion rotation, bool isSaved, string name, LandscapeCameraState cameraState, float offSetY)
         {
+            this.id = System.Guid.NewGuid().ToString();
             this.position = position;
             this.rotation = rotation;
             this.isSaved = isSaved;

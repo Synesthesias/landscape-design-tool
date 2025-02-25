@@ -20,49 +20,100 @@ namespace Landscape2.Runtime
     public class SaveSystem : ISubComponent
     {
         private VisualElement projectManagementUI;
-        public event Action SaveEvent = delegate { };
-        public event Action LoadEvent = delegate { };
 
+        public event Action<string> SaveEvent = delegate { };
+        public event Action<string> LoadEvent = delegate { };
+        public event Action<string> DeleteEvent = delegate { };
+        public event Action<string> ProjectChangedEvent = delegate { };
+        
         public SaveSystem(VisualElement globalNavi)
         {
             // UIの設定
-            Button saveButton = globalNavi.Q<Button>("SaveButton");
-            Button loadButton = globalNavi.Q<Button>("LoadButton");
+            Button saveButton = globalNavi.Q<Button>("ProjectSaveButton");
+            Button loadButton = globalNavi.Q<Button>("ProjectLoadButton");
 
-            saveButton.clicked += SaveProject;
+            saveButton.clicked += () => SaveProject();
             loadButton.clicked += LoadProject;
         }
-
-        void SaveProject()
+        
+        public void SaveProject(string projectID = "", string projectName = "")
         {
-            var path = StandaloneFileBrowser.SaveFilePanel("Create File", "", "", "data");
+            var path = "";
+#if UNITY_EDITOR && UNITY_STANDALONE_OSX 
+            // NOTE: macで開発時用にEditorのファイル選択ダイアログを表示
+             path = UnityEditor.EditorUtility.SaveFilePanel("Create File", "", projectName, "data");
+#else
+             path = StandaloneFileBrowser.SaveFilePanel("Create File", "", projectName, "data");
+#endif
+            if (string.IsNullOrEmpty(path))
+            {
+                return;
+            }
+
             DataSerializer._savePath = path;
 
-            SaveEvent();
+            SaveEvent(projectID);
+
             DataSerializer.SaveFile();
 
-            Debug.Log("Project saved.");
+            // 完了ポップアップ
+            ModalUI.ShowModal("プロジェクト保存", "プロジェクトを保存しました。", false, false);
+            
+            Debug.Log($"Project saved. {projectID}.");
         }
-
+        
         void LoadProject()
         {
-            var paths = StandaloneFileBrowser.OpenFilePanel("Open File", "", "data", false);
+            string[] paths;
+#if UNITY_EDITOR && UNITY_STANDALONE_OSX 
+            // NOTE: macで開発時用にEditorのファイル選択ダイアログを表示
+            var openFile = UnityEditor.EditorUtility.OpenFilePanel("Open File", "", "data");
+            paths = new string[] { openFile };
+#else
+            paths = StandaloneFileBrowser.OpenFilePanel("Open File", "", "data", false);
+#endif
             string path = "";
             if (paths.Length > 0)
             {
                 path = paths[0];
             }
+            
+            if (string.IsNullOrEmpty(path))
+            {
+                return;
+            }
+            
             DataSerializer._savePath = path;
 
             DataSerializer.LoadFile();
-            LoadEvent();
+            var projectName = System.IO.Path.GetFileNameWithoutExtension(path);
+            var project = ProjectSaveDataManager.ProjectSetting.Add(projectName);
+            
+            // 先に現在のプロジェクトに設定
+            ProjectSaveDataManager.ProjectSetting.SetCurrentProject(project.projectID);
+            
+            // IDで通知
+            LoadEvent(project.projectID);
 
+            // 完了ポップアップ
+            ModalUI.ShowModal("プロジェクト読み込み", "プロジェクトを読み込みしました。", false, false);
+            
             Debug.Log("Project loaded.");
         }
 
         public void ResetLoadEvent()
         {
             LoadEvent = null;
+        }
+        
+        public void Delete(string projectID)
+        {
+            DeleteEvent(projectID);
+        }
+        
+        public void SetProject(string projectID)
+        {
+            ProjectChangedEvent(projectID);
         }
 
         public void OnEnable()

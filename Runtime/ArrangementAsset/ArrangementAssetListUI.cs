@@ -55,6 +55,12 @@ namespace Landscape2.Runtime
 
             Debug.Log($"アセットを追加しました。{target.name}");
 
+            // LODGroupが付いているAssetは全てdisableにする
+            if (target.TryGetComponent<LODGroup>(out var lodGroup))
+            {
+                lodGroup.enabled = false;
+            }
+
             var type = ArrangementAssetTypeExtensions.GetArrangementAssetType(target);
             var typeCount = itemUIs.Count(item => item.Model.Type == type);
             typeCount++;
@@ -87,11 +93,9 @@ namespace Landscape2.Runtime
             {
                 return;
             }
-
-            var ui = itemUIs.Find(item => item.Model.PrefabID == prefabID);
+            var ui = GetItemUI(prefabID);
             if (ui == null)
             {
-                Debug.LogWarning("該当のアセットが見つかりませんでした");
                 return;
             }
             listContent.Remove(ui.Model.Element);
@@ -99,6 +103,9 @@ namespace Landscape2.Runtime
             RemoveFromScene(prefabID);
 
             TryShowNoAssets();
+
+            // プロジェクトへ通知
+            ProjectSaveDataManager.Delete(ProjectSaveDataType.Asset, prefabID.ToString());
         }
 
         private void RemoveFromScene(int prefabID)
@@ -147,7 +154,43 @@ namespace Landscape2.Runtime
 
         private void TryShowNoAssets()
         {
-            noAssets.style.display = itemUIs.Count == 0 ? DisplayStyle.Flex : DisplayStyle.None;
+            var isNoAssets = itemUIs.Count == 0 || itemUIs.All(item => !item.IsShow);
+            noAssets.style.display = isNoAssets ? DisplayStyle.Flex : DisplayStyle.None;
+        }
+
+        public void Show(bool isShow, int prefabID)
+        {
+            if (itemUIs.Count == 0)
+            {
+                return;
+            }
+
+            var ui = GetItemUI(prefabID);
+            ui?.Show(isShow);
+
+            TryShowNoAssets();
+        }
+
+        public void SetEditable(bool isEditable, int prefabID)
+        {
+            if (itemUIs.Count == 0)
+            {
+                return;
+            }
+
+            var ui = GetItemUI(prefabID);
+            ui?.SetEditable(isEditable);
+        }
+
+        private ArrangementAssetListItemUI GetItemUI(int prefabID)
+        {
+            var ui = itemUIs.Find(item => item.Model.PrefabID == prefabID);
+            if (ui == null)
+            {
+                Debug.LogWarning("該当のアセットが見つかりませんでした");
+                return null;
+            }
+            return ui;
         }
     }
 }

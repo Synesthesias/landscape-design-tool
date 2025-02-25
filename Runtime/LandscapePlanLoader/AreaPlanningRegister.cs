@@ -120,7 +120,12 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 newSaveData
             };
             // 作成した景観区画データ基に景観データをロード
-            landscapePlanLoadManager.LoadFromSaveData(listOfSaveData);
+            var loadedProperties = landscapePlanLoadManager.LoadFromSaveData(listOfSaveData);
+            foreach (var loadedProperty in loadedProperties)
+            {
+                // プロジェクトへ保存
+                ProjectSaveDataManager.Add(ProjectSaveDataType.LandscapePlan, loadedProperty.ID.ToString());
+            }
         }
 
         /// <summary>

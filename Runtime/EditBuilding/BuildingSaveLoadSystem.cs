@@ -1,4 +1,5 @@
-﻿using PLATEAU.CityInfo;
+﻿using Landscape2.Runtime.Common;
+using PLATEAU.CityInfo;
 using System.Collections.Generic;
 using System.Linq;
 using ToolBox.Serialization;
@@ -15,12 +16,14 @@ namespace Landscape2.Runtime.BuildingEditor
         {
             saveSystem.SaveEvent += SaveInfo;
             saveSystem.LoadEvent += LoadInfo;
+            saveSystem.DeleteEvent += DeleteInfo;
+            saveSystem.ProjectChangedEvent += SetProjectInfo;
         }
 
         /// <summary>
         /// 景観計画のデータセーブの処理
         /// </summary>
-        public void SaveInfo()
+        public void SaveInfo(string projectID)
         {
             // セーブデータ用クラスに現在の建物編集データをコピー
             List<BuildingSaveData> buildingSaveDatas = new List<BuildingSaveData>();
@@ -28,10 +31,20 @@ namespace Landscape2.Runtime.BuildingEditor
             for (int i = 0; i < buildingDataCount; i++)
             {
                 BuildingProperty buildingProperty = BuildingsDataComponent.GetProperty(i);
+
+                if (!string.IsNullOrEmpty(projectID))
+                {
+                    if (!ProjectSaveDataManager.TryCheckData(ProjectSaveDataType.EditBuilding, projectID, buildingProperty.ID))
+                    {
+                        continue;
+                    }
+                }
+
                 BuildingSaveData saveData = new BuildingSaveData(
                     buildingProperty.GmlID,
                     buildingProperty.ColorData,
-                    buildingProperty.SmoothnessData
+                    buildingProperty.SmoothnessData,
+                    buildingProperty.IsDeleted
                     );
 
                 buildingSaveDatas.Add(saveData);
@@ -44,22 +57,72 @@ namespace Landscape2.Runtime.BuildingEditor
         /// <summary>
         /// 景観計画のデータロードの処理
         /// </summary>
-        public void LoadInfo()
+        public void LoadInfo(string projectID)
         {
-            BuildingsDataComponent.ClearAllProperties();
-
             // 建物編集のセーブデータをロード
             List<BuildingSaveData> loadedBuildingDatas = DataSerializer.Load<List<BuildingSaveData>>("Buildings");
 
             if (loadedBuildingDatas != null)
             {
-                BuildingsDataComponent.ClearAllProperties();
-                BuildingsDataComponent.AddAllNewProperty(loadedBuildingDatas.Select(data => new BuildingProperty(data.GmlID, data.ColorData, data.SmoothnessData)).ToList());
+                var addBuildingProperty = loadedBuildingDatas
+                    .Select(data => new BuildingProperty(
+                        data.GmlID,
+                        data.ColorData,
+                        data.SmoothnessData,
+                        data.IsDeleted))
+                    .ToList();
+                
+                BuildingsDataComponent.AddAllNewProperty(addBuildingProperty);
+                
+                // プロジェクトに通知
+                foreach (var buildingProperty in addBuildingProperty)
+                {
+                    ProjectSaveDataManager.Add(ProjectSaveDataType.EditBuilding, buildingProperty.ID, projectID, false);
+                }
             }
             else
             {
-                Debug.LogError("No saved project data found.");
+                Debug.LogWarning("No saved project data found.");
             }
+        }
+        
+        private void DeleteInfo(string projectID)
+        {
+            int buildingDataCount = BuildingsDataComponent.GetPropertyCount();
+            var deleteBuildingProperty = new List<BuildingProperty>();
+            for (int i = 0; i < buildingDataCount; i++)
+            {
+                var buildingProperty = BuildingsDataComponent.GetProperty(i);
+                if (ProjectSaveDataManager.TryCheckData(
+                        ProjectSaveDataType.EditBuilding,
+                        projectID,
+                        buildingProperty.ID,
+                        false))
+                {
+                    deleteBuildingProperty.Add(buildingProperty);
+                }
+            }
+            
+            BuildingsDataComponent.DeleteProperty(deleteBuildingProperty);
+        }
+        
+        private void SetProjectInfo(string projectID)
+        {
+            int buildingDataCount = BuildingsDataComponent.GetPropertyCount();
+            for (int i = 0; i < buildingDataCount; i++)
+            {
+                var buildingProperty = BuildingsDataComponent.GetProperty(i);
+                var isVisible = ProjectSaveDataManager.TryCheckData(ProjectSaveDataType.EditBuilding, projectID, buildingProperty.ID);
+                
+                BuildingsDataComponent.SetBuildingEditable(buildingProperty.ID, isVisible);
+
+                var objectGroup = CityModelHandler.GetCityObjectGroup(buildingProperty.GmlID);
+                
+                // レイヤーを設定して、マウスイベント無視する
+                LayerMaskUtil.SetIgnore(objectGroup.gameObject, !isVisible);
+            }
+            // 通知
+            BuildingsDataComponent.LoadProject();
         }
     }
 }

@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Object = UnityEngine.Object;
 
 namespace Landscape2.Runtime
 {
@@ -18,6 +20,7 @@ namespace Landscape2.Runtime
     /// <summary>
     /// 視点場解析に必要なデータの構造体
     /// </summary>
+    [Serializable]
     public struct AnalyzeViewPointElements
     {
         // 0 ~ 180(度数)
@@ -389,7 +392,7 @@ namespace Landscape2.Runtime
         {
             var keyName = CreateAnalyzeDataDictKey(analyzeViewPointData);
             Debug.Log($"keyName : {keyName}");
-            var isAdded = lineOfSightDataComponent.AddAnalyzeViewPoinDatatDict(keyName, analyzeViewPointData);
+            var isAdded = lineOfSightDataComponent.AddAnalyzeViewPoinData(keyName, analyzeViewPointData);
             if (isAdded)
             {
                 return analyzeViewPointData;
@@ -407,7 +410,7 @@ namespace Landscape2.Runtime
         {
             var deleteButtonName = DeleteAnalyzeData();
             var keyName = CreateAnalyzeDataDictKey(analyzeViewPointData);
-            var isAdded = lineOfSightDataComponent.AddAnalyzeViewPoinDatatDict(keyName, analyzeViewPointData);
+            var isAdded = lineOfSightDataComponent.AddAnalyzeViewPoinData(keyName, analyzeViewPointData);
 
             if (isAdded)
             {
@@ -432,7 +435,7 @@ namespace Landscape2.Runtime
                 return "";
             }
             var keyName = CreateAnalyzeDataDictKey(editViewPointData);
-            var isRemoved = lineOfSightDataComponent.RemoveAnalyzeViewPointElement(keyName);
+            var isRemoved = lineOfSightDataComponent.RemoveAnalyzeViewPoinData(keyName);
             editViewPointData = AnalyzeViewPointElements.Empty;
             if (isRemoved)
             {
@@ -443,7 +446,7 @@ namespace Landscape2.Runtime
                 return "";
             }
         }
-
+        
         /// <summary>
         /// 眺望対象解析のスライダーの登録
         /// </summary>
@@ -540,6 +543,18 @@ namespace Landscape2.Runtime
                 return;
             }
             CreateLineOfSight();
+        }
+        
+        /// <summary>
+        /// 編集可能か
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public bool CanEdit(string name)
+        {
+            var data = lineOfSightDataComponent
+                .AnalyzeViewPointDatas.Find(point => point.Name == name);
+            return data.IsProject(ProjectSaveDataManager.ProjectSetting.CurrentProject.projectID);
         }
 
         public override void OnSelect()

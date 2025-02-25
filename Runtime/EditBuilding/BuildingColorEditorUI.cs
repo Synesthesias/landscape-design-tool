@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Landscape2.Runtime.Common;
+using Landscape2.Runtime.UiCommon;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,49 +13,67 @@ namespace Landscape2.Runtime.BuildingEditor
     /// </summary>
     public class BuildingColorEditorUI : ISubComponent
     {
+        VisualElement uiRoot;
         ColorEditorUI colorEditorUI;
         BuildingColorEditor buildingColorEditor;
 
-        private readonly VisualTreeAsset colorEditor;    // 色彩編集パネルのUXMLのテンプレート
+        private readonly VisualTreeAsset colorEditor; // 色彩編集パネルのUXMLのテンプレート
         private VisualElement colorEditorClone; // 色彩編集パネルのUXMLのクローン
 
         // 地物型選択リスト
         private readonly DropdownField buildingField;
+
         // 色彩編集パネル表示ボタン
         private readonly Button colorButton;
+
         // Smoothnessスライダー
         private readonly Slider smoothnessSlider;
+
         // 変更ボタン
         private readonly Button okButton;
+
         // キャンセルボタン
         private readonly Button cancelButton;
+
         // リセットボタン
         private readonly Button resetButton;
 
         // 地物型選択リスト名前
         private const string UIBuildingField = "BuildingField";
+
         // 色彩編集パネル表示ボタン
         private const string UIColorButton = "ColorButton";
+
         // Smoothnessスライダー名前
         private const string UISmoothnessSlider = "SmoothnessSlider";
+
         // 変更ボタン名前
         private const string UIOKButton = "OKButton";
+
         // キャンセルボタン名前
         private const string UICancelButton = "CancelButton";
+
         // リセットボタン名前
         private const string UIResetButton = "ResetButton";
 
         // 地物型選択リストの文字列を管理する配列
-        private string[] uiBuildingFields = { "要素全体", "壁", "屋根/屋上" };
+        private string[] uiBuildingFields =
+        {
+            "要素全体", "壁", "屋根/屋上"
+        };
+
         // 色彩編集パネル表示ボタンの色
         private Color colorButtonColor;
+
         // 色彩編集パネル表示ボタンの初期色
         private Color initialColor;
+
         // Smoothnessスライダーの初期値
         private float initialSmoothness;
 
         public BuildingColorEditorUI(BuildingColorEditor buildingColorEditor, EditBuilding editBuilding, VisualElement uiRoot)
         {
+            this.uiRoot = uiRoot;
             this.buildingColorEditor = buildingColorEditor;
             initialColor = buildingColorEditor.InitialColor;
             initialSmoothness = buildingColorEditor.InitialSmoothness;
@@ -142,7 +162,7 @@ namespace Landscape2.Runtime.BuildingEditor
         }
 
         // 建物選択時のイベント
-        private void SetFieldList(GameObject targetObj)
+        private void SetFieldList(GameObject targetObj, bool canEdit)
         {
             // ドロップダウンリストの要素数を取得
             int count = buildingColorEditor.SetMaterialList(targetObj);
@@ -156,8 +176,17 @@ namespace Landscape2.Runtime.BuildingEditor
 
             // UIの初期値を設定
             ResetBuildingEditorUI();
+
             // UIを反映
             UpdateEditorUI();
+            
+            Show(canEdit);
+        }
+
+        private void Show(bool isVisible)
+        {
+            uiRoot.Q<VisualElement>("Panel_MaterialEditor").style.display = isVisible ?
+                DisplayStyle.Flex : DisplayStyle.None;
         }
 
         // 色を更新

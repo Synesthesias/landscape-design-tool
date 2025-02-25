@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using ToolBox.Serialization;
 
@@ -16,15 +17,24 @@ namespace Landscape2.Runtime
         private SaveSystem saveSystem;
         private Sprite viewPointIconSprite;
         private Sprite landmarkIconSprite;
-
-        public LineOfSightSubscribeSaveSystem(SaveSystem saveSystemInstance, LineOfSightDataComponent lineOfSightDataComponentInstance, LineOfSightUI lineOfSightUIInstance)
+        private Landmark landmark;
+        private ViewPoint viewPoint;
+        
+        public LineOfSightSubscribeSaveSystem(
+            SaveSystem saveSystemInstance,
+            LineOfSightDataComponent lineOfSightDataComponentInstance,
+            LineOfSightUI lineOfSightUIInstance,
+            ViewPoint viewPoint,
+            Landmark landmark)
         {
             lineOfSightDataComponent = lineOfSightDataComponentInstance;
             lineOfSightUI = lineOfSightUIInstance;
             saveSystem = saveSystemInstance;
+            this.viewPoint = viewPoint;
+            this.landmark = landmark;
+            
             LoadPointIcon();
-            SetSaveEvent();
-            SetLoadEvent();
+            SetEvents();
         }
 
         private async void LoadPointIcon()
@@ -35,135 +45,185 @@ namespace Landscape2.Runtime
             landmarkIconSprite = await landmarkIconHandle.Task;
         }
 
-        private void SetSaveEvent()
+        private void SetEvents()
         {
             saveSystem.SaveEvent += SaveDict;
-        }
-
-        private void SetLoadEvent()
-        {
-            saveSystem.LoadEvent += LoadViewPointDict;
-            saveSystem.LoadEvent += LoadAnalyzeDataDict;
+            saveSystem.LoadEvent += LoadViewPoint;
+            saveSystem.LoadEvent += LoadLandmark;
+            saveSystem.LoadEvent += LoadAnalyzeViewPoint;
+            saveSystem.LoadEvent += LoadAnalyzeLandmark;
+            saveSystem.DeleteEvent += OnDelete;
+            saveSystem.ProjectChangedEvent += OnProjectChanged;
         }
 
         /// <summary>
         /// 各データを取得し、保存する
         /// </summary>
-        private void SaveDict()
+        private void SaveDict(string projectID)
         {
-            var viewPointDict = lineOfSightDataComponent.GetPointDict(LineOfSightType.viewPoint);
-            var landmarkDict = lineOfSightDataComponent.GetPointDict(LineOfSightType.landmark);
-            var analyzeViewPointDataDict = lineOfSightDataComponent.GetAnalyzeViewPoinDatatDict();
-            var analyzeLandmarkDataDict = lineOfSightDataComponent.GetAnalyzeLandmarkDataDict();
-            DataSerializer.Save("ViewPointDict", viewPointDict);
-            DataSerializer.Save("LandmarktDict", landmarkDict);
-            DataSerializer.Save("AnalyzeViewPointDataDict", analyzeViewPointDataDict);
-            DataSerializer.Save("AnalyzeLandmarkDataDict", analyzeLandmarkDataDict);
+            var viewPoints = lineOfSightDataComponent.ViewPointDatas
+                .Where(data => data.IsProject(projectID))
+                .ToList();
+            
+            var landmarks = lineOfSightDataComponent.LandmarkDatas
+                .Where(data => data.IsProject(projectID))
+                .ToList();
+            
+            var analyzeViewPoints = lineOfSightDataComponent.AnalyzeViewPointDatas
+                .Where(data => data.IsProject(projectID))
+                .ToList();
+            
+            var analyzeLandmarks = lineOfSightDataComponent.AnalyzeLandmarkDatas
+                .Where(data => data.IsProject(projectID))
+                .ToList();
+            
+            DataSerializer.Save(LineOfSightViewPointData.SaveKeyName, viewPoints);
+            DataSerializer.Save(LineOfSightLandMarkData.SaveKeyName, landmarks);
+            DataSerializer.Save(LineOfSightAnalyzeViewPointData.SaveKeyName, analyzeViewPoints);
+            DataSerializer.Save(LineOfSightAnalyzeLandmarkData.SaveKeyName, analyzeLandmarks);
         }
-
-        /// <summary>
-        /// 視点場、眺望対象をロードする
-        /// </summary>
-        private void LoadViewPointDict()
+        
+        private void LoadViewPoint(string projectID)
         {
-            // 全てのボタンを削除
-            lineOfSightUI.ClearButton(LineOfSightType.viewPoint);
-            lineOfSightUI.ClearButton(LineOfSightType.landmark);
-            // 辞書を初期化
-            lineOfSightDataComponent.ClearDict(LineOfSightType.viewPoint);
-            lineOfSightDataComponent.ClearDict(LineOfSightType.landmark);
-            // 既存のポイントの削除
             var viewPointMarkers = GameObject.Find("ViewPointMarkers");
-            foreach (Transform child in viewPointMarkers.transform)
+            var viewPointDatas = DataSerializer.Load<List<LineOfSightViewPointData>>(LineOfSightViewPointData.SaveKeyName);
+            foreach (var data in viewPointDatas)
             {
-                GameObject.Destroy(child.gameObject);
-            }
-            var landamrkMarkers = GameObject.Find("LandmarkMarkers");
-            foreach (Transform child in landamrkMarkers.transform)
-            {
-                GameObject.Destroy(child.gameObject);
-            }
-
-            // 辞書をロード
-            var viewPointDict = DataSerializer.Load<Dictionary<string, LineOfSightDataComponent.PointData>>("ViewPointDict");
-            foreach (KeyValuePair<string, LineOfSightDataComponent.PointData> point in viewPointDict)
-            {
-                // 辞書に登録
-                lineOfSightDataComponent.AddPointDict(LineOfSightType.viewPoint, point.Key, point.Value);
-                // ボタンの作成
-                lineOfSightUI.CreateViewPointButton(point.Key);
-                // ポイントの生成
-                var loadPoint = new GameObject();
-                var spriteRenderer = loadPoint.AddComponent<SpriteRenderer>();
-                spriteRenderer.sprite = viewPointIconSprite;
-                var boxCollider = loadPoint.AddComponent<BoxCollider>();
-                boxCollider.size = spriteRenderer.sprite.bounds.size;
-                loadPoint.transform.position = point.Value.pointPos;
-                loadPoint.transform.parent = viewPointMarkers.transform;
-
-                var go = new GameObject
+                if (lineOfSightDataComponent.ViewPointDatas.Exists(point => point.Name == data.Name))
                 {
-                    name = "yOffset"
-                };
-                go.transform.parent = loadPoint.transform;
-                go.transform.localPosition = new Vector3(0f, point.Value.yOffset, 0f);
-
-                loadPoint.name = point.Key;
-            }
-            var landmarkDict = DataSerializer.Load<Dictionary<string, LineOfSightDataComponent.PointData>>("LandmarktDict");
-            foreach (KeyValuePair<string, LineOfSightDataComponent.PointData> point in landmarkDict)
-            {
-                // 辞書に登録
-                lineOfSightDataComponent.AddPointDict(LineOfSightType.landmark, point.Key, point.Value);
-                // ボタンの作成
-                lineOfSightUI.CreateLandmarkButton(point.Key);
+                    // 既に存在している場合は命名変更
+                    data.Rename(lineOfSightDataComponent.ViewPointDatas
+                        .Select(point => point.Name)
+                        .ToList());
+                }
+                lineOfSightDataComponent.ViewPointDatas.Add(data);
+                lineOfSightUI.CreateViewPointButton(data.Name);
+                
                 // ポイントの生成
-                var loadPoint = new GameObject();
-                var spriteRenderer = loadPoint.AddComponent<SpriteRenderer>();
-                spriteRenderer.sprite = landmarkIconSprite;
-                var boxCollider = loadPoint.AddComponent<BoxCollider>();
-                boxCollider.size = spriteRenderer.sprite.bounds.size;
-                loadPoint.transform.position = point.Value.pointPos;
-
-                var go = new GameObject
-                {
-                    name = "yOffset"
-                };
-                go.transform.parent = loadPoint.transform;
-                go.transform.localPosition = new Vector3(0f, point.Value.yOffset, 0f);
-
-                loadPoint.transform.parent = landamrkMarkers.transform;
-                loadPoint.name = point.Key;
+                var point = viewPoint.GeneratePointMarker(data.viewPoint.pointPos, data.viewPoint.yOffset);
+                point.transform.parent = viewPointMarkers.transform;
+                point.name = data.Name;
+                
+                // プロジェクトに通知
+                data.Add(projectID, false);
             }
         }
-
-        /// <summary>
-        /// 解析結果をロードする
-        /// </summary>
-        private void LoadAnalyzeDataDict()
+        
+        private void LoadLandmark(string projectID)
         {
-            // 表示されている解析データの初期化
-            lineOfSightUI.ClearButton(LineOfSightType.analyzeViewPoint);
-            // 視点場解析のロード
-            lineOfSightDataComponent.ClearDict(LineOfSightType.analyzeViewPoint);
-            var analyzedViewPointDataDict = DataSerializer.Load<Dictionary<string, AnalyzeViewPointElements>>("AnalyzeViewPointDataDict");
-            foreach (KeyValuePair<string, AnalyzeViewPointElements> point in analyzedViewPointDataDict)
+            var landmarkMarkers = GameObject.Find("LandmarkMarkers");
+            var landmarkDatas = DataSerializer.Load<List<LineOfSightLandMarkData>>(LineOfSightLandMarkData.SaveKeyName);
+            foreach (var data in landmarkDatas)
             {
-                // 辞書に登録
-                lineOfSightDataComponent.AddAnalyzeViewPoinDatatDict(point.Key, point.Value);
-                // ボタンの作製
-                lineOfSightUI.CreateAnalyzeViewPointButton(point.Value);
-            }
+                if (lineOfSightDataComponent.LandmarkDatas.Exists(point => point.Name == data.Name))
+                {
+                    // 既に存在している場合は命名変更
+                    data.Rename(lineOfSightDataComponent.LandmarkDatas
+                        .Select(point => point.Name)
+                        .ToList());
+                }
+                
+                lineOfSightDataComponent.LandmarkDatas.Add(data);
+                lineOfSightUI.CreateLandmarkButton(data.Name);
+                
+                // ポイントの生成
+                var point = landmark.GeneratePointMarker(data.landmark.pointPos, data.landmark.yOffset);
+                point.transform.parent = landmarkMarkers.transform;
+                point.name = data.Name;
 
-            // 眺望対象解析のロード
-            lineOfSightDataComponent.ClearDict(LineOfSightType.analyzeLandmark);
-            var analyzeLandmarkDataDict = DataSerializer.Load<Dictionary<string, AnalyzeLandmarkElements>>("AnalyzeLandmarkDataDict");
-            foreach (KeyValuePair<string, AnalyzeLandmarkElements> point in analyzeLandmarkDataDict)
+                // プロジェクトに通知
+                data.Add(projectID, false);
+            }
+        }
+        
+        private void LoadAnalyzeViewPoint(string projectID)
+        {
+            var analyzeViewPointDatas = DataSerializer.Load<List<LineOfSightAnalyzeViewPointData>>(LineOfSightAnalyzeViewPointData.SaveKeyName);
+            foreach (var data in analyzeViewPointDatas)
             {
-                lineOfSightDataComponent.AnddAnalyzeLandmarkDataDict(point.Key, point.Value);
-                lineOfSightUI.CreateAnalyzeLandmarkButton(point.Value);
+                if (lineOfSightDataComponent.AnalyzeViewPointDatas.Exists(point => point.Name == data.Name))
+                {
+                    // 既に存在している場合は命名変更
+                    data.Rename(lineOfSightDataComponent.AnalyzeViewPointDatas
+                        .Select(point => point.Name)
+                        .ToList());
+                }
+                
+                lineOfSightDataComponent.AnalyzeViewPointDatas.Add(data);
+                lineOfSightUI.CreateAnalyzeViewPointButton(data.analyzeViewPoint);
+                
+                // プロジェクトに通知
+                data.Add(projectID, false);
             }
+        }
+        
+        private void LoadAnalyzeLandmark(string projectID)
+        {
+            var analyzeLandmarkDatas = DataSerializer.Load<List<LineOfSightAnalyzeLandmarkData>>(LineOfSightAnalyzeLandmarkData.SaveKeyName);
+            foreach (var data in analyzeLandmarkDatas)
+            {
+                if (lineOfSightDataComponent.AnalyzeLandmarkDatas.Exists(point => point.Name == data.Name))
+                {
+                    // 既に存在している場合は命名変更
+                    data.Rename(lineOfSightDataComponent.AnalyzeLandmarkDatas
+                        .Select(point => point.Name)
+                        .ToList());
+                }
+                
+                lineOfSightDataComponent.AnalyzeLandmarkDatas.Add(data);
+                lineOfSightUI.CreateAnalyzeLandmarkButton(data.analyzeLandmark);
+                
+                // プロジェクトに通知
+                data.Add(projectID, false);
+            }
+        }
+        
+        private void OnDelete(string projectID)
+        {
+            lineOfSightDataComponent.ViewPointDatas
+                .Where(data => data.IsProject(projectID, false))
+                .ToList()
+                .ForEach(data =>
+                {
+                    lineOfSightUI.DeletePoint(LineOfSightType.viewPoint, data.Name);
+                    lineOfSightDataComponent.ViewPointDatas.Remove(data);
+                });
+            
+            lineOfSightDataComponent.LandmarkDatas
+                .Where(data => data.IsProject(projectID, false))
+                .ToList()
+                .ForEach(data =>
+                {
+                    lineOfSightUI.DeletePoint(LineOfSightType.landmark, data.Name);
+                    lineOfSightDataComponent.LandmarkDatas.Remove(data);
+                });
+            
+            lineOfSightDataComponent.AnalyzeViewPointDatas
+                .Where(data => data.IsProject(projectID, false))
+                .ToList()
+                .ForEach(data =>
+                {
+                    lineOfSightUI.DeleteAnalyzeViewPoint(data.Name);
+                    lineOfSightDataComponent.AnalyzeViewPointDatas.Remove(data);
+                });
+            
+            lineOfSightDataComponent.AnalyzeLandmarkDatas
+                .Where(data => data.IsProject(projectID, false))
+                .ToList()
+                .ForEach(data =>
+                {
+                    lineOfSightUI.DeleteAnalyzeLandmark(data.Name);
+                    lineOfSightDataComponent.AnalyzeLandmarkDatas.Remove(data);
+                });
+        }
 
+        private void OnProjectChanged(string projectID)
+        {
+            // 編集中であれば閉じる
+            lineOfSightUI.TryCloseEditView(LineOfSightType.viewPoint);
+            lineOfSightUI.TryCloseEditView(LineOfSightType.landmark);
+            lineOfSightUI.TryCloseEditView(LineOfSightType.analyzeViewPoint);
+            lineOfSightUI.TryCloseEditView(LineOfSightType.analyzeLandmark);
         }
     }
 }

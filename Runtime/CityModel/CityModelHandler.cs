@@ -67,5 +67,20 @@ namespace Landscape2.Runtime
         {
             material.SetFloat("_Smoothness", smoothnessValue);
         }
+        
+        public static PLATEAUCityObjectGroup GetCityObjectGroup(string gmlID)
+        {
+            foreach (var cityModelObj in CityModelList)
+            {
+                foreach (var cityObject in cityModelObj.GetAllCityObjects())
+                {
+                    if (cityObject.GmlID == gmlID)
+                    {
+                        return cityModelObj;
+                    }
+                }
+            }
+            return null;
+        }
     }
 }

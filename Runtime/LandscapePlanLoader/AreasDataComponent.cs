@@ -35,7 +35,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
             properties.Add(newProperty);
             propertiesSnapshot.Add(newPropertyOrigin);
-
+            
             AreaCountChangedEvent();
         }
 
@@ -123,6 +123,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         {
             if (index < 0 || index >= properties.Count) return false;
 
+            var propertyID = properties[index].ID;
+            
             // 建物高さをリセット
             properties[index].ApplyBuildingHeight(false);
             
@@ -132,6 +134,32 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             propertiesSnapshot.RemoveAt(index);
 
             AreaCountChangedEvent();
+
+            ProjectSaveDataManager.Delete(ProjectSaveDataType.LandscapePlan, propertyID.ToString());
+            
+            return true;
+        }
+        
+        /// <summary>
+        /// 該当のプロパティを削除
+        /// </summary>
+        /// <param name="property"></param>
+        /// <returns></returns>
+        public static bool TryRemoveProperty(AreaProperty property)
+        {
+            if (property == null) return false;
+
+            // 建物高さをリセット
+            property.ApplyBuildingHeight(false);
+            
+            // 削除
+            GameObject.Destroy(property.Transform.gameObject);
+            propertiesSnapshot.RemoveAt(properties.IndexOf(property));
+            properties.Remove(property);
+
+            AreaCountChangedEvent();
+            
+            ProjectSaveDataManager.Delete(ProjectSaveDataType.LandscapePlan, property.ID.ToString());
 
             return true;
         }
@@ -200,6 +228,14 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             property.Transform.gameObject.GetComponent<AreaPlanningCollisionHandler>().SetCollider(mesh);
             return true;
         }
+        
+        /// <summary>
+        /// エリア数変更イベントを発火
+        /// </summary>
+        public static void InvokeAreaCountChanged()
+        {
+            AreaCountChangedEvent.Invoke();
+        }
     }
 
     /// <summary>
@@ -220,8 +256,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         public Vector3 ReferencePosition { get; private set; }
         public List<List<Vector3>> PointData { get ; set; }
         public bool IsApplyBuildingHeight { get; private set; }
-
         private AreaPlanningBuildingHeight areaBuildingHeight;
+        public bool IsEditable { get; private set; } // 操作可能かどうか
         
         public AreaProperty(int id, string name, float limitHeight, float lineOffset, Color areaColor, Material wallMaterial, Material ceilingMaterial, float wallMaxHeight, Vector3 referencePos, Transform areaTransform, List<List<Vector3>> pointData, bool isApplyBuildingHeight)
         {
@@ -237,6 +273,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             Transform = areaTransform;
             PointData = pointData;
             IsApplyBuildingHeight = isApplyBuildingHeight;
+            IsEditable = true;
             
             areaBuildingHeight = new AreaPlanningBuildingHeight(areaTransform);
         }
@@ -245,6 +282,9 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         {
             ReferencePosition += newPosition - Transform.position;
             Transform.localPosition = newPosition;
+            
+            // プロジェクトに通知
+            ProjectSaveDataManager.Edit(ProjectSaveDataType.LandscapePlan, ID.ToString());
         }
         
         public void ApplyBuildingHeight(bool isApply)
@@ -257,6 +297,14 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             {
                 areaBuildingHeight.SetHeight(LimitHeight);
             }
+            
+            // プロジェクトに通知
+            ProjectSaveDataManager.Edit(ProjectSaveDataType.LandscapePlan, ID.ToString());
+        }
+        
+        public void SetIsEditable(bool isEditable)
+        {
+            IsEditable = isEditable;
         }
     }
 

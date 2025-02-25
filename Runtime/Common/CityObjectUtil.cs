@@ -35,5 +35,17 @@ namespace Landscape2.Runtime.Common
             }
             return false;
         }
+        
+        public static string GetGmlID(GameObject targetObj)
+        {
+            if (targetObj.TryGetComponent<PLATEAUCityObjectGroup>(out var cityObjectGroup))
+            {
+                foreach (var cityObject in cityObjectGroup.GetAllCityObjects())
+                {
+                    return cityObject.GmlID;
+                }
+            }
+            return "";
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using iShape.Geometry.Polygon;
+using Landscape2.Runtime.Common;
 using PLATEAU.CityInfo;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,9 +25,6 @@ namespace Landscape2.Runtime.BuildingEditor
         // Renderer.materialによって複製されたマテリアルを管理するリスト
         private List<Material> copiedMaterials = new List<Material>();
 
-        // 色彩編集を行った建物を記録するリスト
-        private List<GameObject> editedBuildingObjects = new List<GameObject>();
-
         // 色彩編集パネル表示ボタンの初期色
         private Color initialColor = new Color32(186, 186, 186, 255);
         public Color InitialColor { get => initialColor; }
@@ -36,12 +34,8 @@ namespace Landscape2.Runtime.BuildingEditor
 
         public BuildingColorEditor()
         {
-            // 建物編集データがロードされた場合のイベントを登録
-            BuildingsDataComponent.BuildingDataLoaded += () =>
-            {
-                ResetAllBuildingEdit();
-                LoadBuildingColor();
-            };
+            BuildingsDataComponent.BuildingDataLoaded += LoadBuildingColor;
+            BuildingsDataComponent.BuildingDataDeleted += DeleteBuildingColor;
         }
         // UIで色を変更したときに呼び出される
         // 建築物のRGB値を変更
@@ -167,27 +161,6 @@ namespace Landscape2.Runtime.BuildingEditor
             return 0f;
         }
 
-        // 建物編集を行った建物の編集内容をリセット
-        private void ResetAllBuildingEdit()
-        {
-            foreach (var building in editedBuildingObjects)
-            {
-                var mats = building.GetComponent<MeshRenderer>().materials;
-                if (mats == null)
-                {
-                    Debug.LogWarning("建築物のマテリアルが見つかりませんでした。");
-                    continue;
-                }
-
-                foreach (var mat in mats)
-                {
-                    mat.color = initialColor;
-                    mat.SetFloat("_Smoothness", initialSmoothness);
-                }
-            }
-            editedBuildingObjects.Clear();
-        }
-
         // 建物の色彩とSmoothnessをロード
         private void LoadBuildingColor()
         {
@@ -206,6 +179,15 @@ namespace Landscape2.Runtime.BuildingEditor
             for (int i = 0; i < dataCount; i++)
             {
                 var property = BuildingsDataComponent.GetProperty(i);
+                if (!ProjectSaveDataManager.TryCheckData(
+                        ProjectSaveDataType.EditBuilding,
+                        ProjectSaveDataManager.ProjectSetting.CurrentProject.projectID,
+                        property.ID
+                    ))
+                {
+                    continue;
+                }
+
                 string gmlID = property.GmlID;
                 List<Color> colors = property.ColorData;
                 List<float> smoothness = property.SmoothnessData;
@@ -245,14 +227,77 @@ namespace Landscape2.Runtime.BuildingEditor
                     mats[j].color = colors[j];
                     mats[j].SetFloat("_Smoothness", smoothness[j]);
                 }
-                editedBuildingObjects.Add(targetBuilding.gameObject);
+            }
+        }
+        
+        private void DeleteBuildingColor(List<BuildingProperty> deleteBuildings)
+        {
+            foreach (var deleteBuilding in deleteBuildings)
+            {
+                var cityObjectGroup = CityModelHandler.GetCityObjectGroup(deleteBuilding.GmlID);
+                if (cityObjectGroup == null)
+                {
+                    continue;
+                }
+
+                bool isEnd = false;
+                foreach (var buildingProperty in BuildingsDataComponent.GetBuildings(deleteBuilding.GmlID))
+                {
+                    if (buildingProperty.ID != deleteBuilding.ID)
+                    {
+                        // 他にも同じGmlIDの建物がある場合はその色で
+                        SetBuildingParameter(cityObjectGroup.gameObject, buildingProperty);
+                        isEnd = true;
+                        break;
+                    }
+                }
+
+                if (isEnd)
+                {
+                    continue;
+                }
+                
+                ResetBuildingParameter(cityObjectGroup.gameObject);
             }
         }
 
+        private void ResetBuildingParameter(GameObject targetBuilding)
+        {
+            var mats = targetBuilding.gameObject.GetComponent<MeshRenderer>().materials;
+            if (mats == null)
+            {
+                Debug.LogWarning("建築物のマテリアルが見つかりませんでした。");
+                return;
+            }
+            foreach (var material in mats)
+            {
+                // 初期値にセット
+                material.color = InitialColor;
+                material.SetFloat("_Smoothness", InitialSmoothness);
+            }
+        }
+        
+        private void SetBuildingParameter(GameObject targetBuilding, BuildingProperty property)
+        {
+            var mats = targetBuilding.gameObject.GetComponent<MeshRenderer>().materials;
+            if (mats == null)
+            {
+                Debug.LogWarning("建築物のマテリアルが見つかりませんでした。");
+                return;
+            }
+
+            int matCount = mats.Length < property.ColorData.Count ? mats.Length : property.ColorData.Count;
+            for (int i = 0; i < matCount; i++)
+            {
+                mats[i].color = property.ColorData[i];
+                mats[i].SetFloat("_Smoothness", property.SmoothnessData[i]);
+            }
+        }
+        
         // 色彩編集内容を記録する
         public void RecordMaterialColor(GameObject buildingObj, List<Material> mats)
         {
-            string gmlID = GetGmlID(buildingObj.GetComponent<PLATEAUCityObjectGroup>());
+            string gmlID = CityObjectUtil.GetGmlID(buildingObj);
             if (gmlID == null)
             {
                 Debug.LogWarning("gmlIDが見つかりませんでした。");
@@ -275,26 +320,15 @@ namespace Landscape2.Runtime.BuildingEditor
             }
             else
             {
-                editedBuildingObjects.Add(targetObject);
                 //新規のBuildingPropertyを生成
                 var buildingProperty = new BuildingProperty(
                     gmlID,
                     colors,
-                    smoothness
+                    smoothness,
+                    false
                     );
                 BuildingsDataComponent.AddNewProperty(buildingProperty);
             }
-        }
-
-        // 建物のGMLIDを返す
-        private string GetGmlID(PLATEAUCityObjectGroup building)
-        {
-            foreach (var cityObject in building.GetAllCityObjects())
-            {
-                return cityObject.GmlID;
-            }
-
-            return null;
         }
 
         public void Start()

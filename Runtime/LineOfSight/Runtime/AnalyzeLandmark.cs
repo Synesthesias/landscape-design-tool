@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Object = UnityEngine.Object;
 
 namespace Landscape2.Runtime
 {
@@ -17,6 +19,7 @@ namespace Landscape2.Runtime
     /// <summary>
     /// 眺望対象解析に必要なデータの構造体
     /// </summary>
+    [Serializable]
     public struct AnalyzeLandmarkElements
     {
         public int rangeRadius;
@@ -407,7 +410,7 @@ namespace Landscape2.Runtime
         public AnalyzeLandmarkElements RegisterAnalyzeData()
         {
             var keyName = CreateAnalyzeDataDictKey(analyzeLandmarkData);
-            var isAdded = lineOfSightDataComponent.AnddAnalyzeLandmarkDataDict(keyName, analyzeLandmarkData);
+            var isAdded = lineOfSightDataComponent.AddAnalyzeLandmarkData(keyName, analyzeLandmarkData);
             if (isAdded)
             {
                 return analyzeLandmarkData;
@@ -425,7 +428,7 @@ namespace Landscape2.Runtime
         {
             var deleteButtonName = DeleteAnalyzeData();
             var keyName = CreateAnalyzeDataDictKey(analyzeLandmarkData);
-            var isAdded = lineOfSightDataComponent.AnddAnalyzeLandmarkDataDict(keyName, analyzeLandmarkData);
+            var isAdded = lineOfSightDataComponent.AddAnalyzeLandmarkData(keyName, analyzeLandmarkData);
             if (isAdded)
             {
                 return (deleteButtonName, analyzeLandmarkData);
@@ -447,7 +450,7 @@ namespace Landscape2.Runtime
                 return "";
             }
             var keyName = CreateAnalyzeDataDictKey(editLandmarkData);
-            var isRemoved = lineOfSightDataComponent.RemoveAnalyzeLandmarkElement(keyName);
+            var isRemoved = lineOfSightDataComponent.RemoveAnalyzeLandmarkData(keyName);
             editLandmarkData = AnalyzeLandmarkElements.Empty;
             if (isRemoved)
             {
@@ -458,7 +461,7 @@ namespace Landscape2.Runtime
                 return "";
             }
         }
-
+        
         /// <summary>
         /// 登録キーの生成
         /// </summary>
@@ -518,6 +521,18 @@ namespace Landscape2.Runtime
                 return;
             }
             CreateLineOfSight();
+        }
+        
+        /// <summary>
+        /// 編集可能か
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public bool CanEdit(string name)
+        {
+            var data = lineOfSightDataComponent
+                .AnalyzeLandmarkDatas.Find(point => point.Name == name);
+            return data.IsProject(ProjectSaveDataManager.ProjectSetting.CurrentProject.projectID);
         }
 
         public override void OnSelect()

@@ -1,8 +1,10 @@
+using Landscape2.Runtime.Common;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine.UIElements;
 // セーブ、ロード用
 
@@ -152,7 +154,7 @@ namespace Landscape2.Runtime
             isMouseOverUI = false;
         }
 
-        GameObject GeneratePointMarker(Vector3 pos, float yOffset)
+        public GameObject GeneratePointMarker(Vector3 pos, float yOffset)
         {
             var go = new GameObject();
             go.name = "ViewPoint_Root";
@@ -176,11 +178,22 @@ namespace Landscape2.Runtime
             setPointMarkerSpriteRenderer.sprite = viewPointIconSprite;
 
             var boxCollider = go.AddComponent<BoxCollider>();
-            boxCollider.size = setPointMarkerSpriteRenderer.sprite.bounds.size;
-
+            if (viewPointIconSprite == null)
+            {
+                Debug.LogWarning("ViewPoint Icon Sprite is null");
+                SpriteUtil.LoadAsset("ViewPointIcon", sprite =>
+                {
+                    setPointMarkerSpriteRenderer.sprite = sprite;
+                    boxCollider.size = sprite.bounds.size;
+                });
+            }
+            else
+            {
+                boxCollider.size = setPointMarkerSpriteRenderer.sprite.bounds.size;
+            }
             return go;
         }
-
+        
         /// <summary>
         /// クリックされた場所にポイントを配置する
         /// </summary>
@@ -258,7 +271,7 @@ namespace Landscape2.Runtime
             var yOffsetObj = createPointMarker.transform.GetChild(0);
 
             // データの追加
-            var isAdded = lineOfSightDataComponent.AddPointDict(
+            var isAdded = lineOfSightDataComponent.AddPointData(
                 LineOfSightType.viewPoint,
                 registerName,
                 new()
@@ -318,7 +331,7 @@ namespace Landscape2.Runtime
             var deleteData = DeletePoint(); // setPointMerkerを削除している
             var deleteButtonName = deleteData.deleteButtonName;
 
-            var isAdded = lineOfSightDataComponent.AddPointDict(
+            var isAdded = lineOfSightDataComponent.AddPointData(
                 LineOfSightType.viewPoint,
                 registerName,
                 new()
@@ -344,25 +357,49 @@ namespace Landscape2.Runtime
         /// </summary>
         public (string deleteButtonName, List<string> removedAnalyzeKeyNameList) DeletePoint()
         {
-            var pointName = setPointMarker.name;
             // ゲームオブジェクトの削除
+            var pointMakerName = setPointMarker?.name;
             if (setPointMarker != null)
             {
                 GameObject.Destroy(setPointMarker);
                 setPointMarker = null;
             }
             // データの削除
-            var removeData = lineOfSightDataComponent.RemovePointElement(LineOfSightType.viewPoint, pointName);
+            var removeData = lineOfSightDataComponent.RemovePointElement(LineOfSightType.viewPoint, pointMakerName);
             var isRemoved = removeData.isRemoved;
             var removedAnalyzeKeyNameList = removeData.removedAnalyzeKeyNameList;
             if (isRemoved)
             {
-                return (pointName, removedAnalyzeKeyNameList);
+                return (pointMakerName, removedAnalyzeKeyNameList);
             }
             else
             {
                 return ("", removedAnalyzeKeyNameList);
             }
+        }
+
+        public (string deleteButtonName, List<string> removedAnalyzeKeyNameList) DeletePoint(string pointName)
+        {
+            TryDeletePoint(pointName);
+            return (pointName, new List<string>() { pointName });
+        }
+
+        /// <summary>
+        /// PointNameに対応するポイントを削除する
+        /// </summary>
+        /// <param name="pointName"></param>
+        private bool TryDeletePoint(string pointName)
+        {
+            foreach (Transform point in viewPointMarkers.transform)
+            {
+                if (point.name == pointName)
+                {
+                    GameObject.Destroy(point.gameObject);
+                    lineOfSightDataComponent.RemovePointElement(LineOfSightType.viewPoint, pointName);
+                    return true;
+                }
+            }
+            return false;
         }
 
         /// <summary>
@@ -401,6 +438,18 @@ namespace Landscape2.Runtime
 
             // TODO: setPointMarkerを削除する必要があるかも知れない
 
+        }
+
+        /// <summary>
+        /// 編集可能か
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public bool CanEdit(string name)
+        {
+            var data = lineOfSightDataComponent
+                .ViewPointDatas.Find(point => point.Name == name);
+            return data.IsProject(ProjectSaveDataManager.ProjectSetting.CurrentProject.projectID);
         }
 
         public override void OnSelect()
