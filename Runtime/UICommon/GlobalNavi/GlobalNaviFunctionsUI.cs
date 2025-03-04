@@ -12,21 +12,26 @@ namespace Landscape2.Runtime
         private VisualElement functionsElement;
 
         private Toggle walkModeToggle;
-        
+
+        private Button screenCaptureButton;
+
         public bool IsOnWalkMode => walkModeToggle.value;
         public UnityEvent<bool> OnToggleWalkMode = new();
-        
+
+        public UnityEvent OnClickScreenCapture = new();
+
         public GlobalNaviFunctionsUI(VisualElement element)
         {
             menuButton = element.Q<Button>("Btn_Humberger");
             functionsElement = element.Q<VisualElement>("FunctionContainer");
 
             walkModeToggle = functionsElement.Q<Toggle>("Toggle_WalkMode");
-            
+            screenCaptureButton = functionsElement.Q<Button>($"Button_Capture");
+
             RegisterEvents();
             ShowFunctions(false);
         }
-        
+
         private void RegisterEvents()
         {
             menuButton.clicked += () =>
@@ -40,14 +45,21 @@ namespace Landscape2.Runtime
                     ShowFunctions(false);
                 }
             };
-            
+
+            // ScreenShot
+            screenCaptureButton.clicked += () =>
+            {
+                OnClickScreenCapture.Invoke();
+            };
+
+
             // 歩行モード
             walkModeToggle.RegisterValueChangedCallback((value) =>
             {
                 OnToggleWalkMode.Invoke(value.newValue);
             });
         }
-        
+
         public void ShowFunctions(bool isShow)
         {
             functionsElement.style.display = isShow ? DisplayStyle.Flex : DisplayStyle.None;
