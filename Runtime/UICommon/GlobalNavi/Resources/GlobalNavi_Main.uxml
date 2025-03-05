@@ -3,9 +3,9 @@
     <ui:Template name="List_Project_blank" path="List_Project_blank" />
     <Style src="project://database/Packages/com.synesthesias.landscape-design-tool-2/Runtime/UICommon/UIStyleCommon.uss?fileID=7433441132597879392&amp;guid=5003ef441f4ce7e4881f663b95f4df1d&amp;type=3#UIStyleCommon" />
     <Style src="project://database/Packages/com.synesthesias.landscape-design-tool-2/Runtime/UICommon/GlobalNavi/GlobalNavi.uss?fileID=7433441132597879392&amp;guid=c447172ded945dc4393376a1bf7cec68&amp;type=3#GlobalNavi" />
-    <ui:VisualElement name="MainContainer" style="flex-grow: 0; width: 1920px; height: 140px; flex-shrink: 0;">
+    <ui:VisualElement name="MainContainer" style="flex-grow: 0; width: 100%; height: 140px; flex-shrink: 0;">
         <ui:VisualElement name="GlobalNavi_Container" style="flex-grow: 0; height: 145px; width: 100%; background-color: rgba(0, 0, 0, 0); background-image: resource(&apos;UI_GNavi_Base&apos;); flex-direction: row;">
-            <ui:VisualElement name="GlobalNavi_Left" style="flex-grow: 0; width: 497px; height: 84px; align-items: center; flex-direction: row; justify-content: flex-end; padding-top: 0; padding-bottom: 0;">
+            <ui:VisualElement name="GlobalNavi_Left" style="flex-grow: 0; width: 25.89%; height: 84px; align-items: center; flex-direction: row; justify-content: flex-end; padding-top: 0; padding-bottom: 0;">
                 <ui:VisualElement name="Time" style="flex-grow: 1; align-items: flex-end; padding-right: 16px;">
                     <ui:Label tabindex="-1" text="09:00" parse-escape-sequences="true" display-tooltip-when-elided="true" name="TimeText" style="font-size: 36px;" />
                 </ui:VisualElement>
@@ -43,7 +43,7 @@
                     </ui:GroupBox>
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="GlobalNavi_Right" style="flex-grow: 0; width: 497px; height: 84px; flex-direction: row; align-items: center;">
+            <ui:VisualElement name="GlobalNavi_Right" style="flex-grow: 0; width: 25.89%; height: 84px; flex-direction: row; align-items: center;">
                 <ui:VisualElement name="SettingContainer" style="flex-grow: 1; margin-right: 16px; margin-top: 0; justify-content: space-between; align-items: center;">
                     <ui:VisualElement style="flex-grow: 1; width: 100%; flex-direction: row; align-items: flex-end; justify-content: center; padding-bottom: 8px;">
                         <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="Btn_Humberger" style="width: 50px; height: 50px; flex-shrink: 0; flex-grow: 0; margin-top: 0; margin-right: 8px; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; border-left-color: rgb(136, 147, 146); border-right-color: rgb(136, 147, 146); border-top-color: rgb(136, 147, 146); border-bottom-color: rgb(136, 147, 146); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px;" />
@@ -66,7 +66,7 @@
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:VisualElement name="FunctionContainer" style="position: absolute; top: 83px; left: 1275px; background-color: rgba(0, 0, 0, 0.55); border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; padding-top: 8px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px;">
+    <ui:VisualElement name="FunctionContainer" style="position: absolute; top: 83px; left: 66.41%; background-color: rgba(0, 0, 0, 0.55); border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; padding-top: 8px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px;">
         <ui:Toggle label="Toggle" name="Toggle_AutoRotate" tooltip="カメラ自動回転" usage-hints="-1" />
         <ui:Toggle label="Toggle" name="Toggle_WalkMode" tooltip="歩行者視点モード" value="false" />
         <ui:Toggle label="Toggle" name="Toggle_HideUI" tooltip="UIを非表示します" />
@@ -89,7 +89,7 @@
             <ui:Label tabindex="-1" text="明るさ調整" parse-escape-sequences="true" display-tooltip-when-elided="true" />
         </ui:Button>
     </ui:VisualElement>
-    <ui:ScrollView name="Project_List" style="flex-grow: 1; position: absolute; padding-top: 16px; padding-right: 16px; padding-bottom: 16px; padding-left: 16px; top: 62px; left: 1481px; width: 420px;">
+    <ui:ScrollView name="Project_List" style="flex-grow: 1; position: absolute; padding-top: 16px; padding-right: 16px; padding-bottom: 16px; padding-left: 16px; top: 62px; left: 77.14%; width: 420px;">
         <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: flex-end; padding-top: 12px; padding-right: 12px; padding-bottom: 6px; padding-left: 12px; background-color: rgba(14, 21, 20, 0.75);">
             <ui:Label text="編集モード" parse-escape-sequences="true" display-tooltip-when-elided="true" />
             <ui:Toggle label="Toggle" name="Toggle_EditMode" tooltip="編集モード" usage-hints="-1" value="true" />
