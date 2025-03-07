@@ -40,7 +40,7 @@ namespace Landscape2.Runtime
 
         private GlobalNaviFunctionsUI globalNaviFunctionsUI;
         private ProjectSettingUI projectChangerUI;
-        
+
         public GlobalNaviHeader(VisualElement uiRoot, VisualElement[] subMenuUxmls, SaveSystem saveSystem)
         {
             this.subMenuUxmls = subMenuUxmls;
@@ -143,6 +143,8 @@ namespace Landscape2.Runtime
                     settingElement.style.display = DisplayStyle.Flex;
                 }
             };
+
+            globalNaviFunctionsUI.OnClickScreenCapture.AddListener(ScreenCapture.Instance.OnClickCaptureButton);
 
             //歩行者モードトグルボタンが押されたら変更する
             globalNaviFunctionsUI.OnToggleWalkMode.AddListener(OnToggleWalkModeValueChanged);

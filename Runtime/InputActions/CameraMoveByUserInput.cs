@@ -35,6 +35,25 @@ namespace Landscape2.Runtime
         public static UnityEvent OnCameraMoved { get; private set; } = new();
 
         /// <summary>
+        /// Start完了時に呼ばれるイベント
+        /// </summary>
+        public UnityEvent OnStartCompleted { get; private set; } = new();
+
+        /// <summary>
+        /// カメラの移動速度データを更新します
+        /// </summary>
+        /// <param name="newData">新しい移動速度データ</param>
+        public void UpdateCameraMoveSpeedData(CameraMoveData newData)
+        {
+            if (newData == null)
+            {
+                Debug.LogError("CameraMoveDataがnullです");
+                return;
+            }
+            cameraMoveSpeedData = newData;
+        }
+
+        /// <summary>
         /// キーボードでの移動を有効にするかどうか
         /// </summary>
         public static bool IsKeyboardActive
@@ -220,6 +239,9 @@ namespace Landscape2.Runtime
             camera.transform.position = new Vector3(0, 0, 0);
             cameraMoveSpeedData = Resources.Load<CameraMoveData>("CameraMoveSpeedData");
             cameraParent.transform.SetPositionAndRotation(new Vector3(0, 215, 0), Quaternion.Euler(new Vector3(45, 0, 0)));
+
+            // Start完了を通知
+            OnStartCompleted.Invoke();
         }
 
         public void LateUpdate(float deltaTime)

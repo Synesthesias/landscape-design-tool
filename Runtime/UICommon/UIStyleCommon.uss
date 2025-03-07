@@ -708,7 +708,7 @@ Scroller #unity-drag-container {
     flex-direction: column;
     align-items: end;
     top: 60px;
-    left: 1543px;
+    right: 10px;
 }
 
 #PanelArrow {

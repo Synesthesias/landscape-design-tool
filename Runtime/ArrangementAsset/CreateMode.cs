@@ -20,6 +20,7 @@ namespace Landscape2.Runtime
 
         public GameObject selectedAsset;
         private GameObject generatedAsset;
+        private AssetPlacedDirectionComponent component;
         private VisualElement arrangeAssetsUI;
         private bool isMouseOverUI;
 
@@ -46,6 +47,10 @@ namespace Landscape2.Runtime
                     var point = hit.point;
                     point.y += buriedHeight;
                     generatedAsset.transform.position = point;
+                    if (component != null)
+                    {
+                        component.setPlaceNormal = hit.normal;
+                    }
                 }
             }
         }
@@ -88,6 +93,7 @@ namespace Landscape2.Runtime
 
             // アセット生成時に必要コンポーネント付与
             AssetPlacedDirectionComponent.TryAdd(generatedAsset);
+            component = generatedAsset.GetComponent<AssetPlacedDirectionComponent>();
         }
 
         /// <summary>
@@ -193,7 +199,7 @@ namespace Landscape2.Runtime
             {
                 // アセット作成通知
                 ArrangementAssetListUI.OnCreatedAsset.Invoke(generatedAsset);
-                if (generatedAsset.TryGetComponent<AssetPlacedDirectionComponent>(out var component))
+                if (generatedAsset.TryGetComponent(out component))
                 {
                     // 配置完了
                     component.SetPlaced();
