@@ -18,6 +18,7 @@ namespace Landscape2.Runtime.BuildingEditor
             saveSystem.LoadEvent += LoadInfo;
             saveSystem.DeleteEvent += DeleteInfo;
             saveSystem.ProjectChangedEvent += SetProjectInfo;
+            saveSystem.LayerChangedEvent += OnLayerChanged;
         }
 
         /// <summary>
@@ -115,14 +116,15 @@ namespace Landscape2.Runtime.BuildingEditor
                 var isVisible = ProjectSaveDataManager.TryCheckData(ProjectSaveDataType.EditBuilding, projectID, buildingProperty.ID);
                 
                 BuildingsDataComponent.SetBuildingEditable(buildingProperty.ID, isVisible);
-
-                var objectGroup = CityModelHandler.GetCityObjectGroup(buildingProperty.GmlID);
-                
-                // レイヤーを設定して、マウスイベント無視する
-                LayerMaskUtil.SetIgnore(objectGroup.gameObject, !isVisible);
             }
             // 通知
             BuildingsDataComponent.LoadProject();
+        }
+
+        private void OnLayerChanged()
+        {
+            string currentProjectID = ProjectSaveDataManager.ProjectSetting.CurrentProject.projectID;
+            SetProjectInfo(currentProjectID);
         }
     }
 }

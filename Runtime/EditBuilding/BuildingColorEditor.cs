@@ -4,6 +4,7 @@ using PLATEAU.CityInfo;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using System.Linq;
 
 namespace Landscape2.Runtime.BuildingEditor
 {
@@ -179,13 +180,21 @@ namespace Landscape2.Runtime.BuildingEditor
             for (int i = 0; i < dataCount; i++)
             {
                 var property = BuildingsDataComponent.GetProperty(i);
-                if (!ProjectSaveDataManager.TryCheckData(
-                        ProjectSaveDataType.EditBuilding,
-                        ProjectSaveDataManager.ProjectSetting.CurrentProject.projectID,
-                        property.ID
-                    ))
+                
+                // レイヤー値に基づいて表示可否を判定
+                var isVisible = ProjectSaveDataManager.IsVisibleByLayer(
+                    ProjectSaveDataType.EditBuilding,
+                    property.ID);
+                if (!isVisible)
                 {
-                    continue;
+                    // 同じGmlIDを持つ他のプロパティが存在するか確認
+                    var hasOtherVisibleProperty = BuildingsDataComponent.GetBuildings(property.GmlID)
+                        .Where(   p => p.ID != property.ID)
+                        .Any(p => p.GmlID == property.GmlID);
+                    if (hasOtherVisibleProperty)
+                    {
+                        continue;
+                    }
                 }
 
                 string gmlID = property.GmlID;

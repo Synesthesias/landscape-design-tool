@@ -1,40 +1,39 @@
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine.Events;
 
 namespace Landscape2.Runtime.SaveData
 {
     public abstract class ProjectSaveData
     {
         // データ
-        protected Dictionary<string, List<string>> Datas = new();
+        protected Dictionary<string, List<string>> data = new();
         
         public void Add(string projectID, string id)
         {
-            if (Datas.TryGetValue(projectID, out var datas))
+            if (data.TryGetValue(projectID, out var datas))
             {
                 if (!datas.Contains(id))
                 {
                     datas.Add(id);
-                    Datas[projectID] = datas;
+                    data[projectID] = datas;
                 }
             }
             else
             {
-                Datas.Add(projectID, new List<string> { id });
+                data.Add(projectID, new List<string> { id });
             }
         }
 
         public void Delete(string id)
         {
-            foreach (var key in Datas.Keys.ToList())
+            foreach (var key in data.Keys.ToList())
             {
-                if (Datas[key].Contains(id))
+                if (data[key].Contains(id))
                 {
-                    Datas[key].Remove(id);
-                    if (Datas[key].Count == 0)
+                    data[key].Remove(id);
+                    if (data[key].Count == 0)
                     {
-                        Datas.Remove(key);
+                        data.Remove(key);
                     }
                     break;
                 }
@@ -43,7 +42,7 @@ namespace Landscape2.Runtime.SaveData
         
         public string GetProjectID(string id)
         {
-            foreach (var keyValuePair in Datas)
+            foreach (var keyValuePair in data)
             {
                 if (keyValuePair.Value.Contains(id))
                 {
@@ -55,9 +54,9 @@ namespace Landscape2.Runtime.SaveData
 
         public bool TryCheckData(string projectID, string id)
         {
-            if (Datas.TryGetValue(projectID, out var data))
+            if (data.TryGetValue(projectID, out var datas))
             {
-                return data.Contains(id);
+                return datas.Contains(id);
             }
             return false;
         }

@@ -9,24 +9,30 @@ namespace Landscape2.Runtime
     {
         private VisualTreeAsset projectItemTreeAsset;
         private ScrollView scrollView;
+        private VisualElement projectListContainer;
         
-        public bool IsShow => scrollView.style.display == DisplayStyle.Flex;
+        public bool IsShow => projectListContainer.style.display == DisplayStyle.Flex;
         
         public UnityEvent<string> OnSelect = new ();
         public UnityEvent<string> OnDelete = new ();
         public UnityEvent<ProjectData> OnSave = new ();
         public UnityEvent<string> OnRename = new ();
+        public UnityEvent<string> OnUp = new ();
+        public UnityEvent<string> OnDown = new ();
         
         public ProjectSettingListUI(VisualElement element)
         {
-            scrollView = element.Q<ScrollView>("Project_List");
+            projectListContainer = element.Q<VisualElement>("Project_List_Container");
+            scrollView = projectListContainer.Q<ScrollView>("Project_List");
             var projectBlank = element.Q<VisualElement>("List_Project_blank");
             projectItemTreeAsset = Resources.Load<VisualTreeAsset>("List_Project");
+            
+            Show(false);
         }
         
         public void Show(bool isShow)
         {
-            scrollView.style.display = isShow ? DisplayStyle.Flex : DisplayStyle.None;
+            projectListContainer.style.display = isShow ? DisplayStyle.Flex : DisplayStyle.None;
         }
         
         public void Add(ProjectData projectData)
@@ -39,6 +45,10 @@ namespace Landscape2.Runtime
             // プロジェクトを選択
             clone.Q<Button>("Btn_Project").clicked += () =>
             {
+                if (ProjectSaveDataManager.ProjectSetting.IsCurrentProject(projectData.projectID))
+                {
+                    return;
+                }
                 OnSelect.Invoke(projectData.projectID);
                 Show(false);
             };
@@ -62,6 +72,30 @@ namespace Landscape2.Runtime
                 // ポップアップを表示
                 OnRename.Invoke(projectData.projectID);
             };
+            
+            // 上に移動
+            var upButton = clone.Q<Button>("UpButton");
+            upButton.clicked += () =>
+            {
+                OnUp.Invoke(projectData.projectID);
+            };
+            
+            // 下に移動
+            var downButton = clone.Q<Button>("DownButton");
+            downButton.clicked += () =>
+            {
+                OnDown.Invoke(projectData.projectID);
+            };
+            
+            // リストの位置に応じてボタンの表示/非表示を制御
+            if (ProjectSaveDataManager.ProjectSetting.IsTopLayer(projectData.projectID))
+            {
+                upButton.style.visibility = Visibility.Hidden;
+            }
+            if (ProjectSaveDataManager.ProjectSetting.IsBottomLayer(projectData.projectID))
+            {
+                downButton.style.visibility = Visibility.Hidden;
+            }
             
             scrollView.Add(clone);
         }
@@ -102,6 +136,14 @@ namespace Landscape2.Runtime
             if (label.text.Contains(("*")))
             {
                 label.text = label.text.Replace("* ", "");
+            }
+        }
+
+        public void Clear()
+        {
+            while (scrollView.childCount > 0)
+            {
+                scrollView.RemoveAt(0);
             }
         }
     }
