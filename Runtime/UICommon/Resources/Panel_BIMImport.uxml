@@ -8,7 +8,7 @@
                         <ui:Label tabindex="-1" text="IFCファイルを選択してください" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
                         <ui:Label tabindex="-1" text="ファイル名" parse-escape-sequences="true" display-tooltip-when-elided="true" name="FileNameText" style="color: rgb(128, 213, 212); font-size: 12px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
                     </ui:VisualElement>
-                    <ui:Button text="データを選択" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ImportButton" class="OKButton ActionButton" />
+                    <ui:Button text="データを選択" tooltip=".ifcファイルを読み込みます" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ImportButton" class="OKButton ActionButton" />
                 </ui:VisualElement>
                 <ui:VisualElement style="flex-grow: 0; flex-direction: row; justify-content: center; align-items: center; flex-shrink: 1; width: 100%; margin-bottom: 16px;">
                     <ui:Label tabindex="-1" text="緯度" parse-escape-sequences="true" display-tooltip-when-elided="true" style="width: auto; font-size: 16px; -unity-text-align: middle-right; flex-shrink: 1; margin-top: 0; margin-right: 8px; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
@@ -20,11 +20,11 @@
                 </ui:VisualElement>
                 <ui:VisualElement style="flex-grow: 0; flex-direction: row; justify-content: center; align-items: center; flex-shrink: 1; width: 100%; margin-bottom: 16px;">
                     <ui:Label tabindex="-1" text="向き(Yaw)" parse-escape-sequences="true" display-tooltip-when-elided="true" style="width: 80px; font-size: 16px; -unity-text-align: middle-left; flex-shrink: 0; margin-top: 0; margin-right: 8px; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
-                    <ui:SliderInt label="SliderInt" high-value="359" show-input-field="true" name="Slider_Yaw" style="flex-shrink: 1;" />
+                    <ui:SliderInt label="SliderInt" tooltip="建物の向き" high-value="359" show-input-field="true" name="Slider_Yaw" style="flex-shrink: 1;" />
                 </ui:VisualElement>
                 <ui:VisualElement style="flex-grow: 0; flex-direction: row; justify-content: center; align-items: center; flex-shrink: 1; width: 100%; margin-bottom: 16px;">
                     <ui:Label tabindex="-1" text="高さ" parse-escape-sequences="true" display-tooltip-when-elided="true" style="width: 80px; font-size: 16px; -unity-text-align: middle-left; flex-shrink: 0; margin-top: 0; margin-right: 8px; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
-                    <ui:SliderInt label="SliderInt" high-value="100" show-input-field="true" name="Slider_Height" style="flex-shrink: 1;" />
+                    <ui:SliderInt label="SliderInt" tooltip="建物の高さ" high-value="100" show-input-field="true" name="Slider_Height" style="flex-shrink: 1;" />
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="ActionContainer" style="flex-grow: 0; flex-direction: row; align-items: center;">

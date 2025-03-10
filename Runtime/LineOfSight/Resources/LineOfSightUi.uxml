@@ -13,8 +13,8 @@
                     <ui:VisualElement style="flex-grow: 0; flex-direction: row; align-items: center; justify-content: space-between;">
                         <ui:Label tabindex="-1" text="新しくピンを作成" parse-escape-sequences="true" display-tooltip-when-elided="true" style="flex-shrink: 1; width: 100%; font-size: 16px;" />
                         <ui:VisualElement name="ActionContainer" style="flex-grow: 0; flex-direction: column; align-items: center; width: auto; flex-shrink: 0;">
-                            <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="NewViewpoint_Button" text="視点場ピン作成" class="ActionButton" />
-                            <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="NewLandmark_Button" text="眺望対象ピン作成" class="ActionButton" style="margin-top: 10px; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
+                            <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="NewViewpoint_Button" text="視点場ピン作成" tooltip="解析する視点登録" class="ActionButton" />
+                            <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="NewLandmark_Button" text="眺望対象ピン作成" tooltip="解析対象の眺望登録" class="ActionButton" style="margin-top: 10px; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
                         </ui:VisualElement>
                     </ui:VisualElement>
                 </ui:VisualElement>
@@ -23,7 +23,7 @@
                     <ui:VisualElement style="flex-grow: 1; flex-direction: row; align-items: center; justify-content: space-between;">
                         <ui:Label tabindex="-1" text="見通し解析登録" parse-escape-sequences="true" display-tooltip-when-elided="true" style="flex-shrink: 1; width: 100%; font-size: 16px;" />
                         <ui:VisualElement name="ActionContainer" style="flex-grow: 0; flex-direction: column; align-items: center; width: auto; flex-shrink: 0;">
-                            <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="NewAnalyze_Button" text="新規解析" class="ActionButton" />
+                            <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="NewAnalyze_Button" tooltip="登録した建物の見通し解析" text="新規解析" class="ActionButton" />
                         </ui:VisualElement>
                     </ui:VisualElement>
                 </ui:VisualElement>
