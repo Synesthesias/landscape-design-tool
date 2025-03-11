@@ -80,7 +80,7 @@ namespace Landscape2.Runtime
             List<VisualElement> hitElements = new List<VisualElement>();
 
             // ルートから再帰的に探索して、マウス位置に含まれる要素を収集する
-            GetElementsAtPosition(rootElement, mousePos, hitElements);
+            GetElementsAtPosition(rootElement, mousePos, hitElements, 100);
 
             var tipElement = hitElements.Where(x => !string.IsNullOrEmpty(x.tooltip)).FirstOrDefault();
             if (tipElement != null)
@@ -106,10 +106,15 @@ namespace Landscape2.Runtime
         /// <param name="element">走査対象のVisualElement</param>
         /// <param name="pos">パネル座標系での位置</param>
         /// <param name="results">結果を追加するリスト</param>
-        private void GetElementsAtPosition(VisualElement element, Vector2 pos, List<VisualElement> results)
+        private void GetElementsAtPosition(VisualElement element, Vector2 pos, List<VisualElement> results, int recursiveCount)
         {
+            bool contains = element.worldBound.Contains(pos);
+            if (recursiveCount <= 0 || !contains)
+            {
+                return;
+            }
             // 要素がパネルにアタッチされている場合のみ判定
-            if (element.panel != null && element.worldBound.Contains(pos))
+            if (element.panel != null && contains)
             {
                 results.Add(element);
             }
@@ -117,7 +122,7 @@ namespace Landscape2.Runtime
             // 子要素も同様にチェック
             foreach (var child in element.Children())
             {
-                GetElementsAtPosition(child, pos, results);
+                GetElementsAtPosition(child, pos, results, recursiveCount--);
             }
         }
 
