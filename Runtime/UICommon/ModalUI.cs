@@ -32,6 +32,7 @@ namespace Landscape2.Runtime.UiCommon
             if (modalElement == null)
             {
                 modalElement = new UIDocumentFactory().CreateWithUxmlName("Modal");
+                GameObject.Find("Modal").GetComponent<UIDocument>().sortingOrder = 100;
                 
                 // イベント登録
                 modalElement.Q<Button>("OKButton").clicked += () =>
@@ -39,6 +40,7 @@ namespace Landscape2.Runtime.UiCommon
                     onCloseModal?.Invoke();
                     modalElement?.RemoveFromHierarchy();
                     modalElement = null;
+                    GameObject.Destroy(GameObject.Find("Modal"));
                 };
             }
 
@@ -83,6 +85,7 @@ namespace Landscape2.Runtime.UiCommon
             if (selectModalElement == null)
             {
                 selectModalElement = new UIDocumentFactory().CreateWithUxmlName("SelectModal");
+                GameObject.Find("SelectModal").GetComponent<UIDocument>().sortingOrder = 100;
                 
                 // イベント登録
                 selectModalElement.Q<Button>("CancelButton").clicked += () =>

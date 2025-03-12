@@ -1,8 +1,3 @@
-:root {
-    --z-index-base: 1;
-    --z-index-snackbar: 1000;
-    --z-index-modal: 1010;
-}
 
 .unity-text-element {
     color: rgb(255, 255, 255);
@@ -1275,7 +1270,7 @@ Scroller #unity-drag-container {
     background-color: rgb(37, 43, 43);
     border-radius: 12px;
     padding: 12px;
-    z-index: var(--z-index-modal);
+    z-index: 1010;
 }
 
 #Snackbar {
@@ -1287,7 +1282,7 @@ Scroller #unity-drag-container {
     flex-direction: row;
     font-size: 16px;
     align-items: center;
-    z-index: var(--z-index-snackbar);
+    z-index: 1000;
 }
 
 #Dialog {
