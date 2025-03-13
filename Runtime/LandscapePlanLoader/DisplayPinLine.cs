@@ -5,51 +5,54 @@ using UnityEngine;
 namespace Landscape2.Runtime.LandscapePlanLoader
 {
     /// <summary>
-    /// 景観区画作成・編集画面の頂点編集を行うクラス
+    /// 景観区画作成・編集画面の頂点編集におけるPin＆Lineクラス
     /// </summary>
-    public class DisplayPinLine
+    public class DisplayPinLine : MonoBehaviour
     {
-        private GameObject pin; // ピンのプレハブ
-        private GameObject line;   // ラインのプレハブ
+        private GameObject pinPrefab;
+        private GameObject linePrefab;
         private List<GameObject> pinList = new List<GameObject>();
         private List<GameObject> lineList = new List<GameObject>();
+
         private bool isClosed = false;
 
-        private float scaleStep = 1f;       // スクロールごとのスケール変化量
-        private float widthStep = 0.2f;       // スクロールごとのスケール変化量
-        private float minScale = 10f;        // 最小スケール
-        private float minWidth = 2f;        // 最小幅
-        private float maxScale = 30f;        // 最大スケール
-        private float maxWidth = 6f;        // 最大幅
-        private float currentScale = 10f;   // 現在のスケール（初期値）
-        private float currentWidth = 2f;   // 現在のライン幅（初期値）
-        private float scaleValue = 10f;    // スケール値
-        private float widthValue = 2f;   // ライン幅値
+        private float scaleStep = 1f;           // スクロールごとのスケール変化量
+        private float widthStep = 0.2f;         // スクロールごとのスケール変化量
+        private float minScale = 4f;            // 最小スケール
+        private float minWidth = 0.8f;          // 最小幅
+        private float maxScale = 30f;           // 最大スケール
+        private float maxWidth = 6f;            // 最大幅
+        private float currentScale = 10f;       // 現在のスケール（初期値）
+        private float currentWidth = 2f;        // 現在のLine幅（初期値）
+        private float scaleValue = 10f;         // スケール値
+        private float widthValue = 2f;          // 幅値
 
-        private float lineColliderHeight = 100f; // 交差判定のラインのコライダーの高さ
-        private float lineColliderWidth = 2f; // 交差判定のラインのコライダーの幅
-        private float cameraHeight = 215.0f; // カメラの高さの標準値
+        private float lineColliderHeight = 2f;  // 交差判定のLineのコライダーの高さ
+        private float lineColliderWidth = 2f;   // 交差判定のLineのコライダーの幅
 
-        public DisplayPinLine()
+        public void Awake()
         {
-            pin = Resources.Load("PlanAreaPin") as GameObject;
-            line = Resources.Load("PlanAreaLine") as GameObject;
+            pinPrefab = Resources.Load("PlanAreaPin") as GameObject;
+            linePrefab = Resources.Load("PlanAreaLine") as GameObject;
             scaleValue = currentScale;
             widthValue = currentWidth;
         }
 
         /// <summary>
-        /// ピンを生成するメソッド
+        /// Pinを生成するメソッド
         /// </summary>
         public void CreatePin(Vector3 vec,int index)
         {
-            // クリックした位置にピンを生成
-            if (pin == null)
+            // クリックした位置にPinを生成
+            if (pinPrefab == null)
             {
-                Debug.LogWarning("ピン用のオブジェクトが見つかりません。");
+                Debug.LogWarning("Pin用のオブジェクトが見つかりません。");
                 return;
             }
-            var pinObj = GameObject.Instantiate(pin);
+            var pinObj = GameObject.Instantiate(pinPrefab);
+            // Pinの初期設定
+            pinObj.transform.parent = this.transform;
+            pinObj.name = "Pin" + index;
             pinObj.transform.localScale = new Vector3(
                 currentScale,
                 currentScale,
@@ -60,35 +63,26 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         }
 
         /// <summary>
-        /// ピンとラインのサイズの初期化を行うメソッド
-        /// </summary>
-        public void InitializePinLineSize()
-        {
-            // カメラの高さの標準値に応じてピンとラインのサイズを初期化
-            if (Camera.main != null)
-            {
-                currentScale = Camera.main.transform.position.y / cameraHeight * 10f;
-                currentWidth = Camera.main.transform.position.y / cameraHeight * 2f;
-            }
-        }
-
-        /// <summary>
         /// Lineを生成するメソッド
         /// </summary>
         public void DrawLine(Vector3 startVec,Vector3 endVec,int index) 
         {
-            if (line == null)
+            if (linePrefab == null)
             {
                 Debug.LogWarning("Line用のオブジェクトが見つかりません。");
                 return;
             }
-            var lineObj = GameObject.Instantiate(line);
+            var lineObj = GameObject.Instantiate(linePrefab);
+            // Lineの初期設定
+            lineObj.transform.parent = this.transform;
             lineObj.name = "Line" + index;
+            var lineRenderer = lineObj.GetComponent<LineRenderer>();
+            lineRenderer.startWidth = currentWidth;
+            lineRenderer.endWidth = currentWidth;
 
             // 線を引く
             UpdateLinePositions(lineObj,startVec,endVec);
-
-            lineList.Insert(index, lineObj);
+            lineList.Insert(index, lineObj);    
         }
 
         /// <summary>
@@ -96,11 +90,11 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// </summary>
         public void InsertPinLine(Vector3 newVec,int index)
         {
-            // 元のラインを削除
+            // 元のLineを削除
             GameObject.Destroy(lineList[index]);
             lineList.RemoveAt(index);
 
-            // 新しいピンとラインを挿入
+            // 新しいPinとLineを挿入
             CreatePin(newVec, index + 1);
             DrawLine(pinList[index].transform.position, newVec, index);
             if (index == lineList.Count - 1)
@@ -119,11 +113,11 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// </summary>
         public void RemovePinLine(int index)
         {
-            // ピンを削除
+            // Pinを削除
             GameObject.Destroy(pinList[index]);
             pinList.RemoveAt(index);
 
-            // ラインの終点を更新
+            // Lineの終点を更新
             GameObject.Destroy(lineList[index]);
             lineList.RemoveAt(index);
             if (index == 0)
@@ -163,7 +157,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 UpdateLinePositions(lineList[index], newVec, pinList[index + 1].transform.position);
             }
 
-            // 対象の頂点が終点となるラインの頂点を編集
+            // 対象の頂点が終点となるLineの頂点を編集
             if (index == 0)
             {
                 UpdateLinePositions(lineList[lineList.Count - 1], pinList[lineList.Count - 1].transform.position, newVec);
@@ -212,7 +206,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         }
 
         /// <summary>
-        /// クリックの対象が最初のピンかどうかを判定するメソッド
+        /// クリックの対象が最初のPinかどうかを判定するメソッド
         /// </summary>
         public bool IsClickFirstPin(RaycastHit[] hits)
         {
@@ -229,7 +223,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         }
 
         /// <summary>
-        /// ピンを削除するメソッド
+        /// Pinを削除するメソッド
         /// </summary>
         public void ClearPins()
         {
@@ -241,7 +235,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         }
 
         /// <summary>
-        /// ラインを削除するメソッド
+        /// Lineを削除するメソッド
         /// </summary>
         public void ClearLines()
         {
@@ -253,27 +247,27 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         }
 
         /// <summary>
-        /// ピンのインデックスを検索するメソッド
+        /// Pinのインデックスを検索するメソッド
         /// </summary>
         public int FindPinIndex(GameObject pin)
         {
             int index = pinList.IndexOf(pin);
             if (index == -1)
             {
-                Debug.LogWarning("ピンが見つかりません。");
+                Debug.LogWarning("Pinが見つかりません。");
             }
             return index;
         }
 
         /// <summary>
-        /// ラインのインデックスを検索するメソッド
+        /// Lineのインデックスを検索するメソッド
         /// </summary>
         public int FindLineIndex(GameObject line)
         {
             int index = lineList.IndexOf(line);
             if (index == -1)
             {
-                Debug.LogWarning("ラインが見つかりません。");
+                Debug.LogWarning("Lineが見つかりません。");
             }
             return index;
         }
@@ -283,21 +277,21 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// </summary>
         public void ZoomPinLine(float scroll)
         {
-            // スクロール量に応じてラインの幅を増減
-            if (scroll > 0)
+            // スクロール量に応じてLineの幅を増減
+            if (scroll < 0)
             {
                 widthValue += widthStep;
                 scaleValue += scaleStep;
 
             }
-            else if (scroll < 0)
+            else if (scroll > 0)
             {
                 widthValue -= widthStep;
                 scaleValue -= scaleStep;
             }
 
-            // 幅が最小値・最大値を超えないように制限
-            currentWidth = scaleValue <= maxScale ? widthValue : maxWidth;
+            // 幅とスケールが最小値・最大値を超えないように制限
+            currentWidth = widthValue <= maxWidth ? widthValue : maxWidth;
             currentWidth = widthValue >= minWidth ? currentWidth : minWidth;
             currentScale = scaleValue <= maxScale ? scaleValue : maxScale;
             currentScale = scaleValue >= minScale ? currentScale : minScale;
@@ -322,20 +316,31 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         }
 
         /// <summary>
-        /// ラインオブジェクトが他のラインオブジェクトと交差しているかどうかを判定するメソッド
+        /// 作成したLineによってLineオブジェクトが他のLineオブジェクトと交差しているかどうかを判定するメソッド
         /// </summary>
-        public bool IsIntersected()
+        public bool IsIntersectedByLine()
         {
+            // 交差判定を行うLineのリストを作成
+            List<BoxCollider> lineColliderList = new List<BoxCollider>();
             for (int i = 0; i < lineList.Count; i++)
             {
-                for (int j = i + 2; j < lineList.Count; j++)
+                // Lineが極端に短い場合は交差判定から除外
+                if (lineList[i].GetComponent<LineRenderer>().GetPosition(1).x < lineColliderWidth)
                 {
-                    // 最後のラインと最初のラインは隣接しているため交差判定を行わない
-                    if (i == 0 && j == lineList.Count - 1) continue;
+                    continue;
+                }
+                lineColliderList.Add(lineList[i].GetComponent<BoxCollider>());
+            }
 
-                    if (AreLinesOverlappingAccurate(lineList[i], lineList[j]))
+            for (int i = 0; i < lineColliderList.Count; i++)
+            {
+                for (int j = i + 2; j < lineColliderList.Count; j++)
+                {
+                    // 最後のLineと最初のLineは隣接しているため交差判定を行わない
+                    if (i == 0 && j == lineColliderList.Count - 1) continue;
+
+                    if (AreLinesOverlappingAccurate(lineColliderList[i], lineColliderList[j]))
                     {
-                        Debug.Log(i + "&" + j);
                         return true;
                     }
                 }
@@ -344,7 +349,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         }
 
         /// <summary>
-        /// 動かしたピンによってラインオブジェクトが他のラインオブジェクトと交差したかどうかを判定するメソッド
+        /// 動かしたPinによってLineオブジェクトが他のLineオブジェクトと交差したかどうかを判定するメソッド
         /// </summary>
         public bool IsIntersectedByPin(GameObject pin)
         {
@@ -352,55 +357,93 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             if (index == -1) return false;
 
             int lineID1 = index;
-            int lineID2 = index == 0 ? lineList.Count - 1 : index - 1 ;
+            int lineID2 = index == 0 ? lineList.Count - 1 : index - 1;
+            var lineCol1 = lineList[lineID1].GetComponent<BoxCollider>();
+            var lineCol2 = lineList[lineID2].GetComponent<BoxCollider>();
 
+
+            // 交差判定を行うLineのリストを作成
+            List<BoxCollider> lineColliderList = new List<BoxCollider>();
             for (int i = 0; i < lineList.Count; i++)
             {
-                // 自身と隣接するラインは交差判定を行わない
-                if (i == lineID1 || i == lineID1 + 1 || i == lineID2) continue;
-                if(lineID1 == lineList.Count - 1 && i == 0) continue;
-
-                if (AreLinesOverlappingAccurate(lineList[i], lineList[lineID1]))
+                // Lineが極端に短い場合は交差判定から除外
+                if (lineList[i].GetComponent<LineRenderer>().GetPosition(1).x < lineColliderWidth)
                 {
-                    return true;
-                }           
+                    continue;
+                }
+                lineColliderList.Add(lineList[i].GetComponent<BoxCollider>());
             }
-            for (int i = 0; i < lineList.Count; i++)
-            {
-                // 自身と隣接するラインは交差判定を行わない
-                if (i == lineID2 || i == lineID1 || i == lineID2 - 1) continue;
-                if (lineID2 == 0 && i == lineList.Count - 1) continue;
 
-                if (AreLinesOverlappingAccurate(lineList[i], lineList[lineID2]))
+            int lineColID1 = lineColliderList.IndexOf(lineCol1);
+            if (lineColID1 != -1)
+            {
+                for (int i = 0; i < lineColliderList.Count; i++)
                 {
-                    return true;
+                    // 自身と隣接するLineは交差判定を行わない
+                    if (i == lineColID1) continue;
+                    if (i == lineColID1 + 1) continue;
+                    if (i == lineColID1 - 1) continue;
+                    if (i == 0 && lineColID1 == lineColliderList.Count - 1 ) continue;
+                    if (i == lineColliderList.Count - 1 && lineColID1 == 0 ) continue;
+
+                    if (AreLinesOverlappingAccurate(lineColliderList[i], lineColliderList[lineColID1]))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            int lineColID2 = lineColliderList.IndexOf(lineCol2);
+            if (lineColID2 != -1)
+            {
+                for (int i = 0; i < lineColliderList.Count; i++)
+                {
+                    // 自身と隣接するLineは交差判定を行わない
+                    if (i == lineColID2) continue;
+                    if (i == lineColID2 + 1) continue;
+                    if (i == lineColID2 - 1) continue;
+                    if (i == 0 && lineColID2 == lineColliderList.Count - 1) continue;
+                    if (i == lineColliderList.Count - 1 && lineColID2 == 0) continue;
+
+                    if (AreLinesOverlappingAccurate(lineColliderList[i], lineColliderList[lineColID2]))
+                    {
+                        return true;
+                    }
                 }
             }
 
             return false;
         }
         /// <summary>
-        /// ラインオブジェクト同士の重なりを判定するメソッド
+        /// Lineオブジェクト同士の重なりを判定するメソッド
         /// </summary>
-        private bool AreLinesOverlappingAccurate(GameObject line1, GameObject line2)
+        private bool AreLinesOverlappingAccurate(BoxCollider col1, BoxCollider col2)
         {
-            BoxCollider collider1 = line1.GetComponent<BoxCollider>();
-            collider1.size = new Vector3(collider1.size.x, lineColliderHeight, lineColliderWidth);
-            BoxCollider collider2 = line2.GetComponent<BoxCollider>();
-            collider2.size = new Vector3(collider2.size.x, lineColliderHeight, lineColliderWidth);
+            col1.size = new Vector3(col1.size.x, lineColliderHeight, lineColliderWidth);
+            col2.size = new Vector3(col2.size.x, lineColliderHeight, lineColliderWidth);
 
 
             // コライダーのトランスフォーム情報を使用して交差を判定
             bool isOverlap = Physics.ComputePenetration(
-                collider1, collider1.transform.position, collider1.transform.rotation,
-                collider2, collider2.transform.position, collider2.transform.rotation,
+                col1, col1.transform.position, col1.transform.rotation,
+                col2, col2.transform.position, col2.transform.rotation,
                 out _, out _
             );
 
-            collider1.size = new Vector3(collider1.size.x, currentWidth, currentWidth);
-            collider2.size = new Vector3(collider2.size.x, currentWidth, currentWidth);
+            // コライダーのサイズを元に戻す
+            col1.size = new Vector3(col1.size.x, currentWidth, currentWidth);
+            col2.size = new Vector3(col2.size.x, currentWidth, currentWidth);
 
             return isOverlap;
+        }
+
+        public void Update()
+        {
+            // マウスのホイールがスクロールされたらPinとLineのサイズを変更
+            if (Input.mouseScrollDelta.y != 0)
+            {
+                ZoomPinLine(Input.mouseScrollDelta.y);
+            }
         }
     }
 }

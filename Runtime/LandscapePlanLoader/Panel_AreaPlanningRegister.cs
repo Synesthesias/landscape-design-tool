@@ -45,7 +45,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         {
             if (status == PlanningPanelStatus.RegisterAreaMain)
             {
-                displayPinLine.InitializePinLineSize();
                 panel_PointEditor.style.display = DisplayStyle.Flex;
                 okButton.visible = false;
 
@@ -147,7 +146,11 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// </summary>
         protected override void OnOKButtonClicked()
         {
-            if (!areaPlanningRegister.IsCreateArea()) return;
+            if (areaPlanningRegister.IsIntersected())
+            {
+                base.DisplaySnackbar("頂点が交差したエリアは作成できません");
+                return;
+            }
 
             // 新規景観区画データを作成
             areaPlanningRegister.CreateAreaData(

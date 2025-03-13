@@ -29,11 +29,17 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         {
             this.planning = planning;
             this.planningUI = planningUI;
-            displayPinLine = new DisplayPinLine();
 
             colorEditor = Resources.Load<VisualTreeAsset>("UIColorEditor");
             CreateSnackbar();
             snackBarClone.Q<Button>("CloseButton").clicked += () => HideSnackbar();
+
+            // displayPinLineコンポーネントがSceneに存在しない場合は生成
+            displayPinLine = GameObject.FindAnyObjectByType<DisplayPinLine>();
+            if (displayPinLine == null)
+            {
+                displayPinLine = new GameObject("PinLine").AddComponent<DisplayPinLine>();
+            }
         }
 
         /// <summary>
@@ -68,8 +74,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             areaPlanningHeight.RegisterValueChangedCallback(InputHeight);
             areaPlanningColor.RegisterCallback<ClickEvent>(ev => ToggleColorEditing());
             areaPlanningName.RegisterValueChangedCallback(InputAreaName);
-
-            panel_PointEditor.RegisterCallback<WheelEvent>(ev => OnPointEditorWheeled(ev));
             planningUI.OnChangePlanningPanelDisplay += OnDisplayPanel;
         }
 
@@ -178,14 +182,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 snackBarClone.visible = false;
                 snackBarClone.Q<Button>("CloseButton").visible = false;
             }
-        }
-
-        /// <summary>
-        /// 視点を拡大・縮小したときの処理
-        /// </summary>
-        protected void OnPointEditorWheeled(WheelEvent evt)
-        {
-            displayPinLine.ZoomPinLine(evt.delta.y);
         }
     }
 }

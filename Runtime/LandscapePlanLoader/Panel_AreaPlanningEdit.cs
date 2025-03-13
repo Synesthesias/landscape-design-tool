@@ -48,7 +48,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         {
             if (status == PlanningPanelStatus.EditAreaMain)
             {
-                displayPinLine.InitializePinLineSize();
                 panel_PointEditor.style.display = DisplayStyle.Flex;
                 CameraMoveByUserInput.IsCameraMoveActive = true;
                 areaPlanningEdit.CreatePinline();
@@ -163,8 +162,19 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             isColorEditing = false;
             EditColor();
 
-            // 頂点の編集を適用
-            areaPlanningEdit.ConfirmEditData();
+            // 頂点が編集されていたら
+            if (areaPlanningEdit.IsVertexEdited())
+            {
+                // 頂点が交差しているか確認
+                if (displayPinLine.IsIntersectedByLine())
+                {
+                    base.DisplaySnackbar("頂点が交差したエリアは作成できません");
+                    return;
+                }
+                // 頂点の編集を適用
+                areaPlanningEdit.ConfirmEditData();
+            }
+
             //データベースに変更確定を反映
             areaEditManager.ConfirmUpdatedProperty();
             planningUI.InvokeOnChangeConfirmed();
@@ -217,11 +227,12 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// </summary>
         private void OnReleasePanel()
         {
-            if (areaPlanningEdit.IsIntersectedByLine())
+            if (areaPlanningEdit.IsIntersected())
             {
                 base.DisplaySnackbar("頂点が交差したエリアは作成できません");
+                areaPlanningEdit.ResetVertexPosition();
             }
-            areaPlanningEdit.OnReleasePin();
+            areaPlanningEdit.ReleaseEditingPin();
             CameraMoveByUserInput.IsCameraMoveActive = true;
         }
 
