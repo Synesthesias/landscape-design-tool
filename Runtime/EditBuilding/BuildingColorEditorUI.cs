@@ -1,8 +1,5 @@
-﻿using Landscape2.Runtime.Common;
-using Landscape2.Runtime.UiCommon;
+﻿using Landscape2.Runtime.UiCommon;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -65,19 +62,11 @@ namespace Landscape2.Runtime.BuildingEditor
         // 色彩編集パネル表示ボタンの色
         private Color colorButtonColor;
 
-        // 色彩編集パネル表示ボタンの初期色
-        private Color initialColor;
-
-        // Smoothnessスライダーの初期値
-        private float initialSmoothness;
-
         public BuildingColorEditorUI(BuildingColorEditor buildingColorEditor, EditBuilding editBuilding, VisualElement uiRoot)
         {
             this.uiRoot = uiRoot;
             this.buildingColorEditor = buildingColorEditor;
-            initialColor = buildingColorEditor.InitialColor;
-            initialSmoothness = buildingColorEditor.InitialSmoothness;
-
+            
             // 建物編集画面の建物選択イベントに登録
             editBuilding.OnBuildingSelected += SetFieldList;
 
@@ -85,7 +74,7 @@ namespace Landscape2.Runtime.BuildingEditor
             colorEditor = Resources.Load<VisualTreeAsset>("UIColorEditor");
             colorEditorClone = colorEditor.CloneTree();
             uiRoot.Q<VisualElement>("Panel_MaterialEditor").Add(colorEditorClone);
-            colorEditorUI = new ColorEditorUI(colorEditorClone, initialColor);
+            colorEditorUI = new ColorEditorUI(colorEditorClone, BuildingColorEditor.InitialColor);
             colorEditorClone.style.display = DisplayStyle.None;
 
             // 色彩編集パネルのイベント関数を登録
@@ -126,7 +115,11 @@ namespace Landscape2.Runtime.BuildingEditor
             okButton.clicked += () =>
             {
                 // 色を変更する
-                buildingColorEditor.EditMaterialColor(colorButtonColor, smoothnessSlider.value);
+                buildingColorEditor.EditMaterialColor(colorButtonColor, smoothnessSlider.value, (lowestLayerProjectName) =>
+                {
+                    // 警告を表示
+                    SnackBarUI.Show($"{lowestLayerProjectName} の色彩が優先されています。", uiRoot);
+                });
             };
 
             // キャンセルボタンが押されたとき
@@ -145,9 +138,14 @@ namespace Landscape2.Runtime.BuildingEditor
             resetButton.clicked += () =>
             {
                 // 建物の色をリセット
-                buildingColorEditor.EditMaterialColor(initialColor, initialSmoothness);
+                buildingColorEditor.EditMaterialColor(BuildingColorEditor.InitialColor, BuildingColorEditor.InitialSmoothness, (lowestLayerProjectName) =>
+                {
+                    // 警告を表示
+                    SnackBarUI.Show($"{lowestLayerProjectName} の色彩が優先されています。", uiRoot);
+                });
+                
                 // UIをリセット
-                colorEditorUI.ResetColorEditorUI(initialColor);
+                colorEditorUI.ResetColorEditorUI(BuildingColorEditor.InitialColor);
                 ResetBuildingEditorUI();
             };
 

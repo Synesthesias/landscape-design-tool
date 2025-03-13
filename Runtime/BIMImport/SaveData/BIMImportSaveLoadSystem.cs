@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToolBox.Serialization;
+using UnityEngine;
 
 namespace Landscape2.Runtime
 {
@@ -35,6 +36,12 @@ namespace Landscape2.Runtime
             return true;
         }
 
+        public void UpdateSaveData(Vector3 position, Vector3 angle, Vector3 scale, string id)
+        {
+            var data = saveDatas.FirstOrDefault(x => x.ID == id);
+            data?.SetTransform(position, angle, scale);
+        }
+
         public bool RemoveSaveData(string name)
         {
             var data = saveDatas.FirstOrDefault(x => x.ID == name);
@@ -49,15 +56,23 @@ namespace Landscape2.Runtime
                 data.ID);
             return true;
         }
-        
+
         private void Save(string projectID)
         {
-            var filteredData = saveDatas
-                .Where(data => ProjectSaveDataManager.TryCheckData(
-                    ProjectSaveDataType.BimImport,
-                    projectID,
-                    data.ID))
-                .ToList();
+            List<BIMImportSaveData> filteredData;
+            if (string.IsNullOrEmpty(projectID))
+            {
+                filteredData = saveDatas;
+            }
+            else
+            {
+                filteredData = saveDatas
+                    .Where(data => ProjectSaveDataManager.TryCheckData(
+                        ProjectSaveDataType.BimImport,
+                        projectID,
+                        data.ID))
+                    .ToList();
+            }
 
             DataSerializer.Save("BIM", filteredData);
         }
@@ -82,13 +97,12 @@ namespace Landscape2.Runtime
                     projectID,
                     data.ID,
                     false))
-                .Select(data =>
-                {
-                    saveDatas.Remove(data);
-                    return data;
-                })
                 .ToList();
             
+            foreach (var bimImportSaveData in deleteList)
+            {
+                saveDatas.Remove(bimImportSaveData);
+            }
             deleteCallback?.Invoke(deleteList);
         }
         

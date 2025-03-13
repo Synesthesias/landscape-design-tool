@@ -59,7 +59,6 @@ namespace Landscape2.Runtime
                 // 全て保存
                 foreach (var projectData in ProjectSaveDataManager.ProjectSetting.ProjectList)
                 {
-                    if (projectData.IsDefault) continue;
                     projectSettingListUI.Save(projectData.projectID);
                 }
             };

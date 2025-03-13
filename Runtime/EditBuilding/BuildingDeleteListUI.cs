@@ -179,7 +179,7 @@ namespace Landscape2.Runtime
             AppendList(cityObjectGroup.gameObject, property.IsEditable);
         }
 
-        private void DeleteBuildings(List<BuildingProperty> deleteBuildings)
+        private void DeleteBuildings(List<BuildingProperty> deleteBuildings, string projectID)
         {
             listRootElement.Clear();
             for (int i = 0; i < BuildingsDataComponent.GetPropertyCount(); i++)

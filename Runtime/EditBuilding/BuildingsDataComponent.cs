@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using UnityEngine;
+using Landscape2.Runtime;
 
 namespace Landscape2.Runtime.BuildingEditor
 {
@@ -15,7 +16,7 @@ namespace Landscape2.Runtime.BuildingEditor
         // 建物編集がロードされた際のイベント
         public static event Action BuildingDataLoaded = delegate { };
         // 建物編集が削除された際のイベント
-        public static event Action<List<BuildingProperty>> BuildingDataDeleted = delegate { };
+        public static event Action<List<BuildingProperty>, string> BuildingDataDeleted = delegate { };
 
         /// <summary>
         /// 建物編集データを新規に追加するメソッド
@@ -41,9 +42,9 @@ namespace Landscape2.Runtime.BuildingEditor
             BuildingDataLoaded();
         }
 
-        public static void DeleteProperty(List<BuildingProperty> deleteProperties)
+        public static void DeleteProperty(List<BuildingProperty> deleteProperties, string projectID)
         {
-            BuildingDataDeleted(deleteProperties);
+            BuildingDataDeleted(deleteProperties, projectID);
             
             // 通知してから削除
             foreach (var deleteProperty in deleteProperties)
@@ -157,6 +158,125 @@ namespace Landscape2.Runtime.BuildingEditor
         public static int GetDeleteBuildingsCount(string gmlID)
         {
             return properties.Count(p => p.GmlID == gmlID && p.IsDeleted);
+        }
+
+        /// <summary>
+        /// 建物が編集されているかどうかを判定
+        /// </summary>
+        public static bool IsCustomEdited(BuildingProperty buildingProperty)
+        {
+            bool hasCustomColor = buildingProperty.ColorData != null && 
+                buildingProperty.ColorData.Any(c => c != BuildingColorEditor.InitialColor);
+            bool hasCustomSmoothness = buildingProperty.SmoothnessData != null && 
+                buildingProperty.SmoothnessData.Any(s => s != BuildingColorEditor.InitialSmoothness);
+
+            return hasCustomColor || hasCustomSmoothness;
+        }
+
+        /// <summary>
+        /// 最小レイヤーのデータを取得する共通処理
+        /// </summary>
+        private static T GetMinLayerData<T>(
+            List<ProjectData> projects,
+            List<BuildingProperty> buildingProperties,
+            Func<BuildingProperty, bool> hasValidData,
+            Func<BuildingProperty, T> getValue,
+            T defaultValue)
+        {
+            foreach (var project in projects)
+            {
+                var property = buildingProperties.FirstOrDefault(p =>
+                    ProjectSaveDataManager.TryCheckData(ProjectSaveDataType.EditBuilding, project.projectID, p.ID) &&
+                    hasValidData(p));
+                
+                if (property != null)
+                {
+                    return getValue(property);
+                }
+            }
+            return defaultValue;
+        }
+
+        /// <summary>
+        /// 最小レイヤーの建物プロパティの値を取得
+        /// </summary>
+        public static (List<Color> colors, List<float> smoothness, bool isDeleted) GetMinLayerPropertyValues(string gmlID, string excludeProjectID = null)
+        {
+            var projects = ProjectSaveDataManager.ProjectSetting.ProjectList
+                .Where(p => p.projectID != excludeProjectID)
+                .OrderBy(p => p.layer)
+                .ToList();
+
+            // デフォルトのカラーリストを3つの要素で初期化
+            var defaultColors = Enumerable.Repeat(BuildingColorEditor.InitialColor, 3).ToList();
+            // デフォルトのスムースネスリストを3つの要素で初期化
+            var defaultSmoothness = Enumerable.Repeat(BuildingColorEditor.InitialSmoothness, 3).ToList();
+
+            if (!projects.Any())
+                return (
+                    defaultColors,
+                    defaultSmoothness,
+                    false
+                );
+
+            var buildingProperties = GetBuildings(gmlID);
+            if (!buildingProperties.Any())
+                return (
+                    defaultColors,
+                    defaultSmoothness,
+                    false
+                );
+
+            return (
+                GetMinLayerData(
+                    projects,
+                    buildingProperties,
+                    p => p.ColorData != null && p.ColorData.Any(),
+                    p => p.ColorData,
+                    defaultColors),
+                GetMinLayerData(
+                    projects,
+                    buildingProperties,
+                    p => p.SmoothnessData != null && p.SmoothnessData.Any(),
+                    p => p.SmoothnessData,
+                    defaultSmoothness),
+                GetMinLayerData(
+                    projects,
+                    buildingProperties,
+                    p => true,
+                    p => p.IsDeleted,
+                    false)
+            );
+        }
+
+        /// <summary>
+        /// 指定されたGMLIDに紐づいている建物プロパティのIDを元に、最小レイヤーのプロジェクト名を取得する
+        /// </summary>
+        public static (string projectID, string projectName) GetLowestLayerProjectNamesByGmlID(string gmlID)
+        {
+            var buildingProperties = GetBuildings(gmlID);
+            var projectNames = new List<(string, string)>();
+
+            foreach (var bp in buildingProperties)
+            {
+                string targetProjectID = ProjectSaveDataManager.GetProjectID(ProjectSaveDataType.EditBuilding, bp.ID);
+                if (string.IsNullOrEmpty(targetProjectID))
+                {
+                    continue;
+                }
+
+                var currentProject = ProjectSaveDataManager.ProjectSetting.GetProject(targetProjectID);
+                var otherProjects = ProjectSaveDataManager.ProjectSetting.ProjectList
+                    .Where(p => p.projectID != targetProjectID)
+                    .ToList();
+
+                if (!otherProjects.Any() || currentProject.layer <= otherProjects.Min(p => p.layer))
+                {
+                    projectNames.Add((currentProject.projectID, currentProject.projectName));
+                }
+            }
+
+            return projectNames.Distinct().FirstOrDefault();
         }
     }
 

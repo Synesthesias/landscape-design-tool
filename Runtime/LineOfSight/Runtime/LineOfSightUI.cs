@@ -1076,7 +1076,8 @@ namespace Landscape2.Runtime
         /// 視点場 -> 眺望解析ボタン作成
         /// </summary>
         /// <param name="elements"></param>
-        public void CreateAnalyzeViewPointButton(AnalyzeViewPointElements elements)
+        /// <param name="buttonName"></param>
+        public void CreateAnalyzeViewPointButton(AnalyzeViewPointElements elements, string buttonName = "")
         {
             var list_Analyze = new UIDocumentFactory().CreateWithUxmlName("List_Analyze_Viewpoint");
 
@@ -1094,7 +1095,11 @@ namespace Landscape2.Runtime
             upwardLabel.text = elements.rangeHeight.ToString();
             underLabel.text = elements.rangeWidth.ToString();
 
-            var buttonName = elements.startPosName + elements.endPosName + elements.rangeWidth + elements.rangeHeight;
+            if (string.IsNullOrEmpty(buttonName))
+            {
+                buttonName = elements.startPosName + elements.endPosName + elements.rangeWidth + elements.rangeHeight;
+            }
+
             newButton.clicked += () =>
             {
                 if (!analyzeViewPoint.CanEdit(buttonName))
@@ -1125,13 +1130,16 @@ namespace Landscape2.Runtime
         /// 眺望対象解析ボタン作成
         /// </summary>
         /// <param name="elements"></param>
-        public void CreateAnalyzeLandmarkButton(AnalyzeLandmarkElements elements)
+        /// <param name="buttonName"></param>
+        public void CreateAnalyzeLandmarkButton(AnalyzeLandmarkElements elements, string buttonName = "")
         {
             var list_Analyze = new UIDocumentFactory().CreateWithUxmlName("List_Analyze_Landmark");
             var newButton = list_Analyze.Q<Button>("List");
 
-            // newButton.text = "StartPoint : " + elements.startPosName;
-            var buttonName = elements.startPosName + elements.rangeUp + elements.rangeDown;
+            if (string.IsNullOrEmpty(buttonName))
+            {
+                buttonName = elements.startPosName + elements.rangeUp + elements.rangeDown;
+            }
 
             var landmarkNameLabel = list_Analyze.Q<Label>("LandmarkName");
             var upwardLabel = list_Analyze.Q<Label>("Upward");

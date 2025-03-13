@@ -39,6 +39,12 @@ namespace Landscape2.Runtime
 
         public bool IsProject(string projectID, bool isCheckEditMode = true)
         {
+            if (string.IsNullOrEmpty(projectID))
+            {
+                // 結合保存であればtrue
+                return true;
+            }
+
             return ProjectSaveDataManager.TryCheckData(
                 ProjectSaveDataType.LineOfSight,
                 projectID,

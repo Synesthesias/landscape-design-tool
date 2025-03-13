@@ -150,7 +150,7 @@ namespace Landscape2.Runtime
                 }
                 
                 lineOfSightDataComponent.AnalyzeViewPointDatas.Add(data);
-                lineOfSightUI.CreateAnalyzeViewPointButton(data.analyzeViewPoint);
+                lineOfSightUI.CreateAnalyzeViewPointButton(data.analyzeViewPoint, data.Name);
                 
                 // プロジェクトに通知
                 data.Add(projectID, false);
@@ -171,7 +171,7 @@ namespace Landscape2.Runtime
                 }
                 
                 lineOfSightDataComponent.AnalyzeLandmarkDatas.Add(data);
-                lineOfSightUI.CreateAnalyzeLandmarkButton(data.analyzeLandmark);
+                lineOfSightUI.CreateAnalyzeLandmarkButton(data.analyzeLandmark, data.Name);
                 
                 // プロジェクトに通知
                 data.Add(projectID, false);

@@ -133,7 +133,7 @@ namespace Landscape2.Runtime
             OnEditProject.Invoke(projectID);
         }
 
-        private static string GetProjectID(ProjectSaveDataType dataType, string id)
+        public static string GetProjectID(ProjectSaveDataType dataType, string id)
         {
             return dataType switch
             {
@@ -199,6 +199,31 @@ namespace Landscape2.Runtime
             
             // 現在のプロジェクトのレイヤー値が、他のプロジェクトの最小値以下なら表示可能
             return currentProject.layer <= minLayerInOthers;
+        }
+
+        /// <summary>
+        /// 現在のプロジェクトが最小レイヤーかどうかをチェックする
+        /// </summary>
+        public static bool IsCurrentProjectMinLayer()
+        {
+            var currentProject = ProjectSetting.CurrentProject;
+            var projects = ProjectSetting.ProjectList.OrderBy(p => p.layer).ToList();
+            return projects.Any() && currentProject.layer == projects.First().layer;
+        }
+
+        /// <summary>
+        /// 一番下のレイヤーのプロジェクト名を取得する
+        /// </summary>
+        public static bool TryGetLowestLayerProjectName(out string projectName)
+        {
+            var projects = ProjectSetting.ProjectList.OrderBy(p => p.layer).ToList();
+            if (projects.Any())
+            {
+                projectName = projects.First().projectName;
+                return true;
+            }
+            projectName = null;
+            return false;
         }
     }
 }

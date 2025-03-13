@@ -28,27 +28,44 @@ namespace Landscape2.Runtime.BuildingEditor
         {
             // セーブデータ用クラスに現在の建物編集データをコピー
             List<BuildingSaveData> buildingSaveDatas = new List<BuildingSaveData>();
-            int buildingDataCount = BuildingsDataComponent.GetPropertyCount();
-            for (int i = 0; i < buildingDataCount; i++)
-            {
-                BuildingProperty buildingProperty = BuildingsDataComponent.GetProperty(i);
 
-                if (!string.IsNullOrEmpty(projectID))
+            // プロジェクトIDが指定されている場合は、そのプロジェクトのデータのみを保存
+            if (!string.IsNullOrEmpty(projectID))
+            {
+                int buildingDataCount = BuildingsDataComponent.GetPropertyCount();
+                for (int i = 0; i < buildingDataCount; i++)
                 {
+                    BuildingProperty buildingProperty = BuildingsDataComponent.GetProperty(i);
                     if (!ProjectSaveDataManager.TryCheckData(ProjectSaveDataType.EditBuilding, projectID, buildingProperty.ID))
                     {
                         continue;
                     }
-                }
 
-                BuildingSaveData saveData = new BuildingSaveData(
-                    buildingProperty.GmlID,
-                    buildingProperty.ColorData,
-                    buildingProperty.SmoothnessData,
-                    buildingProperty.IsDeleted
+                    var saveData = new BuildingSaveData(
+                        buildingProperty.GmlID,
+                        buildingProperty.ColorData,
+                        buildingProperty.SmoothnessData,
+                        buildingProperty.IsDeleted
                     );
+                    buildingSaveDatas.Add(saveData);
+                }
+            }
+            else
+            {
+                int buildingDataCount = BuildingsDataComponent.GetPropertyCount();
+                for (int i = 0; i < buildingDataCount; i++)
+                {
+                    BuildingProperty buildingProperty = BuildingsDataComponent.GetProperty(i);
 
-                buildingSaveDatas.Add(saveData);
+                    var minLayerValuesResult = BuildingsDataComponent.GetMinLayerPropertyValues(buildingProperty.GmlID);
+                    var saveData = new BuildingSaveData(
+                        buildingProperty.GmlID,
+                        minLayerValuesResult.colors,
+                        minLayerValuesResult.smoothness,
+                        minLayerValuesResult.isDeleted
+                    );
+                    buildingSaveDatas.Add(saveData);
+                }
             }
 
             // データを保存
@@ -104,7 +121,7 @@ namespace Landscape2.Runtime.BuildingEditor
                 }
             }
             
-            BuildingsDataComponent.DeleteProperty(deleteBuildingProperty);
+            BuildingsDataComponent.DeleteProperty(deleteBuildingProperty, projectID);
         }
         
         private void SetProjectInfo(string projectID)

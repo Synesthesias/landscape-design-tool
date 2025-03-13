@@ -215,13 +215,27 @@ namespace Landscape2.Runtime
 
             layoutUI.OnClickOKButton += () =>
             {
-                saveLoadSystem.AddSaveData(
-                    new BIMImportSaveData(
-                        currentLoadIfcObject,
-                        loadIfcDataDict[currentLoadIfcObject.GetInstanceID().ToString()]
-                            .glbData
-                    )
-                );
+                
+                if (saveLoadSystem.SaveDataList.Any(x => x.ID == currentLoadIfcObject.GetInstanceID().ToString()))
+                {
+                    saveLoadSystem.UpdateSaveData(
+                        currentLoadIfcObject.transform.position,
+                        currentLoadIfcObject.transform.eulerAngles,
+                        currentLoadIfcObject.transform.localScale,
+                        currentLoadIfcObject.GetInstanceID().ToString()
+                    );
+                }
+                else
+                {
+                    saveLoadSystem.AddSaveData(
+                        new BIMImportSaveData(
+                            currentLoadIfcObject,
+                            loadIfcDataDict[currentLoadIfcObject.GetInstanceID().ToString()]
+                                .glbData
+                        )
+                    );
+                }
+
 
                 ChangeEditMode(LayoutMode.None);
                 layoutUI.ReleaseTarget();
