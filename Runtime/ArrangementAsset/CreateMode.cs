@@ -70,8 +70,6 @@ namespace Landscape2.Runtime
             {
                 GameObject parent = GameObject.Find("CreatedAssets");
                 generatedAsset = GameObject.Instantiate(obj, hit.point, Quaternion.identity, parent.transform) as GameObject;
-
-                SetBuriedHeight(hit.point, generatedAsset);
             }
             else
             {
@@ -94,19 +92,6 @@ namespace Landscape2.Runtime
             // アセット生成時に必要コンポーネント付与
             AssetPlacedDirectionComponent.TryAdd(generatedAsset);
             component = generatedAsset.GetComponent<AssetPlacedDirectionComponent>();
-        }
-
-        /// <summary>
-        /// 配置時の埋まっている部分の高さを設定
-        /// </summary>
-        private void SetBuriedHeight(Vector3 hitPoint, GameObject target)
-        {
-            var meshRenderers = target.transform.GetComponentsInChildren<MeshRenderer>();
-            foreach (var renderer in meshRenderers)
-            {
-                buriedHeight = hitPoint.y - renderer.bounds.min.y;
-                break;
-            }
         }
 
         public void SetAsset(string assetName, IList<GameObject> plateauAssets)
