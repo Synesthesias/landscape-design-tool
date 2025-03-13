@@ -22,7 +22,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             wallMaterial = Resources.Load<Material>("Materials/PlanAreaWallMaterial");
             ceilingMaterial = Resources.Load<Material>("Materials/PlanAreaCeilingMaterial");
             ceilingMaterial.SetFloat("_Alpha", 0.2f);
-            ceilingMaterial.SetFloat("_Intensity", 3f);
         }
 
         /// <summary>
@@ -39,7 +38,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             var encoding = DetectEncoding(gisTargetFolderPath);
 
             // GISデータの読み込みとメッシュオブジェクトの生成
-            using (ShapefileRenderManager shapefileRenderManager = new ShapefileRenderManager(gisTargetFolderPath, 0 /*RenderMode:Mesh*/, 0, false, false,encoding, null))
+            using (ShapefileRenderManager shapefileRenderManager = new ShapefileRenderManager(gisTargetFolderPath, 0 /*RenderMode:Mesh*/, 0, false, false, encoding, null))
             {
                 if (shapefileRenderManager.Read(0, out listOfGISObjects, out listOfAreaPointDatas))
                 {
@@ -68,7 +67,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 List<List<Vector3>> areaPointData = listOfAreaPointDatas[i];
 
                 //GISデータのプロパティを取得
-               DbfComponent dbf = gisObject.GetComponent<DbfComponent>();
+                DbfComponent dbf = gisObject.GetComponent<DbfComponent>();
                 if (dbf == null)
                 {
                     Debug.LogError("GisObject have no DbfComponent");
@@ -102,13 +101,13 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     Debug.LogError($"{gisObject.name} is out of range of the loaded map");
                     continue;
                 }
-                
+
                 // コライダー判定用のMeshColliderを追加
                 if (!gisObject.GetComponent<AreaPlanningCollisionHandler>())
                 {
                     gisObject.AddComponent<AreaPlanningCollisionHandler>();
                 }
-                
+
                 //新規のAreaPropertyを生成し初期化
                 float initLimitHeight = float.TryParse(GetPropertyValueOf("HEIGHT", dbf), out float heightValue) ? heightValue : 50; // 区画の制限高さを取得
                 int id = int.TryParse(GetPropertyValueOf("ID", dbf), out int idValue) ? idValue : 0;
@@ -136,8 +135,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 gisObjMeshRenderer.material = areaProperty.CeilingMaterial;
 
                 //区画のメッシュから下向きに壁を生成
-               GameObject[] walls = wallGenerator.GenerateWall(mesh, areaProperty.WallMaxHeight, Vector3.down, areaProperty.WallMaterial);
-                for(int j = 0; j < walls.Length; j++)
+                GameObject[] walls = wallGenerator.GenerateWall(mesh, areaProperty.WallMaxHeight, Vector3.down, areaProperty.WallMaterial);
+                for (int j = 0; j < walls.Length; j++)
                 {
                     walls[j].transform.SetParent(gisObject.transform);
                     walls[j].transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
@@ -155,7 +154,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
                 //区画データリストにAreaPropertyを追加登録
                 AreasDataComponent.AddNewProperty(areaProperty);
-                
+
                 loadedAreaProperties.Add(areaProperty);
             }
             Debug.Log("Mesh modification and wall generation completed");
@@ -173,7 +172,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             List<List<List<Vector3>>> listOfAreaPointDatas;
 
             var loadedAreaProperties = new List<AreaProperty>();
-            
+
             // 景観区画の頂点データを取得
             listOfAreaPointDatas = new List<List<List<Vector3>>>();
             foreach (PlanAreaSaveData saveData in saveDatas)
@@ -235,13 +234,13 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     Debug.LogError($"{gisObject.name} is out of range of the loaded map");
                     return loadedAreaProperties;
                 }
-                
+
                 // コライダー判定用のMeshColliderを追加
                 if (!gisObject.GetComponent<AreaPlanningCollisionHandler>())
                 {
                     gisObject.AddComponent<AreaPlanningCollisionHandler>();
                 }
-                
+
                 // 新規のAreaPropertyを生成し初期化
                 float initLimitHeight = saveData.LimitHeight;
                 AreaProperty areaProperty = new AreaProperty(
@@ -280,13 +279,13 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     areaProperty.Transform.localPosition.z
                     ));
                 gisObject.name = $"Area_{areaProperty.ID}";
-                
+
                 // 高さを適用
                 areaProperty.ApplyBuildingHeight(areaProperty.IsApplyBuildingHeight);
 
                 // 区画データリストにAreaPropertyを追加登録
                 AreasDataComponent.AddNewProperty(areaProperty);
-                
+
                 // ロードしたAreaPropertyをリストに追加
                 loadedAreaProperties.Add(areaProperty);
             }
