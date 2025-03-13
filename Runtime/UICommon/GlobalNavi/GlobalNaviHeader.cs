@@ -35,7 +35,7 @@ namespace Landscape2.Runtime
         private const string UIFunctionContainer = "FunctionContainer";
         // プロジェクト管理パネル名前
         private const string UIProjectElement = "Project_List_Container";
-        
+
         // サブメニューのuxmlを格納する配列
         public VisualElement[] subMenuUxmls;
 
@@ -130,6 +130,7 @@ namespace Landscape2.Runtime
                                 subMenuUxmls[button.tabIndex].style.display = DisplayStyle.Flex;
                                 lastSubMenuUxml = subMenuUxmls[button.tabIndex];
                             }
+                            globalNaviFunctionsUI.ResetHideUI();
                         }
                     });
                 });
@@ -153,6 +154,14 @@ namespace Landscape2.Runtime
 
             //歩行者モードトグルボタンが押されたら変更する
             globalNaviFunctionsUI.OnToggleWalkMode.AddListener(OnToggleWalkModeValueChanged);
+
+            globalNaviFunctionsUI.OnToggleHideUI.AddListener((v) =>
+            {
+                if (lastSubMenuUxml != null)
+                {
+                    lastSubMenuUxml.style.display = !v ? DisplayStyle.Flex : DisplayStyle.None;
+                }
+            });
 
             SetRightNaviView(uiRoot);
         }
