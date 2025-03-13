@@ -12,7 +12,6 @@
                     <ui:Label tabindex="-1" text="高さ" parse-escape-sequences="true" display-tooltip-when-elided="true" style="width: 50px; font-size: 16px; -unity-text-align: middle-right; flex-shrink: 0;" />
                     <ui:TextField picking-mode="Ignore" label="Text Field" value="50" name="AreaPlanningHeight" style="width: 20%; flex-shrink: 1; font-size: 18px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
                     <ui:Label tabindex="-1" text="m" parse-escape-sequences="true" display-tooltip-when-elided="true" style="font-size: 16px; margin-left: 0;" />
-                    <ui:Button text="元に戻す" parse-escape-sequences="true" display-tooltip-when-elided="true" name="HeightResetButton" class="OutlineButton" />
                 </ui:VisualElement>
                 <ui:VisualElement style="flex-grow: 0; flex-direction: row; justify-content: center; align-items: center; flex-shrink: 1; width: 100%;">
                     <ui:Label tabindex="-1" text="選択色" parse-escape-sequences="true" display-tooltip-when-elided="true" style="width: 50px; font-size: 16px; -unity-text-align: middle-right; flex-shrink: 0;" />

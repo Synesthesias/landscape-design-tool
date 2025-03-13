@@ -104,8 +104,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 10.0f,
                 color,
                 wallMaxHeight,
-                listOfVertices,
-                false
+                listOfVertices
                 );
             List<PlanAreaSaveData>listOfSaveData = new List<PlanAreaSaveData>
             {

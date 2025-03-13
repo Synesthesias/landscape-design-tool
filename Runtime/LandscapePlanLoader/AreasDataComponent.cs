@@ -254,12 +254,11 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         public float WallMaxHeight { get; private set; }
         public Transform Transform { get; private set; }
         public Vector3 ReferencePosition { get; private set; }
-        public List<List<Vector3>> PointData { get; set; }
-        public bool IsApplyBuildingHeight { get; private set; }
+        public List<List<Vector3>> PointData { get ; set; }
         private AreaPlanningBuildingHeight areaBuildingHeight;
         public bool IsEditable { get; private set; } // 操作可能かどうか
 
-        public AreaProperty(int id, string name, float limitHeight, float lineOffset, Color areaColor, Material wallMaterial, Material ceilingMaterial, float wallMaxHeight, Vector3 referencePos, Transform areaTransform, List<List<Vector3>> pointData, bool isApplyBuildingHeight)
+        public AreaProperty(int id, string name, float limitHeight, float lineOffset, Color areaColor, Material wallMaterial, Material ceilingMaterial, float wallMaxHeight, Vector3 referencePos, Transform areaTransform, List<List<Vector3>> pointData)
         {
             ID = id;
             Name = name;
@@ -272,7 +271,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             ReferencePosition = referencePos;
             Transform = areaTransform;
             PointData = pointData;
-            IsApplyBuildingHeight = isApplyBuildingHeight;
             IsEditable = true;
 
             areaBuildingHeight = new AreaPlanningBuildingHeight(areaTransform);
@@ -289,8 +287,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
         public void ApplyBuildingHeight(bool isApply)
         {
-            IsApplyBuildingHeight = isApply;
-
             // 高さを一度リセット
             areaBuildingHeight.Reset();
             if (isApply)

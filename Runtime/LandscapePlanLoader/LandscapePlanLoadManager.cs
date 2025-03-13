@@ -125,8 +125,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     Mathf.Max(300, initLimitHeight + 50),
                     gisObject.transform.position + mesh.bounds.center,
                     gisObject.transform,
-                    areaPointData,
-                    false
+                    areaPointData
                     );
 
 
@@ -254,8 +253,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     Mathf.Max(300, initLimitHeight + 50),
                     gisObject.transform.position + mesh.bounds.center,
                     gisObject.transform,
-                    areaPointData,
-                    saveData.IsApplyBuildingHeight
+                    areaPointData
                     );
 
                 // 上面Meshのマテリアルを設定
@@ -281,7 +279,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 gisObject.name = $"Area_{areaProperty.ID}";
 
                 // 高さを適用
-                areaProperty.ApplyBuildingHeight(areaProperty.IsApplyBuildingHeight);
+                areaProperty.ApplyBuildingHeight(true);
 
                 // 区画データリストにAreaPropertyを追加登録
                 AreasDataComponent.AddNewProperty(areaProperty);

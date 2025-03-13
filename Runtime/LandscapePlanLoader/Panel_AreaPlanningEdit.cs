@@ -33,10 +33,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             panel_PointEditor.RegisterCallback<MouseUpEvent>(ev => OnReleasePanel());
             panel_PointEditor.style.display = DisplayStyle.None;
 
-            // 高さ 元に戻す
-            heightResetButton = panel_AreaPlanningEdit.Q<Button>("HeightResetButton");
-            heightResetButton.clicked += ResetHeight;
-
             base.InitializeUI();
             base.RegisterCommonCallbacks();
         }
@@ -52,8 +48,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 CameraMoveByUserInput.IsCameraMoveActive = true;
                 areaPlanningEdit.CreatePinline();
 
-                // 高さボタンの活性化
-                heightResetButton.SetEnabled(areaEditManager.IsApplyingBuildingHeight());
                 var color = planningUI.PopColorStack();
                 pasteButton.SetEnabled(color != null);  // pasteボタンは色を取ってきて存在していたら最初から有効
                 base.DisplaySnackbar("頂点ピンをドラッグすると形状を編集できます");
@@ -179,11 +173,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             areaEditManager.ConfirmUpdatedProperty();
             planningUI.InvokeOnChangeConfirmed();
 
-            // 高さを反映し直す
-            if (areaEditManager.IsApplyingBuildingHeight())
-            {
-                areaEditManager.ApplyBuildingHeight(true);
-            }
+            // 高さを反映
+            areaEditManager.ApplyBuildingHeight(true);
         }
 
         /// <summary>
@@ -262,18 +253,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             areaPlanningName.value = name == null ? "" : name;
             areaPlanningHeight.value = height == null ? "" : height.ToString();
             areaPlanningColor.style.backgroundColor = areaEditManager.GetColor();
-        }
-
-        private void ApplyHeight()
-        {
-            areaEditManager.ApplyBuildingHeight(true);
-            heightResetButton.SetEnabled(true);
-        }
-
-        private void ResetHeight()
-        {
-            areaEditManager.ApplyBuildingHeight(false);
-            heightResetButton.SetEnabled(false);
         }
 
         protected override void OnCopyButtonClicked()
