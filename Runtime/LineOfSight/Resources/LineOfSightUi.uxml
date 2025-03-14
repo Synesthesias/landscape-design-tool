@@ -144,12 +144,12 @@
                                     </ui:VisualElement>
                                     <ui:VisualElement style="flex-grow: 1; flex-direction: row; margin-top: 0; align-items: center;">
                                         <ui:VisualElement style="flex-grow: 1; flex-direction: row; align-items: center; height: auto; width: 50%;">
-                                            <ui:Label tabindex="-1" text="上下：" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Title_Vertical" style="color: rgb(128, 213, 212); margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+                                            <ui:Label tabindex="-1" text="高さ：" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Title_Vertical" style="color: rgb(128, 213, 212); margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
                                             <ui:Label tabindex="-1" text="90" parse-escape-sequences="true" display-tooltip-when-elided="true" name="vertical" style="color: rgb(128, 213, 212); margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; display: flex;" />
-                                            <ui:Label tabindex="-1" text="°" parse-escape-sequences="true" display-tooltip-when-elided="true" name="unit" style="color: rgb(128, 213, 212); margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+                                            <ui:Label tabindex="-1" text="m" parse-escape-sequences="true" display-tooltip-when-elided="true" name="unit" style="color: rgb(128, 213, 212); margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
                                         </ui:VisualElement>
                                         <ui:VisualElement style="flex-grow: 1; width: 50%; flex-direction: row; align-items: center;">
-                                            <ui:Label tabindex="-1" text="左右：" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Title_Horizontal" style="color: rgb(128, 213, 212); margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 12px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+                                            <ui:Label tabindex="-1" text="幅：" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Title_Horizontal" style="color: rgb(128, 213, 212); margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 12px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
                                             <ui:Label tabindex="-1" text="90" parse-escape-sequences="true" display-tooltip-when-elided="true" name="horizontal" style="color: rgb(128, 213, 212); margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
                                             <ui:Label tabindex="-1" text="°" parse-escape-sequences="true" display-tooltip-when-elided="true" name="unit" style="color: rgb(128, 213, 212); margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
                                         </ui:VisualElement>
@@ -196,12 +196,12 @@
                                         <ui:VisualElement style="flex-grow: 1; flex-direction: row; align-items: center; height: auto; width: 50%;">
                                             <ui:Label tabindex="-1" text="上方向：" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Title_Upper" style="color: rgb(128, 213, 212); margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
                                             <ui:Label tabindex="-1" text="90" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Upper" style="color: rgb(128, 213, 212); margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; display: flex;" />
-                                            <ui:Label tabindex="-1" text="°" parse-escape-sequences="true" display-tooltip-when-elided="true" name="unit" style="color: rgb(128, 213, 212); margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+                                            <ui:Label tabindex="-1" text="m" parse-escape-sequences="true" display-tooltip-when-elided="true" name="unit" style="color: rgb(128, 213, 212); margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
                                         </ui:VisualElement>
                                         <ui:VisualElement style="flex-grow: 1; width: 50%; flex-direction: row; align-items: center;">
                                             <ui:Label tabindex="-1" text="下方向：" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Title_Under" style="color: rgb(128, 213, 212); margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 12px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
                                             <ui:Label tabindex="-1" text="90" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Under" style="color: rgb(128, 213, 212); margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
-                                            <ui:Label tabindex="-1" text="°" parse-escape-sequences="true" display-tooltip-when-elided="true" name="unit" style="color: rgb(128, 213, 212); margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+                                            <ui:Label tabindex="-1" text="m" parse-escape-sequences="true" display-tooltip-when-elided="true" name="unit" style="color: rgb(128, 213, 212); margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
                                         </ui:VisualElement>
                                     </ui:VisualElement>
                                 </ui:VisualElement>
@@ -228,11 +228,11 @@
                     </ui:VisualElement>
                     <ui:VisualElement style="flex-grow: 1; align-items: center; justify-content: center;">
                         <ui:VisualElement name="row" style="flex-grow: 0; flex-direction: row; align-items: center; width: 100%;">
-                            <ui:Label tabindex="-1" text="上下" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
+                            <ui:Label tabindex="-1" text="高さ" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
                             <ui:SliderInt label="SliderInt" high-value="100" show-input-field="true" name="VerticalSlider" style="flex-shrink: 1; width: 100%;" />
                         </ui:VisualElement>
                         <ui:VisualElement name="row" style="flex-grow: 0; flex-direction: row; align-items: center; margin-top: 24px; width: 100%;">
-                            <ui:Label tabindex="-1" text="左右" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
+                            <ui:Label tabindex="-1" text=" 幅 " parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
                             <ui:SliderInt label="SliderInt" high-value="100" show-input-field="true" name="HorizontalSlider" style="flex-shrink: 1; width: 100%;" />
                         </ui:VisualElement>
                     </ui:VisualElement>
