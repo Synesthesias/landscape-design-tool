@@ -189,5 +189,13 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             if (editingAreaIndex == -1) return;
             AreasDataComponent.ApplyBuildingHeight(editingAreaIndex, isApply);
         }
+
+        /// <summary>
+        /// 対象区画のリスト番号を取得するメソッド
+        /// </summary>
+        public int GetEditingAreaIndex()
+        {
+            return editingAreaIndex;
+        }
     }
 }

@@ -292,6 +292,63 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             return loadedAreaProperties;
         }
 
+        /// <summary>
+        /// 既に登録された区画データのメッシュオブジェクトを頂点データから再生成するメソッド
+        /// </summary>
+        public void ReloadMeshes(List<List<Vector3>> listOfVertices,int index)
+        {
+            // テッセレーション処理を行ったメッシュを生成
+            AreaProperty areaProperty = AreasDataComponent.GetProperty(index);
+            GameObject gisObject = areaProperty.Transform.gameObject;
+            if (gisObject == null)
+            {
+                Debug.LogError("GIS object is not found");
+                return;
+            }
+
+            MeshFilter gisObjMeshFilter = gisObject.GetComponent<MeshFilter>();
+            TessellatedMeshCreator tessellatedMeshCreator = new TessellatedMeshCreator();
+            tessellatedMeshCreator.CreateTessellatedMesh(listOfVertices, gisObjMeshFilter, 30, 40);
+            Mesh mesh = gisObjMeshFilter.sharedMesh;
+
+            // Meshを変形
+            LandscapePlanMeshModifier landscapePlanMeshModifier = new LandscapePlanMeshModifier();
+            if (!landscapePlanMeshModifier.TryModifyMeshToTargetHeight(mesh, areaProperty.LimitHeight, gisObject.transform.position))
+            {
+                Debug.LogError($"{gisObject.name} is out of range of the loaded map");
+                return;
+            }
+
+            //GISオブジェクトの壁オブジェクトを削除
+            for (int i = 0; i < gisObject.transform.childCount; i++)
+            {
+                GameObject wallObject = gisObject.transform.GetChild(i).gameObject;
+                if (wallObject.name.Contains("AreaWall"))
+                {
+                    GameObject.Destroy(wallObject);
+                }
+            }
+            WallGenerator wallGenerator = new WallGenerator();
+            // 区画のメッシュから下向きに壁を再生成
+            GameObject[] walls = wallGenerator.GenerateWall(mesh, areaProperty.WallMaxHeight, Vector3.down, areaProperty.WallMaterial);
+            for (int j = 0; j < walls.Length; j++)
+            {
+                //GameObject wallObject = GameObject.Find($"AreaWall_{areaEditManager.GetAreaID()}_{j}");
+                // 存在する壁オブジェクトを削除
+                //if (wallObject != null) GameObject.Destroy(wallObject);
+
+                walls[j].transform.SetParent(gisObject.transform);
+                walls[j].transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+                walls[j].name = $"AreaWall_{areaProperty.ID}_{j}";
+
+
+                areaProperty.SetLocalPosition(new Vector3(
+                    areaProperty.Transform.localPosition.x,
+                    areaProperty.LimitHeight,
+                    areaProperty.Transform.localPosition.z
+                    ));
+            }
+        }
 
         /// <summary>
         /// フォルダ選択用のダイアログを開き、パスを取得するメソッド
