@@ -158,6 +158,12 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             }
             Debug.Log("Mesh modification and wall generation completed");
 
+            foreach (var loadedProperty in loadedAreaProperties)
+            {
+                // プロジェクトへ保存
+                ProjectSaveDataManager.Add(ProjectSaveDataType.LandscapePlan, loadedProperty.ID.ToString());
+            }
+            
             return loadedAreaProperties;
         }
 
