@@ -1,7 +1,7 @@
 # GISデータ読み込み画面の操作方法
 
 ![GISデータ読み込み](../resources/GisDataList/GisDataList.png)
-- 
+
 - GISデータ読み込み画面では、ShapeファイルもしくはGeoJSONファイルを読み込むことができます。
 - 読み込んだGISデータを元に、建物上部に関連した建物情報とピンを表示できます。
 
