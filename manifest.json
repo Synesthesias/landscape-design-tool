@@ -1,6 +1,15 @@
 {
+  "sitemap": {
+    "fileOptions": {
+      "api/*": {
+        "changefreq": "daily"
+      }
+    },
+    "baseUrl": "https://github.com/Synesthesias/Landscape-Design-Tool-2/",
+    "changefreq": "weekly"
+  },
   "homepages": [],
-  "source_base_path": "D:/a/PLATEAU-UC22-045-landscape-design-tool/PLATEAU-UC22-045-landscape-design-tool/Documentation~",
+  "source_base_path": "D:/a/landscape-design-tool/landscape-design-tool/Documentation~",
   "xrefmap": "xrefmap.yml",
   "files": [
     {
@@ -13,588 +22,12 @@
       "is_incremental": false
     },
     {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LDTHandles.DragHandleResult.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LDTHandles.DragHandleResult.html",
-          "hash": "+0Ik2W2srXSAsYsz2bJWMmqS6qOKhbngmKK6svAaCqc="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LDTHandles.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LDTHandles.html",
-          "hash": "5q+Zbk4Auhe/sU+CmJsFdj0Z4cKZXhcMVygaA7t2+Oo="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.ChangeHeightHandler.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.ChangeHeightHandler.html",
-          "hash": "YzZDlyhmL/TpTv4qdmyqZyqA7k8u7MGvtGQqiIzt6eU="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.CollisionHandler.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.CollisionHandler.html",
-          "hash": "/4vEyatcrNkybGgb3QTuCMEtU7Gaibf5my0hz6SvoW4="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.HeighRegulationAreaHandlerUI.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.HeighRegulationAreaHandlerUI.html",
-          "hash": "3k6UDwU0ZOycRO9iG7fg/W06V9al7HQYaBe2oWffzB0="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.MenuHandler.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.MenuHandler.html",
-          "hash": "vIP66aobanOdoZafZ5yvi1rFooH1mNJTVNrS9SYo3E0="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.RGBColorSelectUI.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.RGBColorSelectUI.html",
-          "hash": "tYEsDXB9bhzjnW6+T28xuC/5jiYyPDaQjg6TMn7AAf4="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.RGBColorSelectUIElement.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.RGBColorSelectUIElement.html",
-          "hash": "ot1u+dxeDghNt/dMk7fRLjrYGQdtJVmuTPqVDyJc3+Q="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.RegulationAreaHandlerUI.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.RegulationAreaHandlerUI.html",
-          "hash": "44PrWSBJQQLBQiLSYBdd2GnPHMpX+KnVwnouNZbNW4g="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.TmpHeight.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.TmpHeight.html",
-          "hash": "nCVnGWuUTAATXrzDKdyXonxyNLw4yFAysPBfcsPyAcY="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.ViewPointUIHandler.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.ViewPointUIHandler.html",
-          "hash": "oe+5MhiLILyjCYG69MauwZ8Nro+OGWZGtVOMZmN10Pk="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.ViewRegulationAreaHandlerUI.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.ViewRegulationAreaHandlerUI.html",
-          "hash": "yblyU0y5Q886V6LUUuwNJUwWb0yZ5M8kCIdjzAuK6e4="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.WeatherHandler.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool.WeatherHandler.html",
-          "hash": "H0Tog9hBvFd8GOLE2JyGvECCdevSeSKt+B7KLyQ3rGg="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool_1.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandScapeDesignTool_1.html",
-          "hash": "FKB1MHhR59xQXJbG7oCM/+H2ePzdr2cRy97Wkv+EIMw="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.LandScapeViewPointEditor.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.LandScapeViewPointEditor.html",
-          "hash": "rQLLwH2fSof+MKG21UzZThO8zpQrkjDlQLJVTmjGXJY="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.LandscapeEditorStyle.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.LandscapeEditorStyle.html",
-          "hash": "8BCd/Ui6cQe+ejaUmthTOke/R0XOAwhV4HE/1fbCKIE="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.PackagePacker.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.PackagePacker.html",
-          "hash": "a8sxZHzE8e3/AV3o+pCd8T981KsA5dsPp8Yw+Ranvwo="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.RegulationAreaEditor.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.RegulationAreaEditor.html",
-          "hash": "5zefu0DcWzoB7NOg4O00+oSU2sGkNkYUunmHai040SA="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.TagAdder.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.TagAdder.html",
-          "hash": "OltBCXMuHY+7yQdphl1mfZPiGZmVfT2Laf4Wj9O+QW0="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.ViewRegulationEditor.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.ViewRegulationEditor.html",
-          "hash": "sweVbZmMVGri+/jB7Y2SKUfQ1wANe3lVTMBq5TtWjpI="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.ViewRegulationGUI.SurfaceType.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.ViewRegulationGUI.SurfaceType.html",
-          "hash": "hNVQfHj43CdALNbZjmS2aOiLtxxImbaSg+zpVJiWFso="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.ViewRegulationGUI.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.ViewRegulationGUI.html",
-          "hash": "KFIGwAicxzozMD2MVkZncfIpMlpfeqZUJlVe9pDrgUI="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.IGuiTabContents.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.IGuiTabContents.html",
-          "hash": "6Z3LI2kZu8UaEOSgMsrP+xUC/fpBqBePjZNNLbFOdGY="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabHeightRegulationGenerate.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabHeightRegulationGenerate.html",
-          "hash": "vABw5Wee5R6m1ncrVrhqMtNzPQ8h5d/EUFwY7auYyts="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabRegulationAreaExport.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabRegulationAreaExport.html",
-          "hash": "P6wia0GoG8Gi6a65/uURpW6TqgcquTzdAH8umm4UFRg="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabRegulationAreaGenerate.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabRegulationAreaGenerate.html",
-          "hash": "cWmPF0ypw1wCdZM+DgluT3MijB+lkrKY6nTfXmiq/ms="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabShapefileLoad.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabShapefileLoad.html",
-          "hash": "E+sjvsd3YpeC19CFnB6PLH0DRe3GXUc2n+NofJHshk8="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabViewPointGenerate.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabViewPointGenerate.html",
-          "hash": "l49Nr8Wwz76CwI6wilKr9lYd+B28B5aBS1qK6UwIJKY="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabViewportRegulationGenerate.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabViewportRegulationGenerate.html",
-          "hash": "haWaYawZQBtP/Jjii6ox9ClGbCRxLZYTJgLM9QknYck="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabWeatherAndTime.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.TabWeatherAndTime.html",
-          "hash": "g2eDy7Ym4LvD1PbKXwTP3n3GkeRcV7vbYkovD2ehdQU="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.WindowTabs.html",
-          "hash": "FbU2H9om57hiFfZV4VHGsMHBiYPJpzdy3GSENVOl3r0="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.Editor.html",
-          "hash": "yBMq7kiD8vwNTBT/P5+pM4sIqw5B8DJaqghqKrOOJx4="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.HeightRegulationAreaHandler.html",
-          "hash": "i50vR1Nv4Vh3tEucYKBxaxSesbrO38v8NjMGMvF+nP4="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.LDTShapeFileHandler.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.LDTShapeFileHandler.html",
-          "hash": "BXJwsDxQBbUbSYKEZmrhZF9ZJto5xEP2e3WrrVDmwN4="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.LDTTools.AreaType.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.LDTTools.AreaType.html",
-          "hash": "/OGuvMVpHknPV+Kjm7aeH3OFKnrrkWMmJ3OL+UcgxvQ="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.LDTTools.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.LDTTools.html",
-          "hash": "UrWdES91XACusM5Eoym0veTczTi0er2ZxTzceqPVzXw="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.RegulationArea.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.RegulationArea.html",
-          "hash": "s/4vl7j3ipbUPt+sasnBjyneLn8uraVyV5A2yNAjKvo="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.ShapeFileEditorHelper.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.ShapeFileEditorHelper.html",
-          "hash": "frKNj9XKmBWqAn0c+uCeaGbf20xtlgvTnxFrWckK1s0="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.ShapeItem.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.ShapeItem.html",
-          "hash": "VD49jGAoe+QqPR+64M2KQ/6/jwVRm6+2HxtcBuYvBBM="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeDesignTool.html",
-          "hash": "PY4wO1ddJVEfZvLP0aR+2d6mzxzTn8fSiGZndiagdBQ="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeViewPoint.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeViewPoint.html",
-          "hash": "I75S36ZIChD0MmqwGdImMcSYm+Np7f9y8e00srjqEog="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.LandscapeViewPointGroup.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.LandscapeViewPointGroup.html",
-          "hash": "F/BSJnGNfU4OIMH6v8hGYV5kumwRP1SDbiUoTgYCa14="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.MunsellColorHandler.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.MunsellColorHandler.html",
-          "hash": "hnB+scz2c6L71EY/Wm59u77od1AWoWtAWUq4T0qI0as="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.ShapeGeometryHelper.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.ShapeGeometryHelper.html",
-          "hash": "038bQdgnMm/HyaQ4iLw/LRYph+yC902FuJ3DweCaZ68="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.ViewRegulation.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.ViewRegulation.html",
-          "hash": "KT0Mp1dLDG3T7Zj2wvqRU1LCjg5pl5B6OoqcDdaJyuc="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.WalkThruHandler.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.WalkThruHandler.html",
-          "hash": "3vVsXvI4HGHgCm9o+PZCOYHhH347cAtaCoGXEYhJ600="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/LandscapeDesignTool.Editor.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/LandscapeDesignTool.Editor.html",
-          "hash": "0D75I6hnd1l4jI2yLUQ9652MdnHup7Q8s+FbtGClZ2w="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "Toc",
-      "source_relative_path": "api/toc.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/toc.html",
-          "hash": "29Z+o3SJOWg8y4Zu5TDB7CCzujyWkpbsCPc7wEvDejs="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
       "type": "Conceptual",
       "source_relative_path": "index.md",
       "output": {
         ".html": {
           "relative_path": "index.html",
-          "hash": "Yu0tAYKDfxvPOf2QSvmMxCNJ0rSjH6YtXD5eqCGy1OE="
+          "hash": "Ezs+IE4ls9XEl6qob6I6ANUYp1rUDLzQx3DK/TAS9ns="
         }
       },
       "is_incremental": false,
@@ -602,11 +35,11 @@
     },
     {
       "type": "Conceptual",
-      "source_relative_path": "manual/buildApp.md",
+      "source_relative_path": "manual/AssetPlacement.md",
       "output": {
         ".html": {
-          "relative_path": "manual/buildApp.html",
-          "hash": "3fN2qevLfZ/LNqig/7znZzgMJevOi7u4OySxjjesUeI="
+          "relative_path": "manual/AssetPlacement.html",
+          "hash": "q4mab2tGpUUvRituFBqIz3dIHScCkTJvU3eCWwfqWWo="
         }
       },
       "is_incremental": false,
@@ -614,11 +47,11 @@
     },
     {
       "type": "Conceptual",
-      "source_relative_path": "manual/buildForWeb.md",
+      "source_relative_path": "manual/BasicOperation.md",
       "output": {
         ".html": {
-          "relative_path": "manual/buildForWeb.html",
-          "hash": "GZp6uCZ6wmoZk2Me3CgMiFaMS1FZywJO/fOQdzo0Nhs="
+          "relative_path": "manual/BasicOperation.html",
+          "hash": "st+SzKRyT9KZAvpr/a6V9IcVdCMdyHisEC0QTGlg/9A="
         }
       },
       "is_incremental": false,
@@ -626,26 +59,11 @@
     },
     {
       "type": "Conceptual",
-      "source_relative_path": "manual/install.md",
+      "source_relative_path": "manual/BimData.md",
       "output": {
         ".html": {
-          "relative_path": "manual/install.html",
-          "hash": "CoVWeBDTfLr86w2SByLe1/IwwtAS93wTPmbQqs+eG8o="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "log_codes": [
-        "InvalidFileLink"
-      ],
-      "type": "Conceptual",
-      "source_relative_path": "manual/landscapeDesign.md",
-      "output": {
-        ".html": {
-          "relative_path": "manual/landscapeDesign.html",
-          "hash": "Rt5V2o5VTRlenJCOGAWZpK/ZzV460TPLaoSGSNGF45o="
+          "relative_path": "manual/BimData.html",
+          "hash": "fK1TwF5ylls1Ho7sbGw7pd0x8u4dsoLRofrvZAQ/Lds="
         }
       },
       "is_incremental": false,
@@ -653,11 +71,11 @@
     },
     {
       "type": "Conceptual",
-      "source_relative_path": "manual/landscapeDiscussion.md",
+      "source_relative_path": "manual/Build.md",
       "output": {
         ".html": {
-          "relative_path": "manual/landscapeDiscussion.html",
-          "hash": "GpE/Cy1EfDu4njBvvyPyo07n7rq7tw8HY0Ddh6cxln0="
+          "relative_path": "manual/Build.html",
+          "hash": "GdscD5Qe+pFXu15MIVnnboSo07Rc6kPkJWVr5z4XdSQ="
         }
       },
       "is_incremental": false,
@@ -665,11 +83,119 @@
     },
     {
       "type": "Conceptual",
-      "source_relative_path": "manual/loadingNewBuildings.md",
+      "source_relative_path": "manual/BuildingEdit.md",
       "output": {
         ".html": {
-          "relative_path": "manual/loadingNewBuildings.html",
-          "hash": "W9AKgPb/xHgypHZ07DDfFnyiD9x5kXHQgApqOla8GH8="
+          "relative_path": "manual/BuildingEdit.html",
+          "hash": "9VLfLJvwST3WMPM9ihe1tI5OduMUqtcPe3zxKZVPOas="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "manual/DistantView.md",
+      "output": {
+        ".html": {
+          "relative_path": "manual/DistantView.html",
+          "hash": "0Tp3QH1VyvGdZY75p4T/42iU9ugimsGAQL32ST0vFBU="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "manual/GisDataList.md",
+      "output": {
+        ".html": {
+          "relative_path": "manual/GisDataList.html",
+          "hash": "HhC/snO4o8uGE3cqcTMWF+WSPD+0rzX7TXYFxLhr4gE="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "manual/LandscapePlanningArea.md",
+      "output": {
+        ".html": {
+          "relative_path": "manual/LandscapePlanningArea.html",
+          "hash": "s183f8E14w7Qq7bDk8A4KDrNtajyflqFt6v7hmqfdLI="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "manual/LineOfSightAnalysis.md",
+      "output": {
+        ".html": {
+          "relative_path": "manual/LineOfSightAnalysis.html",
+          "hash": "ZuRSXCtQK/Ztv7nIYjpT7kdobtG8aczm1Csxn4WKpYI="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "manual/Setup.md",
+      "output": {
+        ".html": {
+          "relative_path": "manual/Setup.html",
+          "hash": "WDmKF3AfdeQSDik+nL2mRhYgihbS9qF6Y5Q8wP514b8="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "manual/ViewpointEdit.md",
+      "output": {
+        ".html": {
+          "relative_path": "manual/ViewpointEdit.html",
+          "hash": "oLLc7eN8FYFz1CKXD5S8hvHWPjP1Q7fO7iwkFF0wpCM="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "manual/ViewpointList.md",
+      "output": {
+        ".html": {
+          "relative_path": "manual/ViewpointList.html",
+          "hash": "Qx4I/fGMPp0o94Eu/q1gzdGUlQEp+ZlZMdUzv8CNtF8="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "manual/navigation.md",
+      "output": {
+        ".html": {
+          "relative_path": "manual/navigation.html",
+          "hash": "uMjzgqScCpaEupZNJ0VydPesggyUoTXD/MqRu2Dyp3k="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "manual/project.md",
+      "output": {
+        ".html": {
+          "relative_path": "manual/project.html",
+          "hash": "wZNh1MDzdRQb0pM3DPA+alkgc8O4ISY9UqQRhB1j6u4="
         }
       },
       "is_incremental": false,
@@ -681,7 +207,7 @@
       "output": {
         ".html": {
           "relative_path": "manual/toc.html",
-          "hash": "+sIeVYkzhB0VVFqgKan84wvvs0qES3w5Zpkb+8nielw="
+          "hash": "BCH4SDz8XNidjNZdFU2KEHtJ3i+yvvfa9Js4VuVNNPg="
         }
       },
       "is_incremental": false,
@@ -689,10 +215,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/buildApp/buildAppMenu.png",
+      "source_relative_path": "resources/AssetPlacement/AssetPlacement_advertisement.png",
       "output": {
         "resource": {
-          "relative_path": "resources/buildApp/buildAppMenu.png"
+          "relative_path": "resources/AssetPlacement/AssetPlacement_advertisement.png"
         }
       },
       "is_incremental": false,
@@ -700,10 +226,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/buildApp/buildingDesignChange.png",
+      "source_relative_path": "resources/AssetPlacement/AssetPlacement_advertisement_edit.png",
       "output": {
         "resource": {
-          "relative_path": "resources/buildApp/buildingDesignChange.png"
+          "relative_path": "resources/AssetPlacement/AssetPlacement_advertisement_edit.png"
         }
       },
       "is_incremental": false,
@@ -711,10 +237,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/buildApp/weatherSetting.png",
+      "source_relative_path": "resources/AssetPlacement/AssetPlacement_building.png",
       "output": {
         "resource": {
-          "relative_path": "resources/buildApp/weatherSetting.png"
+          "relative_path": "resources/AssetPlacement/AssetPlacement_building.png"
         }
       },
       "is_incremental": false,
@@ -722,10 +248,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/buildForWeb/buildSettings.png",
+      "source_relative_path": "resources/AssetPlacement/AssetPlacement_bulk_place.png",
       "output": {
         "resource": {
-          "relative_path": "resources/buildForWeb/buildSettings.png"
+          "relative_path": "resources/AssetPlacement/AssetPlacement_bulk_place.png"
         }
       },
       "is_incremental": false,
@@ -733,10 +259,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/buildForWeb/buildSettingsOperation.png",
+      "source_relative_path": "resources/AssetPlacement/AssetPlacement_bulk_place_asset_error.png",
       "output": {
         "resource": {
-          "relative_path": "resources/buildForWeb/buildSettingsOperation.png"
+          "relative_path": "resources/AssetPlacement/AssetPlacement_bulk_place_asset_error.png"
         }
       },
       "is_incremental": false,
@@ -744,10 +270,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/buildForWeb/checkLocalOperation.png",
+      "source_relative_path": "resources/AssetPlacement/AssetPlacement_bulk_place_asset_select.png",
       "output": {
         "resource": {
-          "relative_path": "resources/buildForWeb/checkLocalOperation.png"
+          "relative_path": "resources/AssetPlacement/AssetPlacement_bulk_place_asset_select.png"
         }
       },
       "is_incremental": false,
@@ -755,10 +281,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/index/overview.png",
+      "source_relative_path": "resources/AssetPlacement/AssetPlacement_bulk_place_create.png",
       "output": {
         "resource": {
-          "relative_path": "resources/index/overview.png"
+          "relative_path": "resources/AssetPlacement/AssetPlacement_bulk_place_create.png"
         }
       },
       "is_incremental": false,
@@ -766,10 +292,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/index/topImage.png",
+      "source_relative_path": "resources/AssetPlacement/AssetPlacement_bulk_place_csv.png",
       "output": {
         "resource": {
-          "relative_path": "resources/index/topImage.png"
+          "relative_path": "resources/AssetPlacement/AssetPlacement_bulk_place_csv.png"
         }
       },
       "is_incremental": false,
@@ -777,10 +303,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/install/addPacakge.png",
+      "source_relative_path": "resources/AssetPlacement/AssetPlacement_bulk_place_csv_category.png",
       "output": {
         "resource": {
-          "relative_path": "resources/install/addPacakge.png"
+          "relative_path": "resources/AssetPlacement/AssetPlacement_bulk_place_csv_category.png"
         }
       },
       "is_incremental": false,
@@ -788,10 +314,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/install/apiCompatibilityLevel.png",
+      "source_relative_path": "resources/AssetPlacement/AssetPlacement_bulk_place_csv_template.png",
       "output": {
         "resource": {
-          "relative_path": "resources/install/apiCompatibilityLevel.png"
+          "relative_path": "resources/AssetPlacement/AssetPlacement_bulk_place_csv_template.png"
         }
       },
       "is_incremental": false,
@@ -799,10 +325,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/install/createProject.png",
+      "source_relative_path": "resources/AssetPlacement/AssetPlacement_bulk_place_end.png",
       "output": {
         "resource": {
-          "relative_path": "resources/install/createProject.png"
+          "relative_path": "resources/AssetPlacement/AssetPlacement_bulk_place_end.png"
         }
       },
       "is_incremental": false,
@@ -810,10 +336,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/install/editMenu.png",
+      "source_relative_path": "resources/AssetPlacement/AssetPlacement_bulk_place_shapefile.png",
       "output": {
         "resource": {
-          "relative_path": "resources/install/editMenu.png"
+          "relative_path": "resources/AssetPlacement/AssetPlacement_bulk_place_shapefile.png"
         }
       },
       "is_incremental": false,
@@ -821,10 +347,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/install/geographicFeatureSetting.png",
+      "source_relative_path": "resources/AssetPlacement/AssetPlacement_bulk_place_shapefile_category.png",
       "output": {
         "resource": {
-          "relative_path": "resources/install/geographicFeatureSetting.png"
+          "relative_path": "resources/AssetPlacement/AssetPlacement_bulk_place_shapefile_category.png"
         }
       },
       "is_incremental": false,
@@ -832,10 +358,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/install/packageManager.png",
+      "source_relative_path": "resources/AssetPlacement/AssetPlacement_create.png",
       "output": {
         "resource": {
-          "relative_path": "resources/install/packageManager.png"
+          "relative_path": "resources/AssetPlacement/AssetPlacement_create.png"
         }
       },
       "is_incremental": false,
@@ -843,10 +369,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/install/plateauMenu.png",
+      "source_relative_path": "resources/AssetPlacement/AssetPlacement_edit.png",
       "output": {
         "resource": {
-          "relative_path": "resources/install/plateauMenu.png"
+          "relative_path": "resources/AssetPlacement/AssetPlacement_edit.png"
         }
       },
       "is_incremental": false,
@@ -854,10 +380,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/install/plateauSdkMenu.png",
+      "source_relative_path": "resources/AssetPlacement/AssetPlacement_list.png",
       "output": {
         "resource": {
-          "relative_path": "resources/install/plateauSdkMenu.png"
+          "relative_path": "resources/AssetPlacement/AssetPlacement_list.png"
         }
       },
       "is_incremental": false,
@@ -865,10 +391,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/install/rangeSelectionScreen.png",
+      "source_relative_path": "resources/AssetPlacement/AssetPlacement_main.png",
       "output": {
         "resource": {
-          "relative_path": "resources/install/rangeSelectionScreen.png"
+          "relative_path": "resources/AssetPlacement/AssetPlacement_main.png"
         }
       },
       "is_incremental": false,
@@ -876,10 +402,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/install/unityHubInstall.png",
+      "source_relative_path": "resources/AssetPlacement/PlateauSandboxCSVTemplate.csv",
       "output": {
         "resource": {
-          "relative_path": "resources/install/unityHubInstall.png"
+          "relative_path": "resources/AssetPlacement/PlateauSandboxCSVTemplate.csv"
         }
       },
       "is_incremental": false,
@@ -887,10 +413,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/install/unityHubMenu.png",
+      "source_relative_path": "resources/BIMImport/BIMImport_Edit.png",
       "output": {
         "resource": {
-          "relative_path": "resources/install/unityHubMenu.png"
+          "relative_path": "resources/BIMImport/BIMImport_Edit.png"
         }
       },
       "is_incremental": false,
@@ -898,10 +424,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/install/unityHubProject.png",
+      "source_relative_path": "resources/BIMImport/BIMImport_Main.png",
       "output": {
         "resource": {
-          "relative_path": "resources/install/unityHubProject.png"
+          "relative_path": "resources/BIMImport/BIMImport_Main.png"
         }
       },
       "is_incremental": false,
@@ -909,10 +435,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/landscapeDesign/addingVertices.png",
+      "source_relative_path": "resources/BasicOperation/img_walkerview01.png",
       "output": {
         "resource": {
-          "relative_path": "resources/landscapeDesign/addingVertices.png"
+          "relative_path": "resources/BasicOperation/img_walkerview01.png"
         }
       },
       "is_incremental": false,
@@ -920,10 +446,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/landscapeDesign/creationOfHeightRestrictedArea.png",
+      "source_relative_path": "resources/Build/AddScene.png",
       "output": {
         "resource": {
-          "relative_path": "resources/landscapeDesign/creationOfHeightRestrictedArea.png"
+          "relative_path": "resources/Build/AddScene.png"
         }
       },
       "is_incremental": false,
@@ -931,10 +457,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/landscapeDesign/creationOfNewRestrictedArea.png",
+      "source_relative_path": "resources/Build/Build.png",
       "output": {
         "resource": {
-          "relative_path": "resources/landscapeDesign/creationOfNewRestrictedArea.png"
+          "relative_path": "resources/Build/Build.png"
         }
       },
       "is_incremental": false,
@@ -942,10 +468,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/landscapeDesign/editRegulationArea.png",
+      "source_relative_path": "resources/Build/PlayerSettings.png",
       "output": {
         "resource": {
-          "relative_path": "resources/landscapeDesign/editRegulationArea.png"
+          "relative_path": "resources/Build/PlayerSettings.png"
         }
       },
       "is_incremental": false,
@@ -953,10 +479,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/landscapeDesign/editingVertices.png",
+      "source_relative_path": "resources/Build/Ready.png",
       "output": {
         "resource": {
-          "relative_path": "resources/landscapeDesign/editingVertices.png"
+          "relative_path": "resources/Build/Ready.png"
         }
       },
       "is_incremental": false,
@@ -964,10 +490,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/landscapeDesign/generationOfRegulatedAreas.png",
+      "source_relative_path": "resources/CameraRotate/CameraRotateButton.png",
       "output": {
         "resource": {
-          "relative_path": "resources/landscapeDesign/generationOfRegulatedAreas.png"
+          "relative_path": "resources/CameraRotate/CameraRotateButton.png"
         }
       },
       "is_incremental": false,
@@ -975,10 +501,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/landscapeDesign/heightRestrictedArea.png",
+      "source_relative_path": "resources/DistantView/Disable.png",
       "output": {
         "resource": {
-          "relative_path": "resources/landscapeDesign/heightRestrictedArea.png"
+          "relative_path": "resources/DistantView/Disable.png"
         }
       },
       "is_incremental": false,
@@ -986,10 +512,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/landscapeDesign/indicationOfViewRestrictions.png",
+      "source_relative_path": "resources/DistantView/Enable.png",
       "output": {
         "resource": {
-          "relative_path": "resources/landscapeDesign/indicationOfViewRestrictions.png"
+          "relative_path": "resources/DistantView/Enable.png"
         }
       },
       "is_incremental": false,
@@ -997,10 +523,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/landscapeDesign/landscapePlanningButton.png",
+      "source_relative_path": "resources/EditBuilding/BuildingColorEditor.png",
       "output": {
         "resource": {
-          "relative_path": "resources/landscapeDesign/landscapePlanningButton.png"
+          "relative_path": "resources/EditBuilding/BuildingColorEditor.png"
         }
       },
       "is_incremental": false,
@@ -1008,10 +534,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/landscapeDesign/landscapePlanningScreen.png",
+      "source_relative_path": "resources/EditBuilding/DeleteBuilding.jpg",
       "output": {
         "resource": {
-          "relative_path": "resources/landscapeDesign/landscapePlanningScreen.png"
+          "relative_path": "resources/EditBuilding/DeleteBuilding.jpg"
         }
       },
       "is_incremental": false,
@@ -1019,10 +545,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/landscapeDesign/lineOfSightDisplay.png",
+      "source_relative_path": "resources/EditBuilding/DeleteBuilding_After.jpg",
       "output": {
         "resource": {
-          "relative_path": "resources/landscapeDesign/lineOfSightDisplay.png"
+          "relative_path": "resources/EditBuilding/DeleteBuilding_After.jpg"
         }
       },
       "is_incremental": false,
@@ -1030,10 +556,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/landscapeDesign/restrictionsOnViews.png",
+      "source_relative_path": "resources/EditBuilding/DeleteBuilding_AfterList.jpg",
       "output": {
         "resource": {
-          "relative_path": "resources/landscapeDesign/restrictionsOnViews.png"
+          "relative_path": "resources/EditBuilding/DeleteBuilding_AfterList.jpg"
         }
       },
       "is_incremental": false,
@@ -1041,10 +567,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/landscapeDesign/shapeFileExport.png",
+      "source_relative_path": "resources/EditBuilding/EditBuilding.png",
       "output": {
         "resource": {
-          "relative_path": "resources/landscapeDesign/shapeFileExport.png"
+          "relative_path": "resources/EditBuilding/EditBuilding.png"
         }
       },
       "is_incremental": false,
@@ -1052,10 +578,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/landscapeDiscussion/addViewpointField.png",
+      "source_relative_path": "resources/GisDataList/GisDataList.png",
       "output": {
         "resource": {
-          "relative_path": "resources/landscapeDiscussion/addViewpointField.png"
+          "relative_path": "resources/GisDataList/GisDataList.png"
         }
       },
       "is_incremental": false,
@@ -1063,10 +589,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/landscapeDiscussion/daytimeCase.png",
+      "source_relative_path": "resources/GisDataList/GisDataList_DataSelect.png",
       "output": {
         "resource": {
-          "relative_path": "resources/landscapeDiscussion/daytimeCase.png"
+          "relative_path": "resources/GisDataList/GisDataList_DataSelect.png"
         }
       },
       "is_incremental": false,
@@ -1074,10 +600,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/landscapeDiscussion/duskCase.png",
+      "source_relative_path": "resources/GisDataList/GisDataList_color_data_name.png",
       "output": {
         "resource": {
-          "relative_path": "resources/landscapeDiscussion/duskCase.png"
+          "relative_path": "resources/GisDataList/GisDataList_color_data_name.png"
         }
       },
       "is_incremental": false,
@@ -1085,10 +611,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/landscapeDiscussion/landscapeConsultationScreen.png",
+      "source_relative_path": "resources/GisDataList/GisDataList_delete.png",
       "output": {
         "resource": {
-          "relative_path": "resources/landscapeDiscussion/landscapeConsultationScreen.png"
+          "relative_path": "resources/GisDataList/GisDataList_delete.png"
         }
       },
       "is_incremental": false,
@@ -1096,10 +622,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/landscapeDiscussion/sceneryPreview.png",
+      "source_relative_path": "resources/GisDataList/GisDataList_file_select.png",
       "output": {
         "resource": {
-          "relative_path": "resources/landscapeDiscussion/sceneryPreview.png"
+          "relative_path": "resources/GisDataList/GisDataList_file_select.png"
         }
       },
       "is_incremental": false,
@@ -1107,10 +633,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/loadingNewBuildings/checkCoordinates.png",
+      "source_relative_path": "resources/GisDataList/GisDataList_list.png",
       "output": {
         "resource": {
-          "relative_path": "resources/loadingNewBuildings/checkCoordinates.png"
+          "relative_path": "resources/GisDataList/GisDataList_list.png"
         }
       },
       "is_incremental": false,
@@ -1118,10 +644,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/loadingNewBuildings/checkOriginInformation.png",
+      "source_relative_path": "resources/GisDataList/GisDataList_select.png",
       "output": {
         "resource": {
-          "relative_path": "resources/loadingNewBuildings/checkOriginInformation.png"
+          "relative_path": "resources/GisDataList/GisDataList_select.png"
         }
       },
       "is_incremental": false,
@@ -1129,10 +655,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/loadingNewBuildings/fbxImport.png",
+      "source_relative_path": "resources/GisDataList/GisDataList_view.png",
       "output": {
         "resource": {
-          "relative_path": "resources/loadingNewBuildings/fbxImport.png"
+          "relative_path": "resources/GisDataList/GisDataList_view.png"
         }
       },
       "is_incremental": false,
@@ -1140,10 +666,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/loadingNewBuildings/fbxPlacement.png",
+      "source_relative_path": "resources/HeightDisplay/HeightDisplayIcon.png",
       "output": {
         "resource": {
-          "relative_path": "resources/loadingNewBuildings/fbxPlacement.png"
+          "relative_path": "resources/HeightDisplay/HeightDisplayIcon.png"
         }
       },
       "is_incremental": false,
@@ -1151,10 +677,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/loadingNewBuildings/positionSetting.png",
+      "source_relative_path": "resources/HeightDisplay/HeightLimit.png",
       "output": {
         "resource": {
-          "relative_path": "resources/loadingNewBuildings/positionSetting.png"
+          "relative_path": "resources/HeightDisplay/HeightLimit.png"
         }
       },
       "is_incremental": false,
@@ -1162,10 +688,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/loadingNewBuildings/proBuilderMenu.png",
+      "source_relative_path": "resources/HeightDisplay/WalkerViewHeightDisplay.png",
       "output": {
         "resource": {
-          "relative_path": "resources/loadingNewBuildings/proBuilderMenu.png"
+          "relative_path": "resources/HeightDisplay/WalkerViewHeightDisplay.png"
         }
       },
       "is_incremental": false,
@@ -1173,10 +699,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/loadingNewBuildings/proBuilderWindowButton.png",
+      "source_relative_path": "resources/InitialSettings/InitialSettings_Finish.png",
       "output": {
         "resource": {
-          "relative_path": "resources/loadingNewBuildings/proBuilderWindowButton.png"
+          "relative_path": "resources/InitialSettings/InitialSettings_Finish.png"
         }
       },
       "is_incremental": false,
@@ -1184,10 +710,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/loadingNewBuildings/setBuildingHeight.png",
+      "source_relative_path": "resources/InitialSettings/InitialSettings_Open.png",
       "output": {
         "resource": {
-          "relative_path": "resources/loadingNewBuildings/setBuildingHeight.png"
+          "relative_path": "resources/InitialSettings/InitialSettings_Open.png"
         }
       },
       "is_incremental": false,
@@ -1195,10 +721,1110 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/loadingNewBuildings/specifyBottomShape.png",
+      "source_relative_path": "resources/InitialSettings/InitialSettings_Run.png",
       "output": {
         "resource": {
-          "relative_path": "resources/loadingNewBuildings/specifyBottomShape.png"
+          "relative_path": "resources/InitialSettings/InitialSettings_Run.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/Install/addPacakge.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/Install/addPacakge.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/Install/apiCompatibilityLevel.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/Install/apiCompatibilityLevel.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/Install/createProject.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/Install/createProject.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/Install/editMenu.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/Install/editMenu.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/Install/geographicFeatureSetting.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/Install/geographicFeatureSetting.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/Install/packageDownload.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/Install/packageDownload.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/Install/packageManager.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/Install/packageManager.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/Install/plateauMenu.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/Install/plateauMenu.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/Install/plateauSdkMenu.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/Install/plateauSdkMenu.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/Install/rangeSelectionScreen.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/Install/rangeSelectionScreen.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/Install/unityHubInstall.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/Install/unityHubInstall.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/Install/unityHubMenu.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/Install/unityHubMenu.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/Install/unityHubProject.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/Install/unityHubProject.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LandscapePlanningAreaImages/AreaDataList.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LandscapePlanningAreaImages/AreaDataList.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LandscapePlanningAreaImages/BrowseShpFolder.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LandscapePlanningAreaImages/BrowseShpFolder.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LandscapePlanningAreaImages/ColorCopyPaste.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LandscapePlanningAreaImages/ColorCopyPaste.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LandscapePlanningAreaImages/ColorPanel.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LandscapePlanningAreaImages/ColorPanel.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LandscapePlanningAreaImages/DBFSample.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LandscapePlanningAreaImages/DBFSample.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LandscapePlanningAreaImages/EditAreaColor.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LandscapePlanningAreaImages/EditAreaColor.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LandscapePlanningAreaImages/EditAreaHeight.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LandscapePlanningAreaImages/EditAreaHeight.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LandscapePlanningAreaImages/EditAreaHeight_return.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LandscapePlanningAreaImages/EditAreaHeight_return.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LandscapePlanningAreaImages/EditAreaName.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LandscapePlanningAreaImages/EditAreaName.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LandscapePlanningAreaImages/EditAreaPanel.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LandscapePlanningAreaImages/EditAreaPanel.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LandscapePlanningAreaImages/EditPoint.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LandscapePlanningAreaImages/EditPoint.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LandscapePlanningAreaImages/LoadLandscapePlanButton.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LandscapePlanningAreaImages/LoadLandscapePlanButton.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LandscapePlanningAreaImages/PlanAreaMain.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LandscapePlanningAreaImages/PlanAreaMain.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LandscapePlanningAreaImages/RegisterAreaButton.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LandscapePlanningAreaImages/RegisterAreaButton.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LandscapePlanningAreaImages/RegisterAreaPanel.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LandscapePlanningAreaImages/RegisterAreaPanel.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LandscapePlanningAreaImages/RegisterPoint.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LandscapePlanningAreaImages/RegisterPoint.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LandscapePlanningAreaImages/SaveDialog.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LandscapePlanningAreaImages/SaveDialog.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LandscapePlanningAreaImages/SaveLandscapePlanButton.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LandscapePlanningAreaImages/SaveLandscapePlanButton.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LandscapePlanningAreaImages/StartAreaDataEdit.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LandscapePlanningAreaImages/StartAreaDataEdit.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LineOfSight/AddLandmark1.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LineOfSight/AddLandmark1.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LineOfSight/AddLandmark2.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LineOfSight/AddLandmark2.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LineOfSight/AddLandmark3.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LineOfSight/AddLandmark3.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LineOfSight/AddLandmark4.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LineOfSight/AddLandmark4.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LineOfSight/AddViewPoint2.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LineOfSight/AddViewPoint2.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LineOfSight/AddViewPoint2_.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LineOfSight/AddViewPoint2_.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LineOfSight/AddViewPoint3.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LineOfSight/AddViewPoint3.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LineOfSight/AddViewPoint4.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LineOfSight/AddViewPoint4.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LineOfSight/AddViewpoint1.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LineOfSight/AddViewpoint1.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LineOfSight/Analyze1.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LineOfSight/Analyze1.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LineOfSight/AnalyzeLandmark1.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LineOfSight/AnalyzeLandmark1.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LineOfSight/AnalyzeLandmark2.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LineOfSight/AnalyzeLandmark2.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LineOfSight/AnalyzeLandmark3.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LineOfSight/AnalyzeLandmark3.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LineOfSight/AnalyzeLandmark4.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LineOfSight/AnalyzeLandmark4.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LineOfSight/AnalyzeLandmark5.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LineOfSight/AnalyzeLandmark5.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LineOfSight/AnalyzeLandmark6.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LineOfSight/AnalyzeLandmark6.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LineOfSight/AnalyzeLandmark7.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LineOfSight/AnalyzeLandmark7.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LineOfSight/AnalyzeViewpoint1.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LineOfSight/AnalyzeViewpoint1.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LineOfSight/AnalyzeViewpoint2.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LineOfSight/AnalyzeViewpoint2.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LineOfSight/AnalyzeViewpoint3.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LineOfSight/AnalyzeViewpoint3.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LineOfSight/AnalyzeViewpoint4.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LineOfSight/AnalyzeViewpoint4.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LineOfSight/AnalyzeViewpoint5.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LineOfSight/AnalyzeViewpoint5.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LineOfSight/AnalyzeViewpoint6.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LineOfSight/AnalyzeViewpoint6.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LineOfSight/AnalyzeViewpoint7.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LineOfSight/AnalyzeViewpoint7.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LineOfSight/AnalyzeViewpoint8.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LineOfSight/AnalyzeViewpoint8.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LineOfSight/AnalyzeViewpoint9.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LineOfSight/AnalyzeViewpoint9.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LineOfSight/EditAnalyze1.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LineOfSight/EditAnalyze1.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LineOfSight/EditLandmark1.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LineOfSight/EditLandmark1.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LineOfSight/EditLandmark2.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LineOfSight/EditLandmark2.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LineOfSight/EditViewpoint1.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LineOfSight/EditViewpoint1.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LineOfSight/EditViewpoint2.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LineOfSight/EditViewpoint2.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LineOfSight/LineOfSightMain.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LineOfSight/LineOfSightMain.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/Navigation/img_navigation01.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/Navigation/img_navigation01.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/Navigation/img_navigation02.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/Navigation/img_navigation02.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/Navigation/img_navigation03.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/Navigation/img_navigation03.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/Navigation/img_navigation_help01.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/Navigation/img_navigation_help01.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/Navigation/img_navigation_help02.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/Navigation/img_navigation_help02.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/Navigation/img_navigation_help03.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/Navigation/img_navigation_help03.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/Navigation/img_navigation_help04.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/Navigation/img_navigation_help04.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/Navigation/img_navigation_help05.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/Navigation/img_navigation_help05.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/Navigation/img_navigation_help06.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/Navigation/img_navigation_help06.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/Navigation/img_walkmode01.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/Navigation/img_walkmode01.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/Project/img_project01.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/Project/img_project01.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/Project/img_project02.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/Project/img_project02.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/Project/img_project03.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/Project/img_project03.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/Project/img_project04.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/Project/img_project04.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/Project/img_project05.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/Project/img_project05.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/Project/img_project06.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/Project/img_project06.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/Project/img_project07.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/Project/img_project07.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/ProjectManagement/ProjectManagement_Load.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/ProjectManagement/ProjectManagement_Load.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/ProjectManagement/ProjectManagement_Save.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/ProjectManagement/ProjectManagement_Save.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/ProjectManagement/ProjectManagement_main.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/ProjectManagement/ProjectManagement_main.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/ScreenCapture/ScreenCapture.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/ScreenCapture/ScreenCapture.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/ScreenCapture/ScreenCaptureFileDialog.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/ScreenCapture/ScreenCaptureFileDialog.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/UIDisplayDisable/UIDisplayDisableArea.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/UIDisplayDisable/UIDisplayDisableArea.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/UIDisplayDisable/UIDisplayDisableButton.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/UIDisplayDisable/UIDisplayDisableButton.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/UIDisplayDisable/UIDisplayDisableEnable.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/UIDisplayDisable/UIDisplayDisableEnable.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/WalkerViewpointImages/OverlookingEdit.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/WalkerViewpointImages/OverlookingEdit.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/WalkerViewpointImages/OverlookingList.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/WalkerViewpointImages/OverlookingList.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/WalkerViewpointImages/OverlookingRegist.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/WalkerViewpointImages/OverlookingRegist.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/WalkerViewpointImages/WalkerButton.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/WalkerViewpointImages/WalkerButton.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/WalkerViewpointImages/WalkerControllerPanel.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/WalkerViewpointImages/WalkerControllerPanel.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/WalkerViewpointImages/WalkerEdit.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/WalkerViewpointImages/WalkerEdit.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/WalkerViewpointImages/WalkerList.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/WalkerViewpointImages/WalkerList.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/WalkerViewpointImages/WalkerPositionSelect.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/WalkerViewpointImages/WalkerPositionSelect.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/WalkerViewpointImages/WalkerRegist.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/WalkerViewpointImages/WalkerRegist.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/WeatherTimeEditor/WeatherTimeEditor.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/WeatherTimeEditor/WeatherTimeEditor.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/logo.svg",
+      "output": {
+        "resource": {
+          "relative_path": "resources/logo.svg"
         }
       },
       "is_incremental": false,
@@ -1210,7 +1836,7 @@
       "output": {
         ".html": {
           "relative_path": "toc.html",
-          "hash": "ZLDSNDhkIh1OuvsIQ9nspt1NTIH2noIb3CLLquZKSbA="
+          "hash": "06uiBuftZaXpQ8azBe5iXhY37/sextPwNZwV63tkIxk="
         }
       },
       "is_incremental": false,
@@ -1231,13 +1857,7 @@
         "ConceptualDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 7,
-          "skipped_file_count": 0
-        },
-        "ManagedReferenceDocumentProcessor": {
-          "can_incremental": false,
-          "incrementalPhase": "build",
-          "total_file_count": 47,
+          "total_file_count": 15,
           "skipped_file_count": 0
         },
         "ResourceDocumentProcessor": {
