@@ -75,6 +75,11 @@ namespace Landscape2.Runtime
             {
                 var scrollView = rootElement.Q<ScrollView>("Panel");
                 ShowEmptyMessage(false);
+
+                if (buttonIndex.ContainsKey(name))
+                {
+                    RemoveButton(name);
+                }
                 buttonIndex.Add(name, button);
                 scrollView.Add(button);
             }
