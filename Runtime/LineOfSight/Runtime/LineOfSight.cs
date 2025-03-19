@@ -102,10 +102,7 @@ namespace Landscape2.Runtime
         }
         public void Update(float deltaTime)
         {
-            if (lineOfSightUIElement.style.display == DisplayStyle.None)
-            {
-                lineOfSightUI.HideSnackbar();
-            }
+            lineOfSightUI.Update();
         }
         public void OnDisable()
         {
