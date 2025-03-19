@@ -22,6 +22,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             wallMaterial = Resources.Load<Material>("Materials/PlanAreaWallMaterial");
             ceilingMaterial = Resources.Load<Material>("Materials/PlanAreaCeilingMaterial");
             ceilingMaterial.SetFloat("_Alpha", 0.2f);
+            ceilingMaterial.SetFloat("_Intensity", 1.5f);
         }
 
         /// <summary>
@@ -132,6 +133,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 //上面Meshのマテリアルを設定
                 areaProperty.CeilingMaterial.color = areaProperty.Color;
                 gisObjMeshRenderer.material = areaProperty.CeilingMaterial;
+                gisObjMeshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 
                 //区画のメッシュから下向きに壁を生成
                 GameObject[] walls = wallGenerator.GenerateWall(mesh, areaProperty.WallMaxHeight, Vector3.down, areaProperty.WallMaterial);
@@ -163,7 +165,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 // プロジェクトへ保存
                 ProjectSaveDataManager.Add(ProjectSaveDataType.LandscapePlan, loadedProperty.ID.ToString());
             }
-            
+
             return loadedAreaProperties;
         }
 
@@ -301,7 +303,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// <summary>
         /// 既に登録された区画データのメッシュオブジェクトを頂点データから再生成するメソッド
         /// </summary>
-        public void ReloadMeshes(List<List<Vector3>> listOfVertices,int index)
+        public void ReloadMeshes(List<List<Vector3>> listOfVertices, int index)
         {
             // テッセレーション処理を行ったメッシュを生成
             AreaProperty areaProperty = AreasDataComponent.GetProperty(index);

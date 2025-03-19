@@ -30,7 +30,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 CountEdge(edgeCount, vertices, triangles[i + 2], triangles[i]);
             }
 
-            
+
             List<Edge> outlineEdges = new List<Edge>();
 
             // 外周を形成するエッジを抽出
@@ -45,7 +45,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
             // 隣接する外周エッジを探索してソート
             List<List<Vector3>> sortedOutlineVerticesList = new List<List<Vector3>>();
-            while(outlineEdges.Count != 0)
+            while (outlineEdges.Count != 0)
             {
                 // 初期エッジをリストに追加
                 List<Vector3> sortedOutlineVertices = new List<Vector3>
@@ -83,14 +83,14 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                         isFound = false;
                     }
 
-                    if (!isFound)   break;
+                    if (!isFound) break;
                 }
                 sortedOutlineVerticesList.Add(sortedOutlineVertices);
             }
 
 
             GameObject[] wallObjects = new GameObject[sortedOutlineVerticesList.Count];
-            for(int k = 0; k < sortedOutlineVerticesList.Count; k++)
+            for (int k = 0; k < sortedOutlineVerticesList.Count; k++)
             {
                 List<Vector3> wallVertices = new List<Vector3>();
                 List<int> wallTriangles = new List<int>();
@@ -133,6 +133,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 MeshRenderer meshRenderer = wallObject.AddComponent<MeshRenderer>();
                 meshFilter.mesh = wallMesh;
                 meshRenderer.material = wallMaterial;
+                meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 
                 wallObjects[k] = wallObject;
             }
