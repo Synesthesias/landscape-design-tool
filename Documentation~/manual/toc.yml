@@ -4,6 +4,10 @@
   items:
     - name: セットアップ
       href: Setup.md
+    - name: 遠景表示設定
+      href: DistantView.md
+    - name: ビルド
+      href: Build.md
     - name: 基本操作
       href: BasicOperation.md
     - name: メインメニュー
