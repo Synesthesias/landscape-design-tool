@@ -38,5 +38,5 @@
           items:
             - name: プロジェクト関連
               href: project.md
-            - name: ヘルプ機能
+            - name: グローバルナビ機能
               href: navigation.md

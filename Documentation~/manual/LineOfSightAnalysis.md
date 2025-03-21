@@ -7,16 +7,16 @@
 ![視点場作成](../resources/LineOfSight/AddViewpoint1.png)
 「視点場ピン作成」を選択して下さい
 
-![視点場作成](../resources/LineOfSight/AddViewpoint2.png)
+![視点場作成](../resources/LineOfSight/AddViewPoint2.png)
 「登録名」と「視点の高さ」を入力した後、
 
 地図上をクリックするとクリックした地点に赤のマーカーが出現します。
 
-![視点場作成](../resources/LineOfSight/AddViewpoint3.png)
+![視点場作成](../resources/LineOfSight/AddViewPoint3.png)
 
 マーカーを置いた状態で
 「作成」ボタンを押すと
-![視点場作成](../resources/LineOfSight/AddViewpoint4.png)
+![視点場作成](../resources/LineOfSight/AddViewPoint4.png)
 
 視点場一覧に作成した視点場が登録されます。
 
@@ -26,16 +26,16 @@
 ![眺望対象作成](../resources/LineOfSight/AddViewpoint1.png)
 「眺望対象ピン作成」を選択して下さい
 
-![眺望対象作成](../resources/LineOfSight/AddViewpoint2.png)
+![眺望対象作成](../resources/LineOfSight/AddViewPoint2.png)
 「登録名」と「視点の高さ」を入力した後、
 
 地図上をクリックするとクリックした地点に黄色のマーカーが出現します。
 
-![眺望対象作成](../resources/LineOfSight/AddViewpoint3.png)
+![眺望対象作成](../resources/LineOfSight/AddViewPoint3.png)
 
 マーカーを置いた状態で
 「作成」ボタンを押すと
-![眺望対象作成](../resources/LineOfSight/AddViewpoint4.png)
+![眺望対象作成](../resources/LineOfSight/AddViewPoint4.png)
 
 眺望対象一覧に作成した眺望対象が登録されます。
 
@@ -78,7 +78,17 @@
 - 下方向の角度
 - 確認できる距離
 
-を設定する事が可能です。値が確認できたら「決定」を押して下さい
+を設定する事が可能です。
+
+#### 不可視領域 / 可視領域
+
+![眺望視点](../resources/LineOfSight/AnalyzeLandmark5_2.png)
+
+- 「不可視領域」のチェックボックスをON / OFFすることで眺望対象の不可視領域の表示を切り替える事が可能です
+- 「可視領域」のチェックボックスをON / OFFすることで眺望対象の可視領域の表示を切り替える事が可能です
+- 「不可視領域」はオレンジ色で表示され、「可視領域」は青色で表示されます
+
+値が確認できたら「決定」を押して下さい
 
 #### 登録
 
@@ -93,34 +103,34 @@
 
 選択した視点場から眺望対象迄の範囲の見通しを解析します
 
-![見通し解析](../resources/LineOfSight/AnalyzeViewPoint1.png)
+![見通し解析](../resources/LineOfSight/AnalyzeViewpoint1.png)
 
 「視点場 → 眺望対象」を押して下さい
 
 
 #### 眺望対象選択
 
-![見通し解析](../resources/LineOfSight/AnalyzeViewPoint2.png)
+![見通し解析](../resources/LineOfSight/AnalyzeViewpoint2.png)
 
 眺望対象選択を押して、解析したい対象の眺望対象選択して下さい
 
-![見通し解析](../resources/LineOfSight/AnalyzeViewPoint3.png)
+![見通し解析](../resources/LineOfSight/AnalyzeViewpoint3.png)
 
 #### 視点場選択
 
-![見通し解析](../resources/LineOfSight/AnalyzeViewPoint4.png)
+![見通し解析](../resources/LineOfSight/AnalyzeViewpoint4.png)
 
 視点場の「選択」を押して、確認したい視点場を選択して下さい
 
-![見通し解析](../resources/LineOfSight/AnalyzeViewPoint5.png)
+![見通し解析](../resources/LineOfSight/AnalyzeViewpoint5.png)
 
 #### 角度選択
 
-![見通し解析](../resources/LineOfSight/AnalyzeViewPoint6.png)
+![見通し解析](../resources/LineOfSight/AnalyzeViewpoint6.png)
 
 視野角の設定をする為に黄色い枠で囲まれた「設定」を押して下さい
 
-![見通し解析](../resources/LineOfSight/AnalyzeViewPoint7.png)
+![見通し解析](../resources/LineOfSight/AnalyzeViewpoint7.png)
 
 選択した視点場から眺望対象の範囲で、見通しできない領域が確認できます。
 ここで
@@ -130,11 +140,19 @@
 
 を設定して下さい
 
+#### 不可視領域 / 可視領域
+
+![眺望視点](../resources/LineOfSight/AnalyzeViewpoint10.png)
+
+- 「不可視領域」のチェックボックスをON / OFFすることで視点場から眺望対象への、不可視領域の表示を切り替える事が可能です
+- 「可視領域」のチェックボックスをON / OFFすることで視点場から眺望対象への、可視領域の表示を切り替える事が可能です
+- 「不可視領域」はオレンジ色で表示され、「可視領域」は青色で表示されます
+
 範囲が決まったら「決定」を押して下さい
 
 #### 作成
 
-![見通し解析](../resources/LineOfSight/AnalyzeViewPoint8.png)
+![見通し解析](../resources/LineOfSight/AnalyzeViewpoint8.png)
 
 視点場と眺望対象、確認する角度と範囲が決定しましたら
 「作成」を押して下さい
