@@ -27,7 +27,7 @@
       "output": {
         ".html": {
           "relative_path": "index.html",
-          "hash": "Ezs+IE4ls9XEl6qob6I6ANUYp1rUDLzQx3DK/TAS9ns="
+          "hash": "XLLYuo69A/fck6/hG9MOcl4K1SWbYFuEcfIAUyKA49U="
         }
       },
       "is_incremental": false,
@@ -39,7 +39,7 @@
       "output": {
         ".html": {
           "relative_path": "manual/AssetPlacement.html",
-          "hash": "q4mab2tGpUUvRituFBqIz3dIHScCkTJvU3eCWwfqWWo="
+          "hash": "Nv8KatHNoHYTlHUOTzx7rj7IwsdGiF22yPLsZmJTZtc="
         }
       },
       "is_incremental": false,
@@ -111,7 +111,7 @@
       "output": {
         ".html": {
           "relative_path": "manual/GisDataList.html",
-          "hash": "HhC/snO4o8uGE3cqcTMWF+WSPD+0rzX7TXYFxLhr4gE="
+          "hash": "Ctm3urx40pUJwlu+XmdiD3PuVGBr3+ov/+QUaHtusD8="
         }
       },
       "is_incremental": false,
@@ -135,7 +135,7 @@
       "output": {
         ".html": {
           "relative_path": "manual/LineOfSightAnalysis.html",
-          "hash": "ZuRSXCtQK/Ztv7nIYjpT7kdobtG8aczm1Csxn4WKpYI="
+          "hash": "3sVjO+BZ2nyw2Ez+jl4iznNPwTIZVkMHY7jApVnEUK4="
         }
       },
       "is_incremental": false,
@@ -147,7 +147,7 @@
       "output": {
         ".html": {
           "relative_path": "manual/Setup.html",
-          "hash": "WDmKF3AfdeQSDik+nL2mRhYgihbS9qF6Y5Q8wP514b8="
+          "hash": "45q3divTzPY5B3WboeTkvAzE/ClLaxm53ikM6Cw5kqE="
         }
       },
       "is_incremental": false,
@@ -183,7 +183,7 @@
       "output": {
         ".html": {
           "relative_path": "manual/navigation.html",
-          "hash": "uMjzgqScCpaEupZNJ0VydPesggyUoTXD/MqRu2Dyp3k="
+          "hash": "0ZKqkrnkxOADeolZEp6knBmJ2HGFeyuHFk9BOx+NBGg="
         }
       },
       "is_incremental": false,
@@ -195,7 +195,7 @@
       "output": {
         ".html": {
           "relative_path": "manual/project.html",
-          "hash": "wZNh1MDzdRQb0pM3DPA+alkgc8O4ISY9UqQRhB1j6u4="
+          "hash": "L25OIK3pNNad9PggGbdZmXjASV8YaBCSgKIfiiWBLRc="
         }
       },
       "is_incremental": false,
@@ -207,7 +207,7 @@
       "output": {
         ".html": {
           "relative_path": "manual/toc.html",
-          "hash": "BCH4SDz8XNidjNZdFU2KEHtJ3i+yvvfa9Js4VuVNNPg="
+          "hash": "paMPq3zJiXCvwUu0HtECZMKKT/b23VHAIYqlWKBN2ms="
         }
       },
       "is_incremental": false,
@@ -1249,6 +1249,17 @@
     },
     {
       "type": "Resource",
+      "source_relative_path": "resources/LineOfSight/AnalyzeLandmark5_2.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LineOfSight/AnalyzeLandmark5_2.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
       "source_relative_path": "resources/LineOfSight/AnalyzeLandmark6.png",
       "output": {
         "resource": {
@@ -1275,6 +1286,17 @@
       "output": {
         "resource": {
           "relative_path": "resources/LineOfSight/AnalyzeViewpoint1.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/LineOfSight/AnalyzeViewpoint10.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/LineOfSight/AnalyzeViewpoint10.png"
         }
       },
       "is_incremental": false,
