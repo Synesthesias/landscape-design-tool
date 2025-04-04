@@ -35,7 +35,7 @@ Unity Hub を起動します。
   - [PLATEAU SDK for Unityのリリースページ](https://github.com/Project-PLATEAU/PLATEAU-SDK-for-Unity/releases)
   - [PLATEAU-SDK-Toolkits-for-Unityのリリースページ](https://github.com/Project-PLATEAU/PLATEAU-SDK-Toolkits-for-Unity/releases)
   - [PLATEAU-SDK-Maps-Toolkits-for-Unityのリリースページ](https://github.com/Project-PLATEAU/PLATEAU-SDK-Maps-Toolkit-for-Unity/releases)
-  - [LandscapeDesignTool2のリリースページ](https://github.com/Synesthesias/Landscape-Design-Tool-2/releases)
+  - [LandscapeDesignToolのリリースページ](https://github.com/Synesthesias/landscape-design-tool/releases)
 
 > [!NOTE]  
 > git指定で導入する方法は以下を参考にしてください。<br>
