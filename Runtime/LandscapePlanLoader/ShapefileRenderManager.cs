@@ -290,7 +290,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 // テッセレーション処理を行ったメッシュを生成
                 TessellatedMeshCreator tessellatedMeshCreator = new TessellatedMeshCreator();
                 MeshFilter meshFilter = meshObject.GetComponent<MeshFilter>();
-                tessellatedMeshCreator.CreateTessellatedMesh(partPointsWorldList, meshFilter, 30, 10);
+                tessellatedMeshCreator.CreateTessellatedMesh(partPointsWorldList, meshFilter, 30, 40);
 
                 m_pointDataLists.Add(partPointsWorldList);
                 m_ListOfGISObjects.Add(meshObject);

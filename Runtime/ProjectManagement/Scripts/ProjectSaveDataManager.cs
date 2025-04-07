@@ -1,6 +1,5 @@
 using Landscape2.Runtime.SaveData;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.Events;
 
@@ -10,6 +9,9 @@ namespace Landscape2.Runtime
     {
         // プロジェクト設定
         public static ProjectSetting ProjectSetting = new();
+        
+        // レイヤー変更イベント
+        public static UnityEvent<int> OnLayerChanged = new();
         
         // 配置アセット
         private static ProjectSaveData_Asset SaveDataAsset = new();
@@ -36,6 +38,16 @@ namespace Landscape2.Runtime
         // 編集イベント
         public static UnityEvent<string> OnEditProject = new();
 
+        /// <summary>
+        /// レイヤーを設定
+        /// </summary>
+        public static void SetLayer(string projectID, int layer)
+        {
+            var project = ProjectSetting.GetProject(projectID);
+            project.layer = layer;
+            OnLayerChanged.Invoke(layer);
+        }
+        
         /// <summary>
         /// プロジェクトに追加
         /// </summary>
@@ -121,7 +133,7 @@ namespace Landscape2.Runtime
             OnEditProject.Invoke(projectID);
         }
 
-        private static string GetProjectID(ProjectSaveDataType dataType, string id)
+        public static string GetProjectID(ProjectSaveDataType dataType, string id)
         {
             return dataType switch
             {
@@ -158,6 +170,60 @@ namespace Landscape2.Runtime
                 ProjectSaveDataType.BimImport => SaveDataBimImport.TryCheckData(projectID, id),
                 _ => throw new ArgumentOutOfRangeException(nameof(dataType), dataType, null)
             };
+        }
+
+        /// <summary>
+        /// 指定されたデータが表示可能かどうかをレイヤー値で判定
+        /// </summary>
+        public static bool IsVisibleByLayer(ProjectSaveDataType dataType, string id)
+        {
+            string targetProjectID = GetProjectID(dataType, id);
+            if (string.IsNullOrEmpty(targetProjectID))
+            {
+                return false;
+            }
+
+            var currentProject = ProjectSetting.GetProject(targetProjectID);
+            var otherProjects = ProjectSetting.ProjectList
+                .Where(p => p.projectID != targetProjectID)
+                .ToList();
+
+            // 他のプロジェクトが存在しない場合は表示可能
+            if (!otherProjects.Any())
+            {
+                return true;
+            }
+
+            // 他のプロジェクトの中で最小のレイヤー値を取得
+            var minLayerInOthers = otherProjects.Min(p => p.layer);
+            
+            // 現在のプロジェクトのレイヤー値が、他のプロジェクトの最小値以下なら表示可能
+            return currentProject.layer <= minLayerInOthers;
+        }
+
+        /// <summary>
+        /// 現在のプロジェクトが最小レイヤーかどうかをチェックする
+        /// </summary>
+        public static bool IsCurrentProjectMinLayer()
+        {
+            var currentProject = ProjectSetting.CurrentProject;
+            var projects = ProjectSetting.ProjectList.OrderBy(p => p.layer).ToList();
+            return projects.Any() && currentProject.layer == projects.First().layer;
+        }
+
+        /// <summary>
+        /// 一番下のレイヤーのプロジェクト名を取得する
+        /// </summary>
+        public static bool TryGetLowestLayerProjectName(out string projectName)
+        {
+            var projects = ProjectSetting.ProjectList.OrderBy(p => p.layer).ToList();
+            if (projects.Any())
+            {
+                projectName = projects.First().projectName;
+                return true;
+            }
+            projectName = null;
+            return false;
         }
     }
 }

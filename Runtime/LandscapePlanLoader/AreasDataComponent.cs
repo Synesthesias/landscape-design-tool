@@ -35,7 +35,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
             properties.Add(newProperty);
             propertiesSnapshot.Add(newPropertyOrigin);
-            
+
             AreaCountChangedEvent();
         }
 
@@ -124,10 +124,10 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             if (index < 0 || index >= properties.Count) return false;
 
             var propertyID = properties[index].ID;
-            
+
             // 建物高さをリセット
             properties[index].ApplyBuildingHeight(false);
-            
+
             // 削除
             GameObject.Destroy(properties[index].Transform.gameObject);
             properties.RemoveAt(index);
@@ -136,10 +136,10 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             AreaCountChangedEvent();
 
             ProjectSaveDataManager.Delete(ProjectSaveDataType.LandscapePlan, propertyID.ToString());
-            
+
             return true;
         }
-        
+
         /// <summary>
         /// 該当のプロパティを削除
         /// </summary>
@@ -151,14 +151,14 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
             // 建物高さをリセット
             property.ApplyBuildingHeight(false);
-            
+
             // 削除
             GameObject.Destroy(property.Transform.gameObject);
             propertiesSnapshot.RemoveAt(properties.IndexOf(property));
             properties.Remove(property);
 
             AreaCountChangedEvent();
-            
+
             ProjectSaveDataManager.Delete(ProjectSaveDataType.LandscapePlan, property.ID.ToString());
 
             return true;
@@ -191,12 +191,12 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             {
                 wallMaterial.SetVector("_WallAlphaRange", new Vector2(0.01f, 1f)); // X:0.01 Y:1.0
                 wallMaterial.SetVector("_LineAlphaRange", new Vector2(0.01f, 1f)); // X:0.01 Y:1.0
-                ceilingMaterial.SetFloat("_Alpha", 0.8f);
+                ceilingMaterial.SetFloat("_Alpha", 0.5f);
             }
             else
             {
-                wallMaterial.SetVector("_WallAlphaRange", new Vector2( 0.01f,0.05f)); // X:0.01 Y:0.05
-                wallMaterial.SetVector("_LineAlphaRange", new Vector2( 0.01f,0.1f)); // X:0.01 Y:0.1
+                wallMaterial.SetVector("_WallAlphaRange", new Vector2(0.01f, 0.05f)); // X:0.01 Y:0.05
+                wallMaterial.SetVector("_LineAlphaRange", new Vector2(0.01f, 0.1f)); // X:0.01 Y:0.1
                 ceilingMaterial.SetFloat("_Alpha", 0.25f);
             }
 
@@ -217,18 +217,18 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         public static bool ApplyBuildingHeight(int index, bool isApply)
         {
             if (index < 0 || index >= properties.Count) return false;
-            
+
             var property = properties[index];
-            
+
             // 高さを適用
             property.ApplyBuildingHeight(isApply);
-            
+
             // コライダーをセットし直す
             var mesh = property.Transform.gameObject.GetComponent<MeshFilter>().sharedMesh;
             property.Transform.gameObject.GetComponent<AreaPlanningCollisionHandler>().SetCollider(mesh);
             return true;
         }
-        
+
         /// <summary>
         /// エリア数変更イベントを発火
         /// </summary>
@@ -255,11 +255,10 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         public Transform Transform { get; private set; }
         public Vector3 ReferencePosition { get; private set; }
         public List<List<Vector3>> PointData { get ; set; }
-        public bool IsApplyBuildingHeight { get; private set; }
         private AreaPlanningBuildingHeight areaBuildingHeight;
         public bool IsEditable { get; private set; } // 操作可能かどうか
-        
-        public AreaProperty(int id, string name, float limitHeight, float lineOffset, Color areaColor, Material wallMaterial, Material ceilingMaterial, float wallMaxHeight, Vector3 referencePos, Transform areaTransform, List<List<Vector3>> pointData, bool isApplyBuildingHeight)
+
+        public AreaProperty(int id, string name, float limitHeight, float lineOffset, Color areaColor, Material wallMaterial, Material ceilingMaterial, float wallMaxHeight, Vector3 referencePos, Transform areaTransform, List<List<Vector3>> pointData)
         {
             ID = id;
             Name = name;
@@ -272,9 +271,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             ReferencePosition = referencePos;
             Transform = areaTransform;
             PointData = pointData;
-            IsApplyBuildingHeight = isApplyBuildingHeight;
             IsEditable = true;
-            
+
             areaBuildingHeight = new AreaPlanningBuildingHeight(areaTransform);
         }
 
@@ -282,26 +280,24 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         {
             ReferencePosition += newPosition - Transform.position;
             Transform.localPosition = newPosition;
-            
+
             // プロジェクトに通知
             ProjectSaveDataManager.Edit(ProjectSaveDataType.LandscapePlan, ID.ToString());
         }
-        
+
         public void ApplyBuildingHeight(bool isApply)
         {
-            IsApplyBuildingHeight = isApply;
-            
             // 高さを一度リセット
             areaBuildingHeight.Reset();
             if (isApply)
             {
                 areaBuildingHeight.SetHeight(LimitHeight);
             }
-            
+
             // プロジェクトに通知
             ProjectSaveDataManager.Edit(ProjectSaveDataType.LandscapePlan, ID.ToString());
         }
-        
+
         public void SetIsEditable(bool isEditable)
         {
             IsEditable = isEditable;

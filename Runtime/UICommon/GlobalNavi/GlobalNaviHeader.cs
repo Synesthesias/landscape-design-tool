@@ -21,6 +21,8 @@ namespace Landscape2.Runtime
         private readonly Button settingButton;
         // 設定パネル
         private readonly VisualElement settingElement;
+        // プロジェクト管理パネル
+        private VisualElement projectElement;
         // メニューボタングループ名前
         private const string UImenuGroup = "Menu";
         // サブメニューパネル名前
@@ -31,6 +33,8 @@ namespace Landscape2.Runtime
         private const string UISettingElement = "SettingPanel";
         // 機能変更トグルボタン名前
         private const string UIFunctionContainer = "FunctionContainer";
+        // プロジェクト管理パネル名前
+        private const string UIProjectElement = "Project_List_Container";
 
         // サブメニューのuxmlを格納する配列
         public VisualElement[] subMenuUxmls;
@@ -48,6 +52,7 @@ namespace Landscape2.Runtime
             subMenuElement = uiRoot.Q<VisualElement>(UISubMenuElement);
             settingButton = uiRoot.Q<Button>(UISettingButton);
             settingElement = uiRoot.Q<VisualElement>(UISettingElement);
+            projectElement = uiRoot.Q<VisualElement>(UIProjectElement);
             globalNaviFunctionsUI = new GlobalNaviFunctionsUI(uiRoot);
             projectChangerUI = new ProjectSettingUI(uiRoot, saveSystem);
 
@@ -125,6 +130,7 @@ namespace Landscape2.Runtime
                                 subMenuUxmls[button.tabIndex].style.display = DisplayStyle.Flex;
                                 lastSubMenuUxml = subMenuUxmls[button.tabIndex];
                             }
+                            globalNaviFunctionsUI.ResetHideUI();
                         }
                     });
                 });
@@ -149,17 +155,13 @@ namespace Landscape2.Runtime
             //歩行者モードトグルボタンが押されたら変更する
             globalNaviFunctionsUI.OnToggleWalkMode.AddListener(OnToggleWalkModeValueChanged);
 
-            //保存、ロードした時にセッティングパネルを閉じる処理(新見)
-            var saveButton = settingElement.Q<Button>("ProjectSaveButton");
-            saveButton.clicked += () =>
+            globalNaviFunctionsUI.OnToggleHideUI.AddListener((v) =>
             {
-                settingElement.style.display = DisplayStyle.None;
-            };
-            var loadButton = settingElement.Q<Button>("ProjectLoadButton");
-            loadButton.clicked += () =>
-            {
-                settingElement.style.display = DisplayStyle.None;
-            };
+                if (lastSubMenuUxml != null)
+                {
+                    lastSubMenuUxml.style.display = !v ? DisplayStyle.Flex : DisplayStyle.None;
+                }
+            });
 
             SetRightNaviView(uiRoot);
         }

@@ -31,8 +31,10 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 rootObject.transform.parent = geoRef.transform;
                 CesiumGlobeAnchor anchor = rootObject.AddComponent<CesiumGlobeAnchor>();
                 rootObject.AddComponent<MeshFilter>();
-                rootObject.AddComponent<MeshRenderer>();
-                
+
+                var meshRenderer = rootObject.AddComponent<MeshRenderer>();
+                //                meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+
                 GameObject mesh = Resources.Load<GameObject>(PlateauToolkitMapsConstants.k_MeshObjectPrefab);
 
                 DrawPolygonOrPolyline(rootObject, mesh, pointDatas);
@@ -68,7 +70,9 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 // テッセレーション処理を行ったメッシュを生成
                 TessellatedMeshCreator tessellatedMeshCreator = new TessellatedMeshCreator();
                 MeshFilter meshFilter = meshObject.GetComponent<MeshFilter>();
-                tessellatedMeshCreator.CreateTessellatedMesh(partPointsWorld, meshFilter, 30, 10);
+                tessellatedMeshCreator.CreateTessellatedMesh(partPointsWorld, meshFilter, 30, 40);
+                var mr = meshObject.GetComponent<MeshRenderer>();
+                mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 
                 listOfGISObjects.Add(meshObject);
             }

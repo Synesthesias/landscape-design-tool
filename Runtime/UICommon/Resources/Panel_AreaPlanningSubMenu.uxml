@@ -7,7 +7,7 @@
                     <ui:VisualElement style="flex-grow: 1; margin-bottom: 8px;">
                         <ui:Label tabindex="-1" text="新規作成ボタンでエリアを新規作成または&#10;登録済みエリアをクリックして編集できます" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
                     </ui:VisualElement>
-                    <ui:Button text="データを編集" parse-escape-sequences="true" display-tooltip-when-elided="true" name="EditButton" enable-rich-text="true" focusable="true" class="OKButton ActionButton" style="opacity: 1; overflow: hidden; text-overflow: ellipsis; width: 120px;" />
+                    <ui:Button text="データを編集" tooltip="リストから選択した区域の編集" parse-escape-sequences="true" display-tooltip-when-elided="true" name="EditButton" enable-rich-text="true" focusable="true" class="OKButton ActionButton" style="opacity: 1; overflow: hidden; text-overflow: ellipsis; width: 120px;" />
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>

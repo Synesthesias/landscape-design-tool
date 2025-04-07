@@ -75,6 +75,11 @@ namespace Landscape2.Runtime
             {
                 var scrollView = rootElement.Q<ScrollView>("Panel");
                 ShowEmptyMessage(false);
+
+                if (buttonIndex.ContainsKey(name))
+                {
+                    RemoveButton(name);
+                }
                 buttonIndex.Add(name, button);
                 scrollView.Add(button);
             }
@@ -547,8 +552,7 @@ namespace Landscape2.Runtime
                 snackbar.ShowMessage("リストから選択して下さい");
                 // analyzeSettingPanel.style.display = DisplayStyle.None;
                 ShowAnalyzeSettingPanel(false);
-                landmarkList_View.Show(true);
-                // landMarkListPanel.style.display = DisplayStyle.Flex;
+                landmarkList_View.Show(true);// landMarkListPanel.style.display = DisplayStyle.Flex;
                 analyzeViewPoint.SetLandMark();
                 PushElement(new_Analyze_Viewpoint); // ?
                 beforeElement = new_Analyze_Viewpoint;
@@ -995,7 +999,7 @@ namespace Landscape2.Runtime
                         snackbar.ShowMessage(SnackBarUI.NotEditWarning);
                         return;
                     }
-                    
+
                     //  - New_PointMenuの時
                     lineOfSight.SetMode(LineOfSightType.viewPoint);
                     viewPoint.ButtonAction(buttonName);
@@ -1076,7 +1080,8 @@ namespace Landscape2.Runtime
         /// 視点場 -> 眺望解析ボタン作成
         /// </summary>
         /// <param name="elements"></param>
-        public void CreateAnalyzeViewPointButton(AnalyzeViewPointElements elements)
+        /// <param name="buttonName"></param>
+        public void CreateAnalyzeViewPointButton(AnalyzeViewPointElements elements, string buttonName = "")
         {
             var list_Analyze = new UIDocumentFactory().CreateWithUxmlName("List_Analyze_Viewpoint");
 
@@ -1094,7 +1099,11 @@ namespace Landscape2.Runtime
             upwardLabel.text = elements.rangeHeight.ToString();
             underLabel.text = elements.rangeWidth.ToString();
 
-            var buttonName = elements.startPosName + elements.endPosName + elements.rangeWidth + elements.rangeHeight;
+            if (string.IsNullOrEmpty(buttonName))
+            {
+                buttonName = elements.startPosName + elements.endPosName + elements.rangeWidth + elements.rangeHeight;
+            }
+
             newButton.clicked += () =>
             {
                 if (!analyzeViewPoint.CanEdit(buttonName))
@@ -1102,7 +1111,7 @@ namespace Landscape2.Runtime
                     snackbar.ShowMessage(SnackBarUI.NotEditWarning);
                     return;
                 }
-                
+
                 lineOfSight.SetMode(LineOfSightType.analyzeViewPoint);
                 analyzeViewPoint.ButtonAction(elements);
                 // UI
@@ -1125,13 +1134,16 @@ namespace Landscape2.Runtime
         /// 眺望対象解析ボタン作成
         /// </summary>
         /// <param name="elements"></param>
-        public void CreateAnalyzeLandmarkButton(AnalyzeLandmarkElements elements)
+        /// <param name="buttonName"></param>
+        public void CreateAnalyzeLandmarkButton(AnalyzeLandmarkElements elements, string buttonName = "")
         {
             var list_Analyze = new UIDocumentFactory().CreateWithUxmlName("List_Analyze_Landmark");
             var newButton = list_Analyze.Q<Button>("List");
 
-            // newButton.text = "StartPoint : " + elements.startPosName;
-            var buttonName = elements.startPosName + elements.rangeUp + elements.rangeDown;
+            if (string.IsNullOrEmpty(buttonName))
+            {
+                buttonName = elements.startPosName + elements.rangeUp + elements.rangeDown;
+            }
 
             var landmarkNameLabel = list_Analyze.Q<Label>("LandmarkName");
             var upwardLabel = list_Analyze.Q<Label>("Upward");
@@ -1149,7 +1161,7 @@ namespace Landscape2.Runtime
                     snackbar.ShowMessage(SnackBarUI.NotEditWarning);
                     return;
                 }
-                
+
                 lineOfSight.SetMode(LineOfSightType.analyzeLandmark);
                 analyzeLandmark.ButtonAction(elements);
                 // UI
@@ -1225,7 +1237,7 @@ namespace Landscape2.Runtime
         public void DeletePoint(LineOfSightType type, string pointName = "")
         {
             VisualElement viewpoint = null;
-            (string deleteButtonName, List<string> removedAnalyzeKeyNameList) deleteData = (null, new List<string>() {});
+            (string deleteButtonName, List<string> removedAnalyzeKeyNameList) deleteData = (null, new List<string>() { });
             switch (type)
             {
                 case LineOfSightType.viewPoint:
@@ -1234,7 +1246,7 @@ namespace Landscape2.Runtime
                     viewpoint = analyzeSettingPanel.Q<VisualElement>("Edit_Viewpoint");
                     break;
                 case LineOfSightType.landmark:
-                    deleteData = string.IsNullOrEmpty(pointName) ? landmark.DeletePoint() : landmark.DeletePoint(pointName); 
+                    deleteData = string.IsNullOrEmpty(pointName) ? landmark.DeletePoint() : landmark.DeletePoint(pointName);
                     landmarkList_View.RemoveButton(deleteData.deleteButtonName);
                     viewpoint = analyzeSettingPanel.Q<VisualElement>("Edit_Landmark");
                     break;
@@ -1276,7 +1288,7 @@ namespace Landscape2.Runtime
             edit_Analyze_Viewpoint.style.display = DisplayStyle.None;
             ViewDefaultPanels();
         }
-        
+
         /// <summary>
         /// 解析眺望対象の削除
         /// </summary>
@@ -1296,7 +1308,7 @@ namespace Landscape2.Runtime
         /// </summary>
         public bool TryCloseEditView(LineOfSightType type)
         {
-            switch(type)
+            switch (type)
             {
                 case LineOfSightType.viewPoint:
                     {
@@ -1348,6 +1360,16 @@ namespace Landscape2.Runtime
                     break;
             }
             return false;
+        }
+
+        public void Update()
+        {
+            snackbar.Update();
+
+            if (analyzeSettingPanel.style.display == DisplayStyle.None)
+            {
+                HideSnackbar();
+            }
         }
     }
 }

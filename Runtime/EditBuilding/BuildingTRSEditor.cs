@@ -168,7 +168,7 @@ namespace Landscape2.Runtime
             }
         }
 
-        private void OnDeleteBuildings(List<BuildingProperty> deleteBuildings)
+        private void OnDeleteBuildings(List<BuildingProperty> deleteBuildings, string projectID)
         {
             foreach (var deleteBuilding in deleteBuildings)
             {

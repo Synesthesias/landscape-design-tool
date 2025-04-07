@@ -76,7 +76,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// <param name="meshFilter">生成したメッシュをアタッチするMeshFilter</param>
         /// <param name="tessellateMaxEdge">エッジの最大長</param>
         /// <param name="tessellateMaxArea">Triangleの最大面積</param>
-        public void CreateTessellatedMesh(List<List<Vector3>> points, MeshFilter meshFilter,  float tessellateMaxEdge = 30, float tessellateMaxArea = 10)
+        public void CreateTessellatedMesh(List<List<Vector3>> points, MeshFilter meshFilter,  float tessellateMaxEdge = 30, float tessellateMaxArea = 40)
         {
             var iGeom = IntGeom.DefGeom;
             PlainShape pShape;

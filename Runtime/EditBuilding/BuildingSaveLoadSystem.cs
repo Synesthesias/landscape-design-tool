@@ -18,6 +18,7 @@ namespace Landscape2.Runtime.BuildingEditor
             saveSystem.LoadEvent += LoadInfo;
             saveSystem.DeleteEvent += DeleteInfo;
             saveSystem.ProjectChangedEvent += SetProjectInfo;
+            saveSystem.LayerChangedEvent += OnLayerChanged;
         }
 
         /// <summary>
@@ -27,27 +28,44 @@ namespace Landscape2.Runtime.BuildingEditor
         {
             // セーブデータ用クラスに現在の建物編集データをコピー
             List<BuildingSaveData> buildingSaveDatas = new List<BuildingSaveData>();
-            int buildingDataCount = BuildingsDataComponent.GetPropertyCount();
-            for (int i = 0; i < buildingDataCount; i++)
-            {
-                BuildingProperty buildingProperty = BuildingsDataComponent.GetProperty(i);
 
-                if (!string.IsNullOrEmpty(projectID))
+            // プロジェクトIDが指定されている場合は、そのプロジェクトのデータのみを保存
+            if (!string.IsNullOrEmpty(projectID))
+            {
+                int buildingDataCount = BuildingsDataComponent.GetPropertyCount();
+                for (int i = 0; i < buildingDataCount; i++)
                 {
+                    BuildingProperty buildingProperty = BuildingsDataComponent.GetProperty(i);
                     if (!ProjectSaveDataManager.TryCheckData(ProjectSaveDataType.EditBuilding, projectID, buildingProperty.ID))
                     {
                         continue;
                     }
-                }
 
-                BuildingSaveData saveData = new BuildingSaveData(
-                    buildingProperty.GmlID,
-                    buildingProperty.ColorData,
-                    buildingProperty.SmoothnessData,
-                    buildingProperty.IsDeleted
+                    var saveData = new BuildingSaveData(
+                        buildingProperty.GmlID,
+                        buildingProperty.ColorData,
+                        buildingProperty.SmoothnessData,
+                        buildingProperty.IsDeleted
                     );
+                    buildingSaveDatas.Add(saveData);
+                }
+            }
+            else
+            {
+                int buildingDataCount = BuildingsDataComponent.GetPropertyCount();
+                for (int i = 0; i < buildingDataCount; i++)
+                {
+                    BuildingProperty buildingProperty = BuildingsDataComponent.GetProperty(i);
 
-                buildingSaveDatas.Add(saveData);
+                    var minLayerValuesResult = BuildingsDataComponent.GetMinLayerPropertyValues(buildingProperty.GmlID);
+                    var saveData = new BuildingSaveData(
+                        buildingProperty.GmlID,
+                        minLayerValuesResult.colors,
+                        minLayerValuesResult.smoothness,
+                        minLayerValuesResult.isDeleted
+                    );
+                    buildingSaveDatas.Add(saveData);
+                }
             }
 
             // データを保存
@@ -103,7 +121,7 @@ namespace Landscape2.Runtime.BuildingEditor
                 }
             }
             
-            BuildingsDataComponent.DeleteProperty(deleteBuildingProperty);
+            BuildingsDataComponent.DeleteProperty(deleteBuildingProperty, projectID);
         }
         
         private void SetProjectInfo(string projectID)
@@ -115,14 +133,15 @@ namespace Landscape2.Runtime.BuildingEditor
                 var isVisible = ProjectSaveDataManager.TryCheckData(ProjectSaveDataType.EditBuilding, projectID, buildingProperty.ID);
                 
                 BuildingsDataComponent.SetBuildingEditable(buildingProperty.ID, isVisible);
-
-                var objectGroup = CityModelHandler.GetCityObjectGroup(buildingProperty.GmlID);
-                
-                // レイヤーを設定して、マウスイベント無視する
-                LayerMaskUtil.SetIgnore(objectGroup.gameObject, !isVisible);
             }
             // 通知
             BuildingsDataComponent.LoadProject();
+        }
+
+        private void OnLayerChanged()
+        {
+            string currentProjectID = ProjectSaveDataManager.ProjectSetting.CurrentProject.projectID;
+            SetProjectInfo(currentProjectID);
         }
     }
 }

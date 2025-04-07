@@ -36,6 +36,10 @@ namespace Landscape2.Runtime.GisDataLoader
                         saveData.Add(gisPointInfo);
                     }
                 }
+                else
+                {
+                    saveData.Add(gisPointInfo);
+                }
             }
             // データを保存
             DataSerializer.Save(saveKey, saveData);

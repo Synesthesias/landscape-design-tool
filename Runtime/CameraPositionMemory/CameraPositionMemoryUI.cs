@@ -58,6 +58,8 @@ namespace Landscape2.Runtime.CameraPositionMemory
         private GameObject[] snackbars, modals;
         private Action<float> onUpdateAction;
 
+        private VisualElement rootElement;
+
 
         public CameraPositionMemoryUI(CameraPositionMemory cameraPositionMemory, VisualElement[] subMenuUxmls, WalkerMoveByUserInput walkerMoveByUserInput, SaveSystem saveSystem, VisualElement uiRoot)
         {
@@ -65,7 +67,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
             saveSystem.LoadEvent += LoadInfo;
             saveSystem.DeleteEvent += DeleteInfo;
             saveSystem.ProjectChangedEvent += SetProjectInfo;
-            
+
             this.cameraPositionMemory = cameraPositionMemory;
             uiRootCameraList = subMenuUxmls[(int)SubMenuUxmlType.CameraList];
             uiRootCameraEdit = subMenuUxmls[(int)(SubMenuUxmlType.CameraEdit)];
@@ -167,6 +169,8 @@ namespace Landscape2.Runtime.CameraPositionMemory
                 }
             });
 
+            rootElement = uiRoot;
+
             UpdateButtonState();
         }
 
@@ -205,9 +209,9 @@ namespace Landscape2.Runtime.CameraPositionMemory
                 foreach (CameraPositionData camData in loadCameraPositionDatas)
                 {
                     var slotData = new SlotData(camData.position, camData.rotation, camData.isSaved, camData.name, SlotData.CameraStateStringToEnum(camData.cameraState), camData.offSetY);
-                    
+
                     this.cameraPositionMemory.GetSlotDatas().Add(slotData);
-                    
+
                     // プロジェクトに通知
                     ProjectSaveDataManager.Add(ProjectSaveDataType.CameraPosition, slotData.id, projectID, false);
                 }
@@ -218,11 +222,11 @@ namespace Landscape2.Runtime.CameraPositionMemory
                 Debug.LogError("No saved project cameraPosition data found");
             }
         }
-        
+
         private void DeleteInfo(string projectID)
         {
             var deleteIds = new List<string>();
-            for (int i = 0; i <  cameraPositionMemory.GetSlotDatas().Count; i++)
+            for (int i = 0; i < cameraPositionMemory.GetSlotDatas().Count; i++)
             {
                 var slotData = cameraPositionMemory.GetSlotDatas()[i];
                 if (ProjectSaveDataManager.TryCheckData(
@@ -234,14 +238,14 @@ namespace Landscape2.Runtime.CameraPositionMemory
                     deleteIds.Add(slotData.id);
                 }
             }
-            
+
             foreach (var deleteId in deleteIds)
             {
                 cameraPositionMemory.Delete(deleteId);
             }
             UpdateButtonState();
         }
-        
+
         private void SetProjectInfo(string projectID)
         {
             isListSelected = false; // 選択状態を解除
@@ -547,7 +551,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
                 buttonUi.focusable = false;
                 var cameraState = slotData.cameraState;
                 var isEditable = IsEditableCurrentProject(slotData.id);
-                
+
                 buttonUi.Q<VisualElement>("DeleteButton").visible = false;
                 if (cameraState != LandscapeCameraState.Walker)
                 {
@@ -568,14 +572,14 @@ namespace Landscape2.Runtime.CameraPositionMemory
             for (int i = 0; i < slotCount; i++)
             {
                 var slotData = cameraPositionMemory.GetSlotData(i);
-                
+
                 int slotIndex = i;
                 var buttonUi = cameraPositionList.CloneTree();
                 uiRootCameraEdit.Q<VisualElement>(CameraListContainerName).Add(buttonUi);
                 buttonUi.focusable = false;
                 var cameraState = slotData.cameraState;
                 var isEditable = IsEditableCurrentProject(slotData.id);
-                
+
                 buttonUi.Q<VisualElement>("DeleteButton").visible = isEditable;
                 if (cameraState != LandscapeCameraState.Walker)
                 {
@@ -604,7 +608,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
                     uiRootWalkMode.Q<VisualElement>(CameraListContainerName).Add(buttonUi);
                     buttonUi.focusable = false;
                     var isEditable = IsEditableCurrentProject(slotData.id);
-                    
+
                     buttonUi.Q<VisualElement>("DeleteButton").visible = isEditable;
                     buttonUi.Q<VisualElement>("Circle_Icon_Camera").style.display = DisplayStyle.None;
                     buttonUi.Q<VisualElement>("Circle_Icon_Walk").style.display = DisplayStyle.Flex;
@@ -684,6 +688,9 @@ namespace Landscape2.Runtime.CameraPositionMemory
                 modal.Clear();
                 GameObject.Destroy(GameObject.Find("Modal"));
             };
+
+            modal.parent?.Remove(modal);
+            rootElement.Add(modal);
         }
 
         public void LateUpdate(float deltaTime)

@@ -47,5 +47,12 @@ namespace Landscape2.Runtime
         {
             this.id = id;
         }
+        
+        public void SetTransform(Vector3 position, Vector3 angle, Vector3 scale)
+        {
+            this.position = position;
+            this.angle = angle;
+            this.scale = scale;
+        }
     }
 }

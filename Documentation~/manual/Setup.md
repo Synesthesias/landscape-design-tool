@@ -64,7 +64,7 @@ Project Settings ウィンドウの左側のパネルから「Player」を選択
 
 ## 事前準備
 ### PLATEAUの都市モデル(CityGML)データの用意
-事前にG空間情報センターの[3D都市モデル（Project PLATEAU）ポータルサイト](https://www.geospatial.jp/ckan/dataset/plateau)から景観計画・協議を行いたいエリアの都市モデルデータ(CityGMLファイル一式)をダウンロード、解凍してください。
+事前にG空間情報センターの[3D都市モデル（Project PLATEAU）ポータルサイト](https://front.geospatial.jp/plateau_portal_site/)から景観計画・協議を行いたいエリアの都市モデルデータ(CityGMLファイル一式)をダウンロード、解凍してください。
 
 > [!NOTE]  
 > 都市モデルデータには地形(demフォルダ), 建築物(bldgフォルダ)が含まれている必要があります。
@@ -110,3 +110,7 @@ Project Settings ウィンドウの左側のパネルから「Player」を選択
 - 初期設定画面の「実行」ボタンを押して、初期設定の処理を開始します。
 
 - 実行に必要なコンポーネントがシーン上に全て揃っていない場合、実行可能な状態にした後、「チェックリストを更新」ボタンを押すことで、「実行」ボタンが押せる状態になります。
+
+- 「チェックボタンを更新」ボタンの下に「初期設定が完了しています」と表示されたら、初期設定完了です。
+
+![初期設定完了](../resources/InitialSettings/InitialSettings_Finish.png)

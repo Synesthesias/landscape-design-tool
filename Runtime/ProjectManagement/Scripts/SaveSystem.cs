@@ -25,12 +25,13 @@ namespace Landscape2.Runtime
         public event Action<string> LoadEvent = delegate { };
         public event Action<string> DeleteEvent = delegate { };
         public event Action<string> ProjectChangedEvent = delegate { };
-        
+        public event Action LayerChangedEvent = delegate { };
+
         public SaveSystem(VisualElement globalNavi)
         {
             // UIの設定
-            Button saveButton = globalNavi.Q<Button>("ProjectSaveButton");
-            Button loadButton = globalNavi.Q<Button>("ProjectLoadButton");
+            Button saveButton = globalNavi.Q<Button>("merge_project_button");
+            Button loadButton = globalNavi.Q<Button>("Import_button");
 
             saveButton.clicked += () => SaveProject();
             loadButton.clicked += LoadProject;
@@ -114,6 +115,11 @@ namespace Landscape2.Runtime
         public void SetProject(string projectID)
         {
             ProjectChangedEvent(projectID);
+        }
+
+        public void SetLayer()
+        {
+            LayerChangedEvent();
         }
 
         public void OnEnable()

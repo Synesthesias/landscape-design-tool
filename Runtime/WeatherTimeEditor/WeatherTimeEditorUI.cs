@@ -25,7 +25,11 @@ namespace Landscape2.Runtime.WeatherTimeEditor
         // 時間帯変更ラベル名前
         private const string UITimeLabel = "TimeText";
 
-        public WeatherTimeEditorUI(WeatherTimeEditor weatherTimeEditor, VisualElement uiRoot)
+        public WeatherTimeEditorUI(
+            WeatherTimeEditor weatherTimeEditor,
+            VisualElement uiRoot,
+            float startTimeValue = 0f,
+            float endTimeValue = 1f)
         {
             this.weatherTimeEditor = weatherTimeEditor;
 
@@ -34,8 +38,8 @@ namespace Landscape2.Runtime.WeatherTimeEditor
             timeLabel = uiRoot.Q<Label>(UITimeLabel);
 
             // 時間帯の初期値の設定
-            timeSlider.lowValue = 0f; //0:00
-            timeSlider.highValue = 1f; //24:00
+            timeSlider.lowValue = startTimeValue; //0:00
+            timeSlider.highValue = endTimeValue; //24:00
             timeSlider.value = 0.5f; //12:00
             timeLabel.text = this.weatherTimeEditor.GetTimeString(timeSlider.value);
 

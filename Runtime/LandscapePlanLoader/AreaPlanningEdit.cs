@@ -32,12 +32,18 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         }
 
         /// <summary>
+        /// 頂点に変更があったかを返すメソッド
+        /// </summary>
+        public bool IsVertexEdited()
+        {
+            return isVertexEditing;
+        }
+
+        /// <summary>
         /// 変更内容を確定・保持するメソッド
         /// </summary>
         public void ConfirmEditData()
         {
-            if (!isVertexEditing) return;
-
             // 頂点の編集を適用
             EditVertexIfClicked();
             // メッシュを生成
@@ -59,49 +65,13 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 new List<Vector3>(vertices)
             };
 
-            // テッセレーション処理を行ったメッシュを生成
-            GameObject gisObject = GameObject.Find("Area_" + areaEditManager.GetAreaID());
-            if (gisObject == null)
-            {
-                Debug.LogError("GIS object is not found");
-                return;
-            } 
-            
-            MeshFilter gisObjMeshFilter = gisObject.GetComponent<MeshFilter>();
-            tessellatedMeshCreator.CreateTessellatedMesh(listOfVertices, gisObjMeshFilter, 30, 10);
-            Mesh mesh = gisObjMeshFilter.sharedMesh;
-            AreaProperty areaProperty = AreasDataComponent.GetProperty(areaEditManager.GetAreaID());
-
-            // Meshを変形
-            if (!landscapePlanMeshModifier.TryModifyMeshToTargetHeight(mesh, areaProperty.LimitHeight, gisObject.transform.position))
-            {
-                Debug.LogError($"{gisObject.name} is out of range of the loaded map");
-                return;
-            }
-
-            // 区画のメッシュから下向きに壁を生成
-            GameObject[] walls = wallGenerator.GenerateWall(mesh, (float)areaEditManager.GetMaxHeight(), Vector3.down, areaEditManager.GetWallMaterial());
-            for (int j = 0; j < walls.Length; j++)
-            {
-                GameObject wallObject = GameObject.Find($"AreaWall_{areaEditManager.GetAreaID()}_{j}");
-                // 存在する壁オブジェクトを削除
-                if (wallObject != null) GameObject.Destroy(wallObject);
-
-                walls[j].transform.SetParent(gisObject.transform);
-                walls[j].transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
-                walls[j].name = $"AreaWall_{areaEditManager.GetAreaID()}_{j}";
-
-
-                areaProperty.SetLocalPosition(new Vector3(
-                    areaProperty.Transform.localPosition.x,
-                    areaProperty.LimitHeight,
-                    areaProperty.Transform.localPosition.z
-                    ));
-            }           
+            // メッシュを再生成
+            LandscapePlanLoadManager landscapePlanLoadManager = new LandscapePlanLoadManager();
+            landscapePlanLoadManager.ReloadMeshes(listOfVertices, areaEditManager.GetEditingAreaIndex());
         }
 
         /// <summary>
-        /// エリアの頂点座標リストを取得し，ピンとラインを表示するメソッド
+        /// 区画の頂点座標リストを取得し，PinとLineを表示するメソッド
         /// </summary>
         public void CreatePinline()
         {
@@ -125,7 +95,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
                 vertices.Add(vertex);
 
-                // ラインを描画
+                // Lineを描画
                 if (i == 0)
                 {
                     endVec = landscapePlanMeshModifier.SearchGroundPoint(vertex) + new Vector3(0, 5.0f, 0);
@@ -138,13 +108,13 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 }
                 displayPinLine.CreatePin(endVec, vertices.Count - 1);
             }
-            // エリアを閉じる
+            // 区画を閉じる
             startVec = landscapePlanMeshModifier.SearchGroundPoint(vertices[0]) + new Vector3(0, 5.0f, 0);
             displayPinLine.DrawLine(endVec, startVec, vertices.Count - 1);
         }
 
         /// <summary>
-        /// ピンをクリックしたかどうかを判定するメソッド
+        /// Pinをクリックしたかどうかを判定するメソッド
         /// </summary>
         public bool IsClickPin()
         {
@@ -153,7 +123,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             hits = Physics.RaycastAll(ray, Mathf.Infinity);
             if (hits == null || hits.Length == 0)
                 return false;
-            // ピンをクリックした場合
+            // Pinをクリックした場合
             for (int i = 0; i < hits.Length; i++)
             {
                 if (hits[i].collider.gameObject.name.Contains("Pin"))
@@ -168,7 +138,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         }
 
         /// <summary>
-        ///ラインをクリックしたかどうかを判定するメソッド
+        ///Lineをクリックしたかどうかを判定するメソッド
         /// </summary>
         public bool IsClickLine()
         {
@@ -177,7 +147,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             hits = Physics.RaycastAll(ray, Mathf.Infinity);
             if (hits == null || hits.Length == 0)
                 return false;
-            // ラインをクリックした場合
+            // Lineをクリックした場合
             for (int i = 0; i < hits.Length; i++)
             {
                 if (hits[i].collider.gameObject.name.Contains("Line"))
@@ -191,7 +161,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         }
 
         /// <summary>
-        ///ラインの中点に新しく頂点を追加するメソッド
+        ///Lineの中点に新しく頂点を追加するメソッド
         /// </summary>
         public void AddVertexToLine()
         {
@@ -216,13 +186,13 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             Vector3 newVec = (previousVec + nextVec) / 2;
             vertices.Insert(lineIndex + 1, newVec);
 
-            // ピンとラインを挿入
+            // PinとLineを挿入
             Vector3 newPinVec = landscapePlanMeshModifier.SearchGroundPoint(newVec) + new Vector3(0, 5.0f, 0);
             displayPinLine.InsertPinLine(newPinVec, lineIndex);
         }
 
         /// <summary>
-        /// ピンをドラッグしたときの処理
+        /// Pinをドラッグしたときの処理
         /// </summary>
         public void OnDragPin()
         {
@@ -234,7 +204,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             Vector3 groundPos = landscapePlanMeshModifier.SearchGroundPoint(editingPin.transform.position);
             Vector3 worldPos = Camera.main.ScreenToWorldPoint(mousePos);
             editingPin.transform.position = new Vector3(worldPos.x, groundPos.y, worldPos.z) + new Vector3(0, 5.0f, 0);
-            // ラインの頂点を移動させる
+            // Lineの頂点を移動させる
             displayPinLine.MoveLineVertex(editingPin, editingPin.transform.position);
             // 頂点データを更新
             int index = displayPinLine.FindPinIndex(editingPin);
@@ -245,30 +215,35 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         }
 
         /// <summary>
-        /// ピンを離したときの処理
+        /// 頂点，Pin，Lineを元の位置に戻す処理
         /// </summary>
-        public void OnReleasePin()
+        public void ResetVertexPosition()
         {
-            if(editingPin == null)return;
+            if (editingPin == null) return;
 
-            // 頂点が交差しているかを判定
-            if (IsIntersectedByLine())
-            {
-                Debug.LogWarning("Vertices are crossing");
-                // 頂点，ピン，ラインを元の位置に戻す
-                editingPin.transform.position = lastPinPosition;
-                vertices[displayPinLine.FindPinIndex(editingPin)] = lastPinPosition;
-                displayPinLine.MoveLineVertex(editingPin, lastPinPosition);
-            }
+            editingPin.transform.position = lastPinPosition;
+            vertices[displayPinLine.FindPinIndex(editingPin)] = lastPinPosition;
+            displayPinLine.MoveLineVertex(editingPin, lastPinPosition);
+        }
+
+        /// <summary>
+        /// 編集しているPinとLineを解除する処理
+        /// </summary>
+        public void ReleaseEditingPin()
+        {
             editingPin = null;
-            editingLine = null;           
+            editingLine = null;
         }
 
         /// <summary>
         /// 頂点が交差しているかを判定
         /// </summary>
-        public bool IsIntersectedByLine()
+        public bool IsIntersected()
         {
+            if (editingPin == null)
+            {
+                return false;
+            }
             return displayPinLine.IsIntersectedByPin(editingPin);
         }
 
@@ -295,14 +270,14 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 return;
             };
 
-            // ピンとラインを削除
+            // PinとLineを削除
             displayPinLine.RemovePinLine(index);
             vertices.RemoveAt(index);
             isVertexEditing = true;
         }
 
         /// <summary>
-        /// エリアの頂点の編集を適用させる処理
+        /// 区画の頂点の編集を適用させる処理
         /// </summary>
         public void EditVertexIfClicked()
         {
@@ -314,7 +289,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         }
 
         /// <summary>
-        /// エリアの頂点の編集をクリアする処理
+        /// 区画の頂点の編集をクリアする処理
         /// </summary>
         public void ClearVertexEdit()
         {

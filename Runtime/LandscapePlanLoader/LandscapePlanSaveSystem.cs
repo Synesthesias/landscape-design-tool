@@ -45,8 +45,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     areaProperty.LineOffset,
                     areaProperty.Color,
                     areaProperty.WallMaxHeight,
-                    areaProperty.PointData,
-                    areaProperty.IsApplyBuildingHeight
+                    areaProperty.PointData
                     );
 
                 planAreaSaveDatas.Add(saveData);
@@ -61,8 +60,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// </summary>
         static void LoadInfo(string projectID)
         {
-            AreasDataComponent.ClearAllProperties();
-
             // 景観区画のセーブデータをロード
             List<PlanAreaSaveData> loadedPlanAreaDatas = DataSerializer.Load<List<PlanAreaSaveData>>("PlanAreas");
 
@@ -90,6 +87,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// <param name="projectID"></param>
         static void DeleteInfo(string projectID)
         {
+            var deleteList = new List<AreaProperty>();
             int areaDataCount = AreasDataComponent.GetPropertyCount();
             for (int i = 0; i < areaDataCount; i++)
             {
@@ -100,8 +98,12 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                         areaProperty.ID.ToString(),
                         false))
                 {
-                    AreasDataComponent.TryRemoveProperty(areaProperty);
+                    deleteList.Add(areaProperty);
                 }
+            }
+            foreach (var areaProperty in deleteList)
+            {
+                AreasDataComponent.TryRemoveProperty(areaProperty);
             }
         }
         

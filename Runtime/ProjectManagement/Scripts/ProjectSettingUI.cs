@@ -23,7 +23,7 @@ namespace Landscape2.Runtime
             projectSettingEditModeUI = new (element);
             currentProjectName = element.Q<Label>("SelectProject_Name");
             selectProjectButton = element.Q<Button>("Btn_SelectProject");
-            addProjectButton = element.Q<Button>("Btn_AddProject");
+            addProjectButton = element.Q<Button>("New_project_button");
             this.saveSystem = saveSystem;
             
             Initialize();
@@ -59,7 +59,6 @@ namespace Landscape2.Runtime
                 // 全て保存
                 foreach (var projectData in ProjectSaveDataManager.ProjectSetting.ProjectList)
                 {
-                    if (projectData.IsDefault) continue;
                     projectSettingListUI.Save(projectData.projectID);
                 }
             };
@@ -101,6 +100,8 @@ namespace Landscape2.Runtime
                     var firstProject = ProjectSaveDataManager.ProjectSetting.ProjectList.First();
                     SetCurrentProject(firstProject.projectID);
                 }
+                
+                RefreshProjectList();
 
                 // 完了ポップアップ
                 ModalUI.ShowModal("プロジェクト削除", "プロジェクトを削除しました。", false, false);
@@ -125,6 +126,22 @@ namespace Landscape2.Runtime
                 });
             });
             
+            // 上に移動
+            projectSettingListUI.OnUp.AddListener((projectID) =>
+            {
+                ProjectSaveDataManager.ProjectSetting.MoveLayerUp(projectID);
+                RefreshProjectList();
+                saveSystem.SetLayer();
+            });
+
+            // 下に移動
+            projectSettingListUI.OnDown.AddListener((projectID) =>
+            {
+                ProjectSaveDataManager.ProjectSetting.MoveLayerDown(projectID);
+                RefreshProjectList();
+                saveSystem.SetLayer();
+            });
+            
             // 追加ボタン
             addProjectButton.clicked += () =>
             {
@@ -132,6 +149,7 @@ namespace Landscape2.Runtime
                 {
                     var projectData = ProjectSaveDataManager.ProjectSetting.Add(projectName);
                     Add(projectData.projectID);
+                    RefreshProjectList();
                 
                     // 完了ポップアップ
                     ModalUI.ShowModal("プロジェクト新規作成", "新規プロジェクトを追加しました。", true, false);
@@ -165,6 +183,8 @@ namespace Landscape2.Runtime
             
             // 現在のプロジェクトに設定
             SetCurrentProject(projectID);
+        
+            RefreshProjectList();
         }
         
         private void OnProjectChanged(string projectID)
@@ -190,6 +210,22 @@ namespace Landscape2.Runtime
         private void SetCurrentProjectName(string projectName)
         {
             currentProjectName.text = projectName;
+        }
+
+        private void RefreshProjectList()
+        {
+            // リストをクリア
+            projectSettingListUI.Clear();
+            
+            // レイヤー順でプロジェクトを追加
+            var sortedProjects = ProjectSaveDataManager.ProjectSetting.ProjectList
+                .OrderBy(x => x.layer)
+                .ToList();
+                
+            foreach (var project in sortedProjects)
+            {
+                Add(project.projectID);
+            }
         }
     }
 }

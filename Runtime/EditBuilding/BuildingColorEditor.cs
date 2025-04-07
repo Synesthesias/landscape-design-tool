@@ -1,9 +1,11 @@
 ﻿using iShape.Geometry.Polygon;
 using Landscape2.Runtime.Common;
 using PLATEAU.CityInfo;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using System.Linq;
 
 namespace Landscape2.Runtime.BuildingEditor
 {
@@ -26,11 +28,11 @@ namespace Landscape2.Runtime.BuildingEditor
         private List<Material> copiedMaterials = new List<Material>();
 
         // 色彩編集パネル表示ボタンの初期色
-        private Color initialColor = new Color32(186, 186, 186, 255);
-        public Color InitialColor { get => initialColor; }
+        private static readonly Color initialColor = new Color32(186, 186, 186, 255);
+        public static Color InitialColor { get => initialColor; }
         // Smoothnessスライダーの初期値
-        private float initialSmoothness = 0.7f;
-        public float InitialSmoothness { get => initialSmoothness; }
+        private static readonly float initialSmoothness = 0.7f;
+        public static float InitialSmoothness { get => initialSmoothness; }
 
         public BuildingColorEditor()
         {
@@ -39,7 +41,7 @@ namespace Landscape2.Runtime.BuildingEditor
         }
         // UIで色を変更したときに呼び出される
         // 建築物のRGB値を変更
-        public void EditMaterialColor(Color color, float smoothness)
+        public void EditMaterialColor(Color color, float smoothness, Action<string> showWarning = null)
         {
             if (targetObject != null)
             {
@@ -54,9 +56,25 @@ namespace Landscape2.Runtime.BuildingEditor
                         mat.color = color;
                         mat.SetFloat("_Smoothness", smoothness);
                     }
-
-                    // 変更内容を記録する
                     RecordMaterialColor(targetObject, buildingFieldMaterials);
+                    
+                    // 最小レイヤーの値を取得して更新
+                    var gmlID = CityObjectUtil.GetGmlID(targetObject);
+                    var minLayerValues = BuildingsDataComponent.GetMinLayerPropertyValues(gmlID);
+                    foreach (var mat in editingMaterials)
+                    {
+                        // 色とsmoothnessを変更
+                        mat.color = minLayerValues.colors!.First();
+                        mat.SetFloat("_Smoothness", minLayerValues.smoothness!.First());
+                    }
+
+                    // 最小のレイヤーでなければsnackbarを表示
+                    var lowestProjectInfo = BuildingsDataComponent.GetLowestLayerProjectNamesByGmlID(gmlID);
+                    if (!string.IsNullOrEmpty(lowestProjectInfo.projectName) && 
+                        lowestProjectInfo.projectID != ProjectSaveDataManager.ProjectSetting.CurrentProject.projectID)
+                    {
+                        showWarning?.Invoke(lowestProjectInfo.projectName);
+                    }
                 }
             }
         }
@@ -179,18 +197,13 @@ namespace Landscape2.Runtime.BuildingEditor
             for (int i = 0; i < dataCount; i++)
             {
                 var property = BuildingsDataComponent.GetProperty(i);
-                if (!ProjectSaveDataManager.TryCheckData(
-                        ProjectSaveDataType.EditBuilding,
-                        ProjectSaveDataManager.ProjectSetting.CurrentProject.projectID,
-                        property.ID
-                    ))
-                {
-                    continue;
-                }
-
+                
+                // 最小のレイヤー値を取得
+                var minValues = BuildingsDataComponent.GetMinLayerPropertyValues(property.GmlID);
+                
                 string gmlID = property.GmlID;
-                List<Color> colors = property.ColorData;
-                List<float> smoothness = property.SmoothnessData;
+                List<Color> colors = minValues.colors;
+                List<float> smoothness = minValues.smoothness;
 
                 // Scene上の建物からGMLIDに一致する建物を取得
                 foreach (var building in buildings)
@@ -230,7 +243,7 @@ namespace Landscape2.Runtime.BuildingEditor
             }
         }
         
-        private void DeleteBuildingColor(List<BuildingProperty> deleteBuildings)
+        private void DeleteBuildingColor(List<BuildingProperty> deleteBuildings, string projectID)
         {
             foreach (var deleteBuilding in deleteBuildings)
             {
@@ -240,24 +253,14 @@ namespace Landscape2.Runtime.BuildingEditor
                     continue;
                 }
 
-                bool isEnd = false;
-                foreach (var buildingProperty in BuildingsDataComponent.GetBuildings(deleteBuilding.GmlID))
-                {
-                    if (buildingProperty.ID != deleteBuilding.ID)
-                    {
-                        // 他にも同じGmlIDの建物がある場合はその色で
-                        SetBuildingParameter(cityObjectGroup.gameObject, buildingProperty);
-                        isEnd = true;
-                        break;
-                    }
-                }
-
-                if (isEnd)
-                {
-                    continue;
-                }
-                
-                ResetBuildingParameter(cityObjectGroup.gameObject);
+                var minLayerValues = BuildingsDataComponent.GetMinLayerPropertyValues(deleteBuilding.GmlID, projectID);
+                // 最小レイヤーを設定
+                SetBuildingParameter(
+                    cityObjectGroup.gameObject,
+                    new BuildingProperty(deleteBuilding.GmlID,
+                        minLayerValues.colors,
+                        minLayerValues.smoothness,
+                        minLayerValues.isDeleted));
             }
         }
 

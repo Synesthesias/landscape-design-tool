@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -7,13 +5,16 @@ namespace Landscape2.Runtime
 {
     public class SnackBar
     {
+        const float showDuration = 2f;
         private VisualElement center;
 
         protected VisualElement snackBarClone; // Snackbarのクローン
 
         protected Button closeButton;
 
+        public bool IsVisible => snackBarClone.visible;
 
+        float showTime = 0f;
 
         public SnackBar(VisualElement rootElement, string target = "CenterUpper")
         {
@@ -40,6 +41,8 @@ namespace Landscape2.Runtime
             snackBarClone.Q<Label>("SnackbarText").text = message;
             snackBarClone.visible = true;
             closeButton.visible = true;
+
+            showTime = Time.realtimeSinceStartup;
         }
 
         public void Hide()
@@ -52,6 +55,21 @@ namespace Landscape2.Runtime
             snackBarClone.visible = false;
             closeButton.visible = false;
             // snackBarClone.Q<Button>("CloseButton").visible = false;
+        }
+
+        public void Update()
+        {
+
+            var remindTime = Time.realtimeSinceStartup - showTime;
+            Debug.Log($"{showDuration} : {remindTime} / {IsVisible}");
+            if (showDuration < remindTime)
+            {
+                if (IsVisible)
+                {
+                    Hide();
+                }
+
+            }
         }
     }
 }

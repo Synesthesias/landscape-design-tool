@@ -23,29 +23,21 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         }
 
         /// <summary>
-        /// エリア作成可能かを判定するメソッド
+        /// 区画の頂点が交差しているかを判定するメソッド
         /// </summary>
-        public bool IsCreateArea()
+        public bool IsIntersected()
         {
-            if (vertices.Count < 3)
-            {
-                // LogWarningを表示
-                Debug.LogWarning("頂点数が3未満です。");
-                return false;
-            }
-
-            if (displayPinLine.IsIntersected())
+            if (displayPinLine.IsIntersectedByLine())
             {
                 // LogWarningを表示
                 Debug.LogWarning("頂点が交差しています。");
-                return false;
+                return true;
             }
-
-            return true;
+            return false;
         }
 
         /// <summary>
-        /// クリック時にピンとライン生成を行うメソッド
+        /// クリック時にPinとLine生成を行うメソッド
         /// </summary>
         public void AddVertexIfClicked()
         {
@@ -59,7 +51,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
                 if (vertices.Count > 2)
                 {
-                    // 最初に生成したピンの場合はエリアを閉じる
+                    // 最初に生成したPinの場合は区画を閉じる
                     if (displayPinLine.IsClickFirstPin(hits))
                     {
                         var startVec = vertices[vertices.Count - 1] + new Vector3(0, 5.0f, 0);
@@ -75,9 +67,9 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     {
                         vertices.Add(hits[i].point);
                         var newVec = hits[i].point + new Vector3(0, 5.0f, 0);
-                        // ピンを生成
+                        // Pinを生成
                         displayPinLine.CreatePin(newVec, vertices.Count - 1);
-                        // ラインを生成
+                        // Lineを生成
                         if (vertices.Count > 1)
                         {
                             var startVec = vertices[vertices.Count - 2] + new Vector3(0, 5.0f, 0);
@@ -112,8 +104,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 10.0f,
                 color,
                 wallMaxHeight,
-                listOfVertices,
-                false
+                listOfVertices
                 );
             List<PlanAreaSaveData>listOfSaveData = new List<PlanAreaSaveData>
             {
@@ -129,7 +120,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         }
 
         /// <summary>
-        /// エリアが閉じられたかどうかを判定するメソッド
+        /// 区画が閉じられたかどうかを判定するメソッド
         /// </summary>
         public bool IsClosed()
         {
@@ -137,7 +128,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         }
 
         /// <summary>
-        /// エリアの頂点の編集をクリアする処理
+        /// 区画の頂点の編集をクリアする処理
         /// </summary>
         public void ClearVertexEdit()
         {

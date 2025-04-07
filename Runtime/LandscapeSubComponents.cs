@@ -154,6 +154,7 @@ namespace Landscape2.Runtime
                 new TextureSwitch(uiRoot),
                 new WalkerModeUI(subMenuUxmls[(int)SubMenuUxmlType.WalkMode], landscapeCamera, walkerMoveByUserInput),
                 new VisualSettingConfig(uiRoot,new VisualSettingConfigUI(uiRoot)),
+                new ToolTip(uiRoot),
             };
 
         }
