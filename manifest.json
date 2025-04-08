@@ -147,7 +147,7 @@
       "output": {
         ".html": {
           "relative_path": "manual/Setup.html",
-          "hash": "d9ICc9kd5aCs3TsbCByfw6epDo4qVp2coeSPm7vYU1w="
+          "hash": "fymzjVwjSAobA/90mX/bjWKGv/knNlsGsZXYr+oRg7A="
         }
       },
       "is_incremental": false,
@@ -802,6 +802,17 @@
       "output": {
         "resource": {
           "relative_path": "resources/Install/packageManager.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/Install/packageMapsToolkit.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/Install/packageMapsToolkit.png"
         }
       },
       "is_incremental": false,
