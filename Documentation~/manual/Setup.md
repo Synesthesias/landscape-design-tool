@@ -59,7 +59,7 @@ Unity Hub を起動します。
 
 - `name` に `com.unity.cloud.gltfast` を指定し、`version` に `6.9.0` を指定します。指定ができたら `Add` を押して下さい。
 
-![ツールをUnityにインポート](../resources/Install/packageInstallGltFast_02.png))
+![ツールをUnityにインポート](../resources/Install/packageInstallGltFast_02.png)
 
 - packageの検索で `gltFast` を検索して、`Unity gltFast` のバージョンが `6.9.0` に更新されていることを確認できたら完了です。
 
