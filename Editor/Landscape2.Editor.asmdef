@@ -8,7 +8,8 @@
         "libplateau",
         "PLATEAU.Runtime",
         "Unity.RenderPipelines.HighDefinition.Runtime",
-        "PlateauToolkit.Rendering"
+        "PlateauToolkit.Rendering",
+        "CesiumRuntime"
     ],
     "includePlatforms": [
         "Editor"

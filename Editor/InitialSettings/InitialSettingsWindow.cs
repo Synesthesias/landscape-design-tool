@@ -35,6 +35,8 @@ namespace Landscape2.Editor
         private const string UIEnvironmentHelpbox = "EnvironmentHelpboxColumn"; // Environmentが生成されたかの判定Helpbox欄名前
         private const string UIMaterialAdjustCheck = "MaterialAdjustCheckColumn"; // マテリアル分けが実行されたかの判定欄名前
         private const string UIMaterialAdjustHelpbox = "MaterialAdjustHelpboxColumn"; // マテリアル分けが実行されたかの判定Helpbox欄名前
+        private const string UICesiumCheck = "CesiumCheckColumn"; // Cesiumが生成されたかの判定欄名前
+        private const string UICesiumHelpbox = "CesiumHelpboxColumn"; // Cesiumが生成されたかの判定Helpbox欄名前
 
         private HelpBox initialSettingsHelpBox;
         private HelpBox importCheckHelpBox;
@@ -43,6 +45,7 @@ namespace Landscape2.Editor
         private HelpBox mainCameraCheckHelpBox;
         private HelpBox environmentCheckHelpBox;
         private HelpBox materialAdjustCheckHelpBox;
+        private HelpBox cesiumCheckHelpBox;
 
         private Image importCheckImage;
         private Image cityObjectCheckImage;
@@ -50,6 +53,7 @@ namespace Landscape2.Editor
         private Image mainCameraCheckImage;
         private Image environmentCheckImage;
         private Image materialAdjustCheckImage;
+        private Image cesiumCheckImage;
 
         private List<bool> checkList; // 初期設定実行可能かの判定用リスト
 
@@ -77,7 +81,7 @@ namespace Landscape2.Editor
             mainCameraCheckHelpBox = new HelpBox("MainCameraの生成が失敗しました", HelpBoxMessageType.Error);
             environmentCheckHelpBox = new HelpBox("Environmentの生成が失敗しました", HelpBoxMessageType.Error);
             materialAdjustCheckHelpBox = new HelpBox("マテリアル分けの実行が失敗しました", HelpBoxMessageType.Error);
-
+            cesiumCheckHelpBox = new HelpBox("Cesiumの地形モデルの設定が失敗しました", HelpBoxMessageType.Error);
 
             importCheckImage = new Image();
             cityObjectCheckImage = new Image();
@@ -85,6 +89,7 @@ namespace Landscape2.Editor
             mainCameraCheckImage = new Image();
             environmentCheckImage = new Image();
             materialAdjustCheckImage = new Image();
+            cesiumCheckImage = new Image();
 
             // チェック項目をすべて満たしている場合初期設定を実行できるようにする
             if (IsInitialSettingsPossible() == true)
@@ -220,6 +225,10 @@ namespace Landscape2.Editor
             {
                 initialSettings.CreateBIMImportMaterialSetting();
             }
+
+            // Cesiumの地形モデルを設定
+            initialSettings.SetupCesiumTerrain();
+            AddCheckListUI(true, UICesiumCheck, UICesiumHelpbox, cesiumCheckHelpBox, cesiumCheckImage);
 
             // 初期設定が完了したことをUIに表示
             uiRoot.Add(initialSettingsHelpBox);
