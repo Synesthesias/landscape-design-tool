@@ -4,7 +4,6 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using System.Threading.Tasks;
-using System;
 
 namespace Landscape2.Editor
 {
@@ -37,6 +36,8 @@ namespace Landscape2.Editor
         private const string UIMaterialAdjustHelpbox = "MaterialAdjustHelpboxColumn"; // マテリアル分けが実行されたかの判定Helpbox欄名前
         private const string UICesiumCheck = "CesiumCheckColumn"; // Cesiumが生成されたかの判定欄名前
         private const string UICesiumHelpbox = "CesiumHelpboxColumn"; // Cesiumが生成されたかの判定Helpbox欄名前
+        private const string UIPlateauAssetCheck = "PlateauAssetCheckColumn"; // PLATEAU SDKのサンプルアセットが準備されたかの判定欄名前
+        private const string UIPlateauAssetHelpbox = "PlateauAssetHelpboxColumn"; // PLATEAU SDKのサンプルアセットが準備されたかの判定Helpbox欄名前
 
         private HelpBox initialSettingsHelpBox;
         private HelpBox importCheckHelpBox;
@@ -46,6 +47,7 @@ namespace Landscape2.Editor
         private HelpBox environmentCheckHelpBox;
         private HelpBox materialAdjustCheckHelpBox;
         private HelpBox cesiumCheckHelpBox;
+        private HelpBox plateauCheckHelpBox;
 
         private Image importCheckImage;
         private Image cityObjectCheckImage;
@@ -54,6 +56,7 @@ namespace Landscape2.Editor
         private Image environmentCheckImage;
         private Image materialAdjustCheckImage;
         private Image cesiumCheckImage;
+        private Image plateauCheckImage;
 
         private List<bool> checkList; // 初期設定実行可能かの判定用リスト
 
@@ -82,6 +85,7 @@ namespace Landscape2.Editor
             environmentCheckHelpBox = new HelpBox("Environmentの生成が失敗しました", HelpBoxMessageType.Error);
             materialAdjustCheckHelpBox = new HelpBox("マテリアル分けの実行が失敗しました", HelpBoxMessageType.Error);
             cesiumCheckHelpBox = new HelpBox("Cesiumの地形モデルの設定が失敗しました", HelpBoxMessageType.Error);
+            plateauCheckHelpBox = new HelpBox("PLATEAU SDK for Toolkitのアセットの準備が失敗しました", HelpBoxMessageType.Error);
 
             importCheckImage = new Image();
             cityObjectCheckImage = new Image();
@@ -90,6 +94,7 @@ namespace Landscape2.Editor
             environmentCheckImage = new Image();
             materialAdjustCheckImage = new Image();
             cesiumCheckImage = new Image();
+            plateauCheckImage = new Image();
 
             // チェック項目をすべて満たしている場合初期設定を実行できるようにする
             if (IsInitialSettingsPossible() == true)
@@ -229,6 +234,10 @@ namespace Landscape2.Editor
             // Cesiumの地形モデルを設定
             initialSettings.SetupCesiumTerrain();
             AddCheckListUI(true, UICesiumCheck, UICesiumHelpbox, cesiumCheckHelpBox, cesiumCheckImage);
+
+            // PLATEAU SDKのサンプルアセットを準備
+            initialSettings.PreparePlateauSamples();
+            AddCheckListUI(true, UIPlateauAssetCheck, UIPlateauAssetHelpbox, plateauCheckHelpBox, plateauCheckImage);
 
             // 初期設定が完了したことをUIに表示
             uiRoot.Add(initialSettingsHelpBox);

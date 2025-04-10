@@ -12,6 +12,8 @@ using PLATEAU.Util.Async;
 using PlateauToolkit.Rendering;
 using System.Linq;
 using PLATEAU.Native;
+using PlateauToolkit.Sandbox.Editor;
+using UnityEditor.PackageManager.UI;
 
 namespace Landscape2.Editor
 {
@@ -295,18 +297,15 @@ namespace Landscape2.Editor
             }
         }
 
-        // Cesiumのオブジェクトが存在するかを確認
-        public bool IsCesiumExists()
+        // PLATEAU SDK for Toolkitのサンプルアセットの準備
+        public void PreparePlateauSamples()
         {
-            var geoRef = GameObject.FindObjectOfType<CesiumGeoreference>();
-            var tileset = GameObject.FindObjectOfType<Cesium3DTileset>();
-            if (geoRef != null && tileset != null)
+            if (PlateauSandboxAssetUtility.GetSample(out Sample sample))
             {
-                return true;
-            }
-            else
-            {
-                return false;
+                if (!sample.isImported)
+                {
+                    sample.Import();
+                }
             }
         }
     }

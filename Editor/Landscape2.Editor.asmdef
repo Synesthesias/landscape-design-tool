@@ -9,7 +9,8 @@
         "PLATEAU.Runtime",
         "Unity.RenderPipelines.HighDefinition.Runtime",
         "PlateauToolkit.Rendering",
-        "CesiumRuntime"
+        "CesiumRuntime",
+        "PlateauToolkit.Sandbox.Editor"
     ],
     "includePlatforms": [
         "Editor"
