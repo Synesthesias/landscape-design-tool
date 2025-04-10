@@ -232,12 +232,26 @@ namespace Landscape2.Editor
             }
 
             // Cesiumの地形モデルを設定
-            initialSettings.SetupCesiumTerrain();
-            AddCheckListUI(true, UICesiumCheck, UICesiumHelpbox, cesiumCheckHelpBox, cesiumCheckImage);
+            try
+            {
+                initialSettings.SetupCesiumTerrain();
+                AddCheckListUI(true, UICesiumCheck, UICesiumHelpbox, cesiumCheckHelpBox, cesiumCheckImage);
+            }
+            catch
+            {
+                AddCheckListUI(false, UICesiumCheck, UICesiumHelpbox, cesiumCheckHelpBox, cesiumCheckImage);
+            }
 
             // PLATEAU SDKのサンプルアセットを準備
-            initialSettings.PreparePlateauSamples();
-            AddCheckListUI(true, UIPlateauAssetCheck, UIPlateauAssetHelpbox, plateauCheckHelpBox, plateauCheckImage);
+            try
+            {
+                initialSettings.PreparePlateauSamples();
+                AddCheckListUI(true, UIPlateauAssetCheck, UIPlateauAssetHelpbox, plateauCheckHelpBox, plateauCheckImage);
+            }
+            catch
+            {
+                AddCheckListUI(false, UIPlateauAssetCheck, UIPlateauAssetHelpbox, plateauCheckHelpBox, plateauCheckImage);
+            }
 
             // 初期設定が完了したことをUIに表示
             uiRoot.Add(initialSettingsHelpBox);
