@@ -136,6 +136,7 @@ namespace Landscape2.Runtime
         }
 
         List<GltfImport> loadGLTFList = new();
+        private string tempExePath; // 一時ファイルのパスを保持
 
         private BIMLoader() { }
 
@@ -226,17 +227,17 @@ namespace Landscape2.Runtime
         private string GetIfcConverterPath()
         {
             string ifcExecName = "IfcConvert.exe";
-            string tempPath = Path.Combine(Path.GetTempPath(), ifcExecName);
+            tempExePath = Path.Combine(Path.GetTempPath(), ifcExecName);
 
             // リソースからバイナリデータを読み込む
-            var execData = Resources.Load<TextAsset>("IfcConvert");
+            var execData = Resources.Load<TextAsset>("BIMImport/IfcConvert");
             if (execData != null)
             {
                 // 一時ファイルとして書き出す
-                File.WriteAllBytes(tempPath, execData.bytes);
+                File.WriteAllBytes(tempExePath, execData.bytes);
                 // 実行権限を付与
-                System.IO.File.SetAttributes(tempPath, System.IO.FileAttributes.Normal);
-                return tempPath;
+                System.IO.File.SetAttributes(tempExePath, System.IO.FileAttributes.Normal);
+                return tempExePath;
             }
 
             // 従来のパスをフォールバックとして残す
@@ -320,6 +321,19 @@ namespace Landscape2.Runtime
             foreach (var importer in loadGLTFList)
             {
                 importer.Dispose();
+            }
+
+            // 一時ファイルの削除
+            if (!string.IsNullOrEmpty(tempExePath) && File.Exists(tempExePath))
+            {
+                try
+                {
+                    File.Delete(tempExePath);
+                }
+                catch (System.Exception e)
+                {
+                    Debug.LogWarning($"Failed to delete temporary file: {tempExePath}\n{e}");
+                }
             }
         }
     }
