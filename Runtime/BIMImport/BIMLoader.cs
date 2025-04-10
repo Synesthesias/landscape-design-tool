@@ -234,10 +234,15 @@ namespace Landscape2.Runtime
             if (execData != null)
             {
                 // 一時ファイルとして書き出す
-                File.WriteAllBytes(tempExePath, execData.bytes);
-                // 実行権限を付与
-                System.IO.File.SetAttributes(tempExePath, System.IO.FileAttributes.Normal);
-                return tempExePath;
+                try {
+                    File.WriteAllBytes(tempExePath, execData.bytes);
+                    // 実行権限を付与
+                    System.IO.File.SetAttributes(tempExePath, System.IO.FileAttributes.Normal);
+                    return tempExePath;
+                } catch (System.Exception e) {
+                    Debug.LogError($"一時ファイルの作成に失敗しました: {e.Message}");
+                    // フォールバックロジックに進む
+                }
             }
 
             // 従来のパスをフォールバックとして残す
