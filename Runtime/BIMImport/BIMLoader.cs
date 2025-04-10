@@ -225,17 +225,22 @@ namespace Landscape2.Runtime
         /// <returns></returns>
         private string GetIfcConverterPath()
         {
-            string fullPath = Path.Combine(Application.dataPath, "IfcConvert");
-            string ifcExecName = string.Empty;
+            string ifcExecName = "IfcConvert.exe";
+            string tempPath = Path.Combine(Path.GetTempPath(), ifcExecName);
 
-#if UNITY_EDITOR_WIN
-            ifcExecName = "IfcConvert.exe";
-#elif UNITY_STANDALONE_WIN
-            fullPath = Path.Combine(Application.streamingAssetsPath, "IfcConvert");
-            ifcExecName = "IfcConvert.exe";
-#else
-            ifcExecName = "IfcConvert";
-#endif
+            // リソースからバイナリデータを読み込む
+            var execData = Resources.Load<TextAsset>("IfcConvert");
+            if (execData != null)
+            {
+                // 一時ファイルとして書き出す
+                File.WriteAllBytes(tempPath, execData.bytes);
+                // 実行権限を付与
+                System.IO.File.SetAttributes(tempPath, System.IO.FileAttributes.Normal);
+                return tempPath;
+            }
+
+            // 従来のパスをフォールバックとして残す
+            string fullPath = Path.Combine(Application.dataPath, "IfcConvert");
 
             // まず通常のパスを確認
             var result = Path.Combine(fullPath, ifcExecName);
@@ -244,14 +249,7 @@ namespace Landscape2.Runtime
                 return result;
             }
 
-            // 次にResources配下を確認
-            var resourcesPath = Path.Combine(Application.dataPath, "Resources", "IfcConvert.exe");
-            if (File.Exists(resourcesPath))
-            {
-                return resourcesPath;
-            }
-
-            // 最後にStreamingAssets配下を確認
+            // StreamingAssets配下を確認
             var streamingAssetsPath = Path.Combine(Application.streamingAssetsPath, "IfcConvert.exe");
             if (File.Exists(streamingAssetsPath))
             {
