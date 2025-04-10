@@ -27,9 +27,8 @@ namespace Landscape2.Runtime
             // フォルダが無いとダメ!
             if (!Directory.Exists(ifcPath))
             {
-                string errMes = "IfcConverterフォルダがありません";
-                EditorUtility.DisplayDialog("Error in BIMLoader", errMes, "cancel");
-                throw new BuildFailedException($"{errMes}\n{ifcPath}");
+                Directory.CreateDirectory(ifcPath);
+                Debug.Log($"IfcConverterフォルダを作成しました: {ifcPath}");
             }
 
             Debug.Log($"pass ifcPath : {ifcPath}");
@@ -41,14 +40,19 @@ namespace Landscape2.Runtime
             ifcExec = $"{ifcExec}.exe";
 #endif
             var exeFullPath = Path.Combine(ifcPath, ifcExec);
-            if (!File.Exists(exeFullPath))
+            var resourcesExePath = Path.Combine(Application.dataPath, "Resources", "IfcConvert.exe");
+
+            // 通常のパスとResources配下の両方を確認
+            if (!File.Exists(exeFullPath) && !File.Exists(resourcesExePath))
             {
                 string errMes = $"{ifcExec} がありません";
                 EditorUtility.DisplayDialog("Error in BIMLoader", errMes, "cancel");
                 throw new BuildFailedException(errMes);
             }
 
-            Debug.Log($"pass exeFullpath: {exeFullPath}");
+            // Resources配下に存在する場合は、そちらをコピー元として使用
+            var sourcePath = File.Exists(resourcesExePath) ? resourcesExePath : exeFullPath;
+            Debug.Log($"pass exeFullpath: {sourcePath}");
 
             // streamingassets以下にcopy
             var dstPath = Path.Combine(Application.streamingAssetsPath, ifcExecWithoutExt);
@@ -59,12 +63,12 @@ namespace Landscape2.Runtime
                 return;
             }
 
-            var relativeIfcPath = Path.GetRelativePath(Path.Combine(Application.dataPath, ".."), ifcPath);
-            var result = AssetDatabase.CopyAsset(relativeIfcPath, dstAssetPath);
-            Debug.Log($"copy : {result}\n{ifcPath}({relativeIfcPath})\n{dstAssetPath}");
+            var relativeSourcePath = Path.GetRelativePath(Path.Combine(Application.dataPath, ".."), sourcePath);
+            var result = AssetDatabase.CopyAsset(relativeSourcePath, dstAssetPath);
+            Debug.Log($"copy : {result}\n{sourcePath}({relativeSourcePath})\n{dstAssetPath}");
             if (!result)
             {
-                string errMes = $"{relativeIfcPath} を \n{dstPath} に\ncopyを行う際に失敗しました";
+                string errMes = $"{relativeSourcePath} を \n{dstPath} に\ncopyを行う際に失敗しました";
                 EditorUtility.DisplayDialog("Error in BIMLoader", errMes, "cancel");
                 throw new BuildFailedException(errMes);
             }

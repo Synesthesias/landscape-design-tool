@@ -231,20 +231,34 @@ namespace Landscape2.Runtime
 #if UNITY_EDITOR_WIN
             ifcExecName = "IfcConvert.exe";
 #elif UNITY_STANDALONE_WIN
-            fullPath = Path.Combine(Application.streamingAssetsPath,"IfcConvert");
+            fullPath = Path.Combine(Application.streamingAssetsPath, "IfcConvert");
             ifcExecName = "IfcConvert.exe";
 #else
             ifcExecName = "IfcConvert";
 #endif
-            var result = Path.Combine(fullPath, ifcExecName);
 
-            if (!File.Exists(result))
+            // まず通常のパスを確認
+            var result = Path.Combine(fullPath, ifcExecName);
+            if (File.Exists(result))
             {
-                Debug.LogWarning($"{result} : {File.Exists(result)}");
-                throw new FileNotFoundException(result);
+                return result;
             }
 
-            return result;
+            // 次にResources配下を確認
+            var resourcesPath = Path.Combine(Application.dataPath, "Resources", "IfcConvert.exe");
+            if (File.Exists(resourcesPath))
+            {
+                return resourcesPath;
+            }
+
+            // 最後にStreamingAssets配下を確認
+            var streamingAssetsPath = Path.Combine(Application.streamingAssetsPath, "IfcConvert.exe");
+            if (File.Exists(streamingAssetsPath))
+            {
+                return streamingAssetsPath;
+            }
+
+            throw new FileNotFoundException("IfcConvert.exeが見つかりません。");
         }
 
         private (DstPathData, DstPathData) ConvertIfc2gltf(string ifcFilePath, string ifcExecPath)

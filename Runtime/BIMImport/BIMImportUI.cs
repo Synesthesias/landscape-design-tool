@@ -133,13 +133,17 @@ namespace Landscape2.Runtime
             var fileLoadButton = uiElement.Q<Button>(FileLoadButtonName);
             fileLoadButton.clicked += () =>
             {
-                var path = StandaloneFileBrowser.OpenFilePanel("IFC File Path", "", "ifc", false);
-                if (path.Length < 1)
+#if UNITY_EDITOR
+                var path = UnityEditor.EditorUtility.OpenFilePanel("IFC File Path", "", "ifc");
+#else
+                var path = StandaloneFileBrowser.OpenFilePanel("IFC File Path", "", new[] { new ExtensionFilter("IFC Files", "ifc", "IFC") }, false);
+#endif
+                if (string.IsNullOrEmpty(path))
                 {
                     Debug.LogWarning($"filePanel selection is canceled");
                     return;
                 }
-                openFileAction?.Invoke(path[0]);
+                openFileAction?.Invoke(path);
             };
 
             var fileNameLabel = uiRoot.Q<Label>(FileNameLabelName);
