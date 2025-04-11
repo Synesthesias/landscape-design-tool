@@ -78,6 +78,14 @@ Project Settings ウィンドウの左側のパネルから「Player」を選択
 ![Unityプロジェクトの設定](../resources/Install/apiCompatibilityLevel.png)
 
 ## 事前準備
+
+### 新しいシーンの作成
+
+- メニューバーから `File` → `New Scene` を選択します。
+- `Empty` を選択して新しいシーンを作成します。
+
+![都市モデルのインポート](../resources/Install/createNewScene.png)
+
 ### PLATEAUの都市モデル(CityGML)データの用意
 事前にG空間情報センターの[3D都市モデル（Project PLATEAU）ポータルサイト](https://front.geospatial.jp/plateau_portal_site/)から景観計画・協議を行いたいエリアの都市モデルデータ(CityGMLファイル一式)をダウンロード、解凍してください。
 
