@@ -147,7 +147,7 @@
       "output": {
         ".html": {
           "relative_path": "manual/Setup.html",
-          "hash": "fymzjVwjSAobA/90mX/bjWKGv/knNlsGsZXYr+oRg7A="
+          "hash": "IuuaWnp6nEzhJr9d6ccugrC8Nn4u+b60Erek9EfVi7s="
         }
       },
       "is_incremental": false,
@@ -754,6 +754,17 @@
     },
     {
       "type": "Resource",
+      "source_relative_path": "resources/Install/createNewScene.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/Install/createNewScene.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
       "source_relative_path": "resources/Install/createProject.png",
       "output": {
         "resource": {
@@ -791,6 +802,39 @@
       "output": {
         "resource": {
           "relative_path": "resources/Install/packageDownload.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/Install/packageInstallGltFast_01.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/Install/packageInstallGltFast_01.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/Install/packageInstallGltFast_02.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/Install/packageInstallGltFast_02.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/Install/packageInstallGltFast_03.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/Install/packageInstallGltFast_03.png"
         }
       },
       "is_incremental": false,
