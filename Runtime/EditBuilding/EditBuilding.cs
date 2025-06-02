@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
 
 namespace Landscape2.Runtime
@@ -50,7 +51,7 @@ namespace Landscape2.Runtime
             // 建物編集画面時の処理
             if (uiRoot.style.display == DisplayStyle.Flex)
             {
-                if (Input.GetMouseButtonDown(0))
+                if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
                 {
                     var cbg = panelList.Where(x => x.name == UISelectDeleteButton).FirstOrDefault();
                     if (cbg == null)

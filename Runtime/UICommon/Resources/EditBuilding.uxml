@@ -5,7 +5,7 @@
     <ui:VisualElement name="MainContainer" picking-mode="Ignore" style="flex-grow: 1;">
         <ui:VisualElement name="LeftContainer" picking-mode="Ignore" style="flex-grow: 1; flex-shrink: 0;" >
 
-            <ui:VisualElement name="LeftUpper" style="flex-grow: 1;">
+            <ui:VisualElement name="LeftUpper" style="flex-grow: 1;" picking-mode="Ignore">
                 <ui:VisualElement name="Title_Left" style="flex-grow: 0;">
                     <ui:Label tabindex="-1" text="削除済み建物一覧" parse-escape-sequences="true" display-tooltip-when-elided="true" />
                 </ui:VisualElement>
@@ -19,7 +19,7 @@
         </ui:VisualElement>
 
         <ui:VisualElement name="RightContainer" picking-mode="Ignore" style="flex-grow: 1; flex-shrink: 0;">
-            <ui:VisualElement name="RightUpper" style="flex-grow: 1;">
+            <ui:VisualElement name="RightUpper" style="flex-grow: 1;" picking-mode="Ignore">
                 <ui:VisualElement name="Title_Right" style="flex-grow: 0;">
                     <ui:Label tabindex="-1" text="色彩編集" parse-escape-sequences="true" display-tooltip-when-elided="true" />
                     
