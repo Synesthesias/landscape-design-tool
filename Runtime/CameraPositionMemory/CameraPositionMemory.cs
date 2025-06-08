@@ -16,13 +16,15 @@ namespace Landscape2.Runtime.CameraPositionMemory
         private int slotsCount = 0;
         private List<SlotData> slots;
         private LandscapeCamera landscapeCamera;
+        private float playerDistance = 0.0f;
 
-        public CameraPositionMemory(CinemachineVirtualCamera vcam1, CinemachineVirtualCamera vcam2, LandscapeCamera landscapeCamera)
+        public CameraPositionMemory(CinemachineVirtualCamera vcam1, CinemachineVirtualCamera vcam2, LandscapeCamera landscapeCamera, float playerDistance)
         {
             this.vcam1 = vcam1;
             this.vcam2 = vcam2;
             this.slots = new List<SlotData>();
             this.landscapeCamera = landscapeCamera;
+            this.playerDistance = playerDistance;
         }
 
         /// <summary>
@@ -107,7 +109,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
                 float yRotation = vcam1Euler.y;
                 vcam2.transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
                 CinemachineTransposer trans = vcam2.GetCinemachineComponent<CinemachineTransposer>();
-                Vector3 currentOffset = new Vector3(0.0f, slotData.offSetY, 0.0f);
+                Vector3 currentOffset = new Vector3(0.0f, slotData.offSetY, playerDistance);
                 if (currentOffset.y < 0.5f)
                 {
                     currentOffset.y = 0.5f;
@@ -178,7 +180,8 @@ namespace Landscape2.Runtime.CameraPositionMemory
         /// <param name="y"></param>
         public void SetOffsetY(float y)
         {
-            vcam2.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset = new Vector3(0, y, 0);
+            var offset = vcam2.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset;
+            vcam2.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset = new Vector3(offset.x, y, offset.z);
         }
 
         /// <summary>

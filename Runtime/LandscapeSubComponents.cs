@@ -116,7 +116,7 @@ namespace Landscape2.Runtime
 
             var landscapeCamera = new LandscapeCamera(mainCamVC, walkerCamVC, walker);
             var walkerMoveByUserInput = new WalkerMoveByUserInput(walkerCamVC, walker);
-            var cameraPositionMemory = new CameraPositionMemory.CameraPositionMemory(mainCamVC, walkerCamVC, landscapeCamera);
+            var cameraPositionMemory = new CameraPositionMemory.CameraPositionMemory(mainCamVC, walkerCamVC, landscapeCamera, 0);
 
             // 建物設定
             var cityModelHandler = new CityModelHandler();
