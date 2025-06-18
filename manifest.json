@@ -75,7 +75,7 @@
       "output": {
         ".html": {
           "relative_path": "manual/Build.html",
-          "hash": "GdscD5Qe+pFXu15MIVnnboSo07Rc6kPkJWVr5z4XdSQ="
+          "hash": "dtyyJU1hFPczvshP95eikBHnY59Ww9+ZhzDUIw9L0H8="
         }
       },
       "is_incremental": false,
@@ -457,10 +457,32 @@
     },
     {
       "type": "Resource",
+      "source_relative_path": "resources/Build/AddressablesBuildReport.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/Build/AddressablesBuildReport.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
       "source_relative_path": "resources/Build/Build.png",
       "output": {
         "resource": {
           "relative_path": "resources/Build/Build.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "resources/Build/OtherSettings_Configuration.png",
+      "output": {
+        "resource": {
+          "relative_path": "resources/Build/OtherSettings_Configuration.png"
         }
       },
       "is_incremental": false,
