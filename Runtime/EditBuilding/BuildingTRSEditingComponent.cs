@@ -23,6 +23,7 @@ namespace Landscape2.Runtime
         
         // 編集中のGameObject
         private GameObject editingObject;
+        public GameObject EditingObject => editingObject;
         
         private MeshRenderer meshRenderer;
         
