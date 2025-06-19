@@ -97,13 +97,11 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// RaycastHit配列から、cityObjectTypeがCOT_TINReliefのオブジェクトを探索するメソッド
         /// </summary>
         /// <returns>オブジェクトが見つかった場合は対象オブジェクトのRaycastHit、見つからない場合はnull</returns>
-        RaycastHit? FindGroundObj(RaycastHit[] hits, bool isIncludeConvertedDemGameObj = true)
+        RaycastHit? FindGroundObj(RaycastHit[] hits)
         {
             foreach (var hit in hits)
             {
-                PLATEAUCityObjectGroup cityObjectData = hit.transform.GetComponent<PLATEAUCityObjectGroup>();
-                var isGroud = CityObjectUtil.IsGround(hit.transform.gameObject);
-                if (isGroud)
+                if (CityObjectUtil.IsGround(hit.transform.gameObject))
                     return hit;
             }
 
