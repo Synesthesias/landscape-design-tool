@@ -257,10 +257,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 Debug.LogWarning("Pin is not selected");
                 return;
             }
-
-            // AreaPlanningCollisionHandlerで convexを有効にしているため頂点数が4以上必要
-            // Todo AreaPlannningRegister.csの AddVertexIfClicked()でも同様の条件を扱っている。一か所から数値を参照できるようにするべき
-            const int NumRequiredVertices = 4;
+            const int NumRequiredVertices = AreaPlanningModuleRegulation.NumRequiredPins;
             bool hasRemovableVertices = vertices.Count < NumRequiredVertices + 1;
             if (hasRemovableVertices)
             {

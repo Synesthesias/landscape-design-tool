@@ -1,8 +1,5 @@
-﻿using Landscape2.Runtime.UiCommon;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace Landscape2.Runtime.LandscapePlanLoader
 {
@@ -49,10 +46,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 if (hits == null || hits.Length == 0)
                     return;
 
-                // AreaPlanningCollisionHandlerで convexを有効にしているため頂点数が4以上必要
-                // Todo AreaPlanningEdit.csの DeleteVertex()でも同様の条件を扱っている。一か所から数値を参照できるようにするべき
-                const int NumRequiredVertices = 4;
-                if (vertices.Count >= NumRequiredVertices)
+                if (vertices.Count >= AreaPlanningModuleRegulation.NumRequiredPins)
                 {
                     // 最初に生成したPinの場合は区画を閉じる
                     if (displayPinLine.IsClickFirstPin(hits))
