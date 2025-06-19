@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UIElements;
 using System.Collections.Generic;
 using Landscape2.Runtime.UiCommon;
@@ -257,9 +257,14 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 Debug.LogWarning("Pin is not selected");
                 return;
             }
-            if (vertices.Count < 4)
+
+            // AreaPlanningCollisionHandlerで convexを有効にしているため頂点数が4以上必要
+            // Todo AreaPlannningRegister.csの AddVertexIfClicked()でも同様の条件を扱っている。一か所から数値を参照できるようにするべき
+            const int NumRequiredVertices = 4;
+            bool hasRemovableVertices = vertices.Count < NumRequiredVertices + 1;
+            if (hasRemovableVertices)
             {
-                Debug.LogWarning("The number of vertices is less than 4");
+                Debug.LogWarning("The number of vertices is less than " + (NumRequiredVertices + 1).ToString());
                 return;
             }
 
