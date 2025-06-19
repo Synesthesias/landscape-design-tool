@@ -2,6 +2,7 @@
 using PLATEAU.CityInfo;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem.HID;
 
 namespace Landscape2.Runtime.Common
 {
@@ -33,6 +34,13 @@ namespace Landscape2.Runtime.Common
                     return true;
                 }
             }
+
+            // ToDo TERRAIN_demをどこかに定義したい
+            if (cityObject.name.Contains("TERRAIN_dem"))  //if the ground object is found
+            {
+                return true;
+            }
+
             return false;
         }
         
