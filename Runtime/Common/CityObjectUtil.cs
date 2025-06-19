@@ -2,7 +2,6 @@
 using PLATEAU.CityInfo;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.InputSystem.HID;
 
 namespace Landscape2.Runtime.Common
 {
@@ -35,8 +34,10 @@ namespace Landscape2.Runtime.Common
                 }
             }
 
-            // ToDo TERRAIN_demをどこかに定義したい
-            if (cityObject.name.Contains("TERRAIN_dem"))  //if the ground object is found
+            // ToDo 次の命名規則になることを共通する箇所から取得出来るようにしたい。もしくは他の方法で"TERRAIN_dem"を識別できるようにしたい
+            // ConvertedTerrainData PlaceToSceneRecursive()内でこうなるように名前が付けられる
+            var terrainDemPrefix = "TERRAIN_dem";
+            if (cityObject.name.Contains(terrainDemPrefix))  //if the ground object is found
             {
                 return true;
             }

@@ -1,4 +1,5 @@
-﻿using PLATEAU.CityGML;
+﻿using Landscape2.Runtime.Common;
+using PLATEAU.CityGML;
 using PLATEAU.CityInfo;
 using UnityEngine;
 
@@ -98,47 +99,15 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// <returns>オブジェクトが見つかった場合は対象オブジェクトのRaycastHit、見つからない場合はnull</returns>
         RaycastHit? FindGroundObj(RaycastHit[] hits, bool isIncludeConvertedDemGameObj = true)
         {
-            RaycastHit? res = null;
             foreach (var hit in hits)
             {
                 PLATEAUCityObjectGroup cityObjectData = hit.transform.GetComponent<PLATEAUCityObjectGroup>();
-                if (cityObjectData)
-                    res = FindCOT_TINRelief(hit, cityObjectData);
-                if (res != null) break;  // COT_TINReliefのオブジェクトが見つかった場合はそのオブジェクトを返す
-
-                // 変換されたDemオブジェクトも含める場合
-                // memo Terrainに変換されたDemオブジェクトにはPLATEAUCityObjectGroupがアタッチされていないため回避策として処理を追加　すべての動作に問題ないかは検証が必要
-                if (isIncludeConvertedDemGameObj == true)
-                {
-                    res = FindTerrainDem(hit, hit.transform.gameObject);
-                    if (res != null) break;
-                }
-
-            }
-
-            return res;
-
-            static RaycastHit? FindCOT_TINRelief(RaycastHit hit, PLATEAUCityObjectGroup cityObjectData)
-            {
-                foreach (var rootCityObject in cityObjectData.CityObjects.rootCityObjects)
-                {
-                    if (rootCityObject.CityObjectType == CityObjectType.COT_TINRelief)  //if the ground object is found
-                    {
-                        return hit;
-                    }
-                }
-                return null;
-            }
-
-            static RaycastHit? FindTerrainDem(RaycastHit hit, GameObject cityObject)
-            {
-                // ToDo TERRAIN_demをどこかに定義したい
-                if (cityObject.name.Contains("TERRAIN_dem"))  //if the ground object is found
-                {
+                var isGroud = CityObjectUtil.IsGround(hit.transform.gameObject);
+                if (isGroud)
                     return hit;
-                }
-                return null;
             }
+
+            return null;
         }
     }
 }
