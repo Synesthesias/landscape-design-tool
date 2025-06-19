@@ -107,7 +107,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 { uiRoot , DisplayStyle.Flex }
             };
 
-            var isValidStatus = true;
+            var isSkipDisplaySetting = true;
 
             // パネル表示切り替えイベントを発火
             OnChangePlanningPanelDisplay(status);
@@ -139,11 +139,11 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     break;
 
                 default:
-                    isValidStatus = false;
+                    isSkipDisplaySetting = false;
                     break;
             }
 
-            if (isValidStatus == false)
+            if (isSkipDisplaySetting == false)
             {
                 return;
             }
