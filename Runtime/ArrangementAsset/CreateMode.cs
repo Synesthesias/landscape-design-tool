@@ -1,3 +1,6 @@
+using Landscape2.Runtime.Common;
+using PLATEAU.CityInfo;
+using PlateauToolkit.Sandbox.Runtime.PlateauSandboxBuildings.Runtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -44,6 +47,10 @@ namespace Landscape2.Runtime
                 layerMask = ~layerMask;
                 if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, layerMask))
                 {
+                    if (!CanPlaceAsset(generatedAsset, hit.transform.gameObject))
+                    {
+                        return;
+                    }
                     var point = hit.point;
                     point.y += buriedHeight;
                     generatedAsset.transform.position = point;
@@ -53,6 +60,17 @@ namespace Landscape2.Runtime
                     }
                 }
             }
+        }
+
+        private bool CanPlaceAsset(GameObject assetToPlace, GameObject hitObject)
+        {
+            if (assetToPlace.GetComponent<PlateauSandboxBuilding>())
+            {
+                // 建物の場合は、地面と道路のみに配置
+                return CityObjectUtil.IsGround(hitObject) ||
+                       hitObject.layer == LayerMask.NameToLayer("Ground");
+            }
+            return true;
         }
 
         public void generateAssets(GameObject obj)
@@ -66,16 +84,16 @@ namespace Landscape2.Runtime
                 assetSize = null;
             }
 
+            var generatedPosition = Vector3.zero;
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity))
             {
-                GameObject parent = GameObject.Find("CreatedAssets");
-                generatedAsset = GameObject.Instantiate(obj, hit.point, Quaternion.identity, parent.transform) as GameObject;
+                if (CanPlaceAsset(obj, hit.transform.gameObject))
+                {
+                    generatedPosition = hit.point;
+                }
             }
-            else
-            {
-                GameObject parent = GameObject.Find("CreatedAssets");
-                generatedAsset = GameObject.Instantiate(obj, Vector3.zero, Quaternion.identity, parent.transform) as GameObject;
-            }
+            GameObject parent = GameObject.Find("CreatedAssets");
+            generatedAsset = GameObject.Instantiate(obj, generatedPosition, Quaternion.identity, parent.transform) as GameObject;
 
             var lod = generatedAsset.GetComponent<LODGroup>();
             if (lod != null)
