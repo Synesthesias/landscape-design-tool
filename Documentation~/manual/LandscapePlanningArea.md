@@ -63,6 +63,7 @@
 景観計画の Shape ファイルと dbf ファイルの保存先を選択し、「保存」をクリックします。
 
 エクスプローラーに Shape ファイルと dbf ファイルが保存されると書き出し完了です。
+<br>　※cpg ファイル、 shx ファイルも一緒に出力されることもあります。
 
 ![フォルダ選択](../resources/LandscapePlanningAreaImages/SaveDialog.png)
 
