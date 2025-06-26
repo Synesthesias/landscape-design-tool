@@ -21,14 +21,16 @@ namespace Landscape2.Runtime
         // TODO: コンポーネント消す
         private CinemachineInputProvider inputProviderComponent;
         private CameraMoveData cameraMoveSpeedData;
+        private bool enableGravity;
 
-        public WalkerMoveByUserInput(CinemachineVirtualCamera camera, GameObject walker)
+        public WalkerMoveByUserInput(CinemachineVirtualCamera camera, GameObject walker, bool enableGravity = true)
         {
             this.camera = camera;
             this.walker = walker;
             this.mainCam = Camera.main.gameObject;
             this.inputProviderComponent = camera.GetComponent<CinemachineInputProvider>();
             inputProviderComponent.enabled = false;
+            this.enableGravity = enableGravity;
         }
         public void OnEnable()
         {
@@ -50,7 +52,11 @@ namespace Landscape2.Runtime
         public void Update(float deltaTime)
         {
             var transposer = camera.GetCinemachineComponent<CinemachineTransposer>();
-            walker.GetComponent<CharacterController>().Move(cameraMoveSpeedData.walkerMoveSpeed * deltaTime * Vector3.down * 9.8f);
+            // 重力による落下の制御
+            if (enableGravity)
+            {
+                walker.GetComponent<CharacterController>().Move(cameraMoveSpeedData.walkerMoveSpeed * deltaTime * Vector3.down * 9.8f);
+            }
             if (IsActive)
             {
                 MoveUpDown(cameraMoveSpeedData.walkerOffsetYSpeed * deltaUpDown * deltaTime, transposer);
@@ -76,6 +82,7 @@ namespace Landscape2.Runtime
 
         private void MoveForward(float walkerMoveDelta)
         {
+            // 前後移動は元のまま（制限なし）
             var dir = new Vector3(0f, 0f, walkerMoveDelta);
             var rot = mainCam.transform.eulerAngles;
             dir = Quaternion.Euler(new Vector3(0.0f, rot.y, rot.z)) * dir;
@@ -155,7 +162,11 @@ namespace Landscape2.Runtime
         /// <param name="moveDelta"></param>
         public void MoveWASD(Vector2 moveDelta)
         {
-            var dir = new Vector3(moveDelta.x, 0.0f, moveDelta.y);
+            // 左右移動を少し遅くする
+            Vector2 adjustedMoveDelta = moveDelta;
+            adjustedMoveDelta.x *= 0.5f; // 左右移動を遅く
+            
+            var dir = new Vector3(adjustedMoveDelta.x, 0.0f, adjustedMoveDelta.y);
             var rot = mainCam.transform.eulerAngles;
             dir = Quaternion.Euler(new Vector3(0.0f, rot.y, rot.z)) * dir;
             walker.GetComponent<CharacterController>().Move(-dir);
