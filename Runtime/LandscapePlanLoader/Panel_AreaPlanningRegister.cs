@@ -50,7 +50,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             defaultProperty = new PanelProperty
             {
                 name = areaPlanningName.value,
-                height = float.Parse(areaPlanningHeight.value),
+                height = float.TryParse(areaPlanningHeight.value, out float parsedHeight) ? parsedHeight : limitHeight,
                 color = areaPlanningColor.resolvedStyle.backgroundColor
             };
 
