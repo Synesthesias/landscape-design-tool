@@ -195,41 +195,36 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// </summary>
         private void OnClickPanel(MouseDownEvent e)
         {
-            // 初回クリック時にクリック消費状態をリセット
-            if (e.clickCount == 1)
+            // 初回クリック時やフラグ有効時にクリック消費状態をリセット
+            if (e.clickCount == 1 || isNeedReoffsetClickCount)
             {
-                clickCountOffset = 0;
+                clickCountOffset = e.clickCount - 1; // e.clickCount == 1 : 0, isNeedReoffsetClickCount : どこかでフラグが有効化された際のクリック数
                 isNeedReoffsetClickCount = false;
             }
-            else if (isNeedReoffsetClickCount) // 頂点の移動や削除を行った場合はクリック数のオフセットをリセットする
-            {
-                clickCountOffset = e.clickCount - 1;    // どこかでフラグが有効になり次のクリックでリセットされるため、1を引く。
-                isNeedReoffsetClickCount = false;
-            }
+
+            // これ以降の処理ではクリック消費の対象となる操作が行われるとする。例外があれば そこでfalseを設定する。
+            isNeedReoffsetClickCount = true;
 
             if (areaPlanningEdit.SelectPinOnScreen()) // ピンをクリック 
             {
                 if (e.clickCount == clickCountOffset + 2) // ダブルクリックした場合は頂点を削除
                 {
-                    isNeedReoffsetClickCount = true;
                     areaPlanningEdit.DeleteVertex();
                 }
                 else // 通常クリックの場合は頂点を移動
                 {
-                    // // isNeedReoffsetClickCount = true; // ここでフラグを有効化するとダブルクリックの前にリセットされる。
+                    isNeedReoffsetClickCount = false; // ここでフラグを有効化するとダブルクリックの前にリセットされる。 代わりにドラッグが行われた際にフラグを有効化している。
                     CameraMoveByUserInput.IsCameraMoveActive = false;
                 }
             }
             else if (areaPlanningEdit.SelectLineOnScreen()) // ラインをクリック
             {
-                isNeedReoffsetClickCount = true;
                 CameraMoveByUserInput.IsCameraMoveActive = false;
                 // 中点に頂点を追加
                 areaPlanningEdit.AddVertexToLine();
             }
             else
             {
-                isNeedReoffsetClickCount = true;
                 CameraMoveByUserInput.IsCameraMoveActive = true;    // 消しても景観計画区域の編集時には動作したが別の機能でのフラグの扱いや機能増築時を考慮した設計に必要かもかもしれないので残しておく。
             }
         }
