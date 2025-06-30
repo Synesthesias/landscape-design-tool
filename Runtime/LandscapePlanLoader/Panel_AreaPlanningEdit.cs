@@ -230,7 +230,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             else
             {
                 isNeedReoffsetClickCount = true;
-                CameraMoveByUserInput.IsCameraMoveActive = true;    // 消しても景観計画区域の編集時には動作したが特定の条件でこの処理が必要になるかもしれないので残しておく。
+                CameraMoveByUserInput.IsCameraMoveActive = true;    // 消しても景観計画区域の編集時には動作したが別の機能でのフラグの扱いや機能増築時を考慮した設計に必要かもかもしれないので残しておく。
             }
         }
 
