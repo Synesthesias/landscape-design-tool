@@ -199,6 +199,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             if (e.clickCount == 1)
             {
                 clickCountOffset = 0;
+                isNeedReoffsetClickCount = false;
             }
             else if (isNeedReoffsetClickCount) // 頂点の移動や削除を行った場合はクリック数のオフセットをリセットする
             {
@@ -227,8 +228,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             }
             else
             {
+                isNeedReoffsetClickCount = true;
                 CameraMoveByUserInput.IsCameraMoveActive = true;    // 消しても景観計画区域の編集時には動作したが特定の条件でこの処理が必要になるかもしれないので残しておく。
-                //clickCountOffset = e.clickCount;    // 何も無いところをクリックしたためリセット
             }
         }
 
@@ -237,7 +238,10 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// </summary>
         private void OnDragPanel()
         {
-            isNeedReoffsetClickCount = true; // 頂点の移動や削除を行った場合はクリック数のオフセットをリセットする必要がある。
+            if (areaPlanningEdit.IsClickedPin())
+            {
+                isNeedReoffsetClickCount = true; // 頂点の移動や削除を行った場合はクリック数のオフセットをリセットする必要がある。
+            }
             areaPlanningEdit.OnDragPin();
         }
 
