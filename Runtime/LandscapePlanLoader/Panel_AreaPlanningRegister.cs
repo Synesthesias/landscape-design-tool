@@ -15,6 +15,14 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         private const float wallMaxHeight = 300f;
         private float limitHeight;
 
+        struct PanelProperty
+        {
+            public string name;
+            public float height;
+            public Color color;
+        }
+        private PanelProperty defaultProperty;
+
         public Panel_AreaPlanningRegister(VisualElement planning, PlanningUI planningUI) : base(planning, planningUI)
         {
             areaPlanningRegister = new AreaPlanningRegister(displayPinLine);
@@ -36,6 +44,16 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
             limitHeight = 15.0f; // 初期値15mで設定
             areaPlanningHeight.value = limitHeight.ToString();
+
+
+            // パネルの初期値を保持
+            defaultProperty = new PanelProperty
+            {
+                name = areaPlanningName.value,
+                height = float.Parse(areaPlanningHeight.value),
+                color = areaPlanningColor.resolvedStyle.backgroundColor
+            };
+
         }
 
         /// <summary>
@@ -214,19 +232,15 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             // 色彩変更画面を閉じる
             isColorEditing = false;
             EditColor();
-            //isVertexEditing = false;
-            //// 頂点編集の内容を破棄
-            //areaPlanningEdit.ClearVertexEdit();
 
-            //// 編集対象を更新
-            //areaEditManager.SetEditTarget(newIndex);
+            // 頂点編集の内容を破棄
+            areaPlanningRegister.ClearVertexEdit();
 
-            //// 新しい編集対象のデータをUIに反映
-            //string name = areaEditManager.GetAreaName();
-            //float? height = areaEditManager.GetLimitHeight();
-            //areaPlanningName.value = name == null ? "" : name;
-            //areaPlanningHeight.value = height == null ? "" : height.ToString();
-            //areaPlanningColor.style.backgroundColor = areaEditManager.GetColor();
+            // 初期値にリセット
+            areaPlanningName.value = defaultProperty.name;
+            areaPlanningHeight.value = defaultProperty.height.ToString();
+            areaPlanningColor.style.backgroundColor = new StyleColor(defaultProperty.color); // StyleColorでないとエラーになるため、StyleColorに変換
+
         }
 
     }
