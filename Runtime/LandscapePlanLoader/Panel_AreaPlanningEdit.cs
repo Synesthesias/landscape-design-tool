@@ -191,7 +191,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         }
 
         /// <summary>
-        /// 頂点編集パネルをクリックしたときの処理
+        /// 頂点編集パネルが開いている時にマウスクリックしたときの処理
         /// </summary>
         private void OnClickPanel(MouseDownEvent e)
         {
@@ -230,7 +230,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         }
 
         /// <summary>
-        /// 頂点編集パネルをドラッグしたときの処理
+        /// 頂点編集パネルが開いている時にマウス移動したときの処理
         /// </summary>
         private void OnDragPanel()
         {
@@ -242,7 +242,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         }
 
         /// <summary>
-        /// 頂点編集パネルのクリックを解除したときの処理
+        /// 頂点編集パネルが開いている時にクリックを解除したときの処理
         /// </summary>
         private void OnReleasePanel()
         {
