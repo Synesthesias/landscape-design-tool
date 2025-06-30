@@ -1,4 +1,4 @@
-using Landscape2.Runtime.UiCommon;
+﻿using Landscape2.Runtime.UiCommon;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static Landscape2.Runtime.LandscapePlanLoader.PlanningUI;
@@ -139,6 +139,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         protected override void OnCancelButtonClicked()
         {
             areaPlanningRegister.ClearVertexEdit();
+            RefreshEditor();
         }
 
         /// <summary>
@@ -162,6 +163,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             areaPlanningRegister.ClearVertexEdit();
             planningUI.InvokeOnChangeConfirmed();
 
+            RefreshEditor();
         }
 
         /// <summary>
@@ -197,6 +199,34 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             {
                 areaPlanningColor.style.backgroundColor = new StyleColor(newColor.Value);
             }
+        }
+
+        /// <summary>
+        /// 編集用UXMLのパラメータ情報を更新
+        /// </summary>
+        /// <param name = "newIndex" > 新規に表示する地区データのリスト番号 </ param >
+        /// <param name="isEditable"></param>
+        void RefreshEditor()
+        {
+            //// 編集中の内容を破棄
+            //areaEditManager.ResetProperty();
+            
+            // 色彩変更画面を閉じる
+            isColorEditing = false;
+            EditColor();
+            //isVertexEditing = false;
+            //// 頂点編集の内容を破棄
+            //areaPlanningEdit.ClearVertexEdit();
+
+            //// 編集対象を更新
+            //areaEditManager.SetEditTarget(newIndex);
+
+            //// 新しい編集対象のデータをUIに反映
+            //string name = areaEditManager.GetAreaName();
+            //float? height = areaEditManager.GetLimitHeight();
+            //areaPlanningName.value = name == null ? "" : name;
+            //areaPlanningHeight.value = height == null ? "" : height.ToString();
+            //areaPlanningColor.style.backgroundColor = areaEditManager.GetColor();
         }
 
     }
