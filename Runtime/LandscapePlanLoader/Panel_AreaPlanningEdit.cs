@@ -204,7 +204,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             if (isClickConsumedOnViewport)
                 return;
 
-            if (areaPlanningEdit.IsClickPin()) // ピンをクリック 
+            if (areaPlanningEdit.SelectPinOnScreen()) // ピンをクリック 
             {
                 if (e.clickCount == 2) // ダブルクリックした場合は頂点を削除
                 {
@@ -216,7 +216,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     CameraMoveByUserInput.IsCameraMoveActive = false;
                 }
             }
-            else if (areaPlanningEdit.IsClickLine()) // ラインをクリック
+            else if (areaPlanningEdit.SelectLineOnScreen()) // ラインをクリック
             {
                 isClickConsumedOnViewport = true;
                 CameraMoveByUserInput.IsCameraMoveActive = false;
