@@ -16,6 +16,12 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
         private PlanningPanelStatus currentStatus = PlanningPanelStatus.Default;
 
+        // ビューポート内で既に消費されているクリックかどうか。消費されている場合はダブルクリック以降の処理は行わない。
+        // 例えば一回目のクリックでピンを追加、ピンの移動を開始、ピンの移動を終了している場合は消費されたとする。
+        // ただし、カメラ移動のマウスドラッグの起点では消費はしない。別のクラスで処理されているため。
+        // UIToolkit類のボタンのクリックは考慮していない。
+        private bool isClickConsumedOnViewport = false;
+
         public Panel_AreaPlanningEdit(VisualElement planning, PlanningUI planningUI) : base(planning, planningUI)
         {
             // 親のパネルを取得
@@ -188,10 +194,21 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// </summary>
         private void OnClickPanel(MouseDownEvent e)
         {
+            // 初回クリック時にクリック消費状態をリセット
+            if (e.clickCount == 1)
+            {
+                isClickConsumedOnViewport = false;
+            }
+
+            // 消費済みの場合はビューポート上の操作を行わない。
+            if (isClickConsumedOnViewport)
+                return;
+
             if (areaPlanningEdit.IsClickPin()) // ピンをクリック 
             {
                 if (e.clickCount == 2) // ダブルクリックした場合は頂点を削除
                 {
+                    isClickConsumedOnViewport = true;
                     areaPlanningEdit.DeleteVertex();
                 }
                 else // 通常クリックの場合は頂点を移動
@@ -201,13 +218,14 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             }
             else if (areaPlanningEdit.IsClickLine()) // ラインをクリック
             {
+                isClickConsumedOnViewport = true;
                 CameraMoveByUserInput.IsCameraMoveActive = false;
                 // 中点に頂点を追加
                 areaPlanningEdit.AddVertexToLine();
             }
             else
             {
-                CameraMoveByUserInput.IsCameraMoveActive = true;
+                CameraMoveByUserInput.IsCameraMoveActive = true;    // 消しても景観計画区域の編集時には動作したが特定の条件でこの処理が必要になるかもしれないので残しておく。
             }
         }
 
@@ -216,6 +234,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// </summary>
         private void OnDragPanel()
         {
+            isClickConsumedOnViewport = true; // ドラッグ開始時にクリック消費状態にする
             areaPlanningEdit.OnDragPin();
         }
 
@@ -224,6 +243,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// </summary>
         private void OnReleasePanel()
         {
+            isClickConsumedOnViewport = true; // クリック消費状態にする Release直後にピン類を操作するとダブルクリックになるため。
+
             if (areaPlanningEdit.IsIntersected())
             {
                 base.DisplaySnackbar("頂点が交差したエリアは作成できません");
