@@ -216,6 +216,7 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 }
                 else // 通常クリックの場合は頂点を移動
                 {
+                    // // isNeedReoffsetClickCount = true; // ここでフラグを有効化するとダブルクリックの前にリセットされる。
                     CameraMoveByUserInput.IsCameraMoveActive = false;
                 }
             }
