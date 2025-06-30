@@ -16,9 +16,10 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
         private PlanningPanelStatus currentStatus = PlanningPanelStatus.Default;
 
-        // ビューポート内で既に消費されているクリックかどうか。消費されている場合はダブルクリック以降の処理は行わない。
-        // 例えば一回目のクリックでピンを追加、ピンの移動を開始、ピンの移動を終了している場合は消費されたとする。
-        // ただし、カメラ移動のマウスドラッグの起点では消費はしない。別のクラスで処理されているため。
+        // ビューポート内で既に消費されているクリックかどうか。消費されている場合はダブルクリック以降の処理は行わない。マウスドラッグの操作は許可する。
+        // 例えば一回目のクリックでピンを追加やピンの移動を開始している場合は消費されたとして2回目のクリックでピンを削除することは出来ない。
+        // 例外として
+        // カメラ移動のマウスドラッグの起点では消費はしない。別のクラスで処理されているため。
         // UIToolkit類のボタンのクリックは考慮していない。
         private bool isClickConsumedOnViewport = false;
 
@@ -200,13 +201,13 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 isClickConsumedOnViewport = false;
             }
 
-            // 消費済みの場合はビューポート上の操作を行わない。
+            // クリック消費済みの場合はシーンビュー上のクリック操作を行わない。
             if (isClickConsumedOnViewport)
                 return;
 
             if (areaPlanningEdit.SelectPinOnScreen()) // ピンをクリック 
             {
-                if (e.clickCount == 2) // ダブルクリックした場合は頂点を削除
+                if (e.clickCount % 2 == 0) // ダブルクリックした場合は頂点を削除
                 {
                     isClickConsumedOnViewport = true;
                     areaPlanningEdit.DeleteVertex();
@@ -243,8 +244,6 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         /// </summary>
         private void OnReleasePanel()
         {
-            isClickConsumedOnViewport = true; // クリック消費状態にする Release直後にピン類を操作するとダブルクリックになるため。
-
             if (areaPlanningEdit.IsIntersected())
             {
                 base.DisplaySnackbar("頂点が交差したエリアは作成できません");
