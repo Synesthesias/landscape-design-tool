@@ -89,8 +89,8 @@ namespace Landscape2.Runtime
             }
             else
             {
-                // 非表示時はIgnore Raycastレイヤーに設定
-                LayerMaskUtil.SetIgnore(gameObject, true);
+                // 非表示時はHiddenBuildingレイヤーに設定
+                LayerMaskUtil.SetHiddenBuilding(gameObject, true, originalLayer);
             }
         }
 

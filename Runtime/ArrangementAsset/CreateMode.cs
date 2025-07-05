@@ -43,9 +43,7 @@ namespace Landscape2.Runtime
             {
                 cam = Camera.main;
                 ray = cam.ScreenPointToRay(Input.mousePosition);
-                int layerMask = LayerMask.GetMask("Ignore Raycast");
-                layerMask = ~layerMask;
-                if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, layerMask))
+                if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, LayerMaskUtil.GetGroundClickLayerMask()))
                 {
                     if (!CanPlaceAsset(generatedAsset, hit.transform.gameObject))
                     {

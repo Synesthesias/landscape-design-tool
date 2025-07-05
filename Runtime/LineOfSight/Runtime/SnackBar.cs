@@ -61,7 +61,7 @@ namespace Landscape2.Runtime
         {
 
             var remindTime = Time.realtimeSinceStartup - showTime;
-            Debug.Log($"{showDuration} : {remindTime} / {IsVisible}");
+            // Debug.Log($"{showDuration} : {remindTime} / {IsVisible}");
             if (showDuration < remindTime)
             {
                 if (IsVisible)

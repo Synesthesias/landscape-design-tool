@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
+using Landscape2.Runtime.Common;
 
 namespace Landscape2.Runtime
 {
@@ -159,7 +160,8 @@ namespace Landscape2.Runtime
         public bool SwitchWalkerView()
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            bool canRaycast = Physics.Raycast(ray, out hit);
+            // Ignore RaycastとHiddenBuildingレイヤーを除外してレイキャスト
+            bool canRaycast = Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMaskUtil.GetGroundClickLayerMask());
             if (canRaycast)
             {
                 SwitchCamera(vcam2, vcam1);
