@@ -5,7 +5,7 @@ namespace Landscape2.Runtime.Common
     public static class LayerMaskUtil
     {
         private static int ignoreLayer = LayerMask.NameToLayer("Ignore Raycast");
-        private static int hiddenBuildingLayer = 13;
+        public static int hiddenBuildingLayer = 13;
         public static string HiddenBuildingLayerName => "HiddenBuilding";
         
         public static void SetIgnore(GameObject target, bool isIgnore, int defaultLayer = 0)

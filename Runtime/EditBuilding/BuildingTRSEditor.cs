@@ -16,6 +16,7 @@ namespace Landscape2.Runtime
         BuildingTRSEditorUI trsUI;
         BuildingDeleteListUI deleteListUI;
         GameObject target;
+        public GameObjectFocus assetFocus { get; private set; }
 
         public BuildingTRSEditor(EditBuilding editBuilding, VisualElement element, LandscapeCamera landscapeCamera)
         {
@@ -23,7 +24,7 @@ namespace Landscape2.Runtime
             trsUI = new(editBuilding, element);
             deleteListUI = new(element, this);
 
-            var assetFocus = new GameObjectFocus(landscapeCamera);
+            assetFocus = new GameObjectFocus(landscapeCamera);
             assetFocus.focusFinishCallback += _ => assetFocus.FocusFinish();
 
             GameObject targetViewObject = new()

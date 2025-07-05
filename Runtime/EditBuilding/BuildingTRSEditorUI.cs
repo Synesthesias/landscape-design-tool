@@ -158,6 +158,16 @@ namespace Landscape2.Runtime
         {
             if (currentSelect != null)
             {
+                // 建物が削除済み（HiddenBuildingレイヤー）の場合は非表示にする
+                if (currentSelect.layer == LayerMaskUtil.hiddenBuildingLayer)
+                {
+                    if (trsVisualElement != null && trsVisualElement.style.display == DisplayStyle.Flex)
+                    {
+                        trsVisualElement.style.display = DisplayStyle.None;
+                    }
+                    return;
+                }
+                
                 CalcUIDisplayPosition(currentSelect);
             }
         }
