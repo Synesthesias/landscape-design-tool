@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Landscape2.Runtime.Common;
 
 namespace Landscape2.Runtime
 {
@@ -29,12 +30,18 @@ namespace Landscape2.Runtime
         
         private bool isShow = true;
         
+        // 元のレイヤーを保持
+        private int originalLayer;
+        
         private void Awake()
         {
             // オリジナルのTransformを保持
             originalPosition = transform.position;
             originalRotation = transform.eulerAngles;
             originalScale = transform.localScale;
+            
+            // オリジナルのレイヤーを保持
+            originalLayer = gameObject.layer;
             
             // MeshColliderからオリジナルのメッシュを取得
             // デフォルトがCombine Meshのため、Transformの変更ができないため
@@ -71,11 +78,19 @@ namespace Landscape2.Runtime
             // 両方とも表示/非表示
             meshRenderer.enabled = isShow;
             editingObject.SetActive(isShow);
-
+            
+            // レイヤーの切り替え
             if (isShow)
             {
+                // 表示時は元のレイヤーに戻す
+                LayerMaskUtil.SetIgnore(gameObject, false, originalLayer);
                 // 表示時は編集中かどうかチェック
                 TrySetEditingMode();
+            }
+            else
+            {
+                // 非表示時はIgnore Raycastレイヤーに設定
+                LayerMaskUtil.SetIgnore(gameObject, true);
             }
         }
 
