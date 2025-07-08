@@ -70,14 +70,14 @@ namespace Landscape2.Runtime
             {
                 CameraMoveByUserInput.IsKeyboardActive = true;
                 CameraMoveByUserInput.IsMouseActive = true;
-                WalkerMoveByUserInput.IsActive = false;
+                // WalkerMoveByUserInput.IsActive = false;
                 SwitchCamera(vcam1, vcam2);
             }
             else
             {
                 CameraMoveByUserInput.IsKeyboardActive = false;
                 CameraMoveByUserInput.IsMouseActive = false;
-                WalkerMoveByUserInput.IsActive = true;
+                // WalkerMoveByUserInput.IsActive = true;
                 SwitchCamera(vcam2, vcam1);
             }
             OnSetCameraCalled?.Invoke();
@@ -142,13 +142,13 @@ namespace Landscape2.Runtime
                 {
                     CameraMoveByUserInput.IsKeyboardActive = false;
                     CameraMoveByUserInput.IsMouseActive = false;
-                    WalkerMoveByUserInput.IsActive = false;
+                    // WalkerMoveByUserInput.IsActive = false;
                 }
                 else
                 {
                     CameraMoveByUserInput.IsKeyboardActive = false;
                     CameraMoveByUserInput.IsMouseActive = false;
-                    WalkerMoveByUserInput.IsActive = true;
+                    // WalkerMoveByUserInput.IsActive = true;
                 }
             }
         }
@@ -175,7 +175,7 @@ namespace Landscape2.Runtime
                 //pov.m_HorizontalAxis.Value = vcam1Euler.y;
                 cc.enabled = true;
 
-                WalkerMoveByUserInput.IsActive = true;
+                // WalkerMoveByUserInput.IsActive = true;
                 cameraState = LandscapeCameraState.Walker;
                 OnSetCameraCalled?.Invoke();
             }

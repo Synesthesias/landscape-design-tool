@@ -18,8 +18,6 @@ namespace Landscape2.Runtime
         private float deltaWheel;
 
         private bool isRightClicking = false;
-        // TODO: コンポーネント消す
-        private CinemachineInputProvider inputProviderComponent;
         private CameraMoveData cameraMoveSpeedData;
         private bool enableGravity;
 
@@ -28,8 +26,6 @@ namespace Landscape2.Runtime
             this.camera = camera;
             this.walker = walker;
             this.mainCam = Camera.main.gameObject;
-            this.inputProviderComponent = camera.GetComponent<CinemachineInputProvider>();
-            inputProviderComponent.enabled = false;
             this.enableGravity = enableGravity;
         }
         public void OnEnable()
