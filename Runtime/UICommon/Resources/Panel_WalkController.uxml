@@ -1,7 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Packages/com.synesthesias.landscape-design-tool-2/Runtime/UICommon/UIStyleCommon.uss?fileID=7433441132597879392&amp;guid=5003ef441f4ce7e4881f663b95f4df1d&amp;type=3#UIStyleCommon" />
     <ui:VisualElement name="Panel_WalkController" style="flex-grow: 0; align-items: flex-end;">
-        <ui:VisualElement name="Panel" style="flex-grow: 0; height: 350px;">
+        <ui:VisualElement name="Panel" style="flex-grow: 0; height: 300px;">
             <ui:VisualElement name="HeightContainer" style="flex-grow: 0; flex-direction: row; height: 50px;">
                 <ui:Label tabindex="-1" text="高さ" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Title" style="width: 100px; font-size: 16px; -unity-text-align: middle-center;" />
                 <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: center; align-items: center;">
@@ -42,14 +42,14 @@
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="SpeedContainer" style="flex-grow: 0; flex-direction: row; align-items: center;">
-                <ui:Label tabindex="-1" text="速度" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Title" style="width: 100px; -unity-text-align: upper-center;" />
-                <ui:GroupBox name="TabMenuGroup" style="flex-shrink: 1; align-items: center; width: 100%;">
-                    <ui:RadioButton label="Radio Button" name="SpeedButtonx1" text="x1" class="SubMenuFirst" style="width: 90px;" />
-                    <ui:RadioButton label="Radio Button" name="SpeedButtonx2" text="x2" class="SubMenuMiddle" style="width: 90px;" />
-                    <ui:RadioButton label="Radio Button" name="SpeedButtonx3" text="x3" class="SubMenuEnd" style="width: 90px;" />
-                </ui:GroupBox>
-            </ui:VisualElement>
+            <!-- <ui:VisualElement name="SpeedContainer" style="flex-grow: 0; flex-direction: row; align-items: center;"> -->
+            <!--     <ui:Label tabindex="-1" text="速度" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Title" style="width: 100px; -unity-text-align: upper-center;" /> -->
+            <!--     <ui:GroupBox name="TabMenuGroup" style="flex-shrink: 1; align-items: center; width: 100%;"> -->
+            <!--         <ui:RadioButton label="Radio Button" name="SpeedButtonx1" text="x1" class="SubMenuFirst" style="width: 90px;" /> -->
+            <!--         <ui:RadioButton label="Radio Button" name="SpeedButtonx2" text="x2" class="SubMenuMiddle" style="width: 90px;" /> -->
+            <!--         <ui:RadioButton label="Radio Button" name="SpeedButtonx3" text="x3" class="SubMenuEnd" style="width: 90px;" /> -->
+            <!--     </ui:GroupBox> -->
+            <!-- </ui:VisualElement> -->
             <ui:VisualElement name="ActionContainer" style="flex-grow: 1; flex-direction: row; align-items: center;">
                 <ui:Label tabindex="-1" text="ウォークモード" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Title" style="width: 100px; -unity-text-align: upper-center;" />
                 <ui:VisualElement style="flex-grow: 1; align-items: center;">

@@ -52,7 +52,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
         private Button registerOKButton, editorOKButton, walkRegisterOKButton, walkEditorOKButton, walkControllerW, walkControllerS, walkControllerA, walkControllerD, walkModeQuit;
         private Label walkControllerHeightText;
         private GroupBox walkSpeedGroup;
-        private RadioButton walkSpeed1RadioButton, walkSpeed2RadioButton, walkSpeed3RadioButton;
+        // private RadioButton walkSpeed1RadioButton, walkSpeed2RadioButton, walkSpeed3RadioButton;
         private CameraMoveData cameraMoveSpeedData;
         private float defaultWalkSpeed;
         private GameObject[] snackbars, modals;
@@ -113,9 +113,9 @@ namespace Landscape2.Runtime.CameraPositionMemory
             walkControllerD = uiRootWalkMode.Q<Button>("FpsRightButton");
             walkModeQuit = uiRootWalkMode.Q<VisualElement>("ActionContainer").Q<Button>("OKButton");
             walkSpeedGroup = uiRootWalkMode.Q<GroupBox>("TabMenuGroup");
-            walkSpeed1RadioButton = walkSpeedGroup.Q<RadioButton>("SpeedButtonx1");
-            walkSpeed2RadioButton = walkSpeedGroup.Q<RadioButton>("SpeedButtonx2");
-            walkSpeed3RadioButton = walkSpeedGroup.Q<RadioButton>("SpeedButtonx3");
+            // walkSpeed1RadioButton = walkSpeedGroup.Q<RadioButton>("SpeedButtonx1");
+            // walkSpeed2RadioButton = walkSpeedGroup.Q<RadioButton>("SpeedButtonx2");
+            // walkSpeed3RadioButton = walkSpeedGroup.Q<RadioButton>("SpeedButtonx3");
 
             walkModeQuit.clicked += () =>
             {
@@ -147,27 +147,27 @@ namespace Landscape2.Runtime.CameraPositionMemory
 
             cameraMoveSpeedData = Resources.Load<CameraMoveData>("CameraMoveSpeedData");
             defaultWalkSpeed = cameraMoveSpeedData.walkerMoveSpeed;
-            walkSpeed1RadioButton.RegisterValueChangedCallback(evt =>
-            {
-                if (evt.newValue)
-                {
-                    cameraMoveSpeedData.walkerMoveSpeed = defaultWalkSpeed;
-                }
-            });
-            walkSpeed2RadioButton.RegisterValueChangedCallback(evt =>
-            {
-                if (evt.newValue)
-                {
-                    cameraMoveSpeedData.walkerMoveSpeed = defaultWalkSpeed * 2;
-                }
-            });
-            walkSpeed3RadioButton.RegisterValueChangedCallback(evt =>
-            {
-                if (evt.newValue)
-                {
-                    cameraMoveSpeedData.walkerMoveSpeed = defaultWalkSpeed * 3;
-                }
-            });
+            // walkSpeed1RadioButton.RegisterValueChangedCallback(evt =>
+            // {
+            //     if (evt.newValue)
+            //     {
+            //         cameraMoveSpeedData.walkerMoveSpeed = defaultWalkSpeed;
+            //     }
+            // });
+            // walkSpeed2RadioButton.RegisterValueChangedCallback(evt =>
+            // {
+            //     if (evt.newValue)
+            //     {
+            //         cameraMoveSpeedData.walkerMoveSpeed = defaultWalkSpeed * 2;
+            //     }
+            // });
+            // walkSpeed3RadioButton.RegisterValueChangedCallback(evt =>
+            // {
+            //     if (evt.newValue)
+            //     {
+            //         cameraMoveSpeedData.walkerMoveSpeed = defaultWalkSpeed * 3;
+            //     }
+            // });
 
             rootElement = uiRoot;
 
