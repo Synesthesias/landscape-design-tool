@@ -61,7 +61,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
         private VisualElement rootElement;
 
 
-        public CameraPositionMemoryUI(CameraPositionMemory cameraPositionMemory, VisualElement[] subMenuUxmls, WalkerMoveByUserInput walkerMoveByUserInput, SaveSystem saveSystem, VisualElement uiRoot)
+        public CameraPositionMemoryUI(CameraPositionMemory cameraPositionMemory, VisualElement[] subMenuUxmls, WalkerMoveByUserInput walkerMoveByUserInput, SaveSystem saveSystem, VisualElement uiRoot, VisualElement footerUIRoot = null)
         {
             saveSystem.SaveEvent += SaveInfo;
             saveSystem.LoadEvent += LoadInfo;
@@ -119,7 +119,10 @@ namespace Landscape2.Runtime.CameraPositionMemory
 
             walkModeQuit.clicked += () =>
             {
-                uiRoot.Q<Toggle>("Toggle_WalkMode").value = false;
+                if (footerUIRoot != null)
+                    footerUIRoot.Q<Toggle>("Toggle_WalkMode").value = false;
+                else
+                    uiRoot.Q<Toggle>("Toggle_WalkMode").value = false;
             };
 
             walkControllerW.focusable = false;
