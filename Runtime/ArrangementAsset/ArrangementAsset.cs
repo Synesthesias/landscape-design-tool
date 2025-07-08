@@ -281,7 +281,8 @@ namespace Landscape2.Runtime
             cam = Camera.main;
             ray = cam.ScreenPointToRay(Input.mousePosition);
 
-            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity))
+            RaycastHit[] hits = Physics.RaycastAll(ray, Mathf.Infinity, LayerMaskUtil.GetGroundClickLayerMask());
+            foreach (RaycastHit hit in hits)
             {
                 if (CheckParentName(hit.transform, "CreatedAssets"))
                 {
