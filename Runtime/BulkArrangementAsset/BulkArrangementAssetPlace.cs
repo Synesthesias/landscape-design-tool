@@ -130,6 +130,9 @@ namespace Landscape2.Runtime
                 }
                 // リストに通知
                 ArrangementAssetListUI.OnCreatedAsset.Invoke(target);
+    
+                // プロジェクトに通知
+                ProjectSaveDataManager.Add(ProjectSaveDataType.Asset, target.gameObject.GetInstanceID().ToString());
             }
         }
     }

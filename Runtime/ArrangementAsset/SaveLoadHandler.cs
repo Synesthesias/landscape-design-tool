@@ -61,7 +61,7 @@ namespace Landscape2.Runtime
                 {
                     var transformData = savedData.transformData;
                     string assetName = transformData.name;
-                    GameObject asset = plateauAssets.FirstOrDefault(p => p.name == assetName);
+                    GameObject asset = plateauAssets.FirstOrDefault(p => assetName.Contains(p.name));
                     GameObject generatedAsset = GameObject.Instantiate(asset, transformData.position, transformData.rotation, createdAssets.transform) as GameObject;
                     
                     // 生成したオブジェクトにデータを反映
