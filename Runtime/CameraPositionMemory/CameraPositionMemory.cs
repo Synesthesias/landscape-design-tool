@@ -76,7 +76,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
             {
                 cameraState = LandscapeCameraState.PointOfView;
             }
-            var slotData = new SlotData(trans.position, trans.rotation, true, name, cameraState, vcam2.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset.y);
+            var slotData = new SlotData(trans.position, trans.rotation, true, name, cameraState, GetOffsetY());
             slots.Add(slotData);
             AddSlotCount();
             Debug.Log(GetSlotCount());
@@ -108,13 +108,9 @@ namespace Landscape2.Runtime.CameraPositionMemory
                 float xRotation = vcam1Euler.x > 270 ? vcam1Euler.x - 360 : vcam1Euler.x;
                 float yRotation = vcam1Euler.y;
                 vcam2.transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
-                CinemachineTransposer trans = vcam2.GetCinemachineComponent<CinemachineTransposer>();
-                Vector3 currentOffset = new Vector3(0.0f, slotData.offSetY, playerDistance);
-                if (currentOffset.y < 0.5f)
-                {
-                    currentOffset.y = 0.5f;
-                }
-                trans.m_FollowOffset = currentOffset;
+                var trans = vcam2.GetCinemachineComponent<CinemachineFramingTransposer>();
+                Vector3 currentOffset = new Vector3(trans.m_TrackedObjectOffset.x, slotData.offSetY, trans.m_TrackedObjectOffset.z);
+                trans.m_TrackedObjectOffset = currentOffset;
             }
             Debug.Log($"RestoreSlotData pos:{slotData.position} rot:{slotData.rotation.eulerAngles}");
 
@@ -180,8 +176,8 @@ namespace Landscape2.Runtime.CameraPositionMemory
         /// <param name="y"></param>
         public void SetOffsetY(float y)
         {
-            var offset = vcam2.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset;
-            vcam2.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset = new Vector3(offset.x, y, offset.z);
+            var offset = vcam2.GetCinemachineComponent<CinemachineFramingTransposer>().m_TrackedObjectOffset;
+            vcam2.GetCinemachineComponent<CinemachineFramingTransposer>().m_TrackedObjectOffset = new Vector3(offset.x, y, offset.z);
         }
 
         /// <summary>
@@ -190,7 +186,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
         /// <returns></returns>
         public float GetOffsetY()
         {
-            return vcam2.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset.y;
+            return vcam2.GetCinemachineComponent<CinemachineFramingTransposer>().m_TrackedObjectOffset.y;
         }
     }
 
