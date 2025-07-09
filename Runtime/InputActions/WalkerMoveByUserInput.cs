@@ -2,6 +2,7 @@ using UnityEngine.InputSystem;
 using UnityEngine;
 using Cinemachine;
 using System.Threading.Tasks;
+using UnityEngine.Events;
 using UnityEngine.UIElements;
 
 namespace Landscape2.Runtime
@@ -20,13 +21,18 @@ namespace Landscape2.Runtime
         private bool isRightClicking = false;
         private CameraMoveData cameraMoveSpeedData;
         private bool enableGravity;
+        private System.Action<Vector2> onMoveWASDCalled;
 
-        public WalkerMoveByUserInput(CinemachineVirtualCamera camera, GameObject walker, bool enableGravity = true)
+        public WalkerMoveByUserInput(CinemachineVirtualCamera camera,
+                                     GameObject walker,
+                                     bool enableGravity = true,
+                                     System.Action<Vector2> onMoveWASDCalled = null)
         {
             this.camera = camera;
             this.walker = walker;
             this.mainCam = Camera.main.gameObject;
             this.enableGravity = enableGravity;
+            this.onMoveWASDCalled = onMoveWASDCalled;
         }
         public void OnEnable()
         {
@@ -158,6 +164,12 @@ namespace Landscape2.Runtime
         /// <param name="moveDelta"></param>
         public void MoveWASD(Vector2 moveDelta)
         {
+            if (onMoveWASDCalled != null)
+            {
+                onMoveWASDCalled(moveDelta);
+                return;
+            }
+            
             // 左右移動を少し遅くする
             Vector2 adjustedMoveDelta = moveDelta;
             adjustedMoveDelta.x *= 0.5f; // 左右移動を遅く
