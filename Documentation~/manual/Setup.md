@@ -34,8 +34,11 @@ Unity Hub を起動します。
 - Unityが起動したら、以下の各ツールのリリースページからtgzファイルをダウンロードします。
   - [PLATEAU SDK for Unityのリリースページ](https://github.com/Project-PLATEAU/PLATEAU-SDK-for-Unity/releases)
   - [PLATEAU-SDK-Toolkits-for-Unityのリリースページ](https://github.com/Project-PLATEAU/PLATEAU-SDK-Toolkits-for-Unity/releases)
-  - [PLATEAU-SDK-Maps-Toolkits-for-Unityのリリースページ](https://github.com/Project-PLATEAU/PLATEAU-SDK-Maps-Toolkit-for-Unity/releases)
-  - [LandscapeDesignTool2のリリースページ](https://github.com/Synesthesias/Landscape-Design-Tool-2/releases)
+  - [cesium-unityのリリースページ(v1.6.3)](https://github.com/CesiumGS/cesium-unity/releases/tag/v1.6.3)
+  - [LandscapeDesignToolのリリースページ](https://github.com/Synesthesias/landscape-design-tool/releases)
+- また、`PLATEAU-SDK-Maps-Toolkits-for-Unity` に関しては、上記の `LandscapeDesignToolのリリースページ` にて配布している `com.unity.plateautoolkit.maps-1.0.2.tgz` をダウンロードしてください。
+
+![ツールをUnityにインポート](../resources/Install/packageMapsToolkit.png)
 
 > [!NOTE]  
 > git指定で導入する方法は以下を参考にしてください。<br>
@@ -50,6 +53,18 @@ Unity Hub を起動します。
 
 ![ツールをUnityにインポート](../resources/Install/packageManager.png)
 
+- 続けて、`Unity gltfast` のバージョンを更新します。Package Managerウィンドウの左上の `＋` ボタンから `Add package by name...` を選択します。
+
+![ツールをUnityにインポート](../resources/Install/packageInstallGltFast_01.png)
+
+- `name` に `com.unity.cloud.gltfast` を指定し、`version` に `6.9.0` を指定します。指定ができたら `Add` を押して下さい。
+
+![ツールをUnityにインポート](../resources/Install/packageInstallGltFast_02.png)
+
+- packageの検索で `gltFast` を検索して、`Unity gltFast` のバージョンが `6.9.0` に更新されていることを確認できたら完了です。
+
+![ツールをUnityにインポート](../resources/Install/packageInstallGltFast_03.png)
+
 - 全てのツールを導入したら、Package Manager ウィンドウを閉じます。
 
 ## Unityプロジェクトの設定
@@ -63,6 +78,14 @@ Project Settings ウィンドウの左側のパネルから「Player」を選択
 ![Unityプロジェクトの設定](../resources/Install/apiCompatibilityLevel.png)
 
 ## 事前準備
+
+### 新しいシーンの作成
+
+- メニューバーから `File` → `New Scene` を選択します。
+- `Empty` を選択して新しいシーンを作成します。
+
+![都市モデルのインポート](../resources/Install/createNewScene.png)
+
 ### PLATEAUの都市モデル(CityGML)データの用意
 事前にG空間情報センターの[3D都市モデル（Project PLATEAU）ポータルサイト](https://front.geospatial.jp/plateau_portal_site/)から景観計画・協議を行いたいエリアの都市モデルデータ(CityGMLファイル一式)をダウンロード、解凍してください。
 
