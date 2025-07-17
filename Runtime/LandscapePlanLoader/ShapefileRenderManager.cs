@@ -7,6 +7,8 @@ using Unity.Mathematics;
 using TriangleNet.Geometry;
 using JetBrains.Annotations;
 using PlateauToolkit.Maps;
+using Landscape2.Runtime.Common;
+using Landscape2.Runtime.UiCommon;
 
 
 namespace Landscape2.Runtime.LandscapePlanLoader
@@ -117,6 +119,14 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             {
                 m_ListOfShapes = reader.ReadShapes();
                 m_ShapeType = reader.ShapeConstants;
+                
+                // 座標系バリデーション
+                if (!ValidateCoordinateSystem(m_ListOfShapes))
+                {
+                    Debug.LogError("データの座標系が異なっています。緯度経度座標を持ったデータを入力してください。");
+                    ModalUI.ShowModal("読み込みエラー", "データの座標系が異なっています。\n緯度経度座標を持ったデータを入力してください。", false, true);
+                    return false;
+                }
             }
             m_PositionMarkerSphere.transform.SetParent(m_GeoRef.transform);
             m_PositionMarkerSphere.AddComponent<CesiumGlobeAnchor>();
@@ -349,6 +359,35 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             {
                 dbfComponent.Properties.Add($"{attr}");
             }
+        }
+
+        /// <summary>
+        /// 読み込んだシェープファイルの座標系が有効かバリデーションするメソッド
+        /// </summary>
+        /// <param name="shapes">読み込んだシェープデータリスト</param>
+        /// <returns>有効な座標系の場合はtrue</returns>
+        private bool ValidateCoordinateSystem(List<IShape> shapes)
+        {
+            if (shapes == null || shapes.Count == 0)
+                return true;
+
+            // すべてのシェープの座標をチェック
+            foreach (var shape in shapes)
+            {
+                if (shape?.Points == null) continue;
+
+                foreach (var point in shape.Points)
+                {
+                    // X座標を経度、Z座標を緯度として検証
+                    if (!CoordinateUtils.IsValidLongitude(point.x) || 
+                        !CoordinateUtils.IsValidLatitude(point.z))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
         }
 
         public void Dispose()
