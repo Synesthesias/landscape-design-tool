@@ -16,9 +16,12 @@ namespace Landscape2.Runtime.LandscapePlanLoader
     {
         private readonly Material wallMaterial;
         private readonly Material ceilingMaterial;
+        private readonly AreaPlanningDbfFieldSettings dbfFieldSettings;
 
-        public LandscapePlanLoadManager()
+        public LandscapePlanLoadManager(AreaPlanningDbfFieldSettings dbfFieldSettings = default)
         {
+            this.dbfFieldSettings = dbfFieldSettings.Equals(default) ? new AreaPlanningDbfFieldSettings() : dbfFieldSettings;
+            
             wallMaterial = Resources.Load<Material>("Materials/PlanAreaWallMaterial");
             ceilingMaterial = Resources.Load<Material>("Materials/PlanAreaCeilingMaterial");
             ceilingMaterial.SetFloat("_Alpha", 0.2f);
@@ -110,14 +113,14 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 }
 
                 //新規のAreaPropertyを生成し初期化
-                float initLimitHeight = float.TryParse(GetPropertyValueOf("HEIGHT", dbf), out float heightValue) ? heightValue : 50; // 区画の制限高さを取得
-                int id = int.TryParse(GetPropertyValueOf("ID", dbf), out int idValue) ? idValue : 0;
-                string colorString = GetPropertyValueOf("COLOR", dbf);
+                float initLimitHeight = float.TryParse(GetPropertyValueOfMultiple(dbfFieldSettings.HeightFields, dbf), out float heightValue) ? heightValue : 50; // 区画の制限高さを取得
+                int id = int.TryParse(GetPropertyValueOfMultiple(dbfFieldSettings.IdFields, dbf), out int idValue) ? idValue : 0;
+                string colorString = GetPropertyValueOfMultiple(dbfFieldSettings.ColorFields, dbf);
                 var color = colorString != "" ? DbfStringToColor(colorString) : Color.red;
 
                 AreaProperty areaProperty = new AreaProperty(
                     id,
-                    GetPropertyValueOf("AREANAME", dbf),
+                    GetPropertyValueOfMultiple(dbfFieldSettings.AreaNameFields, dbf),
                     initLimitHeight,
                     10,
                     color,
@@ -401,6 +404,29 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             if (index != -1) return dbf.Properties[index];
 
             Debug.LogError($"Attribute name '{propertyName}' was not found.");
+            return "";
+        }
+
+        /// <summary>
+        /// 区画オブジェクトのDbfComponentから複数の候補名から一致する属性値を取得するメソッド
+        /// </summary>
+        /// <param name="propertyNames">取得したいdbfの属性名候補</param>
+        /// <param name="dbf">取得対象の区画オブジェクトにアタッチされているDbfComponentクラス</param>
+        string GetPropertyValueOfMultiple(string[] propertyNames, DbfComponent dbf)
+        {
+            if (propertyNames == null || propertyNames.Length == 0)
+                return "";
+
+            foreach (string propertyName in propertyNames)
+            {
+                int index = dbf.PropertyNames.IndexOf(propertyName);
+                if (index != -1)
+                {
+                    return dbf.Properties[index];
+                }
+            }
+
+            Debug.LogWarning($"None of the attribute names {string.Join(", ", propertyNames)} were found.");
             return "";
         }
 

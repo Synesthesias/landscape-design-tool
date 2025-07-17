@@ -10,9 +10,9 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         private readonly LandscapePlanLoadManager landscapePlanLoadManager;
         private readonly LandscapeExportManager landscapeExportManager;
 
-        public Panel_AreaPlanningMenuUI(VisualElement planning, PlanningUI planningUI)
+        public Panel_AreaPlanningMenuUI(VisualElement planning, PlanningUI planningUI, AreaPlanningDbfFieldSettings dbfFieldSettings = default)
         {
-            landscapePlanLoadManager = new LandscapePlanLoadManager();
+            landscapePlanLoadManager = new LandscapePlanLoadManager(dbfFieldSettings);
             landscapeExportManager = new LandscapeExportManager();
 
             // ボタンへ処理を登録

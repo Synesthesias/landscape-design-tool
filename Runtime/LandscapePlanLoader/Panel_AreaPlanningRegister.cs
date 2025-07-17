@@ -15,9 +15,9 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         private const float wallMaxHeight = 300f;
         private float limitHeight;
 
-        public Panel_AreaPlanningRegister(VisualElement planning, PlanningUI planningUI) : base(planning, planningUI)
+        public Panel_AreaPlanningRegister(VisualElement planning, PlanningUI planningUI, AreaPlanningDbfFieldSettings dbfFieldSettings = default) : base(planning, planningUI)
         {
-            areaPlanningRegister = new AreaPlanningRegister(displayPinLine);
+            areaPlanningRegister = new AreaPlanningRegister(displayPinLine, dbfFieldSettings);
 
             // 親のパネルを取得
             panel_AreaPlanningEdit = planning.Q<VisualElement>("Panel_AreaPlanningRegister");

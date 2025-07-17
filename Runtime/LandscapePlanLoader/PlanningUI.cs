@@ -42,17 +42,17 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             EditAreaMain,
         }
 
-        public PlanningUI(VisualElement planning, VisualElement uiRoot)
+        public PlanningUI(VisualElement planning, VisualElement uiRoot, AreaPlanningDbfFieldSettings dbfFieldSettings = default)
         {
             currentFocusedAreaIndex = -1;   // エリアが選択されていない状態に設定
             this.uiRoot = uiRoot;
 
             // 各UIパネル制御クラスのインスタンス生成
             new Panel_AreaPlanningListUI(planning, this);
-            new Panel_AreaPlanningMenuUI(planning, this);
+            new Panel_AreaPlanningMenuUI(planning, this, dbfFieldSettings);
             new Panel_AreaPlanningSubMenuUI(planning, this);
             new Panel_AreaPlanningInfoUI(planning, this);
-            new Panel_AreaPlanningRegister(planning, this);
+            new Panel_AreaPlanningRegister(planning, this, dbfFieldSettings);
             new Panel_AreaPlanningEdit(planning, this);
 
             // 各UIパネルのルートを取得

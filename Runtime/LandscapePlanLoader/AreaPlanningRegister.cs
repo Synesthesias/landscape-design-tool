@@ -13,10 +13,10 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         private bool isClosed = false;
         private List<Vector3> vertices = new List<Vector3>();
 
-        public AreaPlanningRegister(DisplayPinLine displayPinLine)
+        public AreaPlanningRegister(DisplayPinLine displayPinLine, AreaPlanningDbfFieldSettings dbfFieldSettings = default)
         {
             this.displayPinLine = displayPinLine;
-            landscapePlanLoadManager = new LandscapePlanLoadManager();
+            landscapePlanLoadManager = new LandscapePlanLoadManager(dbfFieldSettings);
         }
 
         /// <summary>
