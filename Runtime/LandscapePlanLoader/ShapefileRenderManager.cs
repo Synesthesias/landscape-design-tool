@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using UnityEngine;
 using CesiumForUnity;
 using Unity.Mathematics;
@@ -22,6 +24,68 @@ namespace Landscape2.Runtime.LandscapePlanLoader
         List<GameObject> m_ListOfGISObjects = new List<GameObject>();
         List<List<List<Vector3>>> m_pointDataLists = new List<List<List<Vector3>>>();
         public Action m_OnRender;
+        public Action<float> m_OnProgressUpdate;
+        public Action m_OnRenderComplete;
+        
+        const int LARGE_DATA_THRESHOLD = 1000;
+        
+        private bool ValidatePositionMarkerSphere()
+        {
+            if (m_PositionMarkerSphere == null)
+            {
+                Debug.LogError("PositionMarkerSphere is null");
+                return false;
+            }
+            
+            var globeAnchor = m_PositionMarkerSphere.GetComponent<CesiumGlobeAnchor>();
+            if (globeAnchor == null)
+            {
+                Debug.LogError("CesiumGlobeAnchor component is null on PositionMarkerSphere");
+                return false;
+            }
+            
+            return true;
+        }
+        
+        private bool IsValidPointData(List<List<Vector3>> pointLists)
+        {
+            if (pointLists == null || pointLists.Count == 0)
+                return false;
+                
+            foreach (var points in pointLists)
+            {
+                if (points == null || points.Count < 3)
+                    return false;
+                    
+                // すべてのポイントがVector3.zeroでないことを確認
+                bool hasNonZeroPoint = false;
+                foreach (var point in points)
+                {
+                    if (point != Vector3.zero)
+                    {
+                        hasNonZeroPoint = true;
+                        break;
+                    }
+                }
+                
+                if (!hasNonZeroPoint)
+                    return false;
+            }
+            
+            return true;
+        }
+        
+        private Vector3 ConvertToWorldPosition(Vector3 geoPoint)
+        {
+            if (!ValidatePositionMarkerSphere())
+            {
+                return Vector3.zero;
+            }
+            
+            double3 coordinates = new(geoPoint.x, geoPoint.z, m_RenderHeight);
+            m_PositionMarkerSphere.GetComponent<CesiumGlobeAnchor>().longitudeLatitudeHeight = coordinates;
+            return m_PositionMarkerSphere.transform.position;
+        }
 
         CesiumGeoreference m_GeoRef;
         readonly string m_FolderPath;
@@ -91,12 +155,58 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                     m_DbfFilePath = "";
                     m_DbfIsAvailable = false;
                 }
-                DrawShapes(m_CurrentRenderingObject, lineWidth);
+                if (ShouldUseAsyncProcessing())
+                {
+                    StartCoroutineWrapper(() => DrawShapesCoroutine(m_CurrentRenderingObject, lineWidth));
+                }
+                else
+                {
+                    DrawShapes(m_CurrentRenderingObject, lineWidth);
+                }
             }
 
             listOfGISObjects = m_ListOfGISObjects;
             pointDataLists = m_pointDataLists;
             return true;
+        }
+
+        private async Task<(bool success, List<GameObject> listOfGISObjects, List<List<List<Vector3>>> pointDataLists)> ReadAsync(float lineWidth)
+        {
+            string[] filePaths = Directory.GetFiles(m_FolderPath, "*.shp");
+
+            if (lineWidth == 0f)
+            {
+                lineWidth = 10f;
+            }
+
+            if (filePaths.Length == 0)
+            {
+                Debug.LogError("No shapefiles found in the folder");
+                return (false, null, null);
+            }
+
+            foreach (string filePath in filePaths)
+            {
+                if (!ReadShapes(filePath)) return (false, null, null);
+
+                string dbfFileName = Path.GetFileNameWithoutExtension(filePath);
+                m_CurrentRenderingObject = dbfFileName;
+                if (File.Exists(m_FolderPath + "/" + dbfFileName + ".dbf"))
+                {
+                    m_DbfFilePath = m_FolderPath + "/" + dbfFileName + ".dbf";
+                    m_DbfIsAvailable = true;
+                    m_DbfReader = new DbfReader(m_DbfFilePath, m_SupportedStringEncoding);
+                    m_DbfReader.ReadHeader();
+                }
+                else
+                {
+                    m_DbfFilePath = "";
+                    m_DbfIsAvailable = false;
+                }
+                await DrawShapesAsync(m_CurrentRenderingObject, lineWidth);
+            }
+
+            return (true, m_ListOfGISObjects, m_pointDataLists);
         }
 
         public bool ReadShapes(string filePath)
@@ -133,16 +243,48 @@ namespace Landscape2.Runtime.LandscapePlanLoader
             return true;
         }
 
-        public void DrawShapes(string currentRenderingObjectName, float lineWidth)
+        private bool ShouldUseAsyncProcessing()
+        {
+            if (m_ListOfShapes == null) return false;
+            
+            int totalPoints = 0;
+            foreach (var shape in m_ListOfShapes)
+            {
+                if (shape?.Points != null)
+                {
+                    totalPoints += shape.Points.Count;
+                }
+            }
+            
+            return totalPoints > LARGE_DATA_THRESHOLD;
+        }
+        
+        private void StartCoroutineWrapper(System.Func<IEnumerator> coroutineFunc)
+        {
+            var geoRefMonoBehaviour = m_GeoRef.GetComponent<MonoBehaviour>();
+            if (geoRefMonoBehaviour != null)
+            {
+                geoRefMonoBehaviour.StartCoroutine(coroutineFunc());
+            }
+        }
+        
+        private IEnumerator DrawShapesInternal(string currentRenderingObjectName, float lineWidth, bool useAsync = true)
         {
             if (m_GeoRef == null)
             {
-                return;
+                yield break;
+            }
+            
+            if (m_PositionMarkerSphere == null)
+            {
+                Debug.LogError("PositionMarkerSphere is null. Cannot process shapes.");
+                yield break;
             }
 
             if (m_ListOfShapes.Count > 0)
             {
                 int index = 0;
+                int totalShapes = m_ListOfShapes.Count;
 
                 GameObject rootShpObject = new GameObject(currentRenderingObjectName + "_SHP");
                 rootShpObject.transform.parent = m_GeoRef.transform;
@@ -151,37 +293,41 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 rootShpObject.AddComponent<MeshRenderer>();
 
                 GameObject shpLineRendererObject = Resources.Load<GameObject>(PlateauToolkitMapsConstants.k_ShapeParentHdrpPrefab);
-
                 GameObject mesh = Resources.Load<GameObject>(PlateauToolkitMapsConstants.k_MeshObjectPrefab);
 
-                foreach (IShape shape in m_ListOfShapes)
+                if (useAsync)
                 {
-                    DbfRecord record = new DbfRecord();
-
-                    if (m_DbfIsAvailable)
+                    const int batchSize = 50;
+                    for (int batchStart = 0; batchStart < m_ListOfShapes.Count; batchStart += batchSize)
                     {
-                        record = m_DbfReader.ReadNextRecord();
-                    }
-                    if (shpLineRendererObject != null)
-                    {
-                        switch (m_ShapeType)
+                        int batchEnd = Mathf.Min(batchStart + batchSize, m_ListOfShapes.Count);
+                        
+                        for (int i = batchStart; i < batchEnd; i++)
                         {
-                            case 3:
-                            case 5:
-                                DrawPolygonOrPolyline(shape, index, lineWidth, shpLineRendererObject, rootShpObject, m_DbfIsAvailable, m_DbfReader, record, mesh);
-                                break;
-                            case 1:
-                                DrawPoint(shape, rootShpObject, m_DbfIsAvailable, m_DbfReader, record);
-                                break;
+                            ProcessSingleShape(m_ListOfShapes[i], index, lineWidth, shpLineRendererObject, rootShpObject, mesh);
+                            index++;
+                            
+                            if (useAsync && index % 10 == 0)
+                            {
+                                yield return null;
+                            }
                         }
 
-                        index++;
-                    }
-                    else
-                    {
-                        Debug.LogError("Failed to load shpLineRendererObject");
+                        float progress = (float)batchEnd / totalShapes;
+                        m_OnProgressUpdate?.Invoke(progress);
+                        
+                        yield return null;
                     }
                 }
+                else
+                {
+                    foreach (IShape shape in m_ListOfShapes)
+                    {
+                        ProcessSingleShape(shape, index, lineWidth, shpLineRendererObject, rootShpObject, mesh);
+                        index++;
+                    }
+                }
+                
                 if (m_RenderMode == 0)
                 {
                     double3 pos = anchor.longitudeLatitudeHeight;
@@ -190,31 +336,107 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
                     if (rootShpObject.GetComponent<MeshFilter>() != null && rootShpObject.GetComponent<MeshRenderer>() != null && m_MergeMeshes)
                     {
+                        if (useAsync)
+                        {
+                            yield return null;
+                        }
+                        
                         rootShpObject.AddComponent<MeshCombiner>().CombineMeshes();
+                        
+                        if (useAsync)
+                        {
+                            yield return null;
+                        }
+                        
                         GameObject mergedMeshes = new GameObject(rootShpObject.name + "_merged");
                         mergedMeshes.AddComponent<MeshFilter>().mesh = rootShpObject.GetComponent<MeshCombiner>().CombinedMesh;
                         mergedMeshes.AddComponent<MeshRenderer>().material = m_Clockwise;
                         mergedMeshes.transform.parent = m_GeoRef.transform;
                         mergedMeshes.AddComponent<CesiumGlobeAnchor>().longitudeLatitudeHeight = anchor.longitudeLatitudeHeight;
+                        
+                        if (useAsync)
+                        {
+                            yield return null;
+                        }
+                        
                         GameObject.DestroyImmediate(rootShpObject);
                     }
                 }
             }
+            
             if (m_DbfReader != null)
             {
                 m_DbfReader.Dispose();
             }
+            
+            if (useAsync)
+            {
+                m_OnRenderComplete?.Invoke();
+            }
+        }
+        
+        private void ProcessSingleShape(IShape shape, int index, float lineWidth, GameObject shpLineRendererObject, GameObject rootShpObject, GameObject mesh)
+        {
+            
+            DbfRecord record = new DbfRecord();
+
+            if (m_DbfIsAvailable)
+            {
+                record = m_DbfReader.ReadNextRecord();
+            }
+            
+            if (shpLineRendererObject != null)
+            {
+                switch (m_ShapeType)
+                {
+                    case 3:
+                    case 5:
+                        DrawPolygonOrPolyline(shape, index, lineWidth, shpLineRendererObject, rootShpObject, m_DbfIsAvailable, m_DbfReader, record, mesh);
+                        break;
+                    case 1:
+                        DrawPoint(shape, rootShpObject, m_DbfIsAvailable, m_DbfReader, record);
+                        break;
+                }
+            }
+            else
+            {
+                Debug.LogError("Failed to load shpLineRendererObject");
+            }
         }
 
-        void DrawPoint(IShape shape, GameObject parentObject, bool dbfRead, DbfReader dbfReader, DbfRecord record)
+        public void DrawShapes(string currentRenderingObjectName, float lineWidth)
         {
+            var enumerator = DrawShapesInternal(currentRenderingObjectName, lineWidth, false);
+            while (enumerator.MoveNext()) { /* 同期実行 */ }
+        }
+        
+        private IEnumerator DrawShapesCoroutine(string currentRenderingObjectName, float lineWidth)
+        {
+            var enumerator = DrawShapesInternal(currentRenderingObjectName, lineWidth, true);
+            while (enumerator.MoveNext())
+            {
+                yield return enumerator.Current;
+            }
+        }
+
+        public async Task DrawShapesAsync(string currentRenderingObjectName, float lineWidth)
+        {
+            await Task.Run(() =>
+            {
+                var enumerator = DrawShapesInternal(currentRenderingObjectName, lineWidth, true);
+                while (enumerator.MoveNext()) { /* 非同期実行 */ }
+            });
+        }
+
+        private void DrawPoint(IShape shape, GameObject parentObject, bool dbfRead, DbfReader dbfReader, DbfRecord record)
+        {
+            
             GameObject markerObjectDefault = Resources.Load<GameObject>(PlateauToolkitMapsConstants.k_PointMarkerHdrpPrefab);
 
             foreach (Vector3 point in shape.Points)
             {
+                Vector3 pointPos = ConvertToWorldPosition(point);
                 double3 coordinates = new(point.x, point.z, m_RenderHeight);
-                m_PositionMarkerSphere.GetComponent<CesiumGlobeAnchor>().longitudeLatitudeHeight = coordinates;
-                Vector3 pointPos = m_PositionMarkerSphere.transform.position;
                 GameObject marker = m_PointDataPrefab == null ? GameObject.Instantiate(markerObjectDefault) : GameObject.Instantiate(m_PointDataPrefab);
                 marker.name = "point_data";
                 marker.transform.parent = parentObject.transform;
@@ -241,10 +463,8 @@ namespace Landscape2.Runtime.LandscapePlanLoader
 
                 foreach (Vector3 point in partPoints)
                 {
-                    double3 coordinates = new(point.x, point.z, m_RenderHeight);
-                    m_PositionMarkerSphere.GetComponent<CesiumGlobeAnchor>().longitudeLatitudeHeight = coordinates;
-                    Vector3 pointPos = m_PositionMarkerSphere.transform.position;
-                    partPointsWorld.Add(pointPos);
+                    Vector3 worldPos = ConvertToWorldPosition(point);
+                    partPointsWorld.Add(worldPos);
                 }
 
                 if (m_RenderMode == 1)
@@ -298,9 +518,24 @@ namespace Landscape2.Runtime.LandscapePlanLoader
                 }
 
                 // テッセレーション処理を行ったメッシュを生成
-                TessellatedMeshCreator tessellatedMeshCreator = new TessellatedMeshCreator();
-                MeshFilter meshFilter = meshObject.GetComponent<MeshFilter>();
-                tessellatedMeshCreator.CreateTessellatedMesh(partPointsWorldList, meshFilter, 30, 40);
+                if (IsValidPointData(partPointsWorldList))
+                {
+                    TessellatedMeshCreator tessellatedMeshCreator = new TessellatedMeshCreator();
+                    MeshFilter meshFilter = meshObject.GetComponent<MeshFilter>();
+                    
+                    try
+                    {
+                        tessellatedMeshCreator.CreateTessellatedMesh(partPointsWorldList, meshFilter, 30, 40);
+                    }
+                    catch (System.Exception e)
+                    {
+                        Debug.LogWarning($"Tessellation failed for shape {index}: {e.Message}. Skipping tessellation for this shape.");
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning($"Invalid point data for shape {index}. Skipping tessellation.");
+                }
 
                 m_pointDataLists.Add(partPointsWorldList);
                 m_ListOfGISObjects.Add(meshObject);
