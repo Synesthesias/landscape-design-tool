@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Cinemachine;
 using UnityEngine.Events;
+using System.Linq;
 
 namespace Landscape2.Runtime
 {
@@ -120,6 +121,14 @@ namespace Landscape2.Runtime
         /// InputActionsからカメラ上下移動のキーボード操作を受け取り、カメラを上下移動します。
         /// </summary>
         /// <param name="context"></param>
+        /// <summary>
+        /// 複数のキーが同時に押されているかチェック
+        /// </summary>
+        private bool IsMultipleKeysPressed()
+        {
+            return Keyboard.current.allKeys.Count(k => k.isPressed) > 1;
+        }
+
         public void OnVerticalMoveCameraByKeyboard(InputAction.CallbackContext context)
         {
             if (!IsKeyboardActive)
@@ -288,6 +297,13 @@ namespace Landscape2.Runtime
         /// </summary>
         private void MoveCameraVertical(float moveDelta, Transform cameraTrans)
         {
+            // 複数キーが押されている場合は移動をキャンセル
+            if (moveDelta != 0f && IsMultipleKeysPressed())
+            {
+                verticalMoveByKeyboard = 0f;
+                return;
+            }
+            
             var dir = new Vector3(0.0f, moveDelta, 0.0f);
             cameraTrans.position += dir;
         }
