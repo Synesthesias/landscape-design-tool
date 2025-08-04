@@ -34,6 +34,7 @@ namespace Landscape2.Runtime
         public static bool IsCameraMoveActive { get; set; } = true;
 
         public static UnityEvent OnCameraMoved { get; private set; } = new();
+        public static UnityEvent<Vector3, Quaternion> OnCameraStateReturned { get; private set; } = new();
 
         /// <summary>
         /// Start完了時に呼ばれるイベント
@@ -81,6 +82,9 @@ namespace Landscape2.Runtime
         public CameraMoveByUserInput(CinemachineVirtualCamera camera)
         {
             this.camera = camera;
+            
+            // カメラが戻ってきたときのイベントを登録
+            OnCameraStateReturned.AddListener(MoveCameraInstantly);
         }
 
         public void OnEnable()
@@ -436,6 +440,40 @@ namespace Landscape2.Runtime
             float distance = cameraHeightAtDistance / Mathf.Cos(angle * Mathf.Deg2Rad);
 
             return distance;
+        }
+        
+        /// <summary>
+        /// カメラを指定された位置と回転に即座に移動します。
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="rotation"></param>
+        private void MoveCameraInstantly(Vector3 position, Quaternion rotation)
+        {
+            if (cameraParent != null)
+            {
+                // 回転を調整
+                Vector3 eulerAngles = rotation.eulerAngles;
+                float yRotation = eulerAngles.y; // 方向を保持
+                Quaternion adjustedRotation = Quaternion.Euler(47.8f, yRotation, 0f); // 下向き角度
+                
+                // 水平後方ベクトルを計算
+                Vector3 backwardDirection = adjustedRotation * Vector3.back;
+                backwardDirection.y = 0;
+                backwardDirection.Normalize(); // 正規化して単位ベクトルにする
+                float backwardDistance = 75.0f; // 後方に下がる距離
+                
+                // 後方位置を反映
+                Vector3 adjustedPosition = position + (backwardDirection * backwardDistance);
+                
+                // Y座標は元のカメラの高さに設定
+                adjustedPosition.y = cameraParent.transform.position.y;
+                
+                cameraParent.transform.SetPositionAndRotation(adjustedPosition, adjustedRotation);
+            }
+            else
+            {
+                Debug.LogError("CameraParentが設定されていません。");
+            }
         }
     }
 }

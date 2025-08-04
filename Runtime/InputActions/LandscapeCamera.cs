@@ -114,6 +114,10 @@ namespace Landscape2.Runtime
                 CameraMoveByUserInput.IsKeyboardActive = true;
                 CameraMoveByUserInput.IsMouseActive = true;
                 WalkerMoveByUserInput.IsActive = false;
+                
+                // 現状の歩行者視点カメラの位置で、俯瞰カメラを戻す
+                CameraMoveByUserInput.OnCameraStateReturned.Invoke(vcam2.transform.position, vcam2.transform.rotation);
+                
                 SwitchCamera(vcam1, vcam2);
             }
         }
