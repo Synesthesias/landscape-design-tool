@@ -24,6 +24,10 @@ namespace Landscape2.Runtime
         private GameObject cameraParent;
         private RaycastHit rotateHit, parallelHit;
         private float translationFactor = 1f;
+        
+        // 垂直入力の一時無効化用
+        private float verticalInputDisabledUntil = 0f;
+        private const float VERTICAL_INPUT_DISABLE_DURATION = 0.3f;
 
         private static GameObject focusTarget;
         private static bool isFocusTriggered = false;
@@ -122,15 +126,18 @@ namespace Landscape2.Runtime
         }
 
         /// <summary>
-        /// InputActionsからカメラ上下移動のキーボード操作を受け取り、カメラを上下移動します。
-        /// </summary>
-        /// <param name="context"></param>
-        /// <summary>
         /// 複数のキーが同時に押されているかチェック
         /// </summary>
         private bool IsMultipleKeysPressed()
         {
-            return Keyboard.current.allKeys.Count(k => k.isPressed) > 1;
+            var pressedKeys = Keyboard.current.allKeys.Where(k => k.isPressed).ToList();
+            int keyCount = pressedKeys.Count;
+            if (keyCount > 1)
+            {
+                // 複数キー検出時に一時無効化タイマーを設定
+                verticalInputDisabledUntil = Time.time + VERTICAL_INPUT_DISABLE_DURATION;
+            }
+            return keyCount > 1;
         }
 
         public void OnVerticalMoveCameraByKeyboard(InputAction.CallbackContext context)
@@ -301,6 +308,13 @@ namespace Landscape2.Runtime
         /// </summary>
         private void MoveCameraVertical(float moveDelta, Transform cameraTrans)
         {
+            // 一時無効化期間中は移動をキャンセル
+            if (Time.time < verticalInputDisabledUntil)
+            {
+                verticalMoveByKeyboard = 0f;
+                return;
+            }
+            
             // 複数キーが押されている場合は移動をキャンセル
             if (moveDelta != 0f && IsMultipleKeysPressed())
             {
