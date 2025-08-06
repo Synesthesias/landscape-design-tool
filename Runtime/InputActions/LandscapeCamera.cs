@@ -106,6 +106,9 @@ namespace Landscape2.Runtime
                 CameraMoveByUserInput.IsKeyboardActive = false;
                 CameraMoveByUserInput.IsMouseActive = false;
                 WalkerMoveByUserInput.IsActive = false;
+                
+                // 俯瞰カメラから歩行者選択モードへ切り替え時にカメラ位置を調整
+                SetCameraWithBackwardOffset(vcam1.transform, vcam2.transform, 0f);
             }
             else if (cameraState == LandscapeCameraState.SelectWalkPoint || cameraState == LandscapeCameraState.Walker)
             {
@@ -115,8 +118,8 @@ namespace Landscape2.Runtime
                 CameraMoveByUserInput.IsMouseActive = true;
                 WalkerMoveByUserInput.IsActive = false;
                 
-                // 現状の歩行者視点カメラの位置で、俯瞰カメラを戻す
-                CameraMoveByUserInput.OnCameraStateReturned.Invoke(vcam2.transform.position, vcam2.transform.rotation);
+                // 歩行者視点から俯瞰カメラへ戻る時にカメラ位置を調整
+                SetCameraWithBackwardOffset(vcam2.transform, vcam1.transform, 47.8f);
                 
                 SwitchCamera(vcam1, vcam2);
             }
@@ -267,6 +270,49 @@ namespace Landscape2.Runtime
                 return rendererChildren[0];
             }
             return null;
+        }
+
+        /// <summary>
+        /// 参照元カメラの位置・回転から、後方オフセット付きでターゲットカメラを設定します。
+        /// </summary>
+        /// <param name="sourceCamera">参照元のカメラTransform</param>
+        /// <param name="targetCamera">対象のカメラTransform</param>
+        /// <param name="downwardAngle">下向き角度（俯瞰モード: 47.8f, 歩行者モード: 0f）</param>
+        private void SetCameraWithBackwardOffset(Transform sourceCamera, Transform targetCamera, float downwardAngle)
+        {
+            if (sourceCamera != null && targetCamera != null)
+            {
+                // 回転を調整
+                Vector3 eulerAngles = sourceCamera.rotation.eulerAngles;
+                float yRotation = eulerAngles.y; // 方向を保持
+                Quaternion adjustedRotation = Quaternion.Euler(downwardAngle, yRotation, 0f);
+                
+                // 水平後方ベクトルを計算
+                Vector3 backwardDirection = adjustedRotation * Vector3.back;
+                backwardDirection.y = 0;
+                backwardDirection.Normalize(); // 正規化して単位ベクトルにする
+                float backwardDistance = 75.0f; // 後方に下がる距離
+                
+                // 後方位置を反映
+                Vector3 adjustedPosition = sourceCamera.position + (backwardDirection * backwardDistance);
+                
+                // Y座標は元のカメラの高さに設定
+                adjustedPosition.y = targetCamera.position.y;
+                
+                targetCamera.SetPositionAndRotation(adjustedPosition, adjustedRotation);
+                
+                // 子要素のカメラを更新（子カメラがある場合）
+                if (targetCamera.childCount > 0)
+                {
+                    var childCamera = targetCamera.GetChild(0);
+                    childCamera.localPosition = Vector3.zero;
+                    childCamera.localRotation = Quaternion.identity;
+                }
+            }
+            else
+            {
+                Debug.LogError("ソースカメラまたは対象カメラが設定されていません。");
+            }
         }
     }
 }
