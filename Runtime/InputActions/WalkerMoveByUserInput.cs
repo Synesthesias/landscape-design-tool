@@ -22,6 +22,7 @@ namespace Landscape2.Runtime
         private CameraMoveData cameraMoveSpeedData;
         private bool enableGravity;
         private System.Action<Vector2> onMoveWASDCalled;
+        public UnityEvent OnStartCompleted { get; private set; } = new();
 
         public WalkerMoveByUserInput(CinemachineVirtualCamera camera,
                                      GameObject walker,
@@ -49,6 +50,7 @@ namespace Landscape2.Runtime
         public void Start()
         {
             cameraMoveSpeedData = Resources.Load<CameraMoveData>("CameraMoveSpeedData");
+            OnStartCompleted.Invoke();
         }
 
         public void Update(float deltaTime)

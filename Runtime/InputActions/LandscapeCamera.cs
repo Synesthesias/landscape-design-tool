@@ -15,6 +15,10 @@ namespace Landscape2.Runtime
         private CinemachineVirtualCamera vcam2;
         private GameObject walker;
         private RaycastHit hit;
+        
+        // デフォルトのカメラ設定を保持
+        private (Vector3, Quaternion) vcam1Defaults;
+        private (Vector3, Quaternion) vcam2Defaults;
 
         public LandscapeCameraState cameraState { get; private set; }
         public event Action OnSetCameraCalled;
@@ -25,6 +29,10 @@ namespace Landscape2.Runtime
             this.vcam1 = vcam1;
             this.vcam2 = vcam2;
             this.walker = walker;
+            
+            // 初期のデフォルト値を保存
+            SetCameraDefaults();
+            
             SwitchCamera(vcam1, vcam2);
         }
 
@@ -35,6 +43,18 @@ namespace Landscape2.Runtime
         public LandscapeCameraState GetCameraState()
         {
             return cameraState;
+        }
+        
+        /// <summary>
+        /// カメラのデフォルト値を設定する
+        /// </summary>
+        public void SetCameraDefaults()
+        {
+            // vcam1のデフォルト値を保存
+            vcam1Defaults = (vcam1.transform.position, vcam1.transform.rotation);
+            
+            // vcam2のデフォルト値を保存
+            vcam2Defaults = (vcam2.transform.position, vcam2.transform.rotation);
         }
 
         /// <summary>
@@ -106,9 +126,6 @@ namespace Landscape2.Runtime
                 CameraMoveByUserInput.IsKeyboardActive = false;
                 CameraMoveByUserInput.IsMouseActive = false;
                 WalkerMoveByUserInput.IsActive = false;
-                
-                // 俯瞰カメラから歩行者選択モードへ切り替え時にカメラ位置を調整
-                SetCameraWithBackwardOffset(vcam1.transform, vcam2.transform, 0f);
             }
             else if (cameraState == LandscapeCameraState.SelectWalkPoint || cameraState == LandscapeCameraState.Walker)
             {
@@ -119,7 +136,7 @@ namespace Landscape2.Runtime
                 WalkerMoveByUserInput.IsActive = false;
                 
                 // 歩行者視点から俯瞰カメラへ戻る時にカメラ位置を調整
-                SetCameraWithBackwardOffset(vcam2.transform, vcam1.transform, 47.8f);
+                SetCameraWithBackwardOffset(vcam2.transform, vcam1.transform.transform.parent, vcam1Defaults);
                 
                 SwitchCamera(vcam1, vcam2);
             }
@@ -185,6 +202,9 @@ namespace Landscape2.Runtime
                 // WalkerMoveByUserInput.IsActive = true;
                 cameraState = LandscapeCameraState.Walker;
                 OnSetCameraCalled?.Invoke();
+                
+                // 俯瞰カメラから歩行者選択モードへ切り替え時にカメラ位置を調整
+                SetCameraWithBackwardOffset(vcam1.transform, vcam2.transform, vcam2Defaults);
             }
             return canRaycast;
         }
@@ -273,45 +293,47 @@ namespace Landscape2.Runtime
         }
 
         /// <summary>
-        /// 参照元カメラの位置・回転から、後方オフセット付きでターゲットカメラを設定します。
+        /// 参照元カメラの位置・回転から、後方オフセット付きでターゲットカメラコントローラーを設定します。
         /// </summary>
         /// <param name="sourceCamera">参照元のカメラTransform</param>
-        /// <param name="targetCamera">対象のカメラTransform</param>
-        /// <param name="downwardAngle">下向き角度（俯瞰モード: 47.8f, 歩行者モード: 0f）</param>
-        private void SetCameraWithBackwardOffset(Transform sourceCamera, Transform targetCamera, float downwardAngle)
+        /// <param name="targetCameraController">対象のカメラコントローラーTransform</param>
+        /// <param name="targetDefaults">ターゲットカメラのデフォルト設定</param>
+        private void SetCameraWithBackwardOffset(Transform sourceCamera, Transform targetCameraController, (Vector3, Quaternion) targetDefaults)
         {
-            if (sourceCamera != null && targetCamera != null)
+            if (sourceCamera != null && targetCameraController != null)
             {
-                // 回転を調整
+                // 子オブジェクトがある場合はリセット
+                if (targetCameraController.childCount > 0)
+                {
+                    foreach (Transform child in targetCameraController)
+                    {
+                        child.localPosition = Vector3.zero;
+                        child.localRotation = Quaternion.identity;
+                    }
+                }
+                
+                // ソースカメラから後方オフセット付きで計算
                 Vector3 eulerAngles = sourceCamera.rotation.eulerAngles;
                 float yRotation = eulerAngles.y; // 方向を保持
-                Quaternion adjustedRotation = Quaternion.Euler(downwardAngle, yRotation, 0f);
                 
-                // 水平後方ベクトルを計算
-                Vector3 backwardDirection = adjustedRotation * Vector3.back;
-                backwardDirection.y = 0;
-                backwardDirection.Normalize(); // 正規化して単位ベクトルにする
+                Quaternion adjustedRotation = Quaternion.Euler(targetDefaults.Item2.eulerAngles.x, yRotation, 0f);
+                
+                // Y軸回転のみを使用して水平後方ベクトルを計算
+                Quaternion yRotationOnly = Quaternion.Euler(0f, yRotation, 0f);
+                Vector3 backwardDirection = yRotationOnly * Vector3.back;
                 float backwardDistance = 75.0f; // 後方に下がる距離
                 
                 // 後方位置を反映
                 Vector3 adjustedPosition = sourceCamera.position + (backwardDirection * backwardDistance);
                 
-                // Y座標は元のカメラの高さに設定
-                adjustedPosition.y = targetCamera.position.y;
+                // Y座標はデフォルト高さに設定
+                adjustedPosition.y = targetDefaults.Item1.y;
                 
-                targetCamera.SetPositionAndRotation(adjustedPosition, adjustedRotation);
-                
-                // 子要素のカメラを更新（子カメラがある場合）
-                if (targetCamera.childCount > 0)
-                {
-                    var childCamera = targetCamera.GetChild(0);
-                    childCamera.localPosition = Vector3.zero;
-                    childCamera.localRotation = Quaternion.identity;
-                }
+                targetCameraController.SetPositionAndRotation(adjustedPosition, adjustedRotation);
             }
             else
             {
-                Debug.LogError("ソースカメラまたは対象カメラが設定されていません。");
+                Debug.LogError("ソースカメラまたは対象カメラコントローラーが設定されていません。");
             }
         }
     }
