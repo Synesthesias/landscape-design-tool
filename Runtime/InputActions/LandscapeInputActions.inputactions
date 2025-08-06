@@ -220,6 +220,17 @@
                     "action": "cancel",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f2b4b5d4-148c-4490-8581-5067c9dc3db7",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "cancel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
