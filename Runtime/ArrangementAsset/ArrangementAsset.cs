@@ -181,7 +181,8 @@ namespace Landscape2.Runtime
 
         public void SetMode(ArrangeModeName mode)
         {
-            if (currentMode != null)
+            // Create → Create の遷移では OnCancel を呼ばない
+            if (currentMode != null && !(currentMode == createMode && mode == ArrangeModeName.Create))
             {
                 currentMode.OnCancel();
             }
@@ -353,7 +354,7 @@ namespace Landscape2.Runtime
         }
 
         /// <summary>
-        /// 右クリック時
+        /// 右クリック、Escキーでキャンセル
         /// </summary>
         /// <param name="context"></param>
         public void OnCancel(InputAction.CallbackContext context)
@@ -374,7 +375,10 @@ namespace Landscape2.Runtime
                 }
                 currentMode.OnCancel();
                 activeTarget = null;
-            } 
+            }
+            
+            arrangementAssetUIClass?.ClearAssetButtonSelection();
+            
             SetMode(ArrangeModeName.Normal);
         }
 
@@ -382,11 +386,14 @@ namespace Landscape2.Runtime
         {
             if (arrangementAssetUI.resolvedStyle.display == DisplayStyle.None)
             {
+                arrangementAssetUIClass?.ClearAssetButtonSelection();
                 SetMode(ArrangeModeName.Normal);
             }
         }
         public void OnDisable()
         {
+            arrangementAssetUIClass?.ClearAssetButtonSelection();
+            
             SetMode(ArrangeModeName.Normal);
             arrangementAssetUI.UnregisterCallback<GeometryChangedEvent>(OnGeometryChanged);
             input.Disable();

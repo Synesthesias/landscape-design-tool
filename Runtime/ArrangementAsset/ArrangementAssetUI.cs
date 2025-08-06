@@ -17,6 +17,8 @@ namespace Landscape2.Runtime
         private GameObject editTarget;
         private VisualElement editPanel;
         private VisualElement assetListScrollView;
+        private List<Button> assetButtons = new List<Button>();
+        private Button currentSelectedButton = null;
 
         // 一括配置
         private BulkArrangementAssetUI bulkArrangementAssetUI;
@@ -173,6 +175,8 @@ namespace Landscape2.Runtime
         {
             assetListScrollView.style.display = DisplayStyle.Flex;
             assetListScrollView.Clear();
+            assetButtons.Clear();
+            currentSelectedButton = null;
 
             VisualElement flexContainer = new VisualElement();
             // ussに移行すべき
@@ -206,13 +210,26 @@ namespace Landscape2.Runtime
                 newButton.style.backgroundImage = new StyleBackground(assetPicture);
                 newButton.style.backgroundSize = new BackgroundSize(Length.Percent(100), Length.Percent(100));
                 newButton.style.backgroundColor = Color.clear;
-
-                newButton.AddToClassList("AssetButton");
+                // クロージャの問題を避けるため、ローカル変数にキャプチャ
+                var capturedButton = newButton;
+                var capturedAsset = asset;
+                
                 newButton.clicked += () =>
                 {
+                    // カスタム選択状態の管理
+                    if (currentSelectedButton != null && currentSelectedButton != capturedButton)
+                    {
+                        currentSelectedButton.RemoveFromClassList("selected");
+                    }
+                    
+                    capturedButton.AddToClassList("selected");
+                    currentSelectedButton = capturedButton;
+                    
                     arrangementAsset.SetMode(ArrangeModeName.Create);
-                    createMode.SetAsset(asset.name, assetList);
+                    createMode.SetAsset(capturedAsset.name, assetList);
                 };
+                
+                assetButtons.Add(newButton);
                 flexContainer.Add(newButton);
             }
             assetListScrollView.Add(flexContainer);
@@ -299,6 +316,23 @@ namespace Landscape2.Runtime
             {
                 arrangementAssetListUI.SetEditable(false, asset.GetInstanceID());
             }
+        }
+        
+        /// <summary>
+        /// アセットボタンの選択状態をクリア
+        /// </summary>
+        public void ClearAssetButtonSelection()
+        {
+            foreach (var button in assetButtons)
+            {
+                if (button != null)
+                {
+                    button.Blur();
+                    button.RemoveFromClassList("selected");
+                }
+            }
+            
+            currentSelectedButton = null;
         }
     }
 }

@@ -1368,13 +1368,19 @@ Scroller #unity-drag-container {
     height: 100px;
     background-image: resource('img_noimage');
     border-radius: 6px;
-    border-width: 1px;
+    border-width: 5px;
+    border-color: transparent;
     margin: 5px;
+    transition: border-color 0.1s;
 }
 
 #Thumbnail_Asset:focus {
     border-width: 5px;
     border-color: rgb(0, 106, 106);
+}
+
+#Thumbnail_Asset.selected {
+    border-color: #006A6A;
 }
 
 #Toggle_AutoRotate {
