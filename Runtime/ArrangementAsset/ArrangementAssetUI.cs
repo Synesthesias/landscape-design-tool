@@ -225,6 +225,11 @@ namespace Landscape2.Runtime
                     capturedButton.AddToClassList("selected");
                     currentSelectedButton = capturedButton;
                     
+                    // Unity UI Toolkitの描画更新を強制//
+                    capturedButton.schedule.Execute(() => {
+                        capturedButton.MarkDirtyRepaint();
+                    }).ExecuteLater(1);
+                    
                     arrangementAsset.SetMode(ArrangeModeName.Create);
                     createMode.SetAsset(capturedAsset.name, assetList);
                 };
