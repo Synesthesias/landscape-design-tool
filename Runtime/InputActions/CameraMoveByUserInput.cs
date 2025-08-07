@@ -19,6 +19,7 @@ namespace Landscape2.Runtime
         private Vector2 rotateByMouse;
         private float zoomMoveByMouse;
         private LandscapeInputActions.CameraMoveActions input;
+        private InputActionFocusHandler focusHandler;
         private bool isParallelMoveByMouse;
         private bool isRotateByMouse;
         private GameObject cameraParent;
@@ -92,10 +93,19 @@ namespace Landscape2.Runtime
             input = new LandscapeInputActions.CameraMoveActions(new LandscapeInputActions());
             input.SetCallbacks(this);
             input.Enable();
+
+            // フォーカス制御の登録
+            focusHandler = new InputActionFocusHandler(
+                enable: () => input.Enable(),
+                disable: () => input.Disable()
+            );
+            InputFocusManager.RegisterHandler(focusHandler);
         }
 
         public void OnDisable()
         {
+            // フォーカス制御の登録解除
+            InputFocusManager.UnregisterHandler(focusHandler);
             input.Disable();
         }
 

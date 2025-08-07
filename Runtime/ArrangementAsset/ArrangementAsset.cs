@@ -40,6 +40,7 @@ namespace Landscape2.Runtime
         private ArrangementAssetSizeUI sizeUI;
         private VisualElement editPanel;
         private LandscapeInputActions.ArrangeAssetActions input;
+        private InputActionFocusHandler focusHandler;
         private GameObject editTarget;
         private GameObject lastEditTarget;
         private ArrangeMode currentMode;
@@ -84,6 +85,13 @@ namespace Landscape2.Runtime
             input = new LandscapeInputActions.ArrangeAssetActions(new LandscapeInputActions());
             input.SetCallbacks(this);
             input.Enable();
+
+            // フォーカス制御の登録
+            focusHandler = new InputActionFocusHandler(
+                enable: () => input.Enable(),
+                disable: () => input.Disable()
+            );
+            InputFocusManager.RegisterHandler(focusHandler);
             // アセットのロード
             SetPlateauAssets(ArrangementAssetType.Plant.GetKeyName(), ArrangementAssetType.Plant.GetButtonName());
             SetPlateauAssets(ArrangementAssetType.Human.GetKeyName(), ArrangementAssetType.Human.GetButtonName());
@@ -392,6 +400,9 @@ namespace Landscape2.Runtime
         }
         public void OnDisable()
         {
+            // フォーカス制御の登録解除
+            InputFocusManager.UnregisterHandler(focusHandler);
+            
             arrangementAssetUIClass?.ClearAssetButtonSelection();
             
             SetMode(ArrangeModeName.Normal);

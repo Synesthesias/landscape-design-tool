@@ -36,6 +36,7 @@ namespace Landscape2.Runtime
         private LineOfSightUI lineOfSightUI;
         private VisualElement lineOfSightUIElement;
         private LandscapeInputActions.LineOfSightActions input;
+        private InputActionFocusHandler focusHandler;
 
         public LineOfSight(SaveSystem saveSystemInstance, VisualElement uiRootElement)
         {
@@ -58,6 +59,13 @@ namespace Landscape2.Runtime
             input = new LandscapeInputActions.LineOfSightActions(new LandscapeInputActions());
             input.SetCallbacks(this);
             input.Enable();
+
+            // フォーカス制御の登録
+            focusHandler = new InputActionFocusHandler(
+                enable: () => input.Enable(),
+                disable: () => input.Disable()
+            );
+            InputFocusManager.RegisterHandler(focusHandler);
 
             lineOfSightUI.OnEnable(this, viewPoint, landmark, analyzeViewPoint, analyzeLandmark, lineOfSightUIElement);
         }
@@ -106,6 +114,9 @@ namespace Landscape2.Runtime
         }
         public void OnDisable()
         {
+            // フォーカス制御の登録解除
+            InputFocusManager.UnregisterHandler(focusHandler);
+            
             input.Disable();
         }
         public void Start()

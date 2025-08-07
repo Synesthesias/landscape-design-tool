@@ -14,6 +14,7 @@ namespace Landscape2.Runtime
         public static bool IsActive = false;
         private GameObject walker;
         private LandscapeInputActions.WalkerMoveActions input;
+        private InputActionFocusHandler focusHandler;
         private Vector2 deltaWASD;
         private float deltaUpDown;
         private float deltaWheel;
@@ -40,10 +41,20 @@ namespace Landscape2.Runtime
             input = new LandscapeInputActions.WalkerMoveActions(new LandscapeInputActions());
             input.SetCallbacks(this);
             input.Enable();
+
+            // フォーカス制御の登録
+            focusHandler = new InputActionFocusHandler(
+                enable: () => input.Enable(),
+                disable: () => input.Disable()
+            );
+            InputFocusManager.RegisterHandler(focusHandler);
         }
 
         public void OnDisable()
         {
+            // フォーカス制御の登録解除
+            InputFocusManager.UnregisterHandler(focusHandler);
+            
             input.Disable();
         }
 

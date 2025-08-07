@@ -10,6 +10,7 @@ namespace Landscape2.Runtime
     public class LandscapeCameraUI : ISubComponent, LandscapeInputActions.ISelectCamPosActions
     {
         private LandscapeInputActions.SelectCamPosActions input;
+        private InputActionFocusHandler focusHandler;
         private LandscapeCamera landscapeCamera;
         private VisualElement uiRoot, uiRootWalkMode;
         private VisualElement[] subUiRoots;
@@ -37,6 +38,13 @@ namespace Landscape2.Runtime
             input = new LandscapeInputActions.SelectCamPosActions(new LandscapeInputActions());
             input.SetCallbacks(this);
             input.Enable();
+
+            // フォーカス制御の登録
+            focusHandler = new InputActionFocusHandler(
+                enable: () => input.Enable(),
+                disable: () => input.Disable()
+            );
+            InputFocusManager.RegisterHandler(focusHandler);
             uiRoot.RegisterCallback<PointerMoveEvent>(OnPointerMove, TrickleDown.NoTrickleDown);
             uiRoot.RegisterCallback<PointerLeaveEvent>(OnPointerLeave, TrickleDown.NoTrickleDown);
             foreach (var subUiRoot in subUiRoots)
@@ -84,6 +92,9 @@ namespace Landscape2.Runtime
 
         public void OnDisable()
         {
+            // フォーカス制御の登録解除
+            InputFocusManager.UnregisterHandler(focusHandler);
+            
             input.Disable();
             toggleWalkMode.UnregisterValueChangedCallback(OnToggleWalkModeValueChanged);
             uiRoot.UnregisterCallback<PointerMoveEvent>(OnPointerMove, TrickleDown.NoTrickleDown);
