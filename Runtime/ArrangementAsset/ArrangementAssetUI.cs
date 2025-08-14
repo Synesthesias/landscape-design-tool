@@ -81,7 +81,7 @@ namespace Landscape2.Runtime
 
             moveButton.RegisterCallback<ClickEvent>(evt =>
             {
-                editMode.CreateRuntimeHandle(editTarget, TransformType.None);
+                editMode.CreateRuntimeHandle(editTarget, TransformType.Position);
             });
             var rotateButton = editPanel.Q<RadioButton>("RotateButton");
             rotateButton.RegisterCallback<ClickEvent>(evt =>

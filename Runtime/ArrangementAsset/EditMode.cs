@@ -67,7 +67,21 @@ namespace Landscape2.Runtime
             {
                 return;
             }
-            runtimeTransformHandleScript = RuntimeTransformHandle.Create(null, HandleType.POSITION);
+            
+            HandleType handleType = transformType switch
+            {
+                TransformType.Position => HandleType.POSITION,
+                TransformType.Rotation => HandleType.ROTATION,
+                TransformType.Scale => HandleType.SCALE,
+                _ => HandleType.POSITION
+            };
+            
+            runtimeTransformHandleScript = RuntimeTransformHandle.Create(null, handleType);
+            runtimeTransformHandleScript.gameObject.name = "RuntimeTransformHandle";
+            
+            // 一時的に意図的に異なる値を設定（後でSetTransformTypeで正しい値に設定される）
+            runtimeTransformHandleScript.axes = HandleAxes.X;
+            
             runtimeTransformHandleScript.autoScale = true;
             runtimeTransformHandleScript.target = obj.transform;
         }
