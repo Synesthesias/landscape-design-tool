@@ -24,7 +24,6 @@ namespace Landscape2.Runtime
         public GameObject selectedAsset;
         private GameObject generatedAsset;
         private AssetPlacedDirectionComponent component;
-        private VisualElement arrangeAssetsUI;
         private bool isMouseOverUI;
 
         private Vector3? assetSize = null;
@@ -32,9 +31,20 @@ namespace Landscape2.Runtime
 
         public void OnEnable(VisualElement element)
         {
-            arrangeAssetsUI = element.Q<VisualElement>("CreatePanel");
-            arrangeAssetsUI.RegisterCallback<MouseEnterEvent>(OnMouseEnter);
-            arrangeAssetsUI.RegisterCallback<MouseLeaveEvent>(OnMouseLeave);
+            var rightUI = element.Q<VisualElement>("RightContainer");
+            var leftUI = element.Q<VisualElement>("LeftContainer");
+
+            foreach (var child in rightUI.Children())
+            {
+                child.RegisterCallback<MouseEnterEvent>(OnMouseEnter); 
+                child.RegisterCallback<MouseLeaveEvent>(OnMouseLeave);
+            }
+
+            foreach (var child in leftUI.Children())
+            {
+                child.RegisterCallback<MouseEnterEvent>(OnMouseEnter);
+                child.RegisterCallback<MouseLeaveEvent>(OnMouseLeave);
+            }
         }
 
         public override void Update()
@@ -68,6 +78,12 @@ namespace Landscape2.Runtime
                 return CityObjectUtil.IsGround(hitObject) ||
                        hitObject.layer == LayerMask.NameToLayer("Ground");
             }
+
+            // UIStateManagerのグローバル状態をチェック
+            if (UIStateManager.IsMouseOverAnyUI || isMouseOverUI)
+            {
+                return false;
+            }
             return true;
         }
 
@@ -75,7 +91,8 @@ namespace Landscape2.Runtime
         {
             cam = Camera.main;
             ray = cam.ScreenPointToRay(Input.mousePosition);
-            if (isMouseOverUI && generatedAsset != null)
+            // UIStateManagerのグローバル状態もチェック
+            if ((UIStateManager.IsMouseOverAnyUI || isMouseOverUI) && generatedAsset != null)
             {
                 ArrangementAssetListUI.OnCancelAsset.Invoke(generatedAsset);
                 GameObject.Destroy(generatedAsset);
@@ -187,11 +204,15 @@ namespace Landscape2.Runtime
         private void OnMouseEnter(MouseEnterEvent evt)
         {
             isMouseOverUI = true;
+            // UIStateManagerにアセットUI状態を設定
+            UIStateManager.IsMouseOverAssetUI = true;
         }
 
         private void OnMouseLeave(MouseLeaveEvent evt)
         {
             isMouseOverUI = false;
+            // UIStateManagerのアセットUI状態をクリア
+            UIStateManager.IsMouseOverAssetUI = false;
         }
 
         public void OnSelect()
