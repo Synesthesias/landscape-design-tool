@@ -24,7 +24,6 @@ namespace Landscape2.Runtime
         public GameObject selectedAsset;
         private GameObject generatedAsset;
         private AssetPlacedDirectionComponent component;
-        private bool isMouseOverUI;
 
         private Vector3? assetSize = null;
         private float buriedHeight = 0.0f; // 地面に埋まっている高さ
@@ -80,7 +79,7 @@ namespace Landscape2.Runtime
             }
 
             // UIStateManagerのグローバル状態をチェック
-            if (UIStateManager.IsMouseOverAnyUI || isMouseOverUI)
+            if (UIStateManager.IsMouseOverUI)
             {
                 return false;
             }
@@ -92,7 +91,7 @@ namespace Landscape2.Runtime
             cam = Camera.main;
             ray = cam.ScreenPointToRay(Input.mousePosition);
             // UIStateManagerのグローバル状態もチェック
-            if ((UIStateManager.IsMouseOverAnyUI || isMouseOverUI) && generatedAsset != null)
+            if (UIStateManager.IsMouseOverUI && generatedAsset != null)
             {
                 ArrangementAssetListUI.OnCancelAsset.Invoke(generatedAsset);
                 GameObject.Destroy(generatedAsset);
@@ -203,16 +202,14 @@ namespace Landscape2.Runtime
 
         private void OnMouseEnter(MouseEnterEvent evt)
         {
-            isMouseOverUI = true;
             // UIStateManagerにアセットUI状態を設定
-            UIStateManager.IsMouseOverAssetUI = true;
+            UIStateManager.IsMouseOverUI = true;
         }
 
         private void OnMouseLeave(MouseLeaveEvent evt)
         {
-            isMouseOverUI = false;
             // UIStateManagerのアセットUI状態をクリア
-            UIStateManager.IsMouseOverAssetUI = false;
+            UIStateManager.IsMouseOverUI = false;
         }
 
         public void OnSelect()
