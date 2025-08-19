@@ -31,7 +31,6 @@ namespace Landscape2.Runtime
         private Vector3 editPointMarkerPos;
         private Vector3 editPointOffsetPos;
         private string editPointName;
-        private bool isMouseOverUI;
         private LineOfSightDataComponent lineOfSightDataComponent;
 
         private LineOfSightPosUtil posUtil;
@@ -146,12 +145,12 @@ namespace Landscape2.Runtime
 
         private void OnMouseEnter(MouseEnterEvent evt)
         {
-            isMouseOverUI = true;
+            UIStateManager.IsMouseOverUI = true;
         }
 
         private void OnMouseLeave(MouseLeaveEvent evt)
         {
-            isMouseOverUI = false;
+            UIStateManager.IsMouseOverUI = false;
         }
 
         public void InitializeEditPoint()
@@ -210,7 +209,7 @@ namespace Landscape2.Runtime
             ray = cam.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity))
             {
-                if (isMouseOverUI)
+                if (UIStateManager.IsMouseOverUI)
                 {
                     return;
                 }

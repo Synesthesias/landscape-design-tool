@@ -14,7 +14,6 @@ namespace Landscape2.Runtime
         private LandscapeCamera landscapeCamera;
         private VisualElement uiRoot, uiRootWalkMode;
         private VisualElement[] subUiRoots;
-        private bool isMouseOverUI = false;
         private Toggle toggleWalkMode;
         private bool isNotNoticeToggleWalkCallback = false;
         private Action<float> onUpdateAction;
@@ -114,7 +113,7 @@ namespace Landscape2.Runtime
         public void OnSelectPosByInput(InputAction.CallbackContext context)
         {
 
-            if (context.started && LandscapeCameraState.SelectWalkPoint == landscapeCamera.GetCameraState() && !isMouseOverUI)
+            if (context.started && LandscapeCameraState.SelectWalkPoint == landscapeCamera.GetCameraState() && !UIStateManager.IsMouseOverUI)
             {
                 landscapeCamera.SwitchWalkerView();
             }
@@ -127,9 +126,8 @@ namespace Landscape2.Runtime
 
         private void OnPointerMove(PointerMoveEvent evt)
         {
-
-            isMouseOverUI = true;
-            landscapeCamera.OnUserInputTrigger(isMouseOverUI);
+            UIStateManager.IsMouseOverUI = true;
+            landscapeCamera.OnUserInputTrigger(true);
         }
 
         /// <summary>
@@ -138,8 +136,8 @@ namespace Landscape2.Runtime
         /// <param name="evt"></param>
         private void OnPointerLeave(PointerLeaveEvent evt)
         {
-            isMouseOverUI = false;
-            landscapeCamera.OnUserInputTrigger(isMouseOverUI);
+            UIStateManager.IsMouseOverUI = false;
+            landscapeCamera.OnUserInputTrigger(false);
         }
 
         /// <summary>
@@ -192,7 +190,7 @@ namespace Landscape2.Runtime
                 snackBar.UnregisterCallback<PointerLeaveEvent>(OnPointerLeave, TrickleDown.NoTrickleDown);
                 snackBar.RemoveFromHierarchy();
                 GameObject.Destroy(GameObject.Find("Snackbar"));
-                isMouseOverUI = false;
+                UIStateManager.IsMouseOverUI = false;
             };
 
             // 一定時間後にSnackbarを削除するためのデリゲートを設定
