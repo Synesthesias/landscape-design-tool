@@ -217,7 +217,8 @@ namespace Landscape2.Runtime
         }
         public void Update(float deltaTime)
         {
-            if (arrangementAssetUI.style.display != DisplayStyle.Flex)
+            if (arrangementAssetUI.style.display != DisplayStyle.Flex ||
+                !input.enabled)
             {
                 return;
             }
