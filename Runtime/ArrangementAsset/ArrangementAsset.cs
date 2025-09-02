@@ -222,6 +222,17 @@ namespace Landscape2.Runtime
                 return;
             }
 
+            if (!input.enabled)
+            {
+                // フォーカスが外れた時にEditModeならクリーンアップ
+                if (currentMode == editMode)
+                {
+                    editMode.OnCancel();
+                    SetMode(ArrangeModeName.Normal);
+                }
+                return;
+            }
+
             bool isMouseDragging = false;
 
 
