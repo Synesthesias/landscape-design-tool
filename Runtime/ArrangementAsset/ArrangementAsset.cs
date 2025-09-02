@@ -217,9 +217,19 @@ namespace Landscape2.Runtime
         }
         public void Update(float deltaTime)
         {
-            if (arrangementAssetUI.style.display != DisplayStyle.Flex ||
-                !input.enabled)
+            if (arrangementAssetUI.style.display != DisplayStyle.Flex)
             {
+                return;
+            }
+
+            if (!input.enabled)
+            {
+                // フォーカスが外れた時にEditModeならクリーンアップ
+                if (currentMode == editMode)
+                {
+                    editMode.OnCancel();
+                    SetMode(ArrangeModeName.Normal);
+                }
                 return;
             }
 
