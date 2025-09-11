@@ -1,7 +1,7 @@
 
 .unity-text-element {
     color: rgb(255, 255, 255);
-    -unity-font-definition: url("project://database/Packages/com.synesthesias.landscape-design-tool-2/Runtime/UICommon/Fonts/MPLUSRounded1c-RegularSDF.asset?fileID=11400000&guid=16ebc954c776e604e8d8693a34969fdb&type=2#MPLUSRounded1c-RegularSDF");
+    -unity-font-definition: url("project://database/Packages/com.synesthesias.landscape-design-tool-2/Runtime/UICommon/Fonts/MPLUSRounded1c-RegularSDF.asset?fileID=11400000&guid=9d81e515c75098c459c537fd1ade6d38&type=2#MPLUSRounded1c-RegularSDF");
 }
 
 .header {
