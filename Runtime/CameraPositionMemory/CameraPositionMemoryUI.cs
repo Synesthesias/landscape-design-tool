@@ -41,6 +41,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
         private const string CameraListContainerName = "unity-content-container";
         private const string CameraRegister = "Panel_CameraViewRegister";
         private const string CameraEditor = "Panel_CameraViewEditor";
+        private const string CameraMoveSpeedDataPath = "CameraMoveSpeedData";
         private const string WalkRegister = "Panel_WalkViewRegister";
         private const string WalkEditor = "Panel_WalkViewEditor";
         private readonly CameraPositionMemory cameraPositionMemory;
@@ -61,7 +62,7 @@ namespace Landscape2.Runtime.CameraPositionMemory
         private VisualElement rootElement;
 
 
-        public CameraPositionMemoryUI(CameraPositionMemory cameraPositionMemory, VisualElement[] subMenuUxmls, WalkerMoveByUserInput walkerMoveByUserInput, SaveSystem saveSystem, VisualElement uiRoot, VisualElement footerUIRoot = null)
+        public CameraPositionMemoryUI(CameraPositionMemory cameraPositionMemory, VisualElement[] subMenuUxmls, WalkerMoveByUserInput walkerMoveByUserInput, SaveSystem saveSystem, VisualElement uiRoot, VisualElement footerUIRoot = null, string cameraMoveSpeedDataPath = CameraMoveSpeedDataPath)
         {
             saveSystem.SaveEvent += SaveInfo;
             saveSystem.LoadEvent += LoadInfo;
@@ -148,7 +149,14 @@ namespace Landscape2.Runtime.CameraPositionMemory
                 walkerMoveByUserInput.MoveWASD(cameraMoveSpeedData.walkerMoveSpeed * 0.5f * new Vector2(-1.0f, 0.0f));
             };
 
-            cameraMoveSpeedData = Resources.Load<CameraMoveData>("CameraMoveSpeedData");
+            cameraMoveSpeedData = Resources.Load<CameraMoveData>(cameraMoveSpeedDataPath);
+
+            if (cameraMoveSpeedData == null)
+            {
+                Debug.LogWarning(string.Format("cameraMoveSpeedDataPath [{0}] does not exist. The default value will be used."));
+                cameraMoveSpeedData = new CameraMoveData();
+            }
+
             defaultWalkSpeed = cameraMoveSpeedData.walkerMoveSpeed;
             // walkSpeed1RadioButton.RegisterValueChangedCallback(evt =>
             // {
