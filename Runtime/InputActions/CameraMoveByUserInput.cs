@@ -9,7 +9,7 @@ namespace Landscape2.Runtime
     /// <summary>
     /// ユーザーの操作によってカメラを動かします。
     /// </summary>
-    public class CameraMoveByUserInput : LandscapeInputActions.ICameraMoveActions, ISubComponent
+    public class CameraMoveByUserInput : LandscapeInputActions.ICameraMoveActions, ISubComponent, LandscapeInputActions.IInputAction
     {
         private readonly CinemachineVirtualCamera camera;
         CameraMoveData cameraMoveSpeedData;
@@ -102,10 +102,20 @@ namespace Landscape2.Runtime
             InputFocusManager.RegisterHandler(focusHandler);
         }
 
+        public void OnEnableInputAction()
+        {
+            input.Enable();
+        }
+
         public void OnDisable()
         {
             // フォーカス制御の登録解除
             InputFocusManager.UnregisterHandler(focusHandler);
+            input.Disable();
+        }
+
+        public void OnDisableInputAction()
+        {
             input.Disable();
         }
 

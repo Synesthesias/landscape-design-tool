@@ -24,7 +24,7 @@ namespace Landscape2.Runtime
         analyzeLandmark
     }
 
-    public class LineOfSight : ISubComponent, LandscapeInputActions.ILineOfSightActions
+    public class LineOfSight : ISubComponent, LandscapeInputActions.ILineOfSightActions, LandscapeInputActions.IInputAction
     {
         private LineOfSightModeClass currentMode;
         private ViewPoint viewPoint;
@@ -68,6 +68,10 @@ namespace Landscape2.Runtime
             InputFocusManager.RegisterHandler(focusHandler);
 
             lineOfSightUI.OnEnable(this, viewPoint, landmark, analyzeViewPoint, analyzeLandmark, lineOfSightUIElement);
+        }
+        public void OnEnableInputAction()
+        {
+            input.Enable();
         }
         // クリック時の処理を判別するため
         public void SetMode(LineOfSightType mode)
@@ -117,6 +121,10 @@ namespace Landscape2.Runtime
             // フォーカス制御の登録解除
             InputFocusManager.UnregisterHandler(focusHandler);
             
+            input.Disable();
+        }
+        public void OnDisableInputAction()
+        {
             input.Disable();
         }
         public void Start()

@@ -29,7 +29,7 @@ namespace Landscape2.Runtime
         Edit
     }
 
-    public class ArrangementAsset : ISubComponent, LandscapeInputActions.IArrangeAssetActions
+    public class ArrangementAsset : ISubComponent, LandscapeInputActions.IArrangeAssetActions, LandscapeInputActions.IInputAction
     {
         const float MouseDragMagnitudeThreashold = 10f;
         private Camera cam;
@@ -118,6 +118,11 @@ namespace Landscape2.Runtime
             arrangementAssetUIClass.RegisterImportButtonAction();
 
             sizeUI.Show(false);
+        }
+
+        public void OnEnableInputAction()
+        {
+            input.Enable();
         }
 
         private async void SetPlateauAssets(string keyName, string buttonName)
@@ -418,6 +423,11 @@ namespace Landscape2.Runtime
             
             SetMode(ArrangeModeName.Normal);
             arrangementAssetUI.UnregisterCallback<GeometryChangedEvent>(OnGeometryChanged);
+            input.Disable();
+        }
+
+        public void OnDisableInputAction()
+        {
             input.Disable();
         }
 
