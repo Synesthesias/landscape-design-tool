@@ -51,12 +51,12 @@
             <ui:VisualElement name="Title_Right" style="flex-grow: 0; height: 5%; width: 100%;">
                 <ui:Label tabindex="-1" text="アセットライブラリー" parse-escape-sequences="true" display-tooltip-when-elided="true" />
             </ui:VisualElement>
-            <ui:VisualElement name="CreatePanel" style="flex-grow: 1; flex-direction: row; height: 72%;">
-                <ui:VisualElement name="VisualElement" style="width: 77%;">
+            <ui:VisualElement name="CreatePanel" picking-mode="Ignore" style="flex-grow: 1; flex-direction: row; height: 72%;">
+                <ui:VisualElement name="VisualElement" picking-mode="Ignore" style="width: 77%;">
                     <ui:Instance template="Panel_AssetImport" name="Panel_AssetImport" picking-mode="Ignore" />
-                    <ui:ScrollView name="AssetListScrollView" style="position: absolute; width: 100%; height: 95%; left: auto; margin-top: 16px;" />
+                    <ui:ScrollView name="AssetListScrollView" picking-mode="Ignore" style="position: absolute; width: 100%; height: 95%; left: auto; margin-top: 16px;" />
                 </ui:VisualElement>
-                <ui:GroupBox name="Panel_AssetCategory" picking-mode="Ignore" style="margin-top: 16px; margin-right: 0; margin-bottom: 0; margin-left: 0; position: absolute; left: auto; right: 0; height: 95%;">
+                <ui:GroupBox name="Panel_AssetCategory" style="margin-top: 16px; margin-right: 0; margin-bottom: 0; margin-left: 0; position: absolute; left: auto; right: 0; height: 95%;">
                     <ui:RadioButton label="Radio Button" name="AssetCategory_Tree" tooltip="樹木" value="true" />
                     <ui:RadioButton label="Radio Button" name="AssetCategory_Ad" tooltip="広告看板" value="false" />
                     <ui:RadioButton label="Radio Button" name="AssetCategory_Human" tooltip="人物" />

@@ -184,6 +184,7 @@ namespace Landscape2.Runtime
             flexContainer.style.flexWrap = Wrap.Wrap;
             flexContainer.style.justifyContent = Justify.SpaceBetween;
             flexContainer.style.justifyContent = Justify.FlexStart;
+            flexContainer.pickingMode = PickingMode.Ignore;
 
 
             foreach (GameObject asset in assetList)
