@@ -843,6 +843,11 @@ public partial class @LandscapeInputActions: IInputActionCollection2, IDisposabl
         }
     }
     public LineOfSightActions @LineOfSight => new LineOfSightActions(this);
+    public interface IInputAction
+    {
+        void OnEnableInputAction();
+        void OnDisableInputAction();
+    }
     public interface ICameraMoveActions
     {
         void OnHorizontalMoveCameraByKeyboard(InputAction.CallbackContext context);

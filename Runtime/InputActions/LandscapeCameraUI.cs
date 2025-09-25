@@ -7,7 +7,7 @@ using System;
 namespace Landscape2.Runtime
 {
 
-    public class LandscapeCameraUI : ISubComponent, LandscapeInputActions.ISelectCamPosActions
+    public class LandscapeCameraUI : ISubComponent, LandscapeInputActions.ISelectCamPosActions, LandscapeInputActions.IInputAction
     {
         private LandscapeInputActions.SelectCamPosActions input;
         private InputActionFocusHandler focusHandler;
@@ -52,6 +52,11 @@ namespace Landscape2.Runtime
                 subUiRoot.RegisterCallback<PointerLeaveEvent>(OnPointerLeave, TrickleDown.NoTrickleDown);
             }
             landscapeCamera.OnSetCameraCalled += HandleSetCameraCalled;
+        }
+
+        public void OnEnableInputAction()
+        {
+            input.Enable();
         }
 
         /// <summary>
@@ -104,6 +109,11 @@ namespace Landscape2.Runtime
                 subUiRoot.UnregisterCallback<PointerLeaveEvent>(OnPointerLeave, TrickleDown.NoTrickleDown);
             }
             landscapeCamera.OnSetCameraCalled -= HandleSetCameraCalled;
+        }
+
+        public void OnDisableInputAction()
+        {
+            input.Disable();
         }
 
         /// <summary>
