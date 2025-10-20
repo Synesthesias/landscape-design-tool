@@ -1,13 +1,13 @@
-﻿using PLATEAU.CityGML;
+﻿using Landscape2.Runtime.UiCommon;
+using PLATEAU.CityGML;
 using PLATEAU.CityInfo;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
-using System.Linq;
-using Landscape2.Runtime.UiCommon;
-using System.ComponentModel;
 
 namespace Landscape2.Runtime
 {
@@ -76,7 +76,13 @@ namespace Landscape2.Runtime
                 UpdateHeightPinsDisplay(evt.newValue);
             });
 
-            SetHeightPin();
+            SetHeightPin(visualizeHeight.GetBuildingList().ToArray());
+
+            // 歩行者モードの高さピンを初期化
+            heightPinClone = visualizeHeightUXML.CloneTree().Q<VisualElement>(UIHeightPin);
+            walkerPanel.Add(heightPinClone);
+            walkerPin = walkerPanel.Q<VisualElement>(UIHeightPin);
+            walkerPin.style.display = DisplayStyle.None;
 
             // 高さ可視化トグルのイベント登録
             heightToggle.RegisterValueChangedCallback((evt) =>
@@ -125,21 +131,23 @@ namespace Landscape2.Runtime
             }
         }
 
+        public void AddBuildingList(PLATEAUCityObjectGroup[] buildings)
+        {
+            visualizeHeight.AddBuildingList(buildings);
+            SetHeightPin(buildings);
+        }
+
         /// <summary>
         /// 高さピンの初期化
         /// </summary>
-        private void SetHeightPin()
+        private void SetHeightPin(PLATEAUCityObjectGroup[] buildingList)
         {
-            // すべての建物を取得
-            List<PLATEAUCityObjectGroup> buildingList = new List<PLATEAUCityObjectGroup>();
-            buildingList = visualizeHeight.GetBuildingList();
-
             foreach (var building in buildingList)
             {
+                // 高さピンを複製
                 heightPinClone = visualizeHeightUXML.CloneTree().Q<VisualElement>(UIHeightPin);
                 bldgList.Add((building, heightPinClone));
 
-                // 高さピンを複製
                 pointOfViewPanel.Add(heightPinClone);
 
                 // 建物の高さを設定
@@ -155,17 +163,15 @@ namespace Landscape2.Runtime
                 bldgList[bldgList.Count - 1].Pin.style.translate = new Translate() { x = -1000, y = -1000 };
             }
             // 建物が高い順にソート
-            bldgList = bldgList.OrderByDescending(item => float.Parse(item.Pin.Q<Label>().text)).ToList();
-
-            // 歩行者モードの高さピンを初期化
-            if (heightPinClone == null)
+            bldgList = bldgList.OrderByDescending(item =>
             {
-                // buildingList.Count() <= 0の時
-                heightPinClone = visualizeHeightUXML.CloneTree().Q<VisualElement>(UIHeightPin);
-            }
-            walkerPanel.Add(heightPinClone);
-            walkerPin = walkerPanel.Q<VisualElement>(UIHeightPin);
-            walkerPin.style.display = DisplayStyle.None;
+                if (float.TryParse(item.Pin.Q<Label>().text, out float value))
+                {
+                    return value;
+                }
+
+                return -100f;
+            }).ToList();
 
             UpdateHeightPinsDisplay(heightSlider.value);
         }

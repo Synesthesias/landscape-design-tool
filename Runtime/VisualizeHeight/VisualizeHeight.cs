@@ -14,7 +14,13 @@ namespace Landscape2.Runtime
     public class VisualizeHeight : ISubComponent
     {
         private List<PLATEAUCityObjectGroup> buildingList = new List<PLATEAUCityObjectGroup>();
+
         public VisualizeHeight()
+        {
+            AddBuildingList(CityModelHandler.CityModelList.ToArray());
+        }
+
+        public void AddBuildingList(PLATEAUCityObjectGroup[] buildings)
         {
             foreach (var cityModelObj in CityModelHandler.CityModelList)
             {
