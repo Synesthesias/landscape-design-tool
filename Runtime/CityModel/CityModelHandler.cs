@@ -40,6 +40,17 @@ namespace Landscape2.Runtime
             }
         }
 
+        public static PLATEAUCityObjectGroup[] AddCityModelList(Transform rootTrs)
+        {
+            var cityModelObjs = rootTrs.GetComponentsInChildren<PLATEAUCityObjectGroup>();
+            foreach (var cityModelObj in cityModelObjs)
+            {
+                cityModelList.Add(cityModelObj);
+            }
+
+            return cityModelObjs;
+        }
+
         private const float smoothnessValue = 0.12f;
 
         public CityModelHandler()
