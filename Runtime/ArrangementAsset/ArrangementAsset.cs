@@ -51,7 +51,8 @@ namespace Landscape2.Runtime
 
         Vector2? mousePosition;
 
-
+        public GameObject ActiveTarget => activeTarget;
+        public bool IsEditMode => currentMode == editMode;
 
         public ArrangementAsset(VisualElement element, SaveSystem saveSystemInstance, LandscapeCamera landscapeCamera)
         {

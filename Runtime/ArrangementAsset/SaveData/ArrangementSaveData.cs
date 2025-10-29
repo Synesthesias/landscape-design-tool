@@ -22,6 +22,7 @@ namespace Landscape2.Runtime
         
         public AdvertisementSaveData advertisementData = new();
         public ArrangementBuildingSaveData buildingSaveData = new();
+        public ArrangementJsonSaveData arrangementJsonSaveData = new();
         
         public void Save(Transform target)
         {
@@ -37,6 +38,12 @@ namespace Landscape2.Runtime
             if (target.TryGetComponent<PlateauSandboxBuilding>(out var buildingTarget))
             {
                 buildingSaveData.Save(buildingTarget);
+            }
+
+            // その他汎用Jsonデータ
+            if (target.TryGetComponent<ArrangementJsonSaveComponent>(out var jsonTarget))
+            {
+                arrangementJsonSaveData.Save(jsonTarget.GetJsonSaveData());
             }
         }
 
@@ -59,6 +66,12 @@ namespace Landscape2.Runtime
             if (target.TryGetComponent<PlateauSandboxBuilding>(out var buildingTarget))
             {
                 buildingSaveData.Apply(buildingTarget);
+            }
+
+            // その他汎用Json保存
+            if (target.TryGetComponent<ArrangementJsonSaveComponent>(out var jsonTarget))
+            {
+                jsonTarget.Apply(arrangementJsonSaveData.JsonData);
             }
         }
     }
