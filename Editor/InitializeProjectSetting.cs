@@ -19,7 +19,7 @@ namespace Landscape2.Editor
         private static void ConfigureHDRPSettings()
         {
             // HDRPアセットを取得
-            var hdrpAsset = GraphicsSettings.renderPipelineAsset as HDRenderPipelineAsset;
+            var hdrpAsset = GraphicsSettings.defaultRenderPipeline as HDRenderPipelineAsset;
             if (hdrpAsset == null)
             {
                 Debug.LogError("HDRP Asset is not assigned in Graphics Settings.");
