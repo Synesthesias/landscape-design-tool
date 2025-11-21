@@ -178,9 +178,13 @@ namespace Landscape2.Editor
 
     public class CustomAssetPostprocessor : AssetPostprocessor
     {
+        static bool isProcessing = false;
         static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
         {
+            if (isProcessing || BuildPipeline.isBuildingPlayer) return;
+            isProcessing = true;
             AddressableSettingsLoader.LoadAndAddSettings();
+            isProcessing = false;
         }
     }
 }
