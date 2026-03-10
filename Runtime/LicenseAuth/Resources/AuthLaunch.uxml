@@ -1,0 +1,17 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Packages/com.synesthesias.landscape-design-tool/Runtime/LicenseAuth/Resources/AuthLaunch.uss?#AuthLaunch" />
+    <ui:VisualElement name="Root" class="root-elemnt" style="flex-grow: 1; align-items: center; justify-content: center; background-color: rgb(255, 255, 255); width: 100%; height: 100%;">
+        <ui:VisualElement name="VisualElement" style="flex-grow: 1; justify-content: flex-start; -unity-text-align: upper-center; align-items: center; margin-top: 0; padding-top: 200px; height: 80%;">
+            <ui:Label name="IntroductionLabel" text="景観ツールにようこそ（仮）" class="label-medium-bold" style="margin-bottom: 32px; font-size: 48px; -unity-font-style: bold; color: rgb(0, 106, 106); margin-top: 0; margin-right: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+            <ui:VisualElement style="flex-grow: 0; align-items: center; height: 100%; justify-content: center;">
+                <ui:Label tabindex="-1" text="ID(メールアドレス)とパスワードを入力し、「ログイン」ボタンを押してください。" parse-escape-sequences="true" display-tooltip-when-elided="true" style="color: rgb(0, 0, 0); font-size: 16px;" />
+                <ui:Button name="LoginButton" class="login-button" style="flex-direction: row; align-items: center; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); justify-content: center; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; height: 50px; width: 350px; border-top-left-radius: 25px; border-top-right-radius: 25px; border-bottom-right-radius: 25px; border-bottom-left-radius: 25px;">
+                    <ui:Label text="ログイン" style="font-size: 18px;" />
+                </ui:Button>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="VisualElement" style="flex-grow: 1; width: 100%; align-items: center; justify-content: center; height: 20%;">
+            <ui:VisualElement name="logo" style="flex-grow: 0; flex-shrink: 0; width: 368px; height: 91px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

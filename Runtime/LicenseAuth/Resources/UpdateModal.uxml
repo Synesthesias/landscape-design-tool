@@ -1,0 +1,15 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Packages/com.synesthesias.landscape-design-tool/Runtime/LicenseAuth/Resources/UpdateModal.uss?fileID=7433441132597879392&amp;guid=ac840283f2991a7449a4f334f8044bc2&amp;type=3#UpdateModal" />
+    <ui:VisualElement name="Root" class="root-elemnt" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.5); align-items: center; justify-content: center;">
+        <ui:VisualElement name="ModalWindow" style="position: relative; align-items: center; padding: 20px; border-radius: 16px; box-shadow: 0 2px 5px rgba(131, 133, 132, 0.2); background-color: rgb(255, 255, 255); flex-shrink: 0; width: 500px; height: 278px;">
+            <ui:Button name="CloseButton" style="position: absolute; top: 10px; right: 10px; width: 24px; height: 24px; justify-content: center; align-items: center; background-color: transparent; border: none; border-left-color: rgba(149, 149, 149, 0); border-right-color: rgba(149, 149, 149, 0); border-top-color: rgba(149, 149, 149, 0); border-bottom-color: rgba(149, 149, 149, 0); border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0;">
+                <ui:Label text="×" style="font-size: 18px; color: rgb(0, 0, 0); width: 24px; height: 24px;" />
+            </ui:Button>
+            <ui:Label name="TitleLabel" text="アップデート" class="label-medium-bold" style="margin-top: 40px; margin-bottom: 20px; color: rgb(255, 4, 4);" />
+            <ui:Label name="MessageLabel" text="メッセージ" class="label-medium-bold" style="margin-bottom: 40px;" />
+            <ui:Button name="ActionButton" class="login-button" style="flex-direction: row; align-items: center; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); border-top-left-radius: 25px; border-top-right-radius: 25px; border-bottom-right-radius: 25px; border-bottom-left-radius: 25px;">
+                <ui:Label name="ActionButtonLabel" text="ダウンロード" style="font-size: 14px;" />
+            </ui:Button>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
